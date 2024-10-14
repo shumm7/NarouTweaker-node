@@ -1,10 +1,53 @@
-import { defaultValue } from "./misc"
-import "@fortawesome/fontawesome-free/js/fontawesome";
-import "@fortawesome/fontawesome-free/js/brands";
-import "@fortawesome/fontawesome-free/js/solid";
-import "@fortawesome/fontawesome-free/js/regular";
+/**
+ * カスタムアイコンのID
+ */
+type CustomIconID = string
 
-export const novelIconList = {
+/**
+ * カスタムアイコンのIDのリスト
+ */
+export type CustomIconIDs = Array<CustomIconID>
+
+/**
+ * カスタムアイコンのリスト
+ * @param {CustomIconID} key - ID
+ * @param {CustomIconItem} IconItem - カスタムアイコンのオブジェクト
+ */
+export type CustomIconItems = {
+    [key: CustomIconID]: CustomIconItem
+}
+
+/**
+ * カスタムアイコン
+ * @param {string|undefined} icon - FontAwesomeクラス（例："fa-solid fa-house"）
+ * @param {string|undefined} text - 表示名
+ * @param {boolean|undefined} isDropdown - ドロップダウンに表示するかどうか
+ */
+export class CustomIconItem {
+    icon?: string // https://fontawesome.com/search?o=r&m=free
+    text?: string
+    isDropdown?: boolean
+
+    constructor(icon?:CustomIconItem)
+    constructor(icon?:Object|CustomIconItem){
+        if(icon instanceof Object){
+            if("icon" in icon && typeof icon.icon=="string"){
+                this.icon = icon.icon
+            }
+            if("text" in icon && typeof icon.text=="string"){
+                this.text = icon.text
+            }
+            if("isDropdown" in icon && typeof icon.isDropdown=="boolean"){
+                this.isDropdown = icon.isDropdown
+            }
+        }
+    }
+}
+
+/**
+ * 小説ページのカスタムヘッダ用アイコンリスト
+ */
+export const novelIconList: CustomIconItems = {
     home: {
         icon: "fa-solid fa-house",
         text: "ホーム"
@@ -132,9 +175,11 @@ export const novelIconList = {
         text: "設定"
     }
 }
-// https://fontawesome.com/search?o=r&m=free
 
-export const workspaceIconList = {
+/**
+ * ユーザページのカスタムヘッダ用アイコンリスト
+ */
+export const workspaceIconList: CustomIconItems = {
     user: {
         icon: "fa-solid fa-user",
         text: "ユーザ",
@@ -229,7 +274,10 @@ export const workspaceIconList = {
     }
 }
 
-export const workspaceMenuIconList = {
+/**
+ * ユーザページのメニュー用アイコンリスト
+ */
+export const workspaceMenuIconList: CustomIconItems = {
     user: {
         icon: "fa-solid fa-user",
         text: "ユーザ"
@@ -276,24 +324,23 @@ export const workspaceMenuIconList = {
     }
 }
 
-export function getExceptedIcon(lists, parent){
-    var v:Array<string> = []
-    $.each(lists, function(_, list){
-        $.each(list, function(_, key){
-            v.push(key)
-        })
-    })
-
-    parent = defaultValue(parent, novelIconList)
-
-    var ret:Array<any> = []
-    $.each(parent, function(key, _){
-        if(!v.includes(String(key))){
+/**
+ * リストに含まれていないアイコンを取得する
+ * @param {Array<CustomIconIDs>|CustomIconIDs} lists - カスタムアイコンIDのリスト（一階層までネスト可）
+ * @param {CustomIconItems} parent - 全体集合となるカスタムアイコンのリスト
+ * @returns {CustomIconIDs} - 引数に指定したリストに含まれないアイコンIDのリスト
+ */
+export function getExcludeIcons(lists: Array<CustomIconIDs>|CustomIconIDs, parent: CustomIconItems = novelIconList): CustomIconIDs{
+    const v:CustomIconIDs = lists.flat()
+    var ret:CustomIconIDs = []
+    Object.keys(parent).forEach(function(key: CustomIconID){
+        if(!v.includes(key)){
             ret.push(key)
         }
     })
     return ret;
 }
+
 
 export function addFontAwesomeOriginaIcons(){
     window.requestAnimationFrame = window.requestAnimationFrame.bind(window)

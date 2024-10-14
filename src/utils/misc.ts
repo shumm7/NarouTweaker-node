@@ -1,20 +1,43 @@
-import Dictionary from "./type";
-
-export function saveJson(data:Dictionary<string,any>, filename){
+/**
+ * オブジェクトをJSONファイルで保存
+ * @param data - オブジェクト
+ * @param filename - ファイル名
+*/
+export function saveJson(data:Object, filename: string): void{
     var url = 'data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 3))))
     chrome.runtime.sendMessage({action: "downloads", data: {url: url, filename: filename}}, function(_response){
         
     });
-    return true;
 }
 
-export function saveText(data, filename){
+/**
+ * 文字列をファイルで保存
+ * @param data - テキスト
+ * @param filename - ファイル名
+*/
+export function saveText(data: string, filename: string){
     var url = 'data:text/plain;base64,' + btoa(unescape(encodeURIComponent(data)))
     chrome.runtime.sendMessage({action: "downloads", data: {url: url, filename: filename}}, function(_response){
         
     });
     return true;
 }
+
+/**
+ * 拡張機能のバージョンを取得
+ * @returns バージョン
+*/
+export function getExtensionVersion(): string{
+    return chrome.runtime.getManifest().version
+}
+/**
+ * 拡張機能の作者名を取得
+ * @returns 作者名
+*/
+export function getExtensionAuthor(): string{
+    return chrome.i18n.getMessage("extAuthor")
+}
+
 
 export function defaultValue(value, def){
     if(value==undefined){
@@ -43,12 +66,4 @@ export function getCSSRule(key, rules){
     })
     style += "}\n"
     return style
-}
-
-export function getExtensionVersion(){
-    return chrome.runtime.getManifest().version
-}
-
-export function getExtensionAuthor(){
-    return chrome.i18n.getMessage("extAuthor")
 }

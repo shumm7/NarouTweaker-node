@@ -1,4 +1,10 @@
-export function getBigGenre(genre:number){
+/**
+ * 小説大ジャンル
+ * @param genre - 大ジャンル番号
+ * @returns 大ジャンル名
+*/
+export function getBigGenre(genre:number): string;
+export function getBigGenre(genre:number|any): string{
     if(genre==1){
         return "恋愛"
     }
@@ -22,7 +28,43 @@ export function getBigGenre(genre:number){
     }
 }
 
-export function getGenre(genre:number){
+/**
+ * 小説大ジャンル番号
+ * @param genre - 大ジャンル名
+ * @returns 大ジャンル番号
+*/
+export function getBigGenreNumber(genre:string): number|null
+export function getBigGenreNumber(genre:string|any): number|null{
+    if(genre=="恋愛"){
+        return 1
+    }
+    else if(genre=="ファンタジー"){
+        return 2
+    }
+    else if(genre=="文芸"){
+        return 3
+    }
+    else if(genre=="SF"){
+        return 4
+    }
+    else if(genre=="その他"){
+        return 99
+    }
+    else if(genre=="ノンジャンル"){
+        return 98
+    }
+    else{
+        return null
+    }
+}
+
+/**
+ * 小説ジャンル
+ * @param genre - ジャンル番号
+ * @returns ジャンル名
+*/
+export function getGenre(genre:number): string
+export function getGenre(genre:number|any): string{
     if(genre==101){
         return "異世界〔恋愛〕"
     }
@@ -91,7 +133,13 @@ export function getGenre(genre:number){
     }
 }
 
-export function getGenreNumber(genre:string){
+/**
+ * 小説ジャンル番号
+ * @param genre - ジャンル名
+ * @returns ジャンル番号
+*/
+export function getGenreNumber(genre:string):number|null
+export function getGenreNumber(genre:string|any):number|null{
     if(genre=="異世界〔恋愛〕"){
         return 101
     }
@@ -160,18 +208,30 @@ export function getGenreNumber(genre:string){
     }
 }
 
-export function getNovelType(tp:Number){
-    if(tp==1){
+/**
+ * 小説タイプ（連載/短編）
+ * @param type - 1:連載 / 2:短編
+ * @returns 小説タイプ
+*/
+export function getNovelType(type:Number): string
+export function getNovelType(type:Number|any): string{
+    if(type==1){
         return "連載"
     }
-    else if(tp==2){
+    else if(type==2){
         return "短編"
     }else{
         return ""
     }
 }
 
-export function getNovelEnd(state:Number){
+/**
+ * 小説の完結情報
+ * @param state - 0:完結 / 1:連載中
+ * @returns 小説タイプ
+*/
+export function getNovelEnd(state:Number): string
+export function getNovelEnd(state:Number|any): string{
     if(state==0){
         return "完結"
     }
@@ -182,7 +242,13 @@ export function getNovelEnd(state:Number){
     }
 }
 
-export function getNocgenre(genre:Number){
+/**
+ * R18小説の掲載サイト名
+ * @param genre - 1:ノクターン / 2:ムーンライト / 3:ムーンライト（BL） / 4:ミッドナイト
+ * @returns サイト名
+*/
+export function getNocgenre(genre:Number): string
+export function getNocgenre(genre:Number|any): string{
     if(genre==1){
         return "ノクターンノベルズ(男性向け)"
     }

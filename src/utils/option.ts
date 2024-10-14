@@ -1,267 +1,352 @@
+import { CustomIconIDs, novelIconList, workspaceIconList, workspaceMenuIconList } from "./header"
 import { getExtensionVersion } from "./misc"
+import { CSS_String, ReplacePatterns } from "./type"
+import { FontFamiliesV1 } from "./v1_font"
+import { SkinsV1 } from "./v1_skin"
 
-export const defaultOption = {
+/**
+ * 設定データ（storage.local）
+ */
+export class LocalOptions{
     /* Extension */
-    extOptionsVersion: getExtensionVersion(),
-    extAdvancedSettings: false,
-    extExperimentalFeatures: false,
-    extDebug: false,
-    extFavoriteOptions: [],
-    extPopupDefaultPage: "__auto__", 
-    extOptionPageButtons: true,
-    extNotifications: true,
+    extOptionsVersion: string = getExtensionVersion()
+    extAdvancedSettings: boolean = false
+    extExperimentalFeatures: boolean = false
+    extDebug: boolean = false
+    extFavoriteOptions: Array<string> = []
+    extPopupDefaultPage: string = "__auto__"
+    extOptionPageButtons: boolean = true
+    extNotifications: boolean = true
 
     /* Narou */
-    //narouSkipAgeauth: false,
-    narouSyuppanShowBookImage: true,
-    narouSyuppanShowBookViewImage: true,
+    narouSyuppanShowBookImage: boolean = true
+    narouSyuppanShowBookViewImage: boolean = true
 
     /* Novel */
-    novelCustomStyle: true,
-    novelCustomHeaderType: "2",
-    novelCustomCSS: "",
-    novelLegacyHeaderIcon: true,
-    novelVertical: false,
-    novelCustomHeaderScrollHidden: false,
-    novelCustomHeaderMode: "scroll",
-    novelCustomHeaderLeft: ["home", "info", "impression", "review", "pdf", "favepisode", "favlist_add", "booklist"],
-    novelCustomHeaderRight: ["option"],
-    novelCustomHeaderShowEnactiveItems: false,
-    novelCustomHeaderSocialShowsBrandName: false,
-    novelCustomHeaderQRCodeCurrentLocation: true,
-    novelCustomHeaderQRCodeShowURL: false,
-    novelPrefaceAutoURL: true,
-    novelAfterwordAutoURL: true,
-    novelShowAllExtext: false,
-    novelShowHistoryOnSublist: true,
-    novelForceMypageLink: false,
-    novelCursorHide: false,
-    novelCursorHideTimeout: 5,
-    novelAttentionBanner: false,
+    novelCustomStyle: boolean = true
+    novelCustomHeaderType: number|string = "2"
+    novelCustomCSS: CSS_String = ""
+    novelLegacyHeaderIcon: boolean = true
+    novelVertical: boolean = false
+    novelCustomHeaderScrollHidden: boolean = false
+    novelCustomHeaderMode: string = "scroll"
+    novelCustomHeaderLeft: CustomIconIDs = ["home", "info", "impression", "review", "pdf", "favepisode", "favlist_add", "booklist"]
+    novelCustomHeaderRight: CustomIconIDs = ["option"]
+    novelCustomHeaderShowEnactiveItems: boolean = false
+    novelCustomHeaderSocialShowsBrandName: boolean = false
+    novelCustomHeaderQRCodeCurrentLocation: boolean = true
+    novelCustomHeaderQRCodeShowURL: boolean = false
+    novelPrefaceAutoURL: boolean = true
+    novelAfterwordAutoURL: boolean = true
+    novelShowAllExtext: boolean = false
+    novelShowHistoryOnSublist: boolean = true
+    novelForceMypageLink: boolean = false
+    novelCursorHide: boolean = false
+    novelCursorHideTimeout: number = 5
+    novelAttentionBanner: boolean = false
+
     /* Workspace */
-    workspaceCustomHeader: ["user", "message", "home", "menu"],
-    workspaceCustomHeaderScrollHidden: false,
-    workspaceCustomHeaderMode: "absolute",
-    workspaceCustomMenu_Left: ["favorite", "edit", "blog"],
-    workspaceCustomMenu_Middle: ["reaction", "block-mute", "x-home"],
-    workspaceCustomMenu_Right: ["find", "support"],
-    workspaceHeaderAdditionalMenu: false,
-    workspaceBookmarkLayout: "0",
-    workspaceBookmarkReplaceEpisode: false,
-    workspaceBookmarkCategoryLayout: "2",
-    workspaceImpressionMarkedButton: true,
-    workspaceImpressionMarkAsReadWhenReply: true,
-    workspaceImpressionHideButton: true,
-    workspaceImpressionHideWhenMarked: true,
-    workspaceNovelmanageDeleteConfirm: true,
-    workspaceUserblogmanageDeleteConfirm: true,
-    workspaceNovelmanageShowPointAverage: true,
-    workspaceCustomEditor: false,
-    workspaceEditorSelectedSkin: 0,
-    workspaceEditorSelectedFontFamily: 0,
-    workspaceEditorFontSize: 0,
-    workspaceEditorLineHeight: 0,
-    workspaceEditorTextRendering: "optimizeLegibility",
-    workspaceEditorWidth: 1,
+    workspaceCustomHeader: CustomIconIDs = ["user", "message", "home", "menu"]
+    workspaceCustomHeaderScrollHidden: boolean = false
+    workspaceCustomHeaderMode: string = "absolute"
+    workspaceCustomMenu_Left: CustomIconIDs = ["favorite", "edit", "blog"]
+    workspaceCustomMenu_Middle: CustomIconIDs = ["reaction", "block-mute", "x-home"]
+    workspaceCustomMenu_Right: CustomIconIDs = ["find", "support"]
+    workspaceHeaderAdditionalMenu: boolean = false
+    workspaceBookmarkLayout: number|string = "0"
+    workspaceBookmarkReplaceEpisode: boolean = false
+    workspaceBookmarkCategoryLayout: number|string = "2"
+    workspaceImpressionMarkedButton: boolean = true
+    workspaceImpressionMarkAsReadWhenReply: boolean = true
+    workspaceImpressionHideButton: boolean = true
+    workspaceImpressionHideWhenMarked: boolean = true
+    workspaceNovelmanageDeleteConfirm: boolean = true
+    workspaceUserblogmanageDeleteConfirm: boolean = true
+    workspaceNovelmanageShowPointAverage: boolean = true
+    workspaceCustomEditor: boolean = false
+    workspaceEditorSelectedSkin: number = 0
+    workspaceEditorSelectedFontFamily: number = 0
+    workspaceEditorFontSize: number = 0
+    workspaceEditorLineHeight: number = 0
+    workspaceEditorTextRendering: string = "optimizeLegibility"
+    workspaceEditorWidth: number = 1
 
     /* Yomou */
-    yomouRank_ShowNovelInfoLink: true,
-    yomouRank_ShowKasasagi: false,
-    yomouRank_ShowRaWi: false,
-    yomouRank_ShowDescription: true,
-    yomouRank_ShowTags: true,
-    yomouRank_DevidePointsUnit: true,
-    yomouRank_PointsColor: "#ed1a3d",
-    yomouRank_CustomCSS: "",
+    yomouRank_ShowNovelInfoLink: boolean = true
+    yomouRank_ShowKasasagi: boolean = false
+    yomouRank_ShowRaWi: boolean = false
+    yomouRank_ShowDescription: boolean = true
+    yomouRank_ShowTags: boolean = true
+    yomouRank_DevidePointsUnit: boolean = true
+    yomouRank_PointsColor: string = "#ed1a3d"
+    yomouRank_CustomCSS: CSS_String = ""
 
-    yomouRankTop_ShowDescription: false,
-    yomouRankTop_ShowPoints: false,
-    yomouRankTop_ShowTags: false,
-    yomouRankTop_ShowLength: false,
-    yomouRankTop_ShowNovelInfoLink: false,
-    yomouRankTop_ShowUpdateDate: false,
-    yomouRankTop_ShowKasasagi: false,
-    yomouRankTop_ShowRaWi: false,
-    yomouRankTop_CustomCSS: "",
+    yomouRankTop_ShowDescription: boolean = false
+    yomouRankTop_ShowPoints: boolean = false
+    yomouRankTop_ShowTags: boolean = false
+    yomouRankTop_ShowLength: boolean = false
+    yomouRankTop_ShowNovelInfoLink: boolean = false
+    yomouRankTop_ShowUpdateDate: boolean = false
+    yomouRankTop_ShowKasasagi: boolean = false
+    yomouRankTop_ShowRaWi: boolean = false
+    yomouRankTop_CustomCSS: CSS_String = ""
     //yomouRankTop_DailyShowList: ["101", "102", "201", "202", "301", "302", "303", "304", "305", "306", "307", "401", "402", "403", "404", "9901", "9902", "9903", "9999"],
     
     /* Mypage */
-    mypageShowUserId: true,
-    mypageNovellistShowReaction: false,
-    mypageNovellistShowKasasagi: false,
-    mypageNovellistShowRaWi: false,
-    mypageNovellistShowLength: false,
-    mypageShowFavUserId: true,
-    mypageProfileStatics: true,
-    mypageProfileBooklist: true,
-    mypageDisableExternalURLWarning: false,
-    mypageProfileAutoURL: true,
-    mypageBlogAutoURL: true,
-    mypageBlogCommentAutoURL: false,
+    mypageShowUserId: boolean = true
+    mypageNovellistShowReaction: boolean = false
+    mypageNovellistShowKasasagi: boolean = false
+    mypageNovellistShowRaWi: boolean = false
+    mypageNovellistShowLength: boolean = false
+    mypageShowFavUserId: boolean = true
+    mypageProfileStatics: boolean = true
+    mypageProfileBooklist: boolean = true
+    mypageDisableExternalURLWarning: boolean = false
+    mypageProfileAutoURL: boolean = true
+    mypageBlogAutoURL: boolean = true
+    mypageBlogCommentAutoURL: boolean = false
 
     /* Kasasagi */
-    kasasagiCustomStyle: true,
-    kasasagiExportButton: true,
+    kasasagiCustomStyle: boolean = true
+    kasasagiExportButton: boolean = true
 
-    kasasagiShowGraph_GeneralDay: true,
-    kasasagiShowGraph_GeneralTotal: false,
-    kasasagiShowGraph_ChapterUnique: true,
-    kasasagiShowGraph_DayPV: true,
-    kasasagiShowGraph_DayUnique: true,
-    kasasagiShowGraph_MonthPV: true,
-    kasasagiShowGraph_MonthUnique: true,
+    kasasagiShowGraph_GeneralDay: boolean = true
+    kasasagiShowGraph_GeneralTotal: boolean = false
+    kasasagiShowGraph_ChapterUnique: boolean = true
+    kasasagiShowGraph_DayPV: boolean = true
+    kasasagiShowGraph_DayUnique: boolean = true
+    kasasagiShowGraph_MonthPV: boolean = true
+    kasasagiShowGraph_MonthUnique: boolean = true
     
-    kasasagiGraphType_GeneralDay: "bar",
-    kasasagiGraphType_GeneralTotal: "bar",
-    kasasagiGraphType_ChapterUnique: "bar",
-    kasasagiGraphType_DayPV: "bar",
-    kasasagiGraphType_DayUnique: "bar",
-    kasasagiGraphType_MonthPV: "bar",
-    kasasagiGraphType_MonthUnique: "bar",
+    kasasagiGraphType_GeneralDay: string = "bar"
+    kasasagiGraphType_GeneralTotal: string = "bar"
+    kasasagiGraphType_ChapterUnique: string = "bar"
+    kasasagiGraphType_DayPV: string = "bar"
+    kasasagiGraphType_DayUnique: string = "bar"
+    kasasagiGraphType_MonthPV: string = "bar"
+    kasasagiGraphType_MonthUnique: string = "bar"
 
-    kasasagiShowTable_API: true,
-    kasasagiShowTable_Rank: true,
-    kasasagiShowTable_ExternalLink: true,
-    kasasagiShowTable_GeneralDay: true,
-    kasasagiShowTable_ChapterUnique: true,
-    //kasasagiShowTable_DayPV: true, //Unused
-    //kasasagiShowTable_DayUnique: true, //Unused
-    //kasasagiShowTable_MonthPV: true, //Unused
-    //kasasagiShowTable_MonthUnique: true, //Unused
+    kasasagiShowTable_API: boolean = true
+    kasasagiShowTable_Rank: boolean = true
+    kasasagiShowTable_ExternalLink: boolean = true
+    kasasagiShowTable_GeneralDay: boolean = true
+    kasasagiShowTable_ChapterUnique: boolean = true
+    //kasasagiShowTable_DayPV: boolean = true //Unused
+    //kasasagiShowTable_DayUnique: boolean = true //Unused
+    //kasasagiShowTable_MonthPV: boolean = true //Unused
+    //kasasagiShowTable_MonthUnique: boolean = true //Unused
 
     /* Mitemin */
-    miteminShowIcodeField: true,
+    miteminShowIcodeField: boolean = true
 
     /* Skin */
-    skins: [],
-    selectedSkin: 0,
-    novelAuthorCustomSkin: true,
-    novelAuthorCustomSkinWarning: true,
+    skins: SkinsV1 = []
+    selectedSkin: number = 0
+    novelAuthorCustomSkin: boolean = true
+    novelAuthorCustomSkinWarning: boolean = true
 
     /* Font */
-    fontSelectedFontFamily: 0,
-    fontFontFamilyList: [],
-    fontFontSize: 0,
-    fontLineHeight: 0,
-    fontTextRendering: "optimizeLegibility",
-    fontWidth: 1,
+    fontSelectedFontFamily: number = 0
+    fontFontFamilyList: FontFamiliesV1 = []
+    fontFontSize: number = 0
+    fontLineHeight: number = 0
+    fontTextRendering: string = "optimizeLegibility"
+    fontWidth: number = 1
 
     /* Correction */
-    correctionIndent: false,
-    correctionNormalizeEllipses: false,
-    correctionNormalizeDash: false,
-    correctionNormalizeExclamation: false,
-    correctionRepeatedSymbols: false,
-    correctionPeriodWithBrackets: false,
-    correctionNoSpaceExclamation: false,
-    correctionOddEllipses: false,
-    correctionOddDash: false,
-    correctionWaveDash: false,
-    correctionNumber: false,
-    correctionNumberShort: "full",
-    correctionNumberLong: "half",
-    correctionNumberSymbol: "default",
-    correctionShowIllustration: true,
-    correctionRemoveIllustrationLink: false,
-    correctionVerticalLayout_CombineWord: 0,
-    correctionVerticalLayout_CombineNumber: 2,
-    correctionVerticalLayout_CombineExclamation: 3,
-    correctionVerticalLayout_IgnoreCombineNumberInWord: true,
-    correctionVerticalLayout_SidewayWord: 0,
-    correctionVerticalLayout_SidewayExclamation: 0,
+    correctionIndent: boolean = false
+    correctionNormalizeEllipses: boolean = false
+    correctionNormalizeDash: boolean = false
+    correctionNormalizeExclamation: boolean = false
+    correctionRepeatedSymbols: boolean = false
+    correctionPeriodWithBrackets: boolean = false
+    correctionNoSpaceExclamation: boolean = false
+    correctionOddEllipses: boolean = false
+    correctionOddDash: boolean = false
+    correctionWaveDash: boolean = false
+    correctionNumber: boolean = false
+    correctionNumberShort: string = "full"
+    correctionNumberLong: string = "half"
+    correctionNumberSymbol: string = "default"
+    correctionShowIllustration: boolean = true
+    correctionRemoveIllustrationLink: boolean = false
+    correctionVerticalLayout_CombineWord: number = 0
+    correctionVerticalLayout_CombineNumber: number = 2
+    correctionVerticalLayout_CombineExclamation: number = 3
+    correctionVerticalLayout_IgnoreCombineNumberInWord: boolean = true
+    correctionVerticalLayout_SidewayWord: number = 0
+    correctionVerticalLayout_SidewayExclamation: number = 0
 
-    correctionReplacePatterns: [
+    correctionReplacePatterns: ReplacePatterns = [
         {
-            "active": false,
-            "pattern": "兎に角",
-            "regex": false,
-            "replacement": "とにかく"
+            active: false,
+            pattern: "兎に角",
+            regex: false,
+            replacement: "とにかく"
         },
         {
-            "active": false,
-            "pattern": "兎も角",
-            "regex": false,
-            "replacement": "ともかく"
+            active: false,
+            pattern: "兎も角",
+            regex: false,
+            replacement: "ともかく"
         },
         {
-            "active": false,
-            "pattern": "態々",
-            "regex": false,
-            "replacement": "わざわざ"
+            active: false,
+            pattern: "態々",
+            regex: false,
+            replacement: "わざわざ"
         },
         {
-            "active": false,
-            "pattern": "殆ど",
-            "regex": false,
-            "replacement": "ほとんど"
+            active: false,
+            pattern: "殆ど",
+            regex: false,
+            replacement: "ほとんど"
         },
         {
-            "active": false,
-            "pattern": "偶々",
-            "regex": false,
-            "replacement": "たまたま"
+            active: false,
+            pattern: "偶々",
+            regex: false,
+            replacement: "たまたま"
         },
         {
-            "active": false,
-            "pattern": "勿論",
-            "regex": false,
-            "replacement": "もちろん"
+            active: false,
+            pattern: "勿論",
+            regex: false,
+            replacement: "もちろん"
         },
         {
-            "active": false,
-            "pattern": "一際",
-            "regex": false,
-            "replacement": "ひときわ"
+            active: false,
+            pattern: "一際",
+            regex: false,
+            replacement: "ひときわ"
         },
         {
-            "active": false,
-            "pattern": "流石",
-            "regex": false,
-            "replacement": "さすが"
+            active: false,
+            pattern: "流石",
+            regex: false,
+            replacement: "さすが"
         },
         {
-            "active": false,
-            "pattern": "其れ",
-            "regex": false,
-            "replacement": "それ"
+            active: false,
+            pattern: "其れ",
+            regex: false,
+            replacement: "それ"
         },
         {
-            "active": false,
-            "pattern": "其の",
-            "regex": false,
-            "replacement": "その"
+            active: false,
+            pattern: "其の",
+            regex: false,
+            replacement: "その"
         },
         {
-            "active": false,
-            "pattern": "而も",
-            "regex": false,
-            "replacement": "しかも"
+            active: false,
+            pattern: "而も",
+            regex: false,
+            replacement: "しかも"
         },
         {
-            "active": false,
-            "pattern": "而る",
-            "regex": false,
-            "replacement": "しかる"
+            active: false,
+            pattern: "而る",
+            regex: false,
+            replacement: "しかる"
         },
         {
-            "active": false,
-            "pattern": "而れ",
-            "regex": false,
-            "replacement": "しかれ"
+            active: false,
+            pattern: "而れ",
+            regex: false,
+            replacement: "しかれ"
         },
         {
-            "active": false,
-            "pattern": "凄く",
-            "regex": false,
-            "replacement": "すごく"
+            active: false,
+            pattern: "凄く",
+            regex: false,
+            replacement: "すごく"
         },
         {
-            "active": false,
-            "pattern": "凄い",
-            "regex": false,
-            "replacement": "すごい"
+            active: false,
+            pattern: "凄い",
+            regex: false,
+            replacement: "すごい"
         }
-    ],
+    ]
+
+    constructor(data?:Object){
+        if(data instanceof Object){
+            Object.keys(data).forEach(function(key){
+                this.set(key, data[key])
+            })
+        }
+    }
+
+    public set(obj: Object):void
+    public set(key: string, value: any):void
+    public set(key?: string|Object, value?: any):void{
+        if(key!==undefined){
+            if(typeof key==="string"){
+                var value = this.check_value(key, value)
+                if(value!==undefined){
+                    this[key] = value
+                }
+            }else if(value instanceof Object){
+                Object.keys(key).forEach(function(k){
+                    this.set(k, key[k])
+                })
+            }
+        }
+    }
+
+    private check_value(key: string, value: any): any{
+        if(typeof this[key] === typeof value){
+            if(key === "extOptionsVersion"){
+                return
+            }else if(["kasasagiGraphType_GeneralDay", "kasasagiGraphType_GeneralTotal", "kasasagiGraphType_ChapterUnique", "kasasagiGraphType_DayPV", "kasasagiGraphType_DayUnique", "kasasagiGraphType_MonthPV", "kasasagiGraphType_MonthUnique"].includes(key)){
+                if(!["bar", "line"].includes(value)){
+                    return
+                }
+            }else if(["novelCustomHeaderMode", "workspaceCustomHeaderMode"].includes(key)){
+                if(!["absolute", "fixed", "scroll"].includes(value)){
+                    return
+                }
+            }
+            else if(key==="correctionNumberShort" || key==="correctionNumberLong" || key==="correctionNumberSymbol"){
+                if(!["default", "half", "full", "kanji"].includes(value)){
+                    return
+                }
+            }else if(["novelCustomHeaderLeft", "novelCustomHeaderRight"].includes(key)){
+                if(!Array.isArray(value)){return}
+
+                var list: CustomIconIDs = []
+                value.forEach(function(id){
+                    if(id in novelIconList){
+                        list.push(id)
+                    }
+                })
+                return list
+            }else if("workspaceCustomHeader" === key){
+                if(!Array.isArray(value)){return}
+
+                var list: CustomIconIDs = []
+                value.forEach(function(id){
+                    if(id in workspaceIconList){
+                        list.push(id)
+                    }
+                })
+                return list
+
+            }else if(["workspaceCustomMenu_Left", "workspaceCustomMenu_Middle", "workspaceCustomMenu_Right"].includes(key)){
+                if(!Array.isArray(value)){return}
+
+                var list: CustomIconIDs = []
+                value.forEach(function(id){
+                    if(id in workspaceMenuIconList){
+                        list.push(id)
+                    }
+                })
+                return list
+            }
+            return value
+        }
+    }
 }
 
 export const defaultGlobalOption = {
@@ -271,401 +356,3 @@ export const defaultGlobalOption = {
     history_data: {},
     workspaceImpressionMarked: {},
 }
-
-export const localSkins = [
-    {
-        "name": "ライト〔標準〕",
-        "description": "Narou Tweaker オリジナル",
-        "customizable": false,
-        "show": true,
-        "style": {
-            "link": {
-                "color_hover": "rgb(98, 84, 255)",
-                "color_link": "rgb(26, 13, 171)",
-                "color_visited": "#681da8"
-            },
-            "novel": {
-                "background": "#ffffff",
-                "background_second": "#eeeeee",
-                "color": "rgba(0, 0, 0, 0.87)"
-            },
-            "sublist": {
-                "color": "rgba(0, 0, 0, 0.5)",
-                "hover": "rgba(67, 51, 242, 0.7)",
-                "visited": "rgba(50, 38, 181, 0.7)"
-            }
-        },
-        "css": ""
-    },
-    {
-        "name": "ダーク〔標準〕",
-        "description": "Narou Tweaker オリジナル",
-        "customizable": false,
-        "show": true,
-        "style": {
-            "link": {
-                "color_hover": "rgb(152, 189, 235)",
-                "color_link": "rgb(83, 155, 245)",
-                "color_visited": "rgb(135, 122, 245)"
-            },
-            "novel": {
-                "background": "#1d2020",
-                "background_second": "rgb(47, 50, 50)",
-                "color": "rgba(255, 255, 255, 0.92)"
-            },
-            "sublist": {
-                "color": "rgba(255, 255, 255, 0.3)",
-                "hover": "rgba(152, 189, 235, 0.7)",
-                "visited": "rgba(114, 142, 176, 0.7)"
-            }
-        },
-        "css": ""
-    },
-    {
-        "name": "生成り〔標準〕",
-        "description": "Narou Tweaker オリジナル",
-        "customizable": false,
-        "show": true,
-        "style": {
-            "link": {
-                "color_hover": "rgb(98, 84, 255)",
-                "color_link": "rgb(26, 13, 171)",
-                "color_visited": "#681da8"
-            },
-            "novel": {
-                "background": "#f7f6eb",
-                "background_second": "#eeeeee",
-                "color": "rgba(0, 0, 0, 0.87)"
-            },
-            "sublist": {
-                "color": "rgba(0, 0, 0, 0.3)",
-                "hover": "rgba(67, 51, 242, 0.7)",
-                "visited": "rgba(50, 38, 181, 0.7)"
-            }
-        },
-        "css": ""
-    },
-    {
-        "name": "水色〔標準〕",
-        "description": "Narou Tweaker オリジナル",
-        "customizable": false,
-        "show": true,
-        "style": {
-            "link": {
-                "color_hover": "rgb(98, 84, 255)",
-                "color_link": "rgb(26, 13, 171)",
-                "color_visited": "#681da8"
-            },
-            "novel": {
-                "background": "#dfecf4",
-                "background_second": "#b7d2e4",
-                "color": "rgba(0, 0, 0, 0.87)"
-            },
-            "sublist": {
-                "color": "rgba(0, 0, 0, 0.5)",
-                "hover": "rgba(67, 51, 242, 0.7)",
-                "visited": "rgba(50, 38, 181, 0.7)"
-            }
-        },
-        "css": ""
-    },
-    {
-        "name": "標準設定〔小説家になろう〕",
-        "description": "サイトのデフォルト",
-        "customizable": false,
-        "show": true,
-        "style": {
-            "novel": {
-                "background": "#fff",
-                "background_second": "#dfdfdf",
-                "color": "#444"
-            },
-            "link": {
-                "color_link": "#03c",
-                "color_visited": "#857",
-                "color_hover": "#393"
-            },
-            "sublist": {
-                "color": "#444",
-                "hover": "#9df",
-                "visited": "#73a6bf"
-            }
-        },
-        "css": ""
-    },
-    {
-        "name": "ブラックモード1〔小説家になろう〕",
-        "description": "サイトのデフォルト",
-        "customizable": false,
-        "show": true,
-        "style": {
-            "novel": {
-                "background": "#000",
-                "background_second": "#202020",
-                "color": "#fff"
-            },
-            "link": {
-                "color_link": "#fcf",
-                "color_visited": "#857",
-                "color_hover": "#f03"
-            },
-            "sublist": {
-                "color": "#fff",
-                "hover": "#f03",
-                "visited": "#bf0026"
-            }
-        },
-        "css": ""
-    },
-    {
-        "name": "ブラックモード2〔小説家になろう〕",
-        "description": "サイトのデフォルト",
-        "customizable": false,
-        "show": true,
-        "style": {
-            "novel": {
-                "background": "#000",
-                "background_second": "#202020",
-                "color": "#ccc"
-            },
-            "link": {
-                "color_link": "#ff9",
-                "color_visited": "#857",
-                "color_hover": "#cf0"
-            },
-            "sublist": {
-                "color": "#ccc",
-                "hover": "#cf0",
-                "visited": "#99bf00"
-            }
-        },
-        "css": ""
-    },
-    {
-        "name": "通常1〔小説家になろう〕",
-        "description": "サイトのデフォルト",
-        "customizable": false,
-        "show": true,
-        "style": {
-            "novel": {
-                "background": "#ccf",
-                "background_second": "#d9d9ff",
-                "color": "#444"
-            },
-            "link": {
-                "color_link": "#00f",
-                "color_visited": "#009",
-                "color_hover": "#00f"
-            },
-            "sublist": {
-                "color": "#444",
-                "hover": "#00f",
-                "visited": "#0000bf"
-            }
-        },
-        "css": ""
-    },
-    {
-        "name": "通常2〔小説家になろう〕",
-        "description": "サイトのデフォルト",
-        "customizable": false,
-        "show": true,
-        "style": {
-            "novel": {
-                "background": "#cfc",
-                "background_second": "#b3dfb3",
-                "color": "#444"
-            },
-            "link": {
-                "color_link": "#00f",
-                "color_visited": "#009",
-                "color_hover": "#00f"
-            },
-            "sublist": {
-                "color": "#444",
-                "hover": "#00f",
-                "visited": "#0000bf"
-            }
-        },
-        "css": ""
-    },
-    {
-        "name": "シンプル〔小説家になろう〕",
-        "description": "サイトのデフォルト",
-        "customizable": false,
-        "show": true,
-        "style": {
-            "novel": {
-                "background": "#fafafa",
-                "background_second": "#dbdbdb",
-                "color": "#444"
-            },
-            "link": {
-                "color_link": "#00f",
-                "color_visited": "#009",
-                "color_hover": "#393"
-            },
-            "sublist": {
-                "color": "#444",
-                "hover": "#393",
-                "visited": "#267326"
-            }
-        },
-        "css": ""
-    },
-    {
-        "name": "おすすめ設定〔小説家になろう〕",
-        "description": "サイトのデフォルト",
-        "customizable": false,
-        "show": true,
-        "style": {
-            "novel": {
-                "background": "#edf7ff",
-                "background_second": "#cfd8df",
-                "color": "#000"
-            },
-            "link": {
-                "color_link": "#00f",
-                "color_visited": "#009",
-                "color_hover": "#00f"
-            },
-            "sublist": {
-                "color": "#444",
-                "hover": "#00f",
-                "visited": "#0000bf"
-            }
-        },
-        "css": ""
-    }
-]
-
-export const localFontFamily = [
-    {
-        "name": "ゴシック体〔デフォルト〕",
-        "description": "Narou Tweaker オリジナル",
-        "customizable": false,
-        "show": true,
-        "font": `NTSymbol, "メイリオ", "Meiryo", 'Hiragino Kaku Gothic ProN', 'ヒラギノ角ゴ ProN W3', sans-serif`,
-        "css": ""
-    },
-    {
-        "name": "明朝体〔デフォルト〕",
-        "description": "Narou Tweaker オリジナル",
-        "customizable": false,
-        "show": true,
-        "font": `NTSymbol, '游明朝',YuMincho,'ヒラギノ明朝 Pr6N','Hiragino Mincho Pr6N','ヒラギノ明朝 ProN','Hiragino Mincho ProN','ヒラギノ明朝 StdN','Hiragino Mincho StdN',HiraMinProN-W3,'HGS明朝B','HG明朝B',serif`,
-        "css": ""
-    },
-    {
-        "name": "Noto Sans〔標準〕",
-        "description": "Narou Tweaker オリジナル",
-        "customizable": false,
-        "show": true,
-        "font": `NTSymbol, "Noto Sans JP", sans-serif`,
-        "css": ""
-    },
-    {
-        "name": "游ゴシック〔標準〕",
-        "description": "Narou Tweaker オリジナル",
-        "customizable": false,
-        "show": true,
-        "font": `NTSymbol, "Yu Gothic", 游ゴシック, YuGothic, 游ゴシック体, sans-serif`,
-        "css": ""
-    },
-    {
-        "name": "源暎エムゴ〔標準〕",
-        "description": "Narou Tweaker オリジナル",
-        "customizable": false,
-        "show": true,
-        "font": `NTSymbol, "源暎エムゴ", sans-serif`,
-        "css": "",
-        "license": `Copyright (c) 2020-2021, おたもん (http://okoneya.jp/font/), with Reserved Font Name '源暎'.\nThis Font Software is licensed under the SIL Open Font License, Version 1.1.`
-    },
-    {
-        "name": "BIZ UDPゴシック〔標準〕",
-        "description": "Narou Tweaker オリジナル",
-        "customizable": false,
-        "show": true,
-        "font": `NTSymbol, "BIZ UDPGothic", sans-serif`,
-        "css": ""
-    },
-    {
-        "name": "新コミック体〔標準〕",
-        "description": "Narou Tweaker オリジナル",
-        "customizable": false,
-        "show": true,
-        "font": `NTSymbol, "新コミック体", sans-serif`,
-        "css": "",
-        "license": `Copyright (C) 2014 Adobe Systems Incorporated. All Rights Reserved.\nCopyright (C) 2014 FONT910. All Rights Reserved.\nLicensed under the Apache License, Version 2.0 (http://www.apache.org/licenses/LICENSE-2.0)`
-    },
-    {
-        "name": "DotGothic16〔標準〕",
-        "description": "Narou Tweaker オリジナル",
-        "customizable": false,
-        "show": true,
-        "font": `NTSymbol, "DotGothic16", sans-serif`,
-        "css": "",
-        "license": `Copyright (C) 2014 Adobe Systems Incorporated. All Rights Reserved.\nCopyright (C) 2014 FONT910. All Rights Reserved.\nLicensed under the Apache License, Version 2.0 (http://www.apache.org/licenses/LICENSE-2.0)`
-    },
-    {
-        "name": "Noto Serif〔標準〕",
-        "description": "Narou Tweaker オリジナル",
-        "customizable": false,
-        "show": true,
-        "font": `NTSymbol, "Noto Serif JP", serif`,
-        "css": ""
-    },
-    {
-        "name": "BIZ UDP明朝〔標準〕",
-        "description": "Narou Tweaker オリジナル",
-        "customizable": false,
-        "show": true,
-        "font": `NTSymbol, "BIZ UDPMincho", serif`,
-        "css": ""
-    },
-    {
-        "name": "さわらび明朝〔標準〕",
-        "description": "Narou Tweaker オリジナル",
-        "customizable": false,
-        "show": true,
-        "font": `NTSymbol, "Sawarabi Mincho", serif`,
-        "css": ""
-    },
-    {
-        "name": "源暎こぶり明朝〔標準〕",
-        "description": "Narou Tweaker オリジナル",
-        "customizable": false,
-        "show": true,
-        "font": `NTSymbol, "源暎こぶり明朝", serif`,
-        "css": "",
-        "license": `Copyright (c) 2017-2022, おたもん (http://okoneya.jp/font/), with Reserved Font Name '源暎' and 'GenEi'.\nThis Font Software is licensed under the SIL Open Font License, Version 1.1.`
-    },
-    {
-        "name": "源暎ちくご明朝〔標準〕",
-        "description": "Narou Tweaker オリジナル",
-        "customizable": false,
-        "show": true,
-        "font": `NTSymbol, "源暎ちくご明朝", serif`,
-        "css": "",
-        "license": `Copyright (c) 2017-2022, おたもん (http://okoneya.jp/font/), with Reserved Font Name '源暎' and 'GenEi'.\nThis Font Software is licensed under the SIL Open Font License, Version 1.1.`
-    },
-]
-
-export const localFont = {
-    "font-size": 100,
-    "line-height": 180,
-    "text-rendering": "optimizeLegibility",
-    "width": 600
-}
-
-export const replacePattern = {
-    pattern: "",
-    replacement: "",
-    regex: false,
-    active: true
-}
-
-export const narouNetwrokUrlPattern = [
-    /^(h?)(ttps?:\/\/(.*)\.syosetu\.com)/,
-    /^(h?)(ttps?:\/\/kasasagi\.hinaproject\.com)/
-]

@@ -1,7 +1,14 @@
-import { narouNetwrokUrlPattern } from "./option";
-
-// HTML要素の文字列置換
-export function replaceUrl(_elem, isWarning:boolean=false) {
+/**
+ * DOM内にあるURLをハイパーリンクに変換する。
+ * @param element - HTML文字列
+ * @param {boolean} isWarning  - 外部リンクに警告を表示する
+ * @returns - HTML文字列
+*/
+export function replaceUrl(element: any, isWarning:boolean=false) {
+    const narouNetwrokUrlPattern = [
+        /^(h?)(ttps?:\/\/(.*)\.syosetu\.com)/,
+        /^(h?)(ttps?:\/\/kasasagi\.hinaproject\.com)/
+    ]
 
     function isUrlWhitelisted(url){
         const whitelist = narouNetwrokUrlPattern
@@ -33,7 +40,7 @@ export function replaceUrl(_elem, isWarning:boolean=false) {
         return str.replace(regexp_url, regexp_makeLink);
     }
 
-    var nodes = $(_elem)[0].childNodes;
+    var nodes = $(element)[0].childNodes;
     $.each(nodes, function(_, w) {
         if(w.innerHTML==undefined){
             $.each($.parseHTML(replaceUrlHtml(w.data)), function(_, x) {
@@ -46,8 +53,12 @@ export function replaceUrl(_elem, isWarning:boolean=false) {
     });
 }
 
-// 記号をエスケープする（DOMインジェクション対策用）
-export function escapeHtml(string:string){
+/**
+ * DOMをエスケープする。
+ * @param {string} string - HTML文字列
+ * @returns {string} - エスケープ済の文字列
+*/
+export function escapeHtml(string:string): string{
     /*
     var p = $("<p>")
     p.text(string)
@@ -72,7 +83,11 @@ export function escapeHtml(string:string){
     });
 }
 
-// 正規表現文字列の記号をエスケープする
+/**
+ * 正規表現文字列の記号をエスケープする
+ * @param elem - 正規表現を含む文字列
+ * @returns - エスケープ済の文字列
+*/
 export function escapeRegex(string: string): string{
     var reRegExp = /[\\^$.*+?()[\]{}|]/g
     var reHasRegExp = new RegExp(reRegExp.source);
@@ -81,81 +96,21 @@ export function escapeRegex(string: string): string{
             : string;
 }
 
-// 日付を日本語で表示（yyyy年MM月dd日）
-export function getDateStringJapanese(date:Date=new Date()): string{
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1);
-    const day = String(date.getDate());
-    return `${year}年${month}月${day}日`;
-}
-
-// 日付を表示（yyyy-MM-dd）
-export function getDateString(date:Date=new Date(), divider:string = "-"): string{
-    if(date===null){return ""}
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}${divider}${month}${divider}${day}`;
-}
-
-// 日時を表示
-export function getDatetimeFromString(datetimeString:string): Date{
-    return new Date(datetimeString)
-}
-
-// 日付を表示（yyyy/MM/dd HH:mm:ss.SSS）
-export function getDatetimeString(date:Date=new Date()): string{
-    if(date===null){return ""}
-    return date.getFullYear() + '/' + ('0' + (date.getMonth() + 1)).slice(-2) + '/' +('0' + date.getDate()).slice(-2) + ' ' +  ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2) + ':' + ('0' + date.getSeconds()).slice(-2) + '.' + date.getMilliseconds();
-}
-
-export function getDatetimeStringForFilename(date:Date=new Date()): string{
-    if(date===null){return ""}
-    return date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' +('0' + date.getDate()).slice(-2) + ' ' +  ('0' + date.getHours()).slice(-2) + '-' + ('0' + date.getMinutes()).slice(-2) + '-' + ('0' + date.getSeconds()).slice(-2);
-
-}
-
-// 日付を表示（yyyy/MM/dd HH:mm）
-export function getDatetimeStringWithoutSecond(date:Date=new Date()): string{
-    if(date===null){return ""}
-    return date.getFullYear() + '/' + ('0' + (date.getMonth() + 1)).slice(-2) + '/' +('0' + date.getDate()).slice(-2) + ' ' +  ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2);
-}
-
-// 昨日の日付を取得
-export function getYesterday(): Date{
-    var yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1)
-    return yesterday
-}
-
-// コンマ付きの数字（文字列）を数値型に変換
+/**
+ * コンマ付きの数値文字列を数値型に変換
+ * @param {string} text - コンマ付きの数値文字列（例：1,000）
+ * @returns {number} - 数値
+*/
 export function parseIntWithComma(text: string): number{
     return parseInt(text.replace(/,/g, ""))
 }
 
-// 分を「dd日hh時間mm分」に変換
-export function minuteStringJapanese(minute): string{
-    minute = parseFloat(minute)
-    if(isNaN(minute) || minute<0){
-        return ``
-    }
-
-    var hour = Math.floor(minute / 60)
-    minute -= (hour * 60)
-    var day = Math.floor(hour / 24)
-    hour -= (day * 24)
-
-    if(hour==0){
-        return `${minute}分`
-    }else if(day==0 && hour > 0){
-        return `${hour}時間${minute}分`
-    }else{
-        return `${day.toLocaleString()}日${hour}時間${minute}分`
-    }
-}
-
-/* Convert Sasie Tags */
-export function convertSasieTags(element:any){
+/**
+ * 小説本文に含まれる挿絵タグをHTML要素に置換
+ * @param element - 本文（DOM）
+ * @returns - 挿絵タグ変換済みの本文
+*/
+export function convertSasieTags(element: any){
     var re = /<(i[0-9]+)\|([0-9]+)>/g
     var to = `<a href="//$2.mitemin.net/$1/" target="_blank"><img src="//$2.mitemin.net/userpageimage/viewimagebig/icode/$1/" alt="挿絵(By みてみん)" border="0"></a>`
     var nodes = $(element)[0].childNodes;
@@ -172,16 +127,15 @@ export function convertSasieTags(element:any){
 }
 
 
-/* 小説家になろうの内部関数 */
-/* Count Chars */
-/*
-関数名:	文字数を取得
-引数:	strings							文字数をカウントする文字列
-		shouldCountSpecialTag			特殊タグをカウントするか
-		shouldCountBlankLF				空白改行文字をカウントするか
-		shouldCountHTMLSpecialCharacter	HTML特殊文字をエスケープするか
+/**
+ * 文字数を取得（小説家になろうの内部関数 char_count.js）
+ * @param {string} strings - 文字数をカウントする文字列
+ * @param {boolean} shouldCountSpecialTag - 特殊タグをカウントするか
+ * @param {boolean} shouldCountBlankLF - 空白改行文字をカウントするか
+ * @param {boolean} shouldCountHTMLSpecialCharacter - HTML特殊文字をエスケープするか
+ * @returns {number} - 文字数
 */
-export function countCharacters(strings, shouldCountSpecialTag, shouldCountBlankLF, shouldCountHTMLSpecialCharacter){
+export function countCharacters(strings:string, shouldCountSpecialTag:boolean, shouldCountBlankLF:boolean, shouldCountHTMLSpecialCharacter:boolean): number{
 	//改行コードを統一
 	strings = strings.replace(/\r\n|\r/g, '\n');
 
@@ -209,8 +163,13 @@ export function countCharacters(strings, shouldCountSpecialTag, shouldCountBlank
 
 }
 
-/* Convert Ruby Tags */
-// 文字列中のルビタグを相互変換
+/**
+ * 文字列中のルビタグを相互変換（小説家になろうの内部関数 char_count.js）
+ * @param {string} text - 元の文字列
+ * @param {boolean} toTags - true:ルビタグ→HTML要素　false:HTML要素→ルビタグ
+ * @param {boolean} additionalKanji - 漢字の判定範囲を拡大する（「𠮟々ヵヶヽヾゝゞ〃仝」を含むようにする）
+ * @returns {string} - 変換後の文字列
+*/
 export function convertRubyTags(text:string, toTags:boolean, additionalKanji:boolean = false): string{
 
 	const min = 1;							// ルビ対応可能な最小文字数
@@ -225,7 +184,7 @@ export function convertRubyTags(text:string, toTags:boolean, additionalKanji:boo
         alphaKanji = 'A-zＡ-ｚ一-龠𠮟々ヵヶヽヾゝゞ〃仝'
     }
 
-	var re, to;
+	var re: RegExp, to: string;
 
 	if(toTags){
 		// 青空文庫形式の場合
@@ -265,8 +224,12 @@ export function convertRubyTags(text:string, toTags:boolean, additionalKanji:boo
 	return text;
 }
 
-// 原稿用紙で何枚か数える
-export function countManuscriptPaper(string){
+/**
+ * 原稿用紙で何枚か数える（小説家になろうの内部関数 char_count.js）
+ * @param {string} string - 文字列
+ * @returns {number} - 400字詰め原稿用紙換算の枚数
+*/
+export function countManuscriptPaper(string: string): number{
 	var len = countCharacters(string, false, true, false);
 	var cnt = 1;
 	if(len != 0){
@@ -276,19 +239,29 @@ export function countManuscriptPaper(string){
 	return cnt;
 }
 
-// 行数を数える
-export function countLines(string){
+/**
+ * 行数を数える（小説家になろうの内部関数 char_count.js）
+ * @param {string} string - 文字列
+ * @returns {number} - 行数
+*/
+export function countLines(string: string): number{
 	string = string.replace(/\r\n|\r/g, '\n');
 	var cnt = string.match(/\n/g);
+    var l: number
 	if(cnt != null){
-		cnt = cnt.length + 1;
+		l = cnt.length + 1;
 	}else{
-		cnt = 1;
+		l = 1;
 	}
-	return cnt;
+	return l;
 }
-// 自動字下げ
-export function autoIndent(novel){
+
+/**
+ * 自動字下げ（小説家になろうの内部関数 char_count.js）
+ * @param {string} novel - 変換前の文字列
+ * @returns {string} - 変換後の文字列
+*/
+export function autoIndent(novel: string): string{
 	var text = novel.split(/\n　+「/g);
 	novel = text.join('\n「');
 
@@ -303,58 +276,13 @@ export function autoIndent(novel){
 	return novel;
 }
 
-// 読了時間（分）
-export function countTime(string){
+/**
+ *  読了時間（分）（小説家になろうの内部関数 char_count.js）
+ * @param {string} string - 文字列
+ * @returns {number} - 読了時間
+*/
+export function countTime(string: string): number{
     return Math.ceil(countCharacters(string, false, false, false) / 500)
-}
-
-/* Ncode Parse */
-/* https://zenn.dev/qnighy/articles/5faa90ddfef843 */
-/* By Masaki Hara (2021/07/17)*/
-const RE_NCODE = /^n(\d{4})([a-z]*)$/i;
-
-function parseBase26(s) {
-    const sl = s.toLowerCase();
-    let ret = 0;
-    for (let i = 0; i < sl.length; i++) {
-        ret = ret * 26 + (sl.charCodeAt(i) - 0x61);
-    }
-    return ret;
-}
-
-function stringifyBase26(n) {
-    if (n === 0) return "a";
-    const digits:Array<number> = [];
-    let m = n;
-    while (m > 0) {
-        digits.push(m % 26 + 0x61);
-        m = (m / 26) | 0;
-    }
-    digits.reverse();
-    return String.fromCharCode(...digits);
-}
-
-export function ncodeToIndex(ncode: string) {
-    const match = RE_NCODE.exec(ncode);
-    if (!match) throw new Error(`Not an ncode: ${JSON.stringify(ncode)}`);
-    const lo = parseInt(match[1], 10);
-    const hi = parseBase26(match[2]);
-    return hi * 9999 + lo;
-}
-
-export function indexToNcode(index: number|string) {
-    if(typeof index === "string"){
-        index = Number(index)
-    }
-    const lo = (index - 1) % 9999 + 1;
-    const hi = ((index - 1) / 9999) | 0;
-    let lostr = lo.toString();
-    while (lostr.length < 4) lostr = `0${lostr}`;
-    return `n${lostr}${stringifyBase26(hi)}`;
-}
-
-export function normalizeNcode(ncode: string) {
-    return indexToNcode(ncodeToIndex(ncode));
 }
 
 export function getNovelTagURL(tag, site, param){
@@ -401,14 +329,25 @@ export function getNovelSearchURL(site: string, param: any){
     return url
 }
 
-/* 文字列の出現回数を検索 */
-export function searchCount(str: string, pattern: string | RegExp){
-    return str.split(pattern).length - 1
+/**
+ * 文字列にパターンが何回出現するかを数える
+ * @param {string} string - 文字列
+ * @param {string|RegExp} pattern - パターン
+ * @returns {number} - 出現回数
+*/
+export function searchCount(string: string, pattern: string | RegExp): number{
+    return string.split(pattern).length - 1
 }
 
-/* 文字列の類似度を計算 */
-/* https://qiita.com/gomaoaji/items/603904e31f965d759293 */
-export function stringSimilarity(strA:string, strB:string){
+/**
+ *  文字列同士の類似度を計算
+ * @param {string} strA - 文字列1
+ * @param {string} strB - 文字列2
+ * @returns {number} - 類似度
+*/
+export function stringSimilarity(strA:string, strB:string): number{
+    /* https://qiita.com/gomaoaji/items/603904e31f965d759293 */
+
     function getToNgram(text: string, n: number = 3){
         if(n===undefined){
             n = 3

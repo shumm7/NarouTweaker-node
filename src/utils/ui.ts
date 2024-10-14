@@ -1,5 +1,5 @@
 /* Info Icon*/
-function balloonGeneral(html:string, icon:string, href:string|undefined=undefined){
+function balloonGeneral(html:string, icon:string, href?:string){
     var object
     if(href==undefined){
         object = $('<span class="ui-balloon ui-information-balloon"><i class="fa-solid '+icon+' ui-balloon--icon"></i><p class="ui-balloon--text disabled">' + html + '</p></span>')
@@ -8,13 +8,19 @@ function balloonGeneral(html:string, icon:string, href:string|undefined=undefine
     }
     object.hover(
         function() {
-            let offset:any = $(this).offset();
-            let height:any = $(this).height();
-            let width:any = $(this).children(".ui-balloon--text").width();
-            $(this).children(".ui-balloon--text").css({
-                top: (offset.top + height + 10) + "px",
-                left: (offset.left - width/2 - 1.5) + "px"
-            })
+            const offset: JQueryCoordinates|undefined = $(this).offset();
+            const height: number|undefined = $(this).height();
+            const width: number|undefined = $(this).children(".ui-balloon--text").width();
+
+            if(offset!==undefined && height!==undefined && width!==undefined){
+                const top: number|undefined = offset.top + height + 10
+                const left: number|undefined = offset.left - width/2 - 1.5 
+                $(this).children(".ui-balloon--text").css({
+                    top: `${top}px`,
+                    left: `${left}px`
+                })
+            }
+            
             $(this).children('.ui-balloon--text').removeClass("disabled");
         },
         function(){
@@ -24,14 +30,14 @@ function balloonGeneral(html:string, icon:string, href:string|undefined=undefine
     return object;
 }
 
-export function addInfoIconBalloon(html:string, href:string|undefined=undefined){
+export function addInfoIconBalloon(html:string, href?:string){
     return balloonGeneral(html, "fa-circle-info", href)
 }
 
-export function addQuestionIconBalloon(html:string, href:string|undefined=undefined){
+export function addQuestionIconBalloon(html:string, href?:string){
     return balloonGeneral(html, "fa-circle-question", href)
 }
 
-export function addExclamationIconBalloon(html:string, href:string|undefined=undefined){
+export function addExclamationIconBalloon(html:string, href?:string){
     return balloonGeneral(html, "fa-circle-exclamation", href)
 }
