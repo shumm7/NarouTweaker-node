@@ -2,18 +2,10 @@ import { CSS_String } from "./type"
 /**
  * スキンリスト(v1)
  */
-export type SkinsV1 = Array<SkinV1>
+export type SkinsV1 = Array<SkinV1_Data>
 
-/**
- * スキン(v1)
- * @param {string} name - スキン名
- * @param {string} description - 説明文
- * @param {boolean} customizable - 編集可能かどうか
- * @param {boolean} show - 表示するかどうか
- * @param {SkinV1_Style} style - スタイルデータのオブジェクト
- * @param {CSS_String} css - カスタムCSS
- */
-export class SkinV1{
+
+export class SkinV1_Data {
     name: string = "新規スキン"
     description: string = ""
     customizable: boolean =  true
@@ -46,7 +38,18 @@ export class SkinV1{
             }
         }
     }
+}
 
+/**
+ * スキン(v1)
+ * @param {string} name - スキン名
+ * @param {string} description - 説明文
+ * @param {boolean} customizable - 編集可能かどうか
+ * @param {boolean} show - 表示するかどうか
+ * @param {SkinV1_Style} style - スタイルデータのオブジェクト
+ * @param {CSS_String} css - カスタムCSS
+ */
+export class SkinV1 extends SkinV1_Data{
     get(){
         return {
             name: this.name,
