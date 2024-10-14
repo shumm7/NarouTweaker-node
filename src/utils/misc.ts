@@ -46,7 +46,7 @@ export function defaultValue(value, def){
     return value
 }
 
-export function check(elm, value, _default) {
+export function check(elm: any, value, _default?) {
     if(value!=true && value!=false){
         if(_default==undefined){
             value = false

@@ -1,13 +1,66 @@
+import { getOptionFromID, getOptionPageFromID } from "options/_lib/optionUI_libs"
 import { CustomIconIDs, novelIconList, workspaceIconList, workspaceMenuIconList } from "./header"
 import { getExtensionVersion } from "./misc"
 import { CSS_String, ReplacePatterns } from "./type"
 import { FontFamiliesV1 } from "./v1_font"
 import { SkinsV1 } from "./v1_skin"
+import { OptionUI_Item, OptionUI_ItemID } from "options/_lib/optionUI_type"
+
+export type OptionID = string
+
+class Options {
+    constructor(data?:Object){
+        if(data instanceof Object){
+            Object.keys(data).forEach(function(key){
+                this.set(key, data[key])
+            })
+        }
+    }
+
+    public set(obj: Object):void
+    public set(key: OptionID, value: any):void
+    public set(key?: OptionID|Object, value?: any):void{
+        if(key!==undefined){
+            if(typeof key==="string"){
+                var value = this.check_value(key, value)
+                if(value!==undefined){
+                    this[key] = value
+                }
+            }else if(value instanceof Object){
+                value = this.exception_process(value)
+                Object.keys(key).forEach(function(k){
+                    this.set(k, key[k])
+                })
+            }
+        }
+    }
+
+    public get(): Object{
+        var ret = {}
+        for (const [key, value] of Object.entries(this)){
+            if(typeof value !== "undefined" && typeof value!=="function"){
+                ret[key] = value
+            }
+        }
+        return ret
+    }
+
+    protected exception_process(obj: Record<string,any>): Record<string,any>{
+        return obj
+    }
+
+    protected check_value(key: OptionID, value: any): any{
+        if(typeof this[key] === typeof value && typeof this[key]!=="function"){
+            
+            return value
+        }
+    }
+}
 
 /**
  * 設定データ（storage.local）
  */
-export class LocalOptions{
+export class LocalOptions extends Options{
     /* Extension */
     extOptionsVersion: string = getExtensionVersion()
     extAdvancedSettings: boolean = false
@@ -270,33 +323,21 @@ export class LocalOptions{
         }
     ]
 
-    constructor(data?:Object){
-        if(data instanceof Object){
-            Object.keys(data).forEach(function(key){
-                this.set(key, data[key])
-            })
+    // バージョンアップ時の対応
+    protected exception_process(obj: Record<string,any>): Record<string,any>{
+        if("novelCustomHeader" in obj && obj.novelCustomHeader === true){
+            console.log(`Converted value: { novelCustomHeader: true } -> { novelCustomHeaderType: "2" } `)
+            obj.novelCustomHeaderType = "2"
+        }else if("novelCustomHeader" in obj && obj.novelCustomHeader === false){
+            console.log(`Converted value: { novelCustomHeader: false } -> { novelCustomHeaderType: "1" } `)
+            obj.novelCustomHeaderType = "1"
         }
+
+        return obj
     }
 
-    public set(obj: Object):void
-    public set(key: string, value: any):void
-    public set(key?: string|Object, value?: any):void{
-        if(key!==undefined){
-            if(typeof key==="string"){
-                var value = this.check_value(key, value)
-                if(value!==undefined){
-                    this[key] = value
-                }
-            }else if(value instanceof Object){
-                Object.keys(key).forEach(function(k){
-                    this.set(k, key[k])
-                })
-            }
-        }
-    }
-
-    private check_value(key: string, value: any): any{
-        if(typeof this[key] === typeof value){
+    protected check_value(key: OptionID, value: any): any{
+        if(typeof this[key] === typeof value && typeof this[key]!=="function"){
             if(key === "extOptionsVersion"){
                 return
             }else if(["kasasagiGraphType_GeneralDay", "kasasagiGraphType_GeneralTotal", "kasasagiGraphType_ChapterUnique", "kasasagiGraphType_DayPV", "kasasagiGraphType_DayUnique", "kasasagiGraphType_MonthPV", "kasasagiGraphType_MonthUnique"].includes(key)){
@@ -343,16 +384,54 @@ export class LocalOptions{
                     }
                 })
                 return list
+            }else if("extFavoriteOptions" === key){
+                if(Array.isArray(value)){
+                    var list: Array<OptionUI_ItemID> = []
+                    value.forEach(function(option){
+                        var optionData: OptionUI_Item|undefined = getOptionFromID(option)
+                        if(optionData?.value?.buttons?.favorite){
+                            list.push(optionData.id)
+                        }
+                    })
+                    var listNoDuplicate = list.filter((e, i) => {
+                        return list.indexOf(e) == i;
+                    }) 
+                    return listNoDuplicate
+                }
+                return
+            }else if("extPopupDefaultPage" === key){
+                if(value!=="__auto__"){
+                    var page = getOptionPageFromID(value)
+                    if((page?.popup?.defaultPage && page?.title && page?.id)){
+                            return value
+                    }
+                }
+                return
             }
             return value
         }
     }
 }
 
-export const defaultGlobalOption = {
-    extLaunchCount: 0,
-    extLastLaunchTime: "",
-    history: [],
-    history_data: {},
-    workspaceImpressionMarked: {},
+/**
+ * 設定データ（storage.sync）
+ */
+export class SyncOptions extends Options{
+    extLaunchCount: number = 0
+    extLastLaunchTime: string = ""
+    history: Array<any> = []
+    history_data: Object = {}
+    workspaceImpressionMarked: Object = {}
+
+    // バージョンアップ時の対応
+    protected exception_process(obj: Record<string,any>): Record<string,any>{
+        return obj
+    }
+
+    protected check_value(key: OptionID, value: any): any{
+        if(typeof this[key] === typeof value && typeof this[key]!=="function"){
+            
+            return value
+        }
+    }
 }

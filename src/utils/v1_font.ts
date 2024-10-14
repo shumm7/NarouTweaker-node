@@ -24,7 +24,6 @@ export class FontFamilyV1 {
     license: string = ""
     css: CSS_String = ""
 
-    constructor(f: FontFamilyV1)
     constructor(f?: FontFamilyV1|Object|null){
         if(f instanceof Object){
             if("name" in f && typeof f.name === "string"){

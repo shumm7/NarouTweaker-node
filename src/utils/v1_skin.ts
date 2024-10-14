@@ -46,6 +46,33 @@ export class SkinV1{
             }
         }
     }
+
+    get(){
+        return {
+            name: this.name,
+            description: this.description,
+            customizable: this.customizable,
+            show: this.show,
+            css: this.css,
+            style: {
+                link: {
+                    color_hover: this.style.link.color_hover,
+                    color_link: this.style.link.color_link,
+                    color_visited: this.style.link.color_visited
+                },
+                novel: {
+                    background: this.style.novel.background,
+                    background_second: this.style.novel.background_second,
+                    color: this.style.novel.color
+                },
+                sublist: {
+                    color: this.style.sublist.color,
+                    hover: this.style.sublist.hover,
+                    visited: this.style.sublist.visited
+                }
+            }
+        }
+    }
 }
 class SkinV1_Style {
     novel: SkinV1_Style_Novel = new SkinV1_Style_Novel
