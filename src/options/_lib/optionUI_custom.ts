@@ -1,3 +1,7 @@
+import { OptionHideParammeters } from "./utils"
+
+const oh = OptionHideParammeters
+
 type OptionUI_Custom = Record<string,string>
 
 export const OptionUI_CustomElement: OptionUI_Custom = {
@@ -280,13 +284,13 @@ export const OptionUI_CustomElement: OptionUI_Custom = {
     ui_novelCustomHeaderDraggable: `
         <div class="draggable_area_container" id="novel_header_icon">
             <div class="draggable_area_outer">
-                <div class="title option-hide option-hide--force-hide" data-for="novelCustomHeaderType" data="2">左</div>
-                <div class="title option-hide option-hide--force-hide" data-for="novelCustomHeaderType novelCustomHeaderType" data="0 1">上部</div>
+                <div class="title option-hide option-hide--force-hide" ${oh.key}="novelCustomHeaderType" ${oh.value}="2">左</div>
+                <div class="title option-hide option-hide--force-hide" ${oh.key}="novelCustomHeaderType novelCustomHeaderType" ${oh.value}="0 1" ${oh.logic}="and">上部</div>
                 <div class="draggable_area" id="left" name="novel-header"></div>
             </div>
             <div class="draggable_area_outer">
-                <div class="title option-hide option-hide--force-hide" data-for="novelCustomHeaderType" data="2">右</div>
-                <div class="title option-hide option-hide--force-hide" data-for="novelCustomHeaderType novelCustomHeaderType" data="0 1">下部</div>
+                <div class="title option-hide option-hide--force-hide" ${oh.key}="novelCustomHeaderType" ${oh.value}="2">右</div>
+                <div class="title option-hide option-hide--force-hide" ${oh.key}="novelCustomHeaderType novelCustomHeaderType" ${oh.value}="0 1" ${oh.logic}="and">下部</div>
                 <div class="draggable_area" id="right" name="novel-header"></div>
             </div>
             <div class="draggable_area_outer">

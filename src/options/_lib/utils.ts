@@ -8,11 +8,11 @@ import { coloris, init } from "@melloware/coloris";
 import hljs from 'highlight.js';
 
 export class OptionHideParammeters {
-    readonly key: string = "data-for"
-    readonly value: string = "data"
-    readonly logic: string = "data-rule"
-    readonly type: string = "data-type"
-    readonly mode: string = "mode"
+    static readonly key: string = "data-for"
+    static readonly value: string = "data"
+    static readonly logic: string = "data-rule"
+    static readonly type: string = "data-type"
+    static readonly mode: string = "mode"
 }
 
 
@@ -26,7 +26,7 @@ export class OptionHideParammeters {
  */
 export function optionHide(){
     $(".option-hide").each(function(){
-        const p = new OptionHideParammeters
+        const p = OptionHideParammeters
         let elm = $(this)
         let keys: Array<string> = []
         let values: Array<string> = []
