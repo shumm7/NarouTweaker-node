@@ -1,4 +1,8 @@
+import jQuery from "jquery";
+Object.assign(window, { $: jQuery, jQuery });
+
 openDropdown()
+
 
 function openDropdown(){
     chrome.tabs.query({active: true, lastFocusedWindow:true}, tabs => {

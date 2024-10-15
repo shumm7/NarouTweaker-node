@@ -6,59 +6,10 @@ import { FontFamiliesV1 } from "./v1_font"
 import { SkinsV1 } from "./v1_skin"
 import { OptionID, OptionUI_Item, OptionUI_ItemID } from "options/_lib/optionUI_type"
 
-class Options {
-    constructor(data?:Object){
-        if(data instanceof Object){
-            Object.keys(data).forEach(function(key){
-                this.set(key, data[key])
-            })
-        }
-    }
-
-    public set(obj: Object):void
-    public set(key: OptionID, value: any):void
-    public set(key?: OptionID|Object, value?: any):void{
-        if(key!==undefined){
-            if(typeof key==="string"){
-                var value = this.check_value(key, value)
-                if(value!==undefined){
-                    this[key] = value
-                }
-            }else if(value instanceof Object){
-                value = this.exception_process(value)
-                Object.keys(key).forEach(function(k){
-                    this.set(k, key[k])
-                })
-            }
-        }
-    }
-
-    public get(): Object{
-        var ret = {}
-        for (const [key, value] of Object.entries(this)){
-            if(typeof value !== "undefined" && typeof value!=="function"){
-                ret[key] = value
-            }
-        }
-        return ret
-    }
-
-    protected exception_process(obj: Record<string,any>): Record<string,any>{
-        return obj
-    }
-
-    protected check_value(key: OptionID, value: any): any{
-        if(typeof this[key] === typeof value && typeof this[key]!=="function"){
-            
-            return value
-        }
-    }
-}
-
 /**
  * 設定データ（storage.local）
  */
-export class LocalOptions extends Options{
+export class LocalOptions{
     /* Extension */
     extOptionsVersion: string = getExtensionVersion()
     extAdvancedSettings: boolean = false
@@ -321,8 +272,80 @@ export class LocalOptions extends Options{
         }
     ]
 
+    constructor(data?: Record<string,any>){
+        var p:any = this
+        if(data instanceof Object){
+            Object.keys(data).forEach(function(key){
+                p.set(key, data[key])
+            })
+        }
+    }
+
+    public set = (key?: OptionID|Object, value?: any):void => {
+        if(key!==undefined){
+            if(typeof key==="string"){
+                var value = this._checkValue(key, value)
+                if(value!==undefined){
+                    this[key] = value
+                }
+            }else if(value instanceof Object){
+                value = this._exceptionProcess(value)
+                Object.keys(key).forEach(function(k){
+                    this.set(k, key[k])
+                })
+            }
+        }
+    }
+
+    public get = (includeParameters?: null|OptionID|Array<OptionID>): Record<string,any> => {
+        var ret = {}
+        if(includeParameters!==undefined && includeParameters!==null){
+            var params: Array<OptionID>
+            if(typeof includeParameters==="string"){
+                params = [includeParameters]
+            }else{
+                params = includeParameters
+            }
+
+            const obj = Object.entries(this)
+            for (const key of includeParameters){
+                var value: any = obj[key]
+                if(typeof value!=="undefined" && typeof value!=="function"){
+                    ret[key] = value
+                }
+            }
+            return ret
+        }else{
+            for (const [key, value] of Object.entries(this)){
+                if(typeof value !== "undefined" && typeof value!=="function"){
+                    ret[key] = value
+                }
+            }
+            return ret
+        }
+    }
+
+    public param = (key?: string): any => {
+        if(key){
+            var value = this[key]
+            if(typeof value !== "undefined" && typeof value!=="function"){
+                return value
+            }
+        }
+    }
+
+    public check = (key?: string, value?: any): any => {
+        if(key){
+            if(value===undefined){
+                if(this)
+                value = this[key]
+            }
+            return this._checkValue(key, value)
+        }
+    }
+
     // バージョンアップ時の対応
-    protected exception_process(obj: Record<string,any>): Record<string,any>{
+    protected _exceptionProcess = (obj: Record<string,any>): Record<string,any> => {
         if("novelCustomHeader" in obj && obj.novelCustomHeader === true){
             console.log(`Converted value: { novelCustomHeader: true } -> { novelCustomHeaderType: "2" } `)
             obj.novelCustomHeaderType = "2"
@@ -334,7 +357,7 @@ export class LocalOptions extends Options{
         return obj
     }
 
-    protected check_value(key: OptionID, value: any): any{
+    protected _checkValue = (key: OptionID, value: any): any => {
         if(typeof this[key] === typeof value && typeof this[key]!=="function"){
             if(key === "extOptionsVersion"){
                 return
@@ -414,19 +437,90 @@ export class LocalOptions extends Options{
 /**
  * 設定データ（storage.sync）
  */
-export class SyncOptions extends Options{
+export class SyncOptions{
     extLaunchCount: number = 0
     extLastLaunchTime: string = ""
     history: Array<any> = []
     history_data: Object = {}
     workspaceImpressionMarked: Object = {}
 
+    constructor(data?: Record<string,any>){
+        var p:any = this
+        if(data instanceof Object){
+            Object.keys(data).forEach(function(key){
+                p.set(key, data[key])
+            })
+        }
+    }
+    public set = (key?: OptionID|Object, value?: any):void => {
+        if(key!==undefined){
+            if(typeof key==="string"){
+                var value = this._checkValue(key, value)
+                if(value!==undefined){
+                    this[key] = value
+                }
+            }else if(value instanceof Object){
+                value = this._exceptionProcess(value)
+                Object.keys(key).forEach(function(k){
+                    this.set(k, key[k])
+                })
+            }
+        }
+    }
+
+    public get = (includeParameters?: null|OptionID|Array<OptionID>): Record<string,any> => {
+        var ret = {}
+        if(includeParameters!==undefined && includeParameters!==null){
+            var params: Array<OptionID>
+            if(typeof includeParameters==="string"){
+                params = [includeParameters]
+            }else{
+                params = includeParameters
+            }
+
+            const obj = Object.entries(this)
+            for (const key of includeParameters){
+                var value: any = obj[key]
+                if(typeof value!=="undefined" && typeof value!=="function"){
+                    ret[key] = value
+                }
+            }
+            return ret
+        }else{
+            for (const [key, value] of Object.entries(this)){
+                if(typeof value !== "undefined" && typeof value!=="function"){
+                    ret[key] = value
+                }
+            }
+            return ret
+        }
+    }
+
+    public param = (key?: string): any => {
+        if(key){
+            var value = this[key]
+            if(typeof value !== "undefined" && typeof value!=="function"){
+                return value
+            }
+        }
+    }
+
+    public check = (key?: string, value?: any): any => {
+        if(key){
+            if(value===undefined){
+                if(this)
+                value = this[key]
+            }
+            return this._checkValue(key, value)
+        }
+    }
+
     // バージョンアップ時の対応
-    protected exception_process(obj: Record<string,any>): Record<string,any>{
+    protected _exceptionProcess = (obj: Record<string,any>): Record<string,any> =>{
         return obj
     }
 
-    protected check_value(key: OptionID, value: any): any{
+    protected _checkValue = (key: OptionID, value: any): any => {
         if(typeof this[key] === typeof value && typeof this[key]!=="function"){
             
             return value

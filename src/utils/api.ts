@@ -1,4 +1,66 @@
 /**
+ * 小説タグから検索URLを取得する
+ * @param {string|Array<string>} tag 
+ * @param {string|number} site - 数値または文字列で対象のサイトを指定。未指定や不正な値の場合は、小説家になろう（全年齢）になる（1:ノクターン 2:ムーンライト 3:ムーンライト（BL） 4:ミッドナイト）
+ * @param param 
+ * @returns 
+ */
+export function getNovelTagURL(tag: string|Array<string>, site?: string|number, param?: {[key: string]: any}){
+    if(param===undefined){
+        param = {}
+    }
+    if(Array.isArray(tag) && tag.length>0){
+        param.word = tag.map((v)=>escape(v)).join("+")
+    }else if(typeof tag === "string"){
+        param.word = tag.split(" ").map((v)=>escape(v)).join("+")
+    }
+    param.keyword = 1
+
+    return getNovelSearchURL(site, param)
+}
+
+/**
+ * 小説家になろうの検索結果URLを取得する
+ * @param {string|number} site - 数値または文字列で対象のサイトを指定。未指定や不正な値の場合は、小説家になろう（全年齢）になる（1:ノクターン 2:ムーンライト 3:ムーンライト（BL） 4:ミッドナイト）
+ * @param param - 検索パラメータ（辞書型オブジェクト）
+ * @returns URL
+ */
+export function getNovelSearchURL(site?: string|number, param?: {[key: string]: any}){
+    if(param===undefined){
+        param = {}
+    }
+
+    var url = `https://yomou.syosetu.com/search.php`
+    if(site=="noc" || Number(site)==1 ){
+        url = `https://noc.syosetu.com/search/search/search.php`
+    }else if(site=="mnlt"){
+        return `https://mnlt.syosetu.com/search/search/`
+    }else if(Number(site)==2){
+        param.nocgenre = 2
+        url = `https://mnlt.syosetu.com/search/search/`
+    }else if(Number(site)==3){
+        param.nocgenre = 3
+        url = `https://mnlt.syosetu.com/search/search/`
+    }else if(site=="mid" || Number(site)==4){
+        url = `https://mid.syosetu.com/search/search/`
+    }
+
+    let i = 0
+    Object.keys(param).forEach(function(key){
+        if(i==0){
+            url += "?"
+        }else{
+            url += "&"
+        }
+        url += `${key}=${param[key]}`
+        i += 1
+    })
+
+    return url
+}
+
+
+/**
  * 小説大ジャンル
  * @param genre - 大ジャンル番号
  * @returns 大ジャンル名

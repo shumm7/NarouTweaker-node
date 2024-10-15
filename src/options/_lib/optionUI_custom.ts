@@ -1,6 +1,4 @@
-type OptionUI_Custom = {
-    [key: string]: string
-}
+type OptionUI_Custom = Record<string,string>
 
 export const OptionUI_CustomElement: OptionUI_Custom = {
     ui_extSearchBox: `

@@ -1,4 +1,4 @@
-import { check, defaultValue } from "../../utils/misc"
+import { check } from "../../utils/misc"
 import { FontFamiliesV1, FontFamilyV1, generateNoDuplicateFontFamilyName, localFont, localFontFamilyV1 } from "../../utils/v1_font";
 import { restoreSkins } from "./_optionsAction_Skin";
 

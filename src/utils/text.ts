@@ -1,3 +1,5 @@
+import { escape } from "querystring"
+
 /**
  * DOM内にあるURLをハイパーリンクに変換する。
  * @param element - HTML文字列
@@ -10,7 +12,7 @@ export function replaceUrl(element: any, isWarning:boolean=false) {
         /^(h?)(ttps?:\/\/kasasagi\.hinaproject\.com)/
     ]
 
-    function isUrlWhitelisted(url){
+    function isUrlWhitelisted(url: string){
         const whitelist = narouNetwrokUrlPattern
         var res = false
         $.each(whitelist, function(_, value){
@@ -24,7 +26,7 @@ export function replaceUrl(element: any, isWarning:boolean=false) {
 
     function replaceUrlHtml(str:string){
         let regexp_url = /((h?)(ttps?:\/\/[a-zA-Z0-9.\-_@:/~?%&;=+#',()*!]+))/g;
-        let regexp_makeLink = function(_all, _url, _h, _href) {
+        let regexp_makeLink = function(_all: string, _url: string, _h: string, _href: string) {
             if(isWarning){
                 if(isUrlWhitelisted(_url)){
                     return '<a href="h' + _href + '" target="_blank">' + _url + '</a>';
@@ -285,50 +287,6 @@ export function countTime(string: string): number{
     return Math.ceil(countCharacters(string, false, false, false) / 500)
 }
 
-export function getNovelTagURL(tag, site, param){
-    if(!param){
-        param = {}
-    }
-    param.word = tag
-    param.keyword = 1
-
-    return getNovelSearchURL(site, param)
-}
-
-export function getNovelSearchURL(site: string, param: any){
-    if(!param){
-        param = {}
-    }
-
-    var url = `https://yomou.syosetu.com/search.php`
-    if(site=="noc" || parseInt(site)==1){
-        url = `https://noc.syosetu.com/search/search/search.php`
-    }else if(site=="mnlt"){
-        return `https://mnlt.syosetu.com/search/search/`
-    }else if(parseInt(site)==2){
-        param.nocgenre = 2
-        url = `https://mnlt.syosetu.com/search/search/`
-    }else if(parseInt(site)==3){
-        param.nocgenre = 3
-        url = `https://mnlt.syosetu.com/search/search/`
-    }else if(site=="mid" || parseInt(site)==4){
-        url = `https://mid.syosetu.com/search/search/`
-    }
-
-    let i = 0
-    Object.keys(param).forEach(function(key){
-        if(i==0){
-            url += "?"
-        }else{
-            url += "&"
-        }
-        url += `${key}=${param[key]}`
-        i += 1
-    })
-
-    return url
-}
-
 /**
  * 文字列にパターンが何回出現するかを数える
  * @param {string} string - 文字列
@@ -353,7 +311,7 @@ export function stringSimilarity(strA:string, strB:string): number{
             n = 3
         }
 
-        let ret = {}
+        let ret: Record<string,any> = {}
         for (var m = 0; m < n; m++) {
             for (var i = 0; i < text.length - m; i++) {
                 const c = text.substring(i, i + m + 1)
@@ -363,7 +321,7 @@ export function stringSimilarity(strA:string, strB:string): number{
         return ret
     }
 
-    function getValuesSum(object: { [key: string]: number }){
+    function getValuesSum(object: Record<string,number>){
         return Object.values(object).reduce((prev, current) => prev + current, 0)
     }
       

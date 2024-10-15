@@ -1,3 +1,4 @@
+import { OptionUI_ItemID } from "options/_lib/optionUI_type";
 import { getOptionFromID } from "../../options/_lib/optionUI_libs";
 import { getOptionElement, optionHide, syntaxHighlight } from "../_lib/utils";
 import { restoreOptions, setup } from "../general";
@@ -5,13 +6,11 @@ import { restoreOptions, setup } from "../general";
 setup()
 setupContents()
 
-function markFavoriteOptions(list){
+function markFavoriteOptions(list: Array<OptionUI_ItemID>){
     $(".contents-item--button-favorite.selected").removeClass("selected")
-    if(Array.isArray(list)){
-        $.each(list, function(_, id){
-            $(`.option-outer[name=${id}] > .contents-option-head > .contents-item--buttons .contents-item--button-favorite, .option-outer[name=${id}] > .contents-option > .contents-option-head > .contents-item--buttons .contents-item--button-favorite`).addClass("selected")
-        })
-    }
+    $.each(list, function(_, id){
+        $(`.option-outer[name=${id}] > .contents-option-head > .contents-item--buttons .contents-item--button-favorite, .option-outer[name=${id}] > .contents-option > .contents-option-head > .contents-item--buttons .contents-item--button-favorite`).addClass("selected")
+    })
 }
 
 function setupContents(scroll?: number){

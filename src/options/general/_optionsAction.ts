@@ -4,33 +4,28 @@ import { OptionUI_Pages } from "../../options/_lib/optionUI_items";
 import { escapeHtml } from "../../utils/text";
 import { LocalOptions } from "../../utils/option";
 import { getDatetimeString, getDatetimeStringForFilename } from "../../utils/time";
+import { OptionUI_Page } from "options/_lib/optionUI_type";
 
 /* 基本設定 */
 /* デフォルトページ（ポップアップ時） */
 export function general_popupDefaultPage_Dropdown(){
     $("#extPopupDefaultPage_Dropdown").on("change", function(e){
-        var pageId = `${$(this).val()}`
-        if(pageId!=="__auto__"){
-            var page = getOptionPageFromID(pageId)
-            if(page){
-                if(page.popup){
-                    if(page.popup.defaultPage && page.title && page.id){
-                        chrome.storage.local.set({extPopupDefaultPage: pageId})
-                    }else{
-                        chrome.storage.local.set({extPopupDefaultPage: "__auto__"})
-                    }
+        const pageId = $(this).val()
+        if(typeof pageId==="string"){
+            if(pageId!=="__auto__"){
+                const page: OptionUI_Page|undefined = getOptionPageFromID(pageId)
+                if(page?.popup?.defaultPage && page?.title && page?.id){
+                    chrome.storage.local.set({extPopupDefaultPage: pageId})
                 }else{
                     chrome.storage.local.set({extPopupDefaultPage: "__auto__"})
                 }
             }else{
-                chrome.storage.local.set({extPopupDefaultPage: "__auto__"})
+                chrome.storage.local.set({extPopupDefaultPage: pageId})
             }
-        }else{
-            chrome.storage.local.set({extPopupDefaultPage: pageId})
         }
     })
 
-    function restoreDropdown(value){
+    function restoreDropdown(value: string){
         var elm = $("#extPopupDefaultPage_Dropdown")
         
         elm.empty()
@@ -108,9 +103,7 @@ export function general_exportOptionData(){
     $("#option-export-json").on("click", (e)=>{
         chrome.storage.local.get(null, function(data) {
             var date = getDatetimeStringForFilename()
-            console.log(date)
             var d = new LocalOptions(data)
-            console.log(d)
             if(d){
                 saveJson(d.get(), `nt-option-${date}.json`)
             }
@@ -181,24 +174,26 @@ export function general_importOptionData(){
     $("#option-import-input--submit").on("click", (e)=>{
         if(window.confirm('スキンを含む、既存のデータが全て上書きされます。\nこの操作は元に戻せません。')){
             $("#option-import-warnings").empty()
-            var raw
             try{
-                raw = JSON.parse(`${$("#option-import-input--field").val()}`)
-                var option = new LocalOptions(raw)
-                if(option){
-                    chrome.storage.local.set(option.get(), function(){
-                        var field = $("#option-import-input--field")
-                        field.val("")
-                        field.trigger("input")
-
-                        /* notify */
-                        chrome.notifications.create("", {
-                            iconUrl: "/assets/icons/icon_48.png",
-                            type: "basic",
-                            title: "Narou Tweakerがアップデートされました",
-                            message: `ユーザによるデータインポート`
+                const lines = $("#option-import-input--field").val()
+                if(typeof lines === "string"){
+                    var raw = JSON.parse(lines)
+                    var option = new LocalOptions(raw)
+                    if(option){
+                        chrome.storage.local.set(option.get(), function(){
+                            var field = $("#option-import-input--field")
+                            field.val("")
+                            field.trigger("input")
+    
+                            /* notify */
+                            chrome.notifications.create("", {
+                                iconUrl: "/assets/icons/icon_48.png",
+                                type: "basic",
+                                title: "Narou Tweakerがアップデートされました",
+                                message: `ユーザによるデータインポート`
+                            })
                         })
-                    })
+                    }
                 }
 
             }catch(e){
@@ -222,23 +217,31 @@ export function general_exportOptionText() {
         chrome.storage.local.get(null, (data)=>{
             try{
                 if(whitelist){
-                    var input = $("#exportLocalOptionText_Input_Whitelist")
-                    const appears = `${input.val()}`.split(/\s/)
+                    const input = $("#exportLocalOptionText_Input_Whitelist")
+                    const lines = input.val()
                     var ret = {}
-                    $.each(appears, function(_, elm){
-                        if(elm in data){
-                            ret[elm] = data[elm]
-                        }
-                    })
+                    if(typeof lines === "string"){
+                        const appears = lines.split(/\s/)
+                        $.each(appears, function(_, elm){
+                            if(elm in data){
+                                ret[elm] = data[elm]
+                            }
+                        })
+                    }
                     data = ret
+                    
                 }else{
-                    var input = $("#exportLocalOptionText_Input_Blacklist")
-                    const ignores = `${input.val()}`.split(/\s/)
-                    $.each(ignores, function(_, elm){
-                        if(elm in data){
-                            delete data[elm]
-                        }
-                    })
+                    const input = $("#exportLocalOptionText_Input_Blacklist")
+                    const lines = input.val()
+                    if(typeof lines === "string"){
+                        const ignores = lines.split(/\s/)
+                        $.each(ignores, function(_, elm){
+                            if(elm in data){
+                                delete data[elm]
+                            }
+                        })
+                    }
+                    
                 }
 
                 var text = JSON.stringify(data, null, 4)
@@ -257,23 +260,29 @@ export function general_exportOptionText() {
             try{
                 if(whitelist){
                     var input = $("#exportSyncOptionText_Input_Whitelist")
-                    const appears = `${input.val()}`.split(/\s/)
+                    const lines = input.val()
                     var ret = {}
-                    $.each(appears, function(_, elm){
-                        if(elm in data){
-                            ret[elm] = data[elm]
-                        }
-                    })
+                    if(typeof lines === "string"){
+                        const appears = lines.split(/\s/)
+                        $.each(appears, function(_, elm){
+                            if(elm in data){
+                                ret[elm] = data[elm]
+                            }
+                        })
+                    }
                     data = ret
 
                 }else{
                     var input = $("#exportSyncOptionText_Input_Blacklist")
-                    const ignores = `${input.val()}`.split(/\s/)
-                    $.each(ignores, function(_, elm){
-                        if(elm in data){
-                            delete data[elm]
-                        }
-                    })
+                    const lines = input.val()
+                    if(typeof lines === "string"){
+                        const ignores = lines.split(/\s/)
+                        $.each(ignores, function(_, elm){
+                            if(elm in data){
+                                delete data[elm]
+                            }
+                        })
+                    }
                 }
 
                 var text = JSON.stringify(data, null, 4)
@@ -292,22 +301,28 @@ export function general_exportOptionText() {
             try{
                 if(whitelist){
                     var input = $("#exportSessionOptionText_Input_Whitelist")
-                    const appears = `${input.val()}`.split(/\s/)
+                    const lines = input.val()
                     var ret = {}
-                    $.each(appears, function(_, elm){
-                        if(elm in data){
-                            ret[elm] = data[elm]
-                        }
-                    })
+                    if(typeof lines === "string"){
+                        const appears = lines.split(/\s/)
+                        $.each(appears, function(_, elm){
+                            if(elm in data){
+                                ret[elm] = data[elm]
+                            }
+                        })
+                    }
                     data = ret
                 }else{
                     var input = $("#exportSessionOptionText_Input_Blacklist")
-                    const ignores = `${input.val()}`.split(/\s/)
-                    $.each(ignores, function(_, elm){
-                        if(elm in data){
-                            delete data[elm]
-                        }
-                    })
+                    const lines = input.val()
+                    if(typeof lines === "string"){
+                        const ignores = lines.split(/\s/)
+                        $.each(ignores, function(_, elm){
+                            if(elm in data){
+                                delete data[elm]
+                            }
+                        })
+                    }
                 }
 
                 var text = JSON.stringify(data, null, 4)
@@ -368,12 +383,15 @@ export function general_exportOptionText() {
 /* 設定データの変更履歴 */
 export function general_monitorOptionChanged(){
     try{
-        function addText(storageName, changes){
+        function addText(storageName: "local"|"sync"|"session", changes: Object){
             var field = $("#option-monitor--output")
 
-            var currentLine = ""
+            var currentLine: string = ""
             if(!$("#option-monitor--mode-reset").prop('checked')){
-                currentLine = `${field.val()}`
+                var c = field.val()
+                if(typeof c === "string"){
+                    currentLine = c
+                }
             }
 
             var keys = Object.keys(changes)
@@ -423,52 +441,56 @@ export function general_insertOptionData(){
             try {
                 $("#option-insert--error").text("")
                 const storage = $("#option-insert--storage").val()
-                const key = `${$("#option-insert--key").val()}`.trim()
-                const value = `${$("#option-insert--value").val()}`.trim()
-                var json
+                const key = $("#option-insert--key").val()
+                const value = $("#option-insert--value").val()
+                var json: string
+                if(typeof storage==="string" && typeof key==="string" && typeof value === "string"){
+                    if(key.length==0){
+                        json = value
+                    }
+                    else{
+                        json = `{"${key}":${value}}`
+                    }
+                    if(value.length==0){
+                        if(window.confirm('値が指定されていません。指定されたキーの設定データを削除しますが、よろしいですか？')){
+                            if(storage=="local"){
+                                chrome.storage.local.remove(key)
+                            }else if(storage=="sync"){
+                                chrome.storage.sync.remove(key)
+                            }else if(storage=="session"){
+                                chrome.storage.session.remove(key)
+                            }else{
+                                $("#option-insert--error").text(`不正なストレージが指定されました: ${key}`)
+                                return false
+                            }
+                        }else{
+                            $("#option-insert--error").text(`操作がキャンセルされました`)
+                            return false
+                        }
+                    }else{
+                        var dict
+                        try {
+                            dict = JSON.parse(json)
+                        }catch(e){
+                            $("#option-insert--error").text(`構文の解釈に失敗しました: ${e}`)
+                            console.warn(e)
+                            return false
+                        }
 
-                if(key.length==0){
-                    json = value
-                }
-                else{
-                    json = `{"${key}":${value}}`
-                }
-                if(value.length==0){
-                    if(window.confirm('値が指定されていません。指定されたキーの設定データを削除しますが、よろしいですか？')){
                         if(storage=="local"){
-                            chrome.storage.local.remove(key)
+                            chrome.storage.local.set(dict)
                         }else if(storage=="sync"){
-                            chrome.storage.sync.remove(key)
+                            chrome.storage.sync.set(dict)
                         }else if(storage=="session"){
-                            chrome.storage.session.remove(key)
+                            chrome.storage.session.set(dict)
                         }else{
                             $("#option-insert--error").text(`不正なストレージが指定されました: ${key}`)
                             return false
                         }
-                    }else{
-                        $("#option-insert--error").text(`操作がキャンセルされました`)
-                        return false
                     }
                 }else{
-                    var dict
-                    try {
-                        dict = JSON.parse(json)
-                    }catch(e){
-                        $("#option-insert--error").text(`構文の解釈に失敗しました: ${e}`)
-                        console.warn(e)
-                        return false
-                    }
-
-                    if(storage=="local"){
-                        chrome.storage.local.set(dict)
-                    }else if(storage=="sync"){
-                        chrome.storage.sync.set(dict)
-                    }else if(storage=="session"){
-                        chrome.storage.session.set(dict)
-                    }else{
-                        $("#option-insert--error").text(`不正なストレージが指定されました: ${key}`)
-                        return false
-                    }
+                    $("#option-insert--error").text(`入力値の取得に失敗しました: ${key}`)
+                    return false
                 }
 
             }catch(e){

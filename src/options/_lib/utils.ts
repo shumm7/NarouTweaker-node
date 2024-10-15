@@ -1,196 +1,190 @@
 import { LocalOptions } from "../../utils/option"
 import { OptionUI_CustomElement } from "./optionUI_custom"
 import { appendFavoriteOption, getOptionCategory, getOptionChildsFromID, getOptionFromID, getOptionPageFromID, moveFavoriteOption, removeFavoriteOption } from "./optionUI_libs"
-import { OptionUI_Item, OptionUI_ItemID } from "./optionUI_type"
+import { OptionID, OptionUI_Item, OptionUI_ItemID } from "./optionUI_type"
 
 import "@melloware/coloris/dist/coloris.css";
 import { coloris, init } from "@melloware/coloris";
 import hljs from 'highlight.js';
 
-export function buttonHide(){
-    $(".button-hide").each(function(){
-        var name = $(this).attr("name")
-        var data_for = $(this).attr("data-for")
-        var set_class = $(this).attr("data") ?? ""
-
-        $(this).on("click", function(){
-            if(!$(this).hasClass(set_class)){
-                $(`.button-hide.${set_class}[name="${name}"]`).removeClass(set_class)
-                $(this).addClass(set_class)
-
-                $(`.button-hide-target[name="${name}"]`).addClass("button-hide--hidden")
-                $(`.button-hide-target${data_for}[name="${name}"]`).removeClass("button-hide--hidden")
-            }
-        })
-    })
+export class OptionHideParammeters {
+    readonly key: string = "data-for"
+    readonly value: string = "data"
+    readonly logic: string = "data-rule"
+    readonly type: string = "data-type"
+    readonly mode: string = "mode"
 }
 
+
+/**o
+ * オプション（storage.local）の状態によって、要素の表示/非表示を切り替える
+ * 対象の要素に「option-hide」クラスを追加する。
+ * @param {OptionID} data - オプションID（複数の場合は半角スペース区切り）
+ * @param data-for - オプションが取る値（この値のときにトリガーする）
+ * @param mode - トリガー時に行うアクション（show/hide/inactive/active）
+ * @param logic - トリガーの比較方法（or（デフォルト）/and/nor/nand）
+ */
 export function optionHide(){
     $(".option-hide").each(function(){
+        const p = new OptionHideParammeters
         let elm = $(this)
-        var data_for
-        var action_value
-        var action_mode
-        var compare_mode
-        var data_type
+        let keys: Array<string> = []
+        let values: Array<string> = []
+        let mode: string = "show"
+        let logic: string = "or"
+        let types: Array<string> = []
 
         /* data_for (前提となる設定項目のID) */
-        if(elm.is("[data-for]")){
-            data_for = $(this).attr("data-for")?.trim().split(/ +/)
-        }else{
-            return false
-        }
+        var s = $(this).attr(p.key)
+        if(s){keys = s.trim().split(/ +/)}
 
         /* data (前提となる設定項目のトリガー値) */
-        if(elm.is("[data]")){
-            action_value = $(this).attr("data")?.trim().split(/ +/)
-        }else{
-            return false
-        }
+        s = $(this).attr(p.value)
+        if(s){values = s.trim().split(/ +/)}
 
-        if(data_for.length > action_value.length){
-            var k = action_value.length
-            for(var i=0; i < data_for.length-action_value.length; i++){
-                action_value.push(action_value[k-1])
-            }
-        }else if(data_for.length < action_value.length){
-            action_value = action_value.slice(0, data_for.length)
-        }
-
-        /* mode */
-        if(elm.is("[mode]")){
-            action_mode = $(this).attr("mode")
-        }
+        /* mode（トリガー時のアクション） */
+        s = $(this).attr(p.mode)
+        if(s){mode = s}
 
         /* logic */
-        if(elm.is("[data-rule]")){
-            compare_mode = $(this).attr("data-rule")
+        s = $(this).attr(p.logic)
+        if(s){logic = s}
+
+        /* types (トリガー値の型) */
+        s = $(this).attr(p.type)
+        if(s){types = s.trim().split(/ +/)}
+
+        if(keys.length > values.length){
+            /* キーが値よりも多い場合は、値をキーと同じ数まで追加 */
+            const k = values.length
+            for(var i=0; i < keys.length-values.length; i++){
+                values.push(values[k-1])
+            }
+        }else if(keys.length < values.length){
+            /* 値がキーよりも多い場合は、値をキーと同じ数まで削除 */
+            values = values.slice(0, keys.length)
         }
 
-        /* data_type (トリガー値の型) */
-        if(elm.is("[data-type]")){
-            data_type = $(this).attr("data-type")?.trim().split(/ +/)
-        }else{
-            data_type = new Array(data_for.length).fill(undefined)
+        if(keys.length > types.length){
+            for(var i=0; i < keys.length-types.length; i++){
+                types.push("")
+            }
+        }else if(keys.length < types.length){
+            types = types.slice(0, keys.length)
         }
 
-        if(data_for.length > data_type.length){
-            var k = data_type.length
-            for(var i=0; i < data_for.length-data_type.length; i++){
-                data_type.push(undefined)
-            }
-        }else if(data_for.length < data_type.length){
-            data_type = data_type.slice(0, data_for.length)
-        }
+        chrome.storage.local.get(keys, function(_d){
+            const data = new LocalOptions(_d)
+            var _k: Array<OptionUI_ItemID> = []
+            var _a: Array<string> = []
+            var _t: Array<string> = []
 
-        function change(value: Array<string>, action_value:Array<string>, type: Array<string>, mode: string|undefined, compare_mode: string|undefined){
-            function compare(source: any, value: string, type: string){
-                if(type){
-                    if(type==="null"){
-                        return source === null
-                    }
-                    else if(type==="boolean"){
-                        return source === (value.toLowerCase() === "true")
-                    }
-                    else if(type==="string"){
-                        return source===value
-                    }
-                    else if(type==="number"){
-                        return source===Number(value)
-                    }
-                }
-                return String(source)===String(value)
-            }
-            
-
-            var bool = false
-            if(value.length>0){
-                if(compare_mode=="and"){
-                    bool = true
-                }
-
-                $.each(value, function(k, v){
-                    if(compare_mode=="and"){
-                        bool = bool && compare(v, action_value[k], type[k])
-                    }else{
-                        bool = bool || compare(v, action_value[k], type[k])
-                    }
-                })
-            }else{
-                bool = false
-            }
-
-            if(bool){
-                if(mode==="hide"){
-                    elm.addClass("option-hide--hidden")
-                }
-                else if(mode==="inactive"){
-                    elm.addClass("option-hide--inactive")
-                }
-                else if(mode==="active"){
-                    elm.removeClass("option-hide--inactive")
-                }
-                else{ //show
-                    elm.removeClass("option-hide--hidden")
-                }
-            }else{
-                if(mode==="hide"){
-                    elm.removeClass("option-hide--hidden")
-                }
-                else if(mode==="inactive"){
-                    elm.removeClass("option-hide--inactive")
-                }
-                else if(mode==="active"){
-                    elm.addClass("option-hide--inactive")
-                }
-                else{ //show
-                    elm.addClass("option-hide--hidden")
-                }
-            }
-        }
-
-        chrome.storage.local.get(data_for, function(data){
-            var values: Array<OptionUI_ItemID> = []
-            var actions: Array<string> = []
-            var types: Array<string> = []
-
-            $.each(data_for, function(i, key){
-                if(key in data){
-                    values.push(data[key])
-                    actions.push(action_value[i])
-                    types.push(data_type[i])
+            $.each(keys, function(i, key){
+                const param = data.param(key)
+                if(param){
+                    _k.push(param)
+                    _a.push(values[i])
+                    _t.push(types[i])
                 }
             })
-            if(values.length>0){
-                change(values, actions, types, action_mode, compare_mode)
+            if(_k.length>0){
+                change(_k, _a, _t, mode, logic)
             }
         })
 
         chrome.storage.local.onChanged.addListener(function(changes){
-            var values: Array<string> = []
-            var actions: Array<string> = []
-            var types: Array<string> = []
+            var _k: Array<OptionUI_ItemID> = []
+            var _a: Array<string> = []
+            var _t: Array<string> = []
 
-            $.each(data_for, function(i, key){
+            $.each(keys, function(i, key){
                 if(changes[key]){
-                    values.push(changes[key].newValue)
-                    actions.push(action_value[i])
-                    types.push(data_type[i])
+                    _k.push(changes[key].newValue)
+                    _a.push(values[i])
+                    _t.push(types[i])
                 }
             })
-            if(values.length>0){
-                change(values, actions, types, action_mode, compare_mode)
+            if(_k.length>0){
+                change(_k, _a, _t, mode, logic)
             }
-            
         })
-        return 
+
+
+        function compare(_original: any, _value: string, _type: string){
+            if(_type){
+                if(_type==="null"){ return _original === null }
+                else if(_type==="undefined"){ return _original === undefined }
+                else if(_type==="boolean"){ return _original === (_value.toLowerCase() === "true") }
+                else if(_type==="string"){ return _original===_value }
+                else if(_type==="number"){
+                    if(isNaN(_original)){
+                        return isNaN(Number(_value))
+                    }else{
+                        return _original===Number(_value)
+                    }
+                }
+            }
+            return String(_original)===String(_value)
+        }
+
+        function change(_keys: Array<string>, _values:Array<string>, _types: Array<string>, _mode: string, _logic: string){
+            /* 論理値 */
+            let condition: boolean = false
+            if(_keys.length>0){
+                if(_logic=="and"){ condition = true }
+
+                $.each(_keys, function(i, _key){
+                    if(_logic=="and" || _logic=="nand"){
+                        condition = condition && compare(_key, _values[i], _types[i])
+                    }else{ // or - nor
+                        condition = condition || compare(_key, _values[i], _types[i])
+                    }
+                })
+                if(_logic == "nor" || _logic == "nand"){
+                    condition = !condition
+                }
+            }
+
+            /* クラス追加 */
+            if(condition){
+                if(_mode==="hide"){
+                    elm.addClass("option-hide--hidden")
+                }
+                else if(_mode==="inactive"){
+                    elm.addClass("option-hide--inactive")
+                }
+                else if(_mode==="active"){
+                    elm.removeClass("option-hide--inactive")
+                }
+                else{ //show
+                    elm.removeClass("option-hide--hidden")
+                }
+            }else{
+                if(_mode==="hide"){
+                    elm.removeClass("option-hide--hidden")
+                }
+                else if(_mode==="inactive"){
+                    elm.removeClass("option-hide--inactive")
+                }
+                else if(_mode==="active"){
+                    elm.addClass("option-hide--inactive")
+                }
+                else{ //show
+                    elm.addClass("option-hide--hidden")
+                }
+            }
+        }
     })
 
-    
+    additionalHide()
+}
+
+function additionalHide(){
+    /* Experimental */
     $(".experimental-hide").each(function(){
         var elm = $(this)
 
-        function change(value){
+        function change(value: any){
             $(".option--experimental-message").empty()
             if(value){
                 elm.removeClass("option-hide--experimental")
@@ -233,7 +227,7 @@ export function optionHide(){
     $(".advanced-hide").each(function(){
         var elm = $(this)
 
-        function change(value){
+        function change(value: any){
             $(".option--advanced-message").empty()
             if(value){
                 elm.removeClass("option-hide--advanced")
@@ -271,7 +265,7 @@ export function optionHide(){
     $(".debug-option-hide").each(function(){
         var elm = $(this)
 
-        function change(value){
+        function change(value: any){
             $(".option--debug-message").empty()
             if(value){
                 elm.removeClass("option-hide--debug")
@@ -312,6 +306,7 @@ export function optionHide(){
     })
 }
 
+
 export function colorPicker(){
     init();
 
@@ -338,19 +333,19 @@ export function colorPicker(){
     
 }
 
+
 export function syntaxHighlight(){
     var i = 1
     $(".syntax-highlight").each(function(){
         const textarea = $(this)
         var language = textarea.attr("data")
-        var wrapper = $(`<div class="syntax-highlight-wrap" id="highlight-${i}"></div>`)
-        textarea.wrap(wrapper)
+        textarea.wrap(`<div class="syntax-highlight-wrap" id="highlight-${i}"></div>`)
         textarea.after(`<pre><code class="${language}"></code></pre>`)
 
+        var wrapper = textarea.parent()
         var dummyWrapper = wrapper.find("pre")
         var dummy = dummyWrapper.find("code")
 
-        resizeTextArea()
         textarea.on("input", function(){
             var r = textarea.val()
             if(r && language){
@@ -376,15 +371,6 @@ export function syntaxHighlight(){
                 clearInterval(resizeInt)
             }
         });
-
-        function resizeTextArea() {
-            var elm = dummy.get(0)
-            if(elm!==undefined){
-                dummy.addClass("resizing");
-                wrapper.css("height", `${elm.scrollHeight+ 20}px`)
-                dummy.removeClass("resizing");
-            }
-        }
     })
 }
 
@@ -882,10 +868,10 @@ export function getOptionElement(option: OptionUI_Item, mode?: optionType){
             `).on("click", function(){
                 if(window.confirm(`この設定データをリセットします。よろしいですか？\n項目：${title}`)){
 
-                    var reset = (option: OptionUI_Item|undefined, ret: Object) => {
+                    var reset = (option: OptionUI_Item|undefined, ret: Record<string,any>) => {
                         if(option?.value){
                             if(Array.isArray(option.value.related)){
-                                var defaultOption = new LocalOptions().get()
+                                const defaultOption = new LocalOptions().get()
                                 $.each(option.value.related, function(_, key){
                                     if(key in defaultOption){
                                         ret[key] = defaultOption[key]

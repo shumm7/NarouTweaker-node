@@ -1,3 +1,5 @@
+import { CSS_String } from "./type";
+
 /**
  * オブジェクトをJSONファイルで保存
  * @param data - オブジェクト
@@ -38,15 +40,25 @@ export function getExtensionAuthor(): string{
     return chrome.i18n.getMessage("extAuthor")
 }
 
-
-export function defaultValue(value, def){
+/**
+ * value が undefined だった場合は、defを出力します
+ * @deprecated "value ?? def" 記法を使用してください
+ */
+export function defaultValue(value: any, def: any){
     if(value==undefined){
         return def
     }
     return value
 }
 
-export function check(elm: any, value, _default?) {
+/**
+ * 指定したオブジェクトをチェックします
+ * @param elm 
+ * @param value 
+ * @param _default 
+ * @deprecated
+ */
+export function check(elm: any, value: boolean, _default?: boolean) {
     if(value!=true && value!=false){
         if(_default==undefined){
             value = false
@@ -54,10 +66,17 @@ export function check(elm: any, value, _default?) {
             value = _default;
         }
     }
-    $(elm).attr('checked', value).prop('checked', value).change();
+    $(elm).prop('checked', value).trigger("change");
   }
 
-export function getCSSRule(key, rules){
+/**
+ * 
+ * @param key キー
+ * @param rules CSSパラメータを記述した辞書のリスト
+ * @returns CSSルール
+ * @deprecated 直接CSSを記述してください。
+ */
+export function getCSSRule(key: string, rules: Array<Record<string,string>>): CSS_String{
     var style = key + "{"
     rules.forEach(rule => {
         Object.keys(rule).forEach(k => {

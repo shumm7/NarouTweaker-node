@@ -1,6 +1,7 @@
 import { OptionUI_Items, OptionUI_Pages } from "./optionUI_items";
 import { LocalOptions, SyncOptions } from "../../utils/option";
-import { OptionUI_Category, OptionUI_CategoryID, OptionUI_Item, OptionUI_ItemID, OptionUI_Page, OptionUI_PageID } from "./optionUI_type.js";
+import { OptionUI_Category, OptionUI_CategoryID, OptionUI_Item, OptionUI_ItemID, OptionUI_Page, OptionUI_PageID } from "./optionUI_type";
+import { limit } from "../../utils/number";
 
 /* Option Category */
 export function getOptionPageFromID(id: OptionUI_PageID): OptionUI_Page|undefined{
@@ -102,20 +103,19 @@ export function getOptionChildsFromID(id: OptionUI_ItemID): Array<OptionUI_Item>
 
 /* favorite */
 export function appendFavoriteOption(id: OptionUI_ItemID){
-    chrome.storage.local.get("extFavoriteOptions", function(data){
-        var list: Array<OptionUI_ItemID> = []
-        if(Array.isArray(data.extFavoriteOptions)){
-            list = data.extFavoriteOptions
-        }
+    chrome.storage.local.get("extFavoriteOptions", function(_d){
+        const data = new LocalOptions(_d)
+        var list: Array<OptionUI_ItemID> = data.extFavoriteOptions
 
-        var opt = getOptionFromID(id)
-        var targetIdx = 0
+        var opt: OptionUI_Item|undefined = getOptionFromID(id)
+        var targetIdx: number = 0
         var objectIds: Array<OptionUI_ItemID> = []
+
         if(opt){
             objectIds.push(opt.id)
 
             // idが子で親が存在しないときは一番若い子の直前に親を配置する
-            var parent =  getOptionParent(opt)
+            var parent: OptionUI_Item|undefined =  getOptionParent(opt)
             if(parent){
                 if(!list.includes(parent.id)){
                     var childs = getOptionChildsFromID(parent.id)
@@ -132,7 +132,7 @@ export function appendFavoriteOption(id: OptionUI_ItemID){
             }
 
             // idが親だった場合、一番若い子の直前に親を配置する
-            var childs = getOptionChildsFromID(opt.id)
+            var childs: Array<OptionUI_Item> = getOptionChildsFromID(opt.id)
             if(childs.length>0){
                 $.each(childs, function(_, child){
                     var idx = list.indexOf(child.id)
@@ -154,26 +154,25 @@ export function appendFavoriteOption(id: OptionUI_ItemID){
                 }
             })
             list.splice(targetIdx, 0, ...objectIds)
-            chrome.storage.local.set({extFavoriteOptions: list})
+            data.set("extFavoriteOptions", list)
+            chrome.storage.local.set(data.get("extFavoriteOptions"))
         }
     })
 }
 
 export function removeFavoriteOption(id: OptionUI_ItemID){
-    chrome.storage.local.get("extFavoriteOptions", function(data){
-        var list = data.extFavoriteOptions
-        if(!Array.isArray(list)){
-            list = []
-        }
+    chrome.storage.local.get("extFavoriteOptions", function(_d){
+       const data = new LocalOptions(_d)
+        var list: Array<OptionUI_ItemID> = data.extFavoriteOptions
 
         var opt = getOptionFromID(id)
         if(opt){
             //リストからidを削除
-            var option: OptionUI_Item  = opt
+            var option: OptionUI_Item = opt
             list = list.filter((v)=>v !== option.id)
 
             // idが親だった場合、子のidをすべて削除
-            var childs = getOptionChildsFromID(option.id)
+            const childs: Array<OptionUI_Item> = getOptionChildsFromID(option.id)
             $.each(childs, function(_, child){
                 if(list.includes(child.id)){
                     list = list.filter((v)=>v !== child.id)
@@ -181,12 +180,12 @@ export function removeFavoriteOption(id: OptionUI_ItemID){
             })
 
             // idが子で、その兄弟がゼロであったときに親を削除する
-            var parent = getOptionParent(option)
+            const parent: OptionUI_Item|undefined = getOptionParent(option)
             if(parent){
                 const parentId = parent.id
-                var childs = getOptionChildsFromID(parentId)
+                var p_childs = getOptionChildsFromID(parentId)
                 var flag = false
-                $.each(childs, function(_, child){
+                $.each(p_childs, function(_, child){
                     if(list.includes(child.id)){
                         flag = true
                         return false
@@ -202,20 +201,19 @@ export function removeFavoriteOption(id: OptionUI_ItemID){
     })
 }
 
-export function moveFavoriteOption(id, pos){
-    chrome.storage.local.get("extFavoriteOptions", function(data){
-        var list = data.extFavoriteOptions
-        if(!Array.isArray(list)){
-            list = []
-        }
+export function moveFavoriteOption(id: OptionUI_ItemID, pos: number){
+    chrome.storage.local.get("extFavoriteOptions", function(_d){
+        const data = new LocalOptions(_d)
+        var list: Array<OptionUI_ItemID> = data.extFavoriteOptions
+
         if(!list.includes(id)){
             return false
         }
 
         /* リストにある要素が親 -> 子を別のリストに分離 */
-        var childsList = {}
+        var childsList: Record<string,any> = {}
         $.each(list, function(_, parentId){
-            var childs = getOptionChildsFromID(parentId)
+            const childs: Array<OptionUI_Item> = getOptionChildsFromID(parentId)
             $.each(childs, function(_, child){
                 if(list.includes(child.id)){
                     if(Array.isArray(childsList[parentId])){
@@ -230,7 +228,7 @@ export function moveFavoriteOption(id, pos){
 
         /* リストにある要素が子 */
         $.each(list, function(_, childId){
-            var parentId = getOptionParentIDFromID(childId)
+            const parentId: OptionUI_ItemID|undefined = getOptionParentIDFromID(childId)
             if(parentId && list.includes(parentId)){
                 if(Array.isArray(childsList[parentId])){
                     childsList[parentId].push(childId)
@@ -245,15 +243,9 @@ export function moveFavoriteOption(id, pos){
         })
 
         /* リストの要素を移動 */
-        var current = list.indexOf(id)
+        var current: number = list.indexOf(id)
         if(current >= 0){
-            var target = current + pos
-            if(target < 0){
-                target = 0
-            }
-            if(target > list.length){
-                target = list.length
-            }
+            var target = limit(current + pos, 0, list.length)
             if(target === current){
                 return false
             }
@@ -268,35 +260,38 @@ export function moveFavoriteOption(id, pos){
                     list.splice(list.indexOf(id) + 1, 0, ...childsList[id])
                 }
             })
+            data.set("extFavoriteOptions", list)
 
-            chrome.storage.local.set({extFavoriteOptions: list})
+            chrome.storage.local.set(data.get("extFavoriteOptions"))
         }
-
-
     })
 }
 
 
-/* format */
-export function fixOption(local, sync){
-    if(local){
-        chrome.storage.local.get(null, (data)=>{
-            chrome.storage.local.clear(()=>{
-                var option = new LocalOptions(data)
 
-                chrome.storage.local.set(option.get(), function(){
+/**
+ * storageの不要なパラメータをフォーマットする
+ * @param {bool} _fixLocal - storage.localをフォーマットする
+ * @param {bool} _fixSync - storage.syncをフォーマットする
+ */
+export function fixOption(_fixLocal: boolean = false, _fixSync: boolean = false){
+    if(_fixLocal){
+        chrome.storage.local.get(null, (data)=>{
+            var option = new LocalOptions(data).get()
+            console.log(option)
+            chrome.storage.local.clear(()=>{
+                chrome.storage.local.set(option, function(){
                     console.log("Fixed option data (local).")
                 })
             })
         })
     }
     
-    if(sync){
+    if(_fixSync){
         chrome.storage.sync.get(null, (data)=>{
+            var option = new SyncOptions(data).get()
             chrome.storage.sync.clear(()=>{
-                var option = new SyncOptions(data)
-
-                chrome.storage.sync.set(option.get(), function(){
+                chrome.storage.sync.set(option, function(){
                     console.log("Fixed option data (sync).")
                 })
             })

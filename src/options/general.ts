@@ -1,21 +1,24 @@
-import { buttonHide, colorPicker, getOptionElement, optionHide, syntaxHighlight } from "./_lib/utils";
+import { colorPicker, getOptionElement, optionHide, syntaxHighlight } from "./_lib/utils";
 import { check } from "../utils/misc"
 import { OptionUI_Items, OptionUI_Pages } from "./_lib/optionUI_items";
-import { OptionUI_PageID } from "./_lib/optionUI_type";
+import { OptionUI_ItemID, OptionUI_Page, OptionUI_PageID } from "./_lib/optionUI_type";
 import { getOptionFromID, getOptionPageFromID } from "./_lib/optionUI_libs";
+
 import jQuery from "jquery";
 Object.assign(window, { $: jQuery, jQuery });
 
 const manifest = chrome.runtime.getManifest()
-let currentPage
+let currentPage: OptionUI_PageID|undefined
 
 export function setup(){
-    currentPage = $("#option-page-id").val()
+    var p = $("#option-page-id").val()
+    if(p!==undefined){
+        currentPage = `${p}`
+    } 
 
     setupDOM()
     setupContents()
     hideOptionButtons()
-    buttonHide()
     optionHide()
     syntaxHighlight()
     restoreOptions()
@@ -23,7 +26,7 @@ export function setup(){
 }
 
 function setupDOM(){
-    var currentCategory 
+    let currentCategory: OptionUI_Page|undefined
 
     /* Remove JS error message */
     $('#js-failed').remove();
@@ -64,6 +67,10 @@ function setupDOM(){
             currentCategory = page
         }
     })
+
+    if(currentCategory===undefined){
+        return
+    }
 
     var sidebar = $(`
         <div id="sidebar-inner">
@@ -116,7 +123,7 @@ function setupDOM(){
             _sidepanelHide(changes.extOptionSidePanelShow.newValue)
         }
     })
-    function _sidepanelHide(mode){
+    function _sidepanelHide(mode?: any){
         if(mode==undefined){mode = true}
         if(mode){
             $("#sidebar").removeClass("hide")
@@ -155,7 +162,7 @@ function setupDOM(){
     })
 
     /* Set Title */
-    function getName(id: OptionUI_PageID, _pre?: string){
+    function getName(id: OptionUI_PageID, _pre?: string): string{
         var cat = getOptionPageFromID(id)
         if(cat===undefined){
             if(_pre){
@@ -281,7 +288,7 @@ function setupDOM(){
             `)
         }
 
-        if(!currentCategory.tabs && currentCategory.tabs!==undefined){
+        if(!currentCategory?.tabs && currentCategory?.tabs!==undefined){
             $("#header-menu").css("display", "none")
         }
         
@@ -355,7 +362,7 @@ function setupContents(){
         }
     })
 
-    function markFavoriteOptions(list){
+    function markFavoriteOptions(list: Array<OptionUI_ItemID>){
         $(".contents-item--button-favorite.selected").removeClass("selected")
         if(Array.isArray(list)){
             $.each(list, function(_, id){
@@ -376,7 +383,7 @@ function setupContents(){
 
 
 /* Restore Options */
-function restoreValues(data){
+function restoreValues(data: Record<string,any>){
     $.each(data, function(name: string, value: any){
       var elm = $(`.options[id="${name}"]`)
       if(elm.length && value!==undefined && value!==null){
@@ -426,7 +433,7 @@ export function restoreOptions(){
         const tagName = $(this).prop("tagName").toLowerCase()
         const type = $(this).prop("type")
     
-        var value = {}
+        var value: Record<string,any> = {}
         if(tagName=="input" && type=="checkbox"){
             value[name] = $(this).prop('checked')
         }else if(tagName=="select"){
@@ -444,7 +451,7 @@ export function restoreOptions(){
         const tagName = $(this).prop("tagName").toLowerCase()
         const type = $(this).prop("type")
     
-        var value = {}
+        var value: Record<string,any> = {}
         if(tagName=="textarea"){
             value[name] = $(this).val()
         }else if(tagName=="input" && type=="text"){
@@ -488,7 +495,7 @@ export function restoreOptions(){
 
 /* Hide Option Buttons */
 function hideOptionButtons(){
-    function toggle(mode){
+    function toggle(mode?: any){
         if(mode){
             $(".contents-item--buttons").css("display", "")
         }else{

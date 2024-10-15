@@ -1,6 +1,6 @@
 import { setup } from "../general";
 import { escapeHtml } from "../../utils/text";
-import { defaultValue, getExtensionVersion } from "../../utils/misc";
+import { getExtensionVersion } from "../../utils/misc";
 
 setup()
 debugMode()
@@ -35,11 +35,11 @@ function showPatchnotes(){
             `)
 
             const currentVersion = getExtensionVersion()
-            const version = escapeHtml(data.version)
-            const date = escapeHtml(defaultValue(data.date, ""))
-            const url = escapeHtml(defaultValue(data.url, `https://github.com/shumm7/Narou-Tweaker/releases/tag/${version}`))
-            const release = data.release
-            const patchnote = data.patchnote[lang]
+            const version = escapeHtml(data?.version)
+            const date = escapeHtml(data?.date ?? "")
+            const url = escapeHtml(data?.url ?? `https://github.com/shumm7/Narou-Tweaker/releases/tag/${version}`)
+            const release = data?.release
+            const patchnote = data?.patchnote[lang]
             const headerList = {
                 ja: {
                     narou: "🏡 小説家になろう",
@@ -104,7 +104,7 @@ function showPatchnotes(){
 /* デバッグモード */
 function debugMode(){
     /* change debug mode */
-    function tabMode(isDebug){
+    function tabMode(isDebug?: boolean){
         var tab = $(`.header-menu-item[name="debug"]`)
 
         if(tab.length){
@@ -113,7 +113,7 @@ function debugMode(){
             }else{
                 tab.css("display", "none")
                 if(tab.hasClass("selected")){
-                    $(`.header-menu-item[name="config"]`).click()
+                    $(`.header-menu-item[name="config"]`).trigger("click")
                 }
             }
         }
@@ -142,11 +142,10 @@ function debugMode(){
     })
 
     /* Ctrl + Alt + O でデバッグモードオプションを表示 */
-    $(window).keydown(function(e){
+    $(window).on("keydown", function(e){
         if(e.ctrlKey){
         if(e.altKey){
         if(e.key === "o"){
-            console.log("event")
             $(`.contents-wide[name="extDebug"]`).css("display", "")
         }
         }
