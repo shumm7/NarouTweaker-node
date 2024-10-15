@@ -1,4 +1,4 @@
-import { LocalOptions } from "utils/option"
+import { LocalOptions } from "../../utils/option"
 import { OptionUI_CustomElement } from "./optionUI_custom"
 import { appendFavoriteOption, getOptionCategory, getOptionChildsFromID, getOptionFromID, getOptionPageFromID, moveFavoriteOption, removeFavoriteOption } from "./optionUI_libs"
 import { OptionUI_Item, OptionUI_ItemID } from "./optionUI_type"
@@ -341,12 +341,12 @@ export function colorPicker(){
 export function syntaxHighlight(){
     var i = 1
     $(".syntax-highlight").each(function(){
-        var textarea = $(this)
+        const textarea = $(this)
         var language = textarea.attr("data")
-        textarea.wrap(`<div class="syntax-highlight-wrap" id="highlight-${i}"></div>`)
+        var wrapper = $(`<div class="syntax-highlight-wrap" id="highlight-${i}"></div>`)
+        textarea.wrap(wrapper)
         textarea.after(`<pre><code class="${language}"></code></pre>`)
 
-        var wrapper = textarea.parent()
         var dummyWrapper = wrapper.find("pre")
         var dummy = dummyWrapper.find("code")
 

@@ -1,4 +1,4 @@
-import { localFont, localFontFamilyV1 } from "utils/v1_font";
+import { localFont, localFontFamilyV1 } from "../../utils/v1_font";
 import { defaultValue, getCSSRule, saveJson } from "../../utils/misc";
 import { generateNoDuplicateSkinName, localSkinsV1, SkinsV1, SkinV1 } from "../../utils/v1_skin";
 

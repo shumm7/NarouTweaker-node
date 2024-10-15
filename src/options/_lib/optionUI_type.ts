@@ -1,5 +1,4 @@
-import { OptionID } from "utils/option"
-
+export type OptionID = string
 export type OptionUI_PageID = string
 export type OptionUI_CategoryID = string
 export type OptionUI_ItemID = string

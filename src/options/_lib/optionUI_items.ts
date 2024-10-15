@@ -1,13 +1,13 @@
-import { general_optionsList } from "../general/_options.js";
-import { narou_optionsList } from "../narou/_options.js";
-import { novel_optionsList } from "../novel/_options.js";
-import { yomou_optionsList } from "../yomou/_options.js";
-import { workspace_optionsList } from "../workspace/_options.js";
-import { mypage_optionsList } from "../mypage/_options.js";
-import { mitemin_optionsList } from "../mitemin/_options.js";
-import { kasasagi_optionsList } from "../kasasagi/_options.js";
+import { general_optionsList } from "../general/_options";
+import { narou_optionsList } from "../narou/_options";
+import { novel_optionsList } from "../novel/_options";
+import { yomou_optionsList } from "../yomou/_options";
+import { workspace_optionsList } from "../workspace/_options";
+import { mypage_optionsList } from "../mypage/_options";
+import { mitemin_optionsList } from "../mitemin/_options";
+import { kasasagi_optionsList } from "../kasasagi/_options";
 
-import { OptionUI_Item, OptionUI_Page } from "./optionUI_type.js";
+import { OptionUI_Item, OptionUI_Page } from "./optionUI_type";
 
 export const OptionUI_Pages: Array<OptionUI_Page> = [
     {

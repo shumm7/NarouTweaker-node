@@ -1,6 +1,6 @@
-import { defaultValue } from "/utils/misc.js"
-import { defaultOption, localFont, localSkins, localFontFamily } from "/utils/option.js"
-import { makeSkinCSS } from "/utils/skin.js"
+import { FontFamiliesV1, FontFamilyV1, localFont, localFontFamilyV1 } from "../utils/v1_font"
+import { localSkinsV1, makeSkinCSS, SkinsV1, SkinV1 } from "../utils/v1_skin"
+import { CSS_String } from "../utils/type"
 
 export function skinListener(){
     makeSkin()
@@ -33,34 +33,33 @@ export function skinListener(){
 
 function makeSkin(){
     chrome.storage.local.get(null, (data) => {
-        const skin_idx = defaultValue(data.selectedSkin, defaultOption.selectedSkin)
-        const skins = localSkins.concat(defaultValue(data.skins, defaultOption.skins))
-        const skin = skins[skin_idx]
+        const skin_idx: number = data.selectedSkin ?? 0
+        const skins: SkinsV1 = localSkinsV1.concat(data.skins ?? [])
+        const skin: SkinV1 = new SkinV1(skins[skin_idx])
 
         var rule = ""
 
         /* Font */
-        const selectedFontFamily = defaultValue(data.fontSelectedFontFamily, defaultOption.fontSelectedFontFamily)
-        var fontFamilyList = localFontFamily.concat(defaultValue(data.fontFontFamilyList, defaultOption.fontFontFamilyList))
-        var fontFamily_Current 
-        var fontCss
+        const selectedFontFamily: number = data.fontSelectedFontFamily ?? 0
+        var fontFamilyList: FontFamiliesV1 = localFontFamilyV1.concat(data.fontFontFamilyList ?? [])
+        var fontFamily_Current: string
+        var fontCss: CSS_String
 
         if(fontFamilyList.length<=selectedFontFamily || selectedFontFamily<0){
-            fontFamily_Current = localFontFamily[0].font
+            fontFamily_Current = localFontFamilyV1[0].font
             fontCss = ""
         }else{
             fontFamily_Current = fontFamilyList[selectedFontFamily].font
             fontCss = fontFamilyList[selectedFontFamily].css
         }
 
-        const fontSize = defaultValue(data.fontFontSize, defaultOption.fontFontSize) + localFont["font-size"]
-        const lineHeight = defaultValue(data.fontLineHeight, defaultOption.fontLineHeight) + localFont["line-height"]
-        const textRendering = defaultValue(data.fontTextRendering, defaultOption.fontTextRendering)
-        const width = localFont["width"] * defaultValue(data.fontWidth, defaultOption.fontWidth)
+        const fontSize = data.fontFontSize + localFont["font-size"]
+        const lineHeight = data.fontLineHeight + localFont["line-height"]
+        const textRendering = data.fontTextRendering
+        const width = localFont["width"] * data.fontWidth
         const outerWidth = width + 130
-        const widthRatio = defaultValue(data.fontWidth, defaultOption.fontWidth)
+        const widthRatio = data.fontWidth
         const verticalVh = 20 * (1 - widthRatio) + 5
-
         rule += `
         .p-novel__text {
             line-height: ${lineHeight}% !important;
@@ -122,8 +121,8 @@ function makeSkin(){
 
 function makeEditorSkin(){
     chrome.storage.local.get(null, (data) => {
-        const skin_idx = defaultValue(data.workspaceEditorSelectedSkin, defaultOption.workspaceEditorSelectedSkin)
-        const skins = localSkins.concat(defaultValue(data.skins, defaultOption.skins))
+        let skin_idx: number = data.workspaceEditorSelectedSkin ?? 0
+        const skins: SkinsV1 = localSkinsV1.concat(data.skins ?? [])
         if(skins.length<skin_idx || skin_idx<0){
             skin_idx = 0
             chrome.storage.local.set({workspaceEditorSelectedSkin: skin_idx})
@@ -179,24 +178,24 @@ function makeEditorSkin(){
         }
         `
 
-        const selectedFontFamily = defaultValue(data.workspaceEditorSelectedFontFamily, defaultOption.workspaceEditorSelectedFontFamily)
-        const fontFamilyList = localFontFamily.concat(defaultValue(data.fontFontFamilyList, defaultOption.fontFontFamilyList))
-        var fontFamily_Current 
-        var fontCss
+        const selectedFontFamily: number = data.workspaceEditorSelectedFontFamily ?? 0
+        const fontFamilyList: FontFamiliesV1 = localFontFamilyV1.concat(data.fontFontFamilyList ?? [])
+        var fontFamily_Current: string
+        var fontCss: CSS_String
 
         if(fontFamilyList.length<=selectedFontFamily || selectedFontFamily<0){
-            fontFamily_Current = localFontFamily[0].font
+            fontFamily_Current = localFontFamilyV1[0].font
             fontCss = ""
         }else{
             fontFamily_Current = fontFamilyList[selectedFontFamily].font
             fontCss = fontFamilyList[selectedFontFamily].css
         }
 
-        const fontSize = defaultValue(data.workspaceEditorFontSize, defaultOption.workspaceEditorFontSize) + localFont["font-size"]
-        const lineHeight = defaultValue(data.workspaceEditorLineHeight, defaultOption.workspaceEditorLineHeight) + localFont["line-height"]
-        const textRendering = defaultValue(data.workspaceEditorTextRendering, defaultOption.workspaceEditorTextRendering)
-        const width = localFont["width"] * defaultValue(data.workspaceEditorWidth, defaultOption.workspaceEditorWidth)
-        const widthRatio = defaultValue(data.workspaceEditorWidth, defaultOption.workspaceEditorWidth)
+        const fontSize = data.workspaceEditorFontSize + localFont["font-size"]
+        const lineHeight = data.workspaceEditorLineHeight + localFont["line-height"]
+        const textRendering = data.workspaceEditorTextRendering
+        const width = localFont["width"] * data.workspaceEditorWidth
+        const widthRatio = data.workspaceEditorWidth
         let font_rule = ""
 
         font_rule += `

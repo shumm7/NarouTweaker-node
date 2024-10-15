@@ -1,8 +1,8 @@
-import { OptionUI_Category, OptionUI_Item } from "options/_lib/optionUI_type";
+import { OptionUI_Category, OptionUI_Item } from "../../options/_lib/optionUI_type";
 import { searchCount, stringSimilarity } from "../../utils/text";
 import { getOptionElement, optionHide, syntaxHighlight } from "../_lib/utils";
 import { restoreOptions, setup } from "../general";
-import { OptionUI_Items, OptionUI_Pages } from "options/_lib/optionUI_items";
+import { OptionUI_Items, OptionUI_Pages } from "../../options/_lib/optionUI_items";
 
 setup()
 $("#search-box").focus()

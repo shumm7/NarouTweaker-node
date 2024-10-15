@@ -1,6 +1,6 @@
-import { getOptionFromID } from "options/_lib/optionUI_libs.js";
-import { getOptionElement, optionHide, syntaxHighlight } from "../_lib/utils.js";
-import { restoreOptions, setup } from "../general.js";
+import { getOptionFromID } from "../../options/_lib/optionUI_libs";
+import { getOptionElement, optionHide, syntaxHighlight } from "../_lib/utils";
+import { restoreOptions, setup } from "../general";
 
 setup()
 setupContents()

@@ -1,17 +1,17 @@
-
-import { defaultOption } from "../../utils/option.js";
-import { getDatetimeStringForFilename, getDatetimeString, escapeHtml } from "../../utils/text.js";
-import { saveJson } from "../../utils/misc.js";
-import { optionCategoryList } from "../_lib/optionUI_items.js";
-import { getOptionPageFromId, fixOption, formatOption } from "../_lib/optionUI_libs.js";
+import { fixOption, getOptionPageFromID } from "../../options/_lib/optionUI_libs";
+import { saveJson } from "../../utils/misc";
+import { OptionUI_Pages } from "../../options/_lib/optionUI_items";
+import { escapeHtml } from "../../utils/text";
+import { LocalOptions } from "../../utils/option";
+import { getDatetimeString, getDatetimeStringForFilename } from "../../utils/time";
 
 /* 基本設定 */
 /* デフォルトページ（ポップアップ時） */
 export function general_popupDefaultPage_Dropdown(){
     $("#extPopupDefaultPage_Dropdown").on("change", function(e){
-        var pageId = $(this).val()
+        var pageId = `${$(this).val()}`
         if(pageId!=="__auto__"){
-            var page = getOptionPageFromId(pageId)
+            var page = getOptionPageFromID(pageId)
             if(page){
                 if(page.popup){
                     if(page.popup.defaultPage && page.title && page.id){
@@ -35,7 +35,7 @@ export function general_popupDefaultPage_Dropdown(){
         
         elm.empty()
         elm.append(`<option value="__auto__">自動（閲覧中のページに合わせる）</option>`)
-        $.each(optionCategoryList, function(_, page){
+        $.each(OptionUI_Pages, function(_, page){
             if(page.popup){
                 if(page.popup.defaultPage && page.title && page.id){
                     elm.append(`<option value="${escapeHtml(page.id)}">ページ「${escapeHtml(page.title)}」</option>`)
@@ -64,12 +64,12 @@ export function general_removeOptionData(){
             chrome.storage.local.get("extNotifications", function(data){
                 chrome.storage.local.clear(()=>{
                     console.log("Reset all options.")
-                    chrome.storage.local.set(defaultOption)
+                    chrome.storage.local.set(new LocalOptions().get())
                     console.log("Set all options.")
 
                     /* notify */
                     if(data.extNotifications){
-                        chrome.notifications.create(null, {
+                        chrome.notifications.create("", {
                             iconUrl: "/assets/icons/icon_48.png",
                             type: "basic",
                             title: "Narou Tweakerがリセットされました",
@@ -90,7 +90,7 @@ export function general_fixOptionData(){
             
             chrome.storage.local.get("extNotifications", function(data){
                 if(data.extNotifications){
-                    chrome.notifications.create(null, {
+                    chrome.notifications.create("", {
                         iconUrl: "/assets/icons/icon_48.png",
                         type: "basic",
                         title: "Narou Tweakerが修復されました",
@@ -109,10 +109,10 @@ export function general_exportOptionData(){
         chrome.storage.local.get(null, function(data) {
             var date = getDatetimeStringForFilename()
             console.log(date)
-            var d = formatOption(data)
+            var d = new LocalOptions(data)
             console.log(d)
             if(d){
-                saveJson(formatOption(data), `nt-option-${date}.json`)
+                saveJson(d.get(), `nt-option-${date}.json`)
             }
         });
     })
@@ -120,9 +120,9 @@ export function general_exportOptionData(){
         $("#option-export-output").css("display", "block")
         chrome.storage.local.get(null, function(data) {
             var field = $("#option-export-output--field")
-            var d = formatOption(data)
+            var d = new LocalOptions(data)
             if(d){
-                field.val(JSON.stringify(d, null, "\t"))
+                field.val(JSON.stringify(d.get(), null, "\t"))
                 field.trigger("input")
             }
         });
@@ -131,7 +131,7 @@ export function general_exportOptionData(){
 
 /* 設定データのインポート */
 export function general_importOptionData(){
-    $("#option-import-json").on("change", (evt)=>{
+    $("#option-import-json").on("change", (evt: any)=>{
         $("#option-import-warnings").empty()
 
         try{
@@ -140,7 +140,7 @@ export function general_importOptionData(){
             reader.onload = function(e){
                 try{
                     var field = $("#option-import-input--field")
-                    field.val(e.target.result)
+                    field.val(`${e.target?.result ?? ""}`)
                     field.trigger("input")
                 }catch(e){
                     console.warn(e)
@@ -157,7 +157,7 @@ export function general_importOptionData(){
         evt.stopPropagation();
         evt.preventDefault();
     });
-    $("#option-import").on("drop", (evt)=>{
+    $("#option-import").on("drop", (evt: any)=>{
         evt.stopPropagation();
         evt.preventDefault();
         $("#option-import-warnings").empty()
@@ -168,7 +168,7 @@ export function general_importOptionData(){
             reader.onload = function(e){
                 try{
                     var field = $("#option-import-input--field")
-                    field.val(e.target.result)
+                    field.val(`${e.target?.result ?? ""}`)
                     field.trigger("input")
                 }catch(e){
                     console.warn(e)
@@ -183,16 +183,16 @@ export function general_importOptionData(){
             $("#option-import-warnings").empty()
             var raw
             try{
-                raw = JSON.parse($("#option-import-input--field").val())
-                var option = formatOption(raw)
+                raw = JSON.parse(`${$("#option-import-input--field").val()}`)
+                var option = new LocalOptions(raw)
                 if(option){
-                    chrome.storage.local.set(option, function(){
+                    chrome.storage.local.set(option.get(), function(){
                         var field = $("#option-import-input--field")
                         field.val("")
                         field.trigger("input")
 
                         /* notify */
-                        chrome.notifications.create(null, {
+                        chrome.notifications.create("", {
                             iconUrl: "/assets/icons/icon_48.png",
                             type: "basic",
                             title: "Narou Tweakerがアップデートされました",
@@ -223,7 +223,7 @@ export function general_exportOptionText() {
             try{
                 if(whitelist){
                     var input = $("#exportLocalOptionText_Input_Whitelist")
-                    const appears = input.val().split(/\s/)
+                    const appears = `${input.val()}`.split(/\s/)
                     var ret = {}
                     $.each(appears, function(_, elm){
                         if(elm in data){
@@ -233,7 +233,7 @@ export function general_exportOptionText() {
                     data = ret
                 }else{
                     var input = $("#exportLocalOptionText_Input_Blacklist")
-                    const ignores = input.val().split(/\s/)
+                    const ignores = `${input.val()}`.split(/\s/)
                     $.each(ignores, function(_, elm){
                         if(elm in data){
                             delete data[elm]
@@ -257,7 +257,7 @@ export function general_exportOptionText() {
             try{
                 if(whitelist){
                     var input = $("#exportSyncOptionText_Input_Whitelist")
-                    const appears = input.val().split(/\s/)
+                    const appears = `${input.val()}`.split(/\s/)
                     var ret = {}
                     $.each(appears, function(_, elm){
                         if(elm in data){
@@ -268,7 +268,7 @@ export function general_exportOptionText() {
 
                 }else{
                     var input = $("#exportSyncOptionText_Input_Blacklist")
-                    const ignores = input.val().split(/\s/)
+                    const ignores = `${input.val()}`.split(/\s/)
                     $.each(ignores, function(_, elm){
                         if(elm in data){
                             delete data[elm]
@@ -292,7 +292,7 @@ export function general_exportOptionText() {
             try{
                 if(whitelist){
                     var input = $("#exportSessionOptionText_Input_Whitelist")
-                    const appears = input.val().split(/\s/)
+                    const appears = `${input.val()}`.split(/\s/)
                     var ret = {}
                     $.each(appears, function(_, elm){
                         if(elm in data){
@@ -302,7 +302,7 @@ export function general_exportOptionText() {
                     data = ret
                 }else{
                     var input = $("#exportSessionOptionText_Input_Blacklist")
-                    const ignores = input.val().split(/\s/)
+                    const ignores = `${input.val()}`.split(/\s/)
                     $.each(ignores, function(_, elm){
                         if(elm in data){
                             delete data[elm]
@@ -373,7 +373,7 @@ export function general_monitorOptionChanged(){
 
             var currentLine = ""
             if(!$("#option-monitor--mode-reset").prop('checked')){
-                currentLine = field.val()
+                currentLine = `${field.val()}`
             }
 
             var keys = Object.keys(changes)
@@ -423,8 +423,8 @@ export function general_insertOptionData(){
             try {
                 $("#option-insert--error").text("")
                 const storage = $("#option-insert--storage").val()
-                const key = $("#option-insert--key").val().trim()
-                const value = $("#option-insert--value").val().trim()
+                const key = `${$("#option-insert--key").val()}`.trim()
+                const value = `${$("#option-insert--value").val()}`.trim()
                 var json
 
                 if(key.length==0){

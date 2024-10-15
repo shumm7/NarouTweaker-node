@@ -63,7 +63,7 @@ export function messageListener(){
 
 function fetchWrap(_url, _post, _header, _callback, _charset) {
     var method = "GET";
-    var body = undefined;
+    var body: string|undefined = undefined;
     var headers = {};
 
     if (_header) {
@@ -91,14 +91,14 @@ function fetchWrap(_url, _post, _header, _callback, _charset) {
         })
         .then(res => {
             clearTimeout(_timeout);
-
+            
             if (res.ok) {
-
+                var _res
                 if (!_charset) {
-                    res = res.text();
+                    _res = res.text();
                 }
 
-                return res;
+                return _res;
             } else {
                 return false;
             }

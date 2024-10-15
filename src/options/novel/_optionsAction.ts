@@ -1,7 +1,7 @@
-import { ReplacePattern } from "utils/type.js"
-import { addFontAwesomeOriginaIcons, CustomIconIDs, getExcludeIcons, novelIconList } from "../../utils/header.js"
-import { addFontEditButtonEvent, restoreFont } from "./_optionsAction_Font.js"
-import { addSkinEditButtonEvent, restoreSkins } from "./_optionsAction_Skin.js"
+import { ReplacePattern } from "../../utils/type"
+import { addFontAwesomeOriginaIcons, CustomIconIDs, getExcludeIcons, novelIconList } from "../../utils/header"
+import { addFontEditButtonEvent, restoreFont } from "./_optionsAction_Font"
+import { addSkinEditButtonEvent, restoreSkins } from "./_optionsAction_Skin"
 
 import Sortable from 'sortablejs'
 

@@ -1,3 +1,3 @@
-import { setup } from "../general";
+import { setup } from "../general"
 
 setup()

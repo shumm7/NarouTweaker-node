@@ -1,5 +1,5 @@
-import { OptionUI_Items, OptionUI_Pages } from "./optionUI_items.js";
-import { LocalOptions, SyncOptions } from "../../utils/option.js";
+import { OptionUI_Items, OptionUI_Pages } from "./optionUI_items";
+import { LocalOptions, SyncOptions } from "../../utils/option";
 import { OptionUI_Category, OptionUI_CategoryID, OptionUI_Item, OptionUI_ItemID, OptionUI_Page, OptionUI_PageID } from "./optionUI_type.js";
 
 /* Option Category */

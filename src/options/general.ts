@@ -1,8 +1,10 @@
 import { buttonHide, colorPicker, getOptionElement, optionHide, syntaxHighlight } from "./_lib/utils";
-import { check, defaultValue } from "../utils/misc"
+import { check } from "../utils/misc"
 import { OptionUI_Items, OptionUI_Pages } from "./_lib/optionUI_items";
 import { OptionUI_PageID } from "./_lib/optionUI_type";
 import { getOptionFromID, getOptionPageFromID } from "./_lib/optionUI_libs";
+import jQuery from "jquery";
+Object.assign(window, { $: jQuery, jQuery });
 
 const manifest = chrome.runtime.getManifest()
 let currentPage

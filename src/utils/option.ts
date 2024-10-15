@@ -1,12 +1,10 @@
-import { getOptionFromID, getOptionPageFromID } from "options/_lib/optionUI_libs"
+import { getOptionFromID, getOptionPageFromID } from "../options/_lib/optionUI_libs"
 import { CustomIconIDs, novelIconList, workspaceIconList, workspaceMenuIconList } from "./header"
 import { getExtensionVersion } from "./misc"
 import { CSS_String, ReplacePatterns } from "./type"
 import { FontFamiliesV1 } from "./v1_font"
 import { SkinsV1 } from "./v1_skin"
-import { OptionUI_Item, OptionUI_ItemID } from "options/_lib/optionUI_type"
-
-export type OptionID = string
+import { OptionID, OptionUI_Item, OptionUI_ItemID } from "options/_lib/optionUI_type"
 
 class Options {
     constructor(data?:Object){

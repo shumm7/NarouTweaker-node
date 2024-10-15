@@ -6,7 +6,7 @@ import { restoreSkins } from "./_optionsAction_Skin";
 /* フォントの表示設定 */
 export function restoreFont(){
   chrome.storage.local.get(null, (data)=>{
-    const fontList:FontFamiliesV1 = data.fontFontFamilyList ?? []
+    const fontList: FontFamiliesV1 = localFontFamilyV1.concat(data.fontFontFamilyList ?? [])
 
     $("#font-family-dropdown").empty()
     $.each(fontList, function(i, font){
@@ -16,8 +16,8 @@ export function restoreFont(){
         $("#font-family-dropdown").append(opt)
       }
     })
-    const index = data.fontSelectedFontFamily ?? 0
-    const selectedFont = fontList[index]
+    const index: number = data.fontSelectedFontFamily ?? 0
+    const selectedFont: FontFamilyV1 = fontList[index]
     $("#font-family-dropdown").val(String(index))
     $("#font-family-dropdown").css("font-family", selectedFont.font)
     $("#font-family-option--editting").text((index+1)+": " + selectedFont.name)

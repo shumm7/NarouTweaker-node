@@ -1,9 +1,8 @@
-import { fixOption } from "../../options/_lib/optionLib.js";
-import { actionListener } from "./_action.js";
-import { messageListener } from "./_process.js";
-import { sidepanelListener } from "./_sidepanel.js";
-import { skinListener } from "./_skin.js";
-import { yomouCssListener } from "./_yomou.js";
+import { fixOption } from "../options/_lib/optionUI_libs"
+import { actionListener } from "./_action"
+import { messageListener } from "./_process"
+import { skinListener } from "./_skin"
+import { yomouCssListener } from "./_yomou"
 
 /* Update Option Data */
 chrome.runtime.onInstalled.addListener((details) => {
