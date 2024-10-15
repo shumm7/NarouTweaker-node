@@ -34,7 +34,7 @@ const manifest = defineManifest({
 
 export default defineConfig((opt) => {
   return {
-    root: resolve(__dirname, "src"),
+    root: "src",
     plugins: [
       crx({ manifest: manifest })
     ],

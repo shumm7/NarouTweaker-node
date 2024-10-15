@@ -1,4 +1,4 @@
-import { CustomIconIDs, getExcludeIcons, workspaceIconList, workspaceMenuIconList } from "../../utils/header"
+import { CustomIconID, CustomIconIDs, getExcludeIcons, workspaceIconList, workspaceMenuIconList } from "../../utils/header"
 import Sortable from 'sortablejs'
 
 export function workspace_customHeaderSortable(){
@@ -57,7 +57,7 @@ export function workspace_customHeaderSortable(){
 
 
     /* Workspace Header */
-    function getWorkspaceHeaderIconElement(id){
+    function getWorkspaceHeaderIconElement(id: CustomIconID){
         let icon = workspaceIconList[id]
         var c = ""
         if("isDropdown" in icon){
@@ -174,7 +174,7 @@ export function workspace_customHeaderMenuSortable(){
     }
 
     /* Workspace Header Menu */
-    function getWorkspaceHeaderMenuIconElement(id){
+    function getWorkspaceHeaderMenuIconElement(id: CustomIconID){
         let icon = workspaceMenuIconList[id]
 
         return `

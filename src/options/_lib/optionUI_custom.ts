@@ -1,4 +1,4 @@
-import { OptionHideParammeters } from "./utils"
+import { OptionHideParammeters } from "./optionUI_type"
 
 const oh = OptionHideParammeters
 

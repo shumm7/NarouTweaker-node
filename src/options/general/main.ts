@@ -143,12 +143,8 @@ function debugMode(){
 
     /* Ctrl + Alt + O でデバッグモードオプションを表示 */
     $(window).on("keydown", function(e){
-        if(e.ctrlKey){
-        if(e.altKey){
-        if(e.key === "o"){
+        if(e.ctrlKey && e.altKey && e.key === "o"){
             $(`.contents-wide[name="extDebug"]`).css("display", "")
-        }
-        }
         }
     });
 }

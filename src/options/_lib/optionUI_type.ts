@@ -3,6 +3,17 @@ export type OptionUI_PageID = string
 export type OptionUI_CategoryID = string
 export type OptionUI_ItemID = string
 
+
+
+export class OptionHideParammeters {
+    static readonly key: string = "data-for"
+    static readonly value: string = "data"
+    static readonly logic: string = "data-rule"
+    static readonly type: string = "data-type"
+    static readonly mode: string = "mode"
+}
+
+
 /**
  * オプションページ上の説明文クラス
  * @param {string} text - メイン文章

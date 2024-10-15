@@ -190,77 +190,112 @@ export function novel_replacePattern(){
 
             /* Events */
             $(".correction-replace--pattern-box .correction-replace--move-front").on("click", function(){ // Up Button
-                var idx = parseInt(`${$(this).parent().parent().attr("data-for") ?? ""}`)
-                chrome.storage.local.get(["correctionReplacePatterns"], function(data){
-                    var patterns = data.correctionReplacePatterns
-                    if(idx>0){
-                        [patterns[idx], patterns[idx-1]] = [patterns[idx-1], patterns[idx]]
-                        chrome.storage.local.set({correctionReplacePatterns: patterns}, function(){})
-
+                const _v = $(this).parent().parent().attr("data-for")
+                if(typeof _v === "string"){
+                    const idx: number = Number(_v)
+                    if(!isNaN(idx)){
+                        chrome.storage.local.get(["correctionReplacePatterns"], function(data){
+                            var patterns = data.correctionReplacePatterns
+                            if(idx>0){
+                                [patterns[idx], patterns[idx-1]] = [patterns[idx-1], patterns[idx]]
+                                chrome.storage.local.set({correctionReplacePatterns: patterns}, function(){})
+    
+                            }
+                        })
                     }
-                })
+                }
             })
             $(".correction-replace--pattern-box .correction-replace--move-back").on("click", function(){ // Down Button
-                var idx = parseInt(`${$(this).parent().parent().attr("data-for") ?? ""}`)
-                chrome.storage.local.get(["correctionReplacePatterns"], function(data){
-                    var patterns = data.correctionReplacePatterns
-                    if(idx<patterns.length-1){
-                        [patterns[idx], patterns[idx+1]] = [patterns[idx+1], patterns[idx]]
-                        chrome.storage.local.set({correctionReplacePatterns: patterns}, function(){})
+                const _v = $(this).parent().parent().attr("data-for")
+                if(typeof _v === "string"){
+                    const idx: number = Number(_v)
+                    if(!isNaN(idx)){
+                        chrome.storage.local.get(["correctionReplacePatterns"], function(data){
+                            var patterns = data.correctionReplacePatterns
+                            if(idx<patterns.length-1){
+                                [patterns[idx], patterns[idx+1]] = [patterns[idx+1], patterns[idx]]
+                                chrome.storage.local.set({correctionReplacePatterns: patterns}, function(){})
+                            }
+                        })
                     }
-                })
+                }
             })
             $(".correction-replace--pattern-box .correction-replace--regex-button").on("click", function(){ // Regex Button
-                var idx = parseInt(`${$(this).parent().attr("data-for") ?? ""}`)
+                const _v = $(this).parent().attr("data-for")
                 var elm = $(this)
-                chrome.storage.local.get(["correctionReplacePatterns"], function(data){
-                    var patterns = data.correctionReplacePatterns
-                    if(elm.hasClass("enabled")){
-                        patterns[idx].regex = false
-                    }else{
-                        patterns[idx].regex = true
+                if(typeof _v === "string"){
+                    const idx: number = Number(_v)
+                    if(!isNaN(idx)){
+                        chrome.storage.local.get(["correctionReplacePatterns"], function(data){
+                            var patterns = data.correctionReplacePatterns
+                            if(elm.hasClass("enabled")){
+                                patterns[idx].regex = false
+                            }else{
+                                patterns[idx].regex = true
+                            }
+                            chrome.storage.local.set({correctionReplacePatterns: patterns}, function(){})
+                        })
                     }
-                    chrome.storage.local.set({correctionReplacePatterns: patterns}, function(){})
-                })
+                }
             })
             $(".correction-replace--pattern-box .correction-replace--active-button").on("click", function(){ // Active Button
-                var idx = parseInt(`${$(this).parent().attr("data-for") ?? ""}`)
+                const _v = $(this).parent().attr("data-for")
                 var elm = $(this)
-                chrome.storage.local.get(["correctionReplacePatterns"], function(data){
-                    var patterns = data.correctionReplacePatterns
-                    if(elm.hasClass("enabled")){
-                        patterns[idx].active = false
-                    }else{
-                        patterns[idx].active = true
+                if(typeof _v === "string"){
+                    const idx: number = Number(_v)
+                    if(!isNaN(idx)){
+                        chrome.storage.local.get(["correctionReplacePatterns"], function(data){
+                            var patterns = data.correctionReplacePatterns
+                            if(elm.hasClass("enabled")){
+                                patterns[idx].active = false
+                            }else{
+                                patterns[idx].active = true
+                            }
+                            chrome.storage.local.set({correctionReplacePatterns: patterns}, function(){})
+                        })
                     }
-                    chrome.storage.local.set({correctionReplacePatterns: patterns}, function(){})
-                })
+                }
             })
             $(".correction-replace--pattern-box .correction-replace--remove-button").on("click", function(){ // Trash Button
-                var idx = parseInt(`${$(this).parent().attr("data-for") ?? ""}`)
-                chrome.storage.local.get(["correctionReplacePatterns"], function(data){
-                    var patterns = data.correctionReplacePatterns
-                    patterns.splice(idx, 1)
-                    chrome.storage.local.set({correctionReplacePatterns: patterns}, function(){})
-                })
+                const _v = $(this).parent().attr("data-for")
+                if(typeof _v === "string"){
+                    const idx: number = Number(_v)
+                    if(!isNaN(idx)){
+                        chrome.storage.local.get(["correctionReplacePatterns"], function(data){
+                            var patterns = data.correctionReplacePatterns
+                            patterns.splice(idx, 1)
+                            chrome.storage.local.set({correctionReplacePatterns: patterns}, function(){})
+                        })
+                    }
+                }
             })
             $(".correction-replace--pattern-box .correction-replace--pattern").on("change", function(){ // Pattern Fields
-                var idx = parseInt(`${$(this).parent().parent().attr("data-for") ?? ""}`)
-                var value = $(this).val()
-                chrome.storage.local.get(["correctionReplacePatterns"], function(data){
-                    var patterns = data.correctionReplacePatterns
-                    patterns[idx].pattern = value
-                    chrome.storage.local.set({correctionReplacePatterns: patterns}, function(){})
-                })
+                const _v = $(this).parent().parent().attr("data-for")
+                if(typeof _v === "string"){
+                    const idx: number = Number(_v)
+                    if(!isNaN(idx)){
+                        var value = $(this).val()
+                        chrome.storage.local.get(["correctionReplacePatterns"], function(data){
+                            var patterns = data.correctionReplacePatterns
+                            patterns[idx].pattern = value
+                            chrome.storage.local.set({correctionReplacePatterns: patterns}, function(){})
+                        })
+                    }
+                }
             })
             $(".correction-replace--pattern-box .correction-replace--replacement").on("change", function(){ // Replacement Fields
-                var idx = parseInt(`${$(this).parent().parent().attr("data-for") ?? ""}`)
-                var value = $(this).val()
-                chrome.storage.local.get(["correctionReplacePatterns"], function(data){
-                    var patterns = data.correctionReplacePatterns
-                    patterns[idx].replacement = value
-                    chrome.storage.local.set({correctionReplacePatterns: patterns}, function(){})
-                })
+                const _v = $(this).parent().parent().attr("data-for")
+                if(typeof _v === "string"){
+                    const idx: number = Number(_v)
+                    if(!isNaN(idx)){
+                        var value = $(this).val()
+                        chrome.storage.local.get(["correctionReplacePatterns"], function(data){
+                            var patterns = data.correctionReplacePatterns
+                            patterns[idx].replacement = value
+                            chrome.storage.local.set({correctionReplacePatterns: patterns}, function(){})
+                        })
+                    }
+                }
             })
         })
     }

@@ -12,8 +12,8 @@ let currentPage: OptionUI_PageID|undefined
 
 export function setup(){
     var p = $("#option-page-id").val()
-    if(p!==undefined){
-        currentPage = `${p}`
+    if(typeof p === "string"){
+        currentPage = p
     } 
 
     setupDOM()
@@ -134,27 +134,34 @@ function setupDOM(){
 
     /* search event */
     $("#sidebar-search-box").on("input", function(){
-        var searchWords: string = `${$(this).val() ?? ""}`
-        if(currentPage!=="search"){
-            const words = searchWords.split(/\s/).filter(w => w.trim().length > 0)
+        const _v = $(this).val()
         
-            const params = new URLSearchParams(location.search)
-            params.set("s", words.join(" "))
-            window.history.replaceState(null, "", `${location.pathname}?${params.toString()}`)
-        }else{
-            $("#search-box").val(searchWords)
-            $("#search-box").trigger("input")
+        if(typeof _v == "string"){
+            var searchWords: string = _v
+            if(currentPage!=="search"){
+                const words = searchWords.split(/\s/).filter(w => w.trim().length > 0)
+            
+                const params = new URLSearchParams(location.search)
+                params.set("s", words.join(" "))
+                window.history.replaceState(null, "", `${location.pathname}?${params.toString()}`)
+            }else{
+                $("#search-box").val(searchWords)
+                $("#search-box").trigger("input")
+            }
         }
     })
     $("#sidebar-search-box").on("keydown", function(e){
         if(e.key === "Enter"){
             if(currentPage!=="search"){
-                var searchWords = `${$(this).val() ?? ""}`
-                const words = searchWords.split(/\s/).filter(w => w.trim().length > 0)
-            
-                const params = new URLSearchParams(location.search)
-                params.set("s", words.join(" "))
-                location.assign(`/options/search/index.html?${params.toString()}`)
+                const _v = $(this).val()
+                if(typeof _v == "string"){
+                    var searchWords: string = _v
+                    const words = searchWords.split(/\s/).filter(w => w.trim().length > 0)
+                
+                    const params = new URLSearchParams(location.search)
+                    params.set("s", words.join(" "))
+                    location.assign(`/options/search/index.html?${params.toString()}`)
+                }
             }else{
                 $("#search-box").focus()
             }

@@ -1,20 +1,11 @@
 import { LocalOptions } from "../../utils/option"
 import { OptionUI_CustomElement } from "./optionUI_custom"
 import { appendFavoriteOption, getOptionCategory, getOptionChildsFromID, getOptionFromID, getOptionPageFromID, moveFavoriteOption, removeFavoriteOption } from "./optionUI_libs"
-import { OptionID, OptionUI_Item, OptionUI_ItemID } from "./optionUI_type"
+import { OptionHideParammeters, OptionUI_Item, OptionUI_ItemID } from "./optionUI_type"
 
 import "@melloware/coloris/dist/coloris.css";
 import { coloris, init } from "@melloware/coloris";
 import hljs from 'highlight.js';
-
-export class OptionHideParammeters {
-    static readonly key: string = "data-for"
-    static readonly value: string = "data"
-    static readonly logic: string = "data-rule"
-    static readonly type: string = "data-type"
-    static readonly mode: string = "mode"
-}
-
 
 /**o
  * オプション（storage.local）の状態によって、要素の表示/非表示を切り替える
