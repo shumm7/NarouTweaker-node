@@ -4,14 +4,14 @@ import {replaceInFile} from 'replace-in-file'
 const root = "./dist"
 
 /* replace files */
-const data = JSON.parse(fs.readFileSync(`${root}/manifest.json`, 'utf8'));
+const data = JSON.parse(fs.readFileSync(`${root}/src/manifest.json`, 'utf8'));
 if("content_scripts" in data){
     for(const content of data.content_scripts){
         if("css" in content){
             var css_list = content.css
             const files = []
             for(const css of css_list){
-                files.push(`${root}/${css}`)
+                files.push(`${root}/src/${css}`)
             }
             replaceInFile({files: files, from: /url\(\/assets\//g, to: "url(chrome-extension://__MSG_@@extension_id__/assets/"})
         }
@@ -28,4 +28,4 @@ if("web_accessible_resources" in data){
         }
     }
 }
-fs.writeFileSync(`${root}/manifest.json`, JSON.stringify(data, undefined, 4));
+fs.writeFileSync(`${root}/src/manifest.json`, JSON.stringify(data, undefined, 4));

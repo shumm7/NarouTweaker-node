@@ -742,12 +742,12 @@ export function _header(){
 
             /* QRコード */
             if(data.novelCustomHeaderQRCodeShowURL){
-                $("#novel_header").before(`<div id='qrcode-outer'><div id="qrcode-background"></div><canvas id="qrcode-display"><input type="text" id="qrcode-text" readonly></canvas></div></div>`)
+                $("#novel_header").before(`<div id='qrcode-outer'><div id="qrcode-background"></div><div id="qrcode-display"><canvas></canvas><input type="text" id="qrcode-text" readonly></div></div></div>`)
                 $("#qrcode-text").on("click", function(){
                     $(this).select()
                 })
             }else{
-                $("#novel_header").before(`<div id='qrcode-outer'><div id="qrcode-background"></div><canvas id="qrcode-display"></canvas></div>`)
+                $("#novel_header").before(`<div id='qrcode-outer'><div id="qrcode-background"></div><div id="qrcode-display"><canvas></canvas></div></div>`)
             }
             $("#qrcode-background").on("click", function(){
                 $("#qrcode-outer").removeClass("show")
@@ -756,12 +756,12 @@ export function _header(){
             var qrcode
             if(data.novelCustomHeaderQRCodeCurrentLocation){
                 $("#novel_header ul").append('<li class="qrcode"><a><i class="fa-solid fa-qrcode"></i><span class="title">QRコード</span></a></li>')
-                qrcode = QRCode.toCanvas(document.getElementById("qrcode-display"), location.href);
+                qrcode = QRCode.toCanvas(document.querySelector("#qrcode-display > canvas"), location.href, {width: 250, height: 250});
                 $("#qrcode-text").val(location.href)
             }else{
                 if(meta_url!=undefined){
                     $("#novel_header ul").append('<li class="qrcode"><a><i class="fa-solid fa-qrcode"></i><span class="title">QRコード</span></a></li>')
-                    qrcode = QRCode.toCanvas(document.getElementById("qrcode-display"), meta_url);
+                    qrcode = QRCode.toCanvas(document.querySelector("#qrcode-display > canvas"), meta_url, {width: 250, height: 250});
                     $("#qrcode-text").val(meta_url)
                 }else if(ncode!=undefined){
                     $("#novel_header ul").append('<li class="qrcode"><a><i class="fa-solid fa-qrcode"></i><span class="title">QRコード</span></a></li>')
@@ -780,7 +780,7 @@ export function _header(){
                         }
                     }
                     if(uri){
-                        qrcode = QRCode.toCanvas(document.getElementById("qrcode-display"), uri);
+                        qrcode = QRCode.toCanvas(document.querySelector("#qrcode-display > canvas"), uri, {width: 250, height: 250});
                         $("#qrcode-text").val(uri)
                     }
                 }

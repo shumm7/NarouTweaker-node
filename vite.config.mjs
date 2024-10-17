@@ -79,7 +79,7 @@ export default defineConfig((opt) => {
             crx({ manifest: manifest })
         ],
         build: {
-            outDir: '../dist',
+            outDir: '../dist/src/',
             emptyOutDir: true,
             rollupOptions: {
                 input: {
