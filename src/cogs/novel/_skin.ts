@@ -1,4 +1,5 @@
-import { formatSkinData, makeSkinCSS } from "../../utils/skin";
+import { LocalOptions } from "../../utils/option";
+import { makeSkinCSS, SkinV1 } from "../../utils/v1_skin";
 
 /* Skin */
 export function removeDefaultSkinClass(){
@@ -30,7 +31,8 @@ export function _authorSkin(){
     })
 
     function changeAuthorSkin(){
-        chrome.storage.local.get(["novelAuthorCustomSkin"], (data)=>{
+        chrome.storage.local.get(["novelAuthorCustomSkin"], (_d)=>{
+            const data = new LocalOptions(_d)
             if(data.novelAuthorCustomSkin){
                 var banner = $(".novelrankingtag a:has(img[alt='Narou Tweaker 作者スキン'])")
                 if(banner.length){
@@ -39,20 +41,24 @@ export function _authorSkin(){
                         try{
                             // Escape HTML Tags
                             var p = $("<p>")
-                            p.text(span.get(0).firstChild.nodeValue)
-                            var text = p.text()
+                            const node = (span.get(0)?.firstChild as HTMLElement).nodeValue
+                            if(node!==null){
+                                p.text(node)
+                                var text = p.text()
+                                
+                                // Parse to Tags
+                                var skinData = new SkinV1(JSON.parse(text))
+                                chrome.storage.local.get(["novelCustomStyle", "novelAuthorCustomSkinWarning"], (data)=>{
+                                    const style = makeSkinCSS(skinData, data.novelCustomStyle)
+                                    $("#narou-tweaker-style--author-css").text(style)
+                                    if(data.novelAuthorCustomSkinWarning){
+                                        userSkinActive(true)
+                                    }else{
+                                        userSkinActive(false)
+                                    }
+                                })
+                            }
                             
-                            // Parse to Tags
-                            var skinData = formatSkinData(JSON.parse(text))
-                            chrome.storage.local.get(["novelCustomStyle", "novelAuthorCustomSkinWarning"], (data)=>{
-                                const style = makeSkinCSS(skinData, data.novelCustomStyle)
-                                $("#narou-tweaker-style--author-css").text(style)
-                                if(data.novelAuthorCustomSkinWarning){
-                                    userSkinActive(true)
-                                }else{
-                                    userSkinActive(false)
-                                }
-                            })
 
                         }catch(e){
                             console.warn(e)

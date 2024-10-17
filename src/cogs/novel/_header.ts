@@ -1,9 +1,9 @@
 import { getNcodeFromURL } from "../../utils/ncode";
 import { CustomIconID, CustomIconIDs, getExcludeIcons } from "../../utils/header"
-import { LocalOptions, SyncOptions } from "utils/option";
-import { getEpisode, getPageType, isR18 } from "utils/api";
+import { LocalOptions, SyncOptions } from "../../utils/option";
+import { getEpisode, getPageType, isR18 } from "../../utils/api";
 
-const QRCode = require('qrcodejs')
+import QRCode from 'qrcode';
 
 /* Header */
 export function _header(){
@@ -742,12 +742,12 @@ export function _header(){
 
             /* QRコード */
             if(data.novelCustomHeaderQRCodeShowURL){
-                $("#novel_header").before(`<div id='qrcode-outer'><div id="qrcode-background"></div><div id="qrcode-display"><input type="text" id="qrcode-text" readonly></div></div></div>`)
+                $("#novel_header").before(`<div id='qrcode-outer'><div id="qrcode-background"></div><canvas id="qrcode-display"><input type="text" id="qrcode-text" readonly></canvas></div></div>`)
                 $("#qrcode-text").on("click", function(){
                     $(this).select()
                 })
             }else{
-                $("#novel_header").before(`<div id='qrcode-outer'><div id="qrcode-background"></div><div id="qrcode-display"></div></div>`)
+                $("#novel_header").before(`<div id='qrcode-outer'><div id="qrcode-background"></div><canvas id="qrcode-display"></canvas></div>`)
             }
             $("#qrcode-background").on("click", function(){
                 $("#qrcode-outer").removeClass("show")
@@ -756,12 +756,12 @@ export function _header(){
             var qrcode
             if(data.novelCustomHeaderQRCodeCurrentLocation){
                 $("#novel_header ul").append('<li class="qrcode"><a><i class="fa-solid fa-qrcode"></i><span class="title">QRコード</span></a></li>')
-                qrcode = new QRCode(document.getElementById("qrcode-display"), {text: location.href});
+                qrcode = QRCode.toCanvas(document.getElementById("qrcode-display"), location.href);
                 $("#qrcode-text").val(location.href)
             }else{
                 if(meta_url!=undefined){
                     $("#novel_header ul").append('<li class="qrcode"><a><i class="fa-solid fa-qrcode"></i><span class="title">QRコード</span></a></li>')
-                    qrcode = new QRCode(document.getElementById("qrcode-display"), {text: meta_url});
+                    qrcode = QRCode.toCanvas(document.getElementById("qrcode-display"), meta_url);
                     $("#qrcode-text").val(meta_url)
                 }else if(ncode!=undefined){
                     $("#novel_header ul").append('<li class="qrcode"><a><i class="fa-solid fa-qrcode"></i><span class="title">QRコード</span></a></li>')
@@ -780,7 +780,7 @@ export function _header(){
                         }
                     }
                     if(uri){
-                        qrcode = new QRCode(document.getElementById("qrcode-display"), {text: uri});
+                        qrcode = QRCode.toCanvas(document.getElementById("qrcode-display"), uri);
                         $("#qrcode-text").val(uri)
                     }
                 }

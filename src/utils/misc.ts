@@ -58,7 +58,7 @@ export function defaultValue(value: any, def: any){
  * @param _default 
  * @deprecated
  */
-export function check(elm: any, value: boolean, _default?: boolean) {
+export function check(elm: any, value: boolean|undefined|null, _default?: boolean) {
     if(value!=true && value!=false){
         if(_default==undefined){
             value = false

@@ -159,6 +159,7 @@ input[type="number"] {
     width: 100%;
 }
 .syntax-highlight-wrap textarea.syntax-highlight {
+    appearance: none;
     -webkit-appearance: none;
     border: 1px solid #aaa;
     caret-color: #000;
@@ -212,6 +213,7 @@ input[type="number"] {
     text-align: center;
     background-color: rgb(27, 142, 243);
     appearance: none;
+    -webkit-appearance: none;
     transition: all 0.2s ease 0s;
     white-space: nowrap;
     border-width: initial;

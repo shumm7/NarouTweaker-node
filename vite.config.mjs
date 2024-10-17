@@ -20,8 +20,16 @@ const manifest = defineManifest({
         service_worker: "background/background.ts",
         type: "module"
     },
+    options_page: "options/general/index.html",
+    options_ui: "options/popup/index.html",
     action: {
-        default_popup: "options/popup/index.html"
+        default_icon: {
+            "16": "assets/icons/icon_16.png",
+            "24": "assets/icons/icon_24.png",
+            "32": "assets/icons/icon_32.png"
+        },
+        default_title: "__MSG_extName__の設定画面を開く",
+        default_popup: "options/popup/index.html",
     },
     permissions: [
         "storage",
@@ -31,12 +39,37 @@ const manifest = defineManifest({
         "notifications"
     ],
     host_permissions: [
-      "*://*.syosetu.com/*",
-      "*://*.eparet.net/*",
-      "*://*.mitemin.net/*"
+        "*://*.syosetu.com/*",
+        "*://*.eparet.net/*",
+        "*://*.mitemin.net/*"
     ],
     content_scripts: [
-    ]
+        {
+            js: [
+                "cogs/novel/main.ts"
+            ],
+            matches: [
+                "*://ncode.syosetu.com/*",
+                "*://novel18.syosetu.com/*",
+                "*://novelcom.syosetu.com/*",
+                "*://novelcom18.syosetu.com/*"
+            ],
+            run_at: "document_end"
+        },
+        {
+            js: [
+                "cogs/skin_css/main.ts"
+            ],
+            matches: [
+                "*://ncode.syosetu.com/*",
+                "*://novel18.syosetu.com/*",
+                "*://novelcom.syosetu.com/*",
+                "*://novelcom18.syosetu.com/*"
+            ],
+            run_at: "document_start"
+        },
+    ],
+
 });
 
 export default defineConfig((opt) => {
@@ -50,7 +83,6 @@ export default defineConfig((opt) => {
             emptyOutDir: true,
             rollupOptions: {
                 input: {
-                    background: resolve(__dirname, 'src/background/background.ts'),
                     "options/favorite/main": resolve(__dirname, 'src/options/favorite/index.html'),
                     "options/general/main": resolve(__dirname, 'src/options/general/index.html'),
                     "options/kasasagi/main": resolve(__dirname, 'src/options/kasasagi/index.html'),

@@ -1,10 +1,10 @@
-import { getEpisode, getNovelSearchURL, getNovelTagURL, getPageType, isR18 } from "utils/api";
+import { getEpisode, getNovelSearchURL, getNovelTagURL, getPageType, isR18 } from "../../utils/api";
 import { escapeHtml, replaceUrl } from "../../utils/text"
 import { novelTop } from "./_novelTop";
-import { getNcodeFromURL } from "utils/ncode";
+import { getNcodeFromURL } from "../../utils/ncode";
+import { getDatetimeStringWithoutSecond } from "../../utils/time";
 
 import gsap from 'gsap';
-import { getDatetimeStringWithoutSecond } from "utils/time";
 
 export function _novel(){
     chrome.storage.local.get(null, (data) => {

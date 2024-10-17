@@ -33,7 +33,7 @@
     "jquery-nstslider": "github:lokku/jquery-nstslider",
     "jquery.selection": "github:marcintabaka/jquery.selection",
     "pickadatejs": "^1.0.23",
-    "qrcodejs": "^1.0.0",
+    "qrcode": "^1.5.4",
     "sortablejs": "^1.15.3",
     "w3-css": "^4.1.0"
   }

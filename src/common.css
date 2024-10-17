@@ -82,6 +82,7 @@ input[type="reset"].ui-button,
 input[type="submit"].ui-button {
 	cursor: pointer;
 	-webkit-appearance: button;
+    appearance: button;
 }
 .ui-button {
 	color: #fff;
@@ -100,7 +101,7 @@ input[type="submit"].ui-button {
 	background-color: #1b8ef3;
 	-webkit-appearance: none;
 	-moz-appearance: none;
-	appearance: none;
+    appearance: none;
 	padding: .7em 3em !important;
 }
 .ui-button:active, .ui-button:focus, .ui-button:hover {
@@ -242,6 +243,7 @@ input.ui-checkbox[type="checkbox"] {
     cursor: pointer;
     transition: border-color 0.1s linear;
     flex-shrink: 0; 
+    appearance: none;
 	-webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;

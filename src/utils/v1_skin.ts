@@ -13,7 +13,7 @@ export class SkinV1_Data {
     style: SkinV1_Style = new SkinV1_Style
     css: CSS_String = ""
 
-    constructor(skin?: SkinV1|Object){
+    constructor(skin?: SkinV1|Record<string,any>){
         if(skin instanceof Object){
             if("name" in skin && typeof skin.name==="string"){
                 this.name = skin.name
@@ -50,7 +50,7 @@ export class SkinV1_Data {
  * @param {CSS_String} css - カスタムCSS
  */
 export class SkinV1 extends SkinV1_Data{
-    get(){
+    get = ():Record<string,any> =>{
         return {
             name: this.name,
             description: this.description,
@@ -461,7 +461,7 @@ export function generateNoDuplicateSkinName(skins: SkinsV1, name: string, select
  * @param {boolean} novelCustomStyle - novelCustomStyleが有効かどうか
  * @returns {string} - スキン名
 */
-export function makeSkinCSS(skin: SkinV1, novelCustomStyle: boolean): CSS_String{
+export function makeSkinCSS(skin: SkinV1, novelCustomStyle?: boolean): CSS_String{
     const s = skin.style
     var rule: CSS_String = ""
 

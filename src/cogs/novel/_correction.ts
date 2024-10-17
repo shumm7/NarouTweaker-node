@@ -1,6 +1,7 @@
-import { getPageType } from "utils/api";
-import { check, defaultValue } from "../../utils/misc"
+import { getPageType } from "../../utils/api";
+import { check } from "../../utils/misc"
 import { escapeHtml } from "../../utils/text";
+import { LocalOptions } from "../../utils/option";
 
 const bracket_begin = `「『＜《〈≪【（”“’‘\\\(\\\'`
 const bracket_end = `」』＞》〉≫】）”’\\\)\\\'`
@@ -107,19 +108,20 @@ export function correction(){
 }
 
 export function restoreCorrectionMode(){
-    chrome.storage.local.get(null, (data) => {
-        check("#novel-option--correction-indent", data.correctionIndent, defaultOption.correctionIndent)
-        check("#novel-option--correction-normalize-ellipses", data.correctionNormalizeEllipses, defaultOption.correctionNormalizeEllipses)
-        check("#novel-option--correction-normalize-dash", data.correctionNormalizeDash, defaultOption.correctionNormalizeDash)
-        check("#novel-option--correction-normalize-exclamation", data.correctionNormalizeExclamation, defaultOption.correctionNormalizeExclamation)
-        check("#novel-option--correction-repeated-symbols", data.correctionRepeatedSymbols, defaultOption.correctionRepeatedSymbols)
-        check("#novel-option--correction-period-with-brackets", data.correctionPeriodWithBrackets, defaultOption.correctionPeriodWithBrackets)
-        check("#novel-option--correction-no-space-exclamation", data.correctionNoSpaceExclamation, defaultOption.correctionNoSpaceExclamation)
-        check("#novel-option--correction-odd-ellipses", data.correctionOddEllipses, defaultOption.correctionOddEllipses)
-        check("#novel-option--correction-odd-dash", data.correctionOddDash, defaultOption.correctionOddDash)
-        check("#novel-option--correction-wave-dash", data.correctionWaveDash, defaultOption.correctionWaveDash)
-        check("#novel-option--correction-number", data.correctionNumber, defaultOption.correctionNumber)
-        check("#novel-option--correction-show-illustration", data.correctionShowIllustration, defaultOption.correctionShowIllustration)
+    chrome.storage.local.get(null, (_d) => {
+        const data = new LocalOptions(_d)
+        check("#novel-option--correction-indent", data.correctionIndent)
+        check("#novel-option--correction-normalize-ellipses", data.correctionNormalizeEllipses)
+        check("#novel-option--correction-normalize-dash", data.correctionNormalizeDash)
+        check("#novel-option--correction-normalize-exclamation", data.correctionNormalizeExclamation)
+        check("#novel-option--correction-repeated-symbols", data.correctionRepeatedSymbols)
+        check("#novel-option--correction-period-with-brackets", data.correctionPeriodWithBrackets)
+        check("#novel-option--correction-no-space-exclamation", data.correctionNoSpaceExclamation)
+        check("#novel-option--correction-odd-ellipses", data.correctionOddEllipses)
+        check("#novel-option--correction-odd-dash", data.correctionOddDash)
+        check("#novel-option--correction-wave-dash", data.correctionWaveDash)
+        check("#novel-option--correction-number", data.correctionNumber)
+        check("#novel-option--correction-show-illustration", data.correctionShowIllustration)
     });
 }
 
@@ -146,48 +148,50 @@ export function resetCorrection(){
     })
 }
 
-function checkLineType(string){
+function checkLineType(string: string): string{
     string = string.trim()
     if(string.match(new RegExp(`^[${symbols}\\s]*$`, "g"))){
         return ""
     }else if(string.match(new RegExp(`^\\s*[${bracket_begin}].*$`))){ //括弧で始まる文章
         var m = string.match(new RegExp(`^\\s*([${bracket_begin}])(.*)$`))
-        var bracket = m[1]
-        var line = m[2]
+        if(m!==null){
+            var bracket = m[1]
+            var line = m[2]
 
-        m = line.match(new RegExp(`^.*([${bracket_end}])\\s*$`), "g")
-        if(m){ //括弧で終わる
-            var ret = className.word
-            $.each(brackets, function(_, b){
-                if(b.begin==bracket){
-                    if(b.end==m[1]){
-                        ret = className.talk //括弧の種類が同じ
-                        return
+            m = line.match(new RegExp(`^.*([${bracket_end}])\\s*$`, "g"))
+            if(m!==null){ //括弧で終わる
+                var m2 = m
+                var ret = className.word
+                $.each(brackets, function(_, b){
+                    if(b.begin==bracket){
+                        if(b.end==m2[1]){
+                            ret = className.talk //括弧の種類が同じ
+                            return
+                        }
                     }
-                }
-            })
-            return ret
-        }else if(!line.match(new RegExp(`[${bracket_end}]`))){ //括弧が含まれない
-            return className.talk
-        }else{
-            return className.word
+                })
+                return ret
+            }else if(!line.match(new RegExp(`[${bracket_end}]`))){ //括弧が含まれない
+                return className.talk
+            }else{
+                return className.word
+            }
         }
-    }else{
-        return className.word
     }
+    return className.word
 }
 
-function replaceText(_elem, regexp, replace, isReplaceAll) {
+function replaceText(_elem: HTMLElement|JQuery<HTMLElement>, regexp: string|RegExp, replace: any, isReplaceAll?: boolean) {
     const exceptTags = ["rp", "rt", "img"]
 
-    function replaceHtml(str){
+    function replaceHtml(str: string){
         if(isReplaceAll){
             return str.replaceAll(regexp, replace)
         }
         return str.replace(regexp, replace)
     }
 
-    function isAllowedTags(tagName){
+    function isAllowedTags(tagName: string){
         if(tagName){
             var t = tagName.toLowerCase()
             return !(exceptTags.includes(t))
@@ -196,11 +200,12 @@ function replaceText(_elem, regexp, replace, isReplaceAll) {
         }
     }
 
-    var nodes = $(_elem)[0].childNodes;
-    $.each(nodes, function(_, w) {
+    var nodes: NodeListOf<HTMLElement> = $(_elem)[0].childNodes as NodeListOf<HTMLElement>;
+    for (const w of nodes) {
         if(isAllowedTags(w.tagName)){
-            if(w.innerHTML==undefined){
-                $.each($.parseHTML(replaceHtml(w.data)), function(_, x) {
+            const text = w.textContent
+            if(w.innerHTML==undefined && text!==null){
+                $.each($.parseHTML(replaceHtml(text)), function(_, x) {
                     w.before(x);
                 });
                 w.remove();
@@ -208,11 +213,11 @@ function replaceText(_elem, regexp, replace, isReplaceAll) {
                 replaceText(w, regexp, replace, isReplaceAll);
             }
         }
-    });
+    }
 }
 
-function wrapTextWithTag(_elem, regexp, tag, callback, insideTag){
-    function wrapHtml(str){
+function wrapTextWithTag(_elem: HTMLElement|JQuery<HTMLElement>, regexp: string|RegExp, tag: HTMLElement|JQuery<HTMLElement>, callback?: {(rpl: string, tag: HTMLElement|JQuery<HTMLElement>): string}, insideTag: boolean = true){
+    function wrapHtml(str: string){
         var repl = str.replace(regexp, function(rpl){
             if(callback!=undefined){
                 return callback(rpl, tag)
@@ -225,11 +230,11 @@ function wrapTextWithTag(_elem, regexp, tag, callback, insideTag){
         return repl
     }
 
-    insideTag = defaultValue(insideTag, true)
-    var nodes = $(_elem)[0].childNodes;
+    var nodes:NodeListOf<HTMLElement> = $(_elem)[0].childNodes as NodeListOf<HTMLElement>
     $.each(nodes, function(_, w) {
-        if(w.innerHTML==undefined){
-            $.each($.parseHTML(wrapHtml(w.data)), function(_, x) {
+        const text = w.textContent
+        if(w.innerHTML==undefined && text!==null){
+            $.each($.parseHTML(wrapHtml(text)), function(_, x) {
                 w.before(x);
             });
             w.remove();
@@ -248,7 +253,10 @@ function correctionIndent(){
     $(".p-novel__body p.correction-replaced").each(function(){
         if(!$(this).hasClass("jinobun")){return}
         var text = $(this)[0].innerHTML
-        $(this)[0].innerHTML = "　" + text.match(new RegExp(`^(\\s*)(.*)`))[2]
+        var m = text.match(new RegExp(`^(\\s*)(.*)`))
+        if(m!==null){
+            $(this)[0].innerHTML = "　" + m[2]
+        }
     })
 }
 
@@ -256,24 +264,24 @@ function correctionNormalizeEllipses(){
     /* 三点リーダー(・・・) → 三点リーダー（……） */
     $(".p-novel__body p.correction-replaced").each(function(){
         if($(this).text().match(/・{2,}/)){
-            $(this).after(replaceText(this, /・{2,}/g, function(s){
+            replaceText(this, /・{2,}/g, function(s){
                 var l = s.length
                 var p = 1
                 if(l>=2){
                     p = Math.round(l/3)
                 }
                 return "……".repeat(p)
-            }))
+            })
         }
         if($(this).text().match(/\.{3,}/)){
-            $(this).after(replaceText(this, /\.{3,}/g, function(s){
+            replaceText(this, /\.{3,}/g, function(s){
                 var l = s.length
                 var p = 1
                 if(l>=3){
                     p = Math.round(l/3)
                 }
                 return "……".repeat(p)
-            }))
+            })
         }
     })
 }
@@ -282,12 +290,10 @@ function correctionNormalizeDash(){
     /* 罫線を用いたダッシュ(─) → 全角ダッシュ（―） */
     $(".p-novel__body p.correction-replaced").each(function(){
         if($(this).text().match(/─|－|—/)){ //罫線
-            $(this).after(
-                replaceText(this, /─{2,}|－{2,}|—{2,}/g, function(s){
-                    var l = s.length
-                    return "―".repeat(l)
-                })
-            )
+            replaceText(this, /─{2,}|－{2,}|—{2,}/g, function(s){
+                var l = s.length
+                return "―".repeat(l)
+            })
         }
     })
 }
@@ -299,7 +305,7 @@ function correctionNormalizeExclamation(){
     2つ連続する感嘆符：‼️、⁉️、⁇、⁈
     3つ以上連続する感嘆符：半角
     */
-   function replaceExclamation(s){
+   function replaceExclamation(s: string){
        if(s.length==1){
            if(s=="！" || s=="？" || s=="‼" || s=="⁇" || s=="⁉" || s=="⁈"){
                return s
@@ -390,13 +396,12 @@ function correctionOddDash(){
 
 function correctionWaveDash(){
     /* 波ダッシュを繋げる */
-    const tag = "<span class='text-sideways'>"
 
     $(".p-novel__body p.correction-replaced").each(function(){
-        wrapTextWithTag($(this), /～{2,}/g, tag, function(s, t){
-            var t = $(tag)
-            t.text("〰".repeat(s.length))
-            return t[0].outerHTML
+        wrapTextWithTag(this, /～{2,}/g, $("<span class='text-sideways'>"), function(s, t){
+            var tag = $(t)
+            tag.text("〰".repeat(s.length))
+            return tag[0].outerHTML
         })
     })
 }
@@ -467,22 +472,19 @@ function removeIllustrationLink(){
 // 縦中横設定
 function verticalLayout_CombineWord(max){
     /* 縦書き表示時の半角単語の縦中横 */
-    const tag = "<span class='text-combine'>"
-    var callback = (rpl, tag)=>{
-        if(rpl.match(/^\d+$/)){return rpl}
-        var t = $(tag)
-        t.text(rpl)
-        return t[0].outerHTML
-    }
-
     $(".p-novel__body p.correction-replaced").each(function(){
-        wrapTextWithTag($(this), new RegExp(`(?<![a-zA-Z\\d\.\,])[a-zA-Z\\d\.\,]{1,${max}}(?![a-zA-Z\\d\.\,])`, "g"), tag, callback)
+        wrapTextWithTag($(this), new RegExp(`(?<![a-zA-Z\\d\.\,])[a-zA-Z\\d\.\,]{1,${max}}(?![a-zA-Z\\d\.\,])`, "g"), $("<span class='text-combine'>"), (rpl, tag)=>{
+            if(rpl.match(/^\d+$/)){return rpl}
+            var t = $(tag)
+            t.text(rpl)
+            return t[0].outerHTML
+        })
     })
 }
 
 function verticalLayout_CombineNumber(max, ignoreCombineInWord){
     /* 縦書き表示時の数字の縦中横 */
-    const tag = "<span class='text-combine'>"
+    const tag = $("<span class='text-combine'>")
 
     $(".p-novel__body p.correction-replaced").each(function(){
         if(ignoreCombineInWord){
@@ -495,7 +497,7 @@ function verticalLayout_CombineNumber(max, ignoreCombineInWord){
 
 function verticalLayout_CombineExclamation(max){
     /* 縦書き表示時の数字の縦中横 */
-    const tag = "<span class='text-combine'>"
+    const tag = $("<span class='text-combine'>")
 
     $(".p-novel__body p.correction-replaced").each(function(){
         wrapTextWithTag($(this), new RegExp(`(?<![!?])[!?]{1,${max}}(?![!?])`, "g"), tag)
@@ -504,10 +506,8 @@ function verticalLayout_CombineExclamation(max){
 
 function verticalLayout_SidewayWord(min){
     /* 縦書き表示時の全角英数字の横向き表示 */
-    const tag = "<span class='text-sideways'>"
-
     $(".p-novel__body p.correction-replaced").each(function(){
-        wrapTextWithTag($(this), new RegExp(`[ａ-ｚＡ-Ｚ０-９．，\\s]{${min},}`, "g"), tag)
+        wrapTextWithTag($(this), new RegExp(`[ａ-ｚＡ-Ｚ０-９．，\\s]{${min},}`, "g"), $("<span class='text-sideways'>"))
     })
 }
 
@@ -517,7 +517,7 @@ function verticalLayout_SidewayExclamation(min){
     const tag = "<span class='text-sideways'>"
 
     $(".p-novel__body p.correction-replaced").each(function(){
-        wrapTextWithTag($(this), new RegExp(`[！？‼⁇⁉⁈]{${min},}`, "g"), tag)
+        wrapTextWithTag($(this), new RegExp(`[！？‼⁇⁉⁈]{${min},}`, "g"), $("<span class='text-sideways'>"))
     })
 }
 

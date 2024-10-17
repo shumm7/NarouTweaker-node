@@ -1,11 +1,11 @@
 import { getOptionFromID, getOptionPageFromID } from "../options/_utils/optionUI_utils"
+import { ReplacePatterns, ImpressionKanrino } from "./data"
 import { CustomIconIDs, novelIconList, workspaceIconList, workspaceMenuIconList } from "./header"
 import { getExtensionVersion } from "./misc"
-import { CSS_String, ReplacePatterns } from "./type"
+import { CSS_String } from "./type"
 import { FontFamiliesV1 } from "./v1_font"
 import { SkinsV1 } from "./v1_skin"
-import { OptionID, OptionUI_Item, OptionUI_ItemID } from "options/_utils/optionUI_type"
-
+import { OptionID, OptionUI_Item, OptionUI_ItemID } from "../options/_utils/optionUI_type"
 /**
  * 設定データ（storage.local）
  */
@@ -442,8 +442,9 @@ export class SyncOptions{
     extLastLaunchTime: string = ""
     history: Array<any> = []
     history_data: Object = {}
-    workspaceImpressionMarked: Object = {}
-
+    workspaceImpressionMarked: ImpressionKanrino = {}
+    workspaceImpressionHidden: ImpressionKanrino = {}
+    
     constructor(data?: Record<string,any>){
         var p:any = this
         if(data instanceof Object){

@@ -1,5 +1,5 @@
-import { Ncode } from "utils/ncode"
-import { popHiddenList, popReadList, pushHiddenList, pushReadList } from "../workspace/_reactionTools"
+import { Ncode } from "../../utils/ncode"
+import { pushImpressionHiddenList, pushImpressionReadList } from "../../utils/data"
 
 export function _novelcom(){
     _readImpression()
@@ -18,9 +18,9 @@ function _readImpression(){
                         if($("form #rescomment").length){
                             
                             $(document).on('submit','form:has(#rescomment)', function(){
-                                pushReadList(ncode, kanrino)
+                                pushImpressionReadList(ncode, kanrino)
                                 if(data.workspaceImpressionHideButton && data.workspaceImpressionHideWhenMarked){
-                                    pushHiddenList(ncode, kanrino)
+                                    pushImpressionHiddenList(ncode, kanrino)
                                 }
                             })
                         }

@@ -1,14 +1,11 @@
-import { ReplacePattern } from "../../utils/type"
-import { addFontAwesomeOriginaIcons, CustomIconIDs, getExcludeIcons, novelIconList } from "../../utils/header"
+import { ReplacePattern } from "../../utils/data"
+import { CustomIconIDs, getExcludeIcons, novelIconList } from "../../utils/header"
 import { addFontEditButtonEvent, restoreFont } from "./_optionsAction_Font"
 import { addSkinEditButtonEvent, restoreSkins } from "./_optionsAction_Skin"
-
 import Sortable from 'sortablejs'
 
 /* 全般 */
 export function novel_customHeaderSortable(){
-    addFontAwesomeOriginaIcons()
-
     /* Novel Header */
     function storeNovelHeader(){
         chrome.storage.local.set(

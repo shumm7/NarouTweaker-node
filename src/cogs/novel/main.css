@@ -639,6 +639,7 @@ ul#head_nav li a:not(.c-bookmark-button), .c-menu__item-pdf {
 	font-size: .9em;
     background: 0 0;
     border: none;
+	appearance: button;
     -webkit-appearance: button;
     cursor: pointer;
 }
