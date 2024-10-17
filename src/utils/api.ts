@@ -59,6 +59,144 @@ export function getNovelSearchURL(site?: string|number, param?: {[key: string]: 
     return url
 }
 
+/**
+ * 小説家になろうグループサイトのURLがR18かどうかを判定
+ * @param {string|URL|Location} _url ページのURL
+ * @returns {boolean} - true:R18 / false:全年齢 / undefined: 判定不能・エラー
+ */
+export function isR18(_url?:string|URL|Location): boolean|undefined{
+    let url:URL
+    if(typeof _url === "string"){
+        try{
+            url = new URL(_url)
+        }catch(e){
+            return undefined
+        }
+    }else if(_url instanceof URL){
+        url = _url
+    }else if(_url instanceof Location){
+        url = new URL(_url.toString())
+    }else{
+        url = new URL(location.toString())
+    }
+
+    if(url.hostname=="ncode.syosetu.com" || url.hostname=="novelcom.syosetu.com"){
+        return false
+    }
+    else if(url.hostname=="novelcom18.syosetu.com" || url.hostname=="novel18.syosetu.com"){
+        return true
+    }
+    else if(url.hostname == "mypage.syosetu.com"){
+        return false
+    }
+    else if(url.hostname == "xmypage.syosetu.com"){
+        return true
+    }
+}
+
+/**
+ * 小説のエピソード番号を取得
+ * @param {string|URL|Location} _url ページのURL
+ * @returns {number} エピソード番号（判定できない場合は0を出力）
+ */
+export function getEpisode(_url?:string|URL|Location): number{
+    let url:URL
+    if(typeof _url === "string"){
+        try{
+            url = new URL(_url)
+        }catch(e){
+            return 0
+        }
+    }else if(_url instanceof URL){
+        url = _url
+    }else if(_url instanceof Location){
+        url = new URL(_url.toString())
+    }else{
+        url = new URL(location.toString())
+    }
+
+    if(url.hostname=="ncode.syosetu.com" || url.hostname=="novel18.syosetu.com"){
+        if (url.pathname.match(/^\/[n|N]\d{4}[a-zA-Z]{2}\/\d+\/*$/)){ /* Story */
+            var m = url.pathname.match(/^\/[n|N]\d{4}[a-zA-Z]{2}\/(\d+)\/*$/)
+            if(m!==null){
+                const e = Number(m[1])
+                if(!isNaN(e)){
+                    return e
+                }
+            }
+            
+        }
+    }
+    return 0
+}
+
+
+/**
+ * 小説家になろうグループサイトのページ種別を判定します
+ * @param {string|URL|Location} _url  ページのURL
+ * @returns {string|undefined} 種類
+ */
+export function getPageType(_url?:string|URL|Location): string|undefined{
+    let url:URL
+    if(typeof _url === "string"){
+        try{
+            url = new URL(_url)
+        }catch(e){
+            return undefined
+        }
+    }else if(_url instanceof URL){
+        url = _url
+    }else if(_url instanceof Location){
+        url = new URL(_url.toString())
+    }else{
+        url = new URL(location.toString())
+    }
+
+    if(url.hostname=="ncode.syosetu.com" || url.hostname=="novel18.syosetu.com"){
+        if (url.pathname.match(/^\/[n|N]\d{4}[a-zA-Z]{2}\/\d+\/*$/)){ /* Story */
+            return "novel"
+        }
+        else if (url.pathname.match(/^\/[n|N]\d{4}[a-zA-Z]{2}\/*$/)){ /* Top */
+            if((typeof $)!=="undefined"){
+                if($(".p-novel__body").length){
+                    return "novel"
+                }else{
+                    return "top"
+                }
+            }else{
+                return "novel"
+            }
+        }
+        else if (url.pathname.match(/\/novelview\/infotop\/ncode\/[n|N]\d{4}[a-zA-Z]{2}\/*/)){ /* Novel Info */
+            return "info"
+        }
+        else if(url.pathname.match(/^\/novelpdf\/creatingpdf\/ncode\/[n|N]\d{4}[a-zA-Z]{2}\/*$/)){ /* PDF */
+            return "pdf"
+        }
+        else if(url.pathname.match(/^\/txtdownload\/top\/ncode\/[n|N]\d{4}[a-zA-Z]{2}\/*$/)){ /* TXT */
+            return "txt"
+        }
+        else if(url.pathname.match(/^\/[s|S]\d{4}[a-zA-Z]{1,}\/*$/)){ /* シリーズ */
+            return "series"
+        }
+    }else if(url.hostname=="novelcom.syosetu.com" || url.hostname=="novelcom18.syosetu.com"){
+        if (url.pathname.match(/^\/impression\/list\/ncode\/\d+\/*.*$/)){ /* Impression */
+            return "impression"
+        }
+        else if (url.pathname.match(/^\/impressionres\/.*\/ncode\/\d+\/*.*$/)){ /* Impression Reply */
+            return "impressionres"
+        }
+        else if (url.pathname.match(/^\/novelreview\/list\/ncode\/\d+\/*.*$/)){ /* Review */
+            return "review"
+        }
+        else if (url.pathname.match(/^\/novelreport\/.*\/ncode\/\d+\/*.*$/)){ /* 誤字報告 */
+            return "report"
+        }
+        else if(url.pathname.match(/^\/[s|S]\d{4}[a-zA-Z]{1,}\/*$/)){ /* シリーズ */
+            return "series"
+        }
+    }
+}
 
 /**
  * 小説大ジャンル

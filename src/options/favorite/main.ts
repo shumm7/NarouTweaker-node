@@ -1,6 +1,6 @@
-import { OptionUI_ItemID } from "options/_lib/optionUI_type";
-import { getOptionFromID } from "../../options/_lib/optionUI_libs";
-import { getOptionElement, optionHide, syntaxHighlight } from "../_lib/utils";
+import { OptionUI_ItemID } from "options/_utils/optionUI_type";
+import { getOptionFromID } from "../_utils/optionUI_utils";
+import { getOptionElement, optionHide, syntaxHighlight } from "../_utils/utils";
 import { restoreOptions, setup } from "../general";
 
 setup()

@@ -1,8 +1,8 @@
-import { colorPicker, getOptionElement, optionHide, syntaxHighlight } from "./_lib/utils";
+import { colorPicker, getOptionElement, optionHide, syntaxHighlight } from "./_utils/utils";
 import { check } from "../utils/misc"
-import { OptionUI_Items, OptionUI_Pages } from "./_lib/optionUI_items";
-import { OptionUI_ItemID, OptionUI_Page, OptionUI_PageID } from "./_lib/optionUI_type";
-import { getOptionFromID, getOptionPageFromID } from "./_lib/optionUI_libs";
+import { OptionUI_Items, OptionUI_Pages } from "./_utils/optionUI_items";
+import { OptionUI_ItemID, OptionUI_Page, OptionUI_PageID } from "./_utils/optionUI_type";
+import { getOptionFromID, getOptionPageFromID } from "./_utils/optionUI_utils";
 
 import jQuery from "jquery";
 Object.assign(window, { $: jQuery, jQuery });

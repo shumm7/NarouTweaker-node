@@ -1,10 +1,10 @@
-import { getOptionFromID, getOptionPageFromID } from "../options/_lib/optionUI_libs"
+import { getOptionFromID, getOptionPageFromID } from "../options/_utils/optionUI_utils"
 import { CustomIconIDs, novelIconList, workspaceIconList, workspaceMenuIconList } from "./header"
 import { getExtensionVersion } from "./misc"
 import { CSS_String, ReplacePatterns } from "./type"
 import { FontFamiliesV1 } from "./v1_font"
 import { SkinsV1 } from "./v1_skin"
-import { OptionID, OptionUI_Item, OptionUI_ItemID } from "options/_lib/optionUI_type"
+import { OptionID, OptionUI_Item, OptionUI_ItemID } from "options/_utils/optionUI_type"
 
 /**
  * 設定データ（storage.local）

@@ -1,10 +1,10 @@
-import { fixOption, getOptionPageFromID } from "../../options/_lib/optionUI_libs";
+import { fixOption, getOptionPageFromID } from "../_utils/optionUI_utils";
 import { saveJson } from "../../utils/misc";
-import { OptionUI_Pages } from "../../options/_lib/optionUI_items";
+import { OptionUI_Pages } from "../_utils/optionUI_items";
 import { escapeHtml } from "../../utils/text";
 import { LocalOptions } from "../../utils/option";
 import { getDatetimeString, getDatetimeStringForFilename } from "../../utils/time";
-import { OptionUI_Page } from "options/_lib/optionUI_type";
+import { OptionUI_Page } from "options/_utils/optionUI_type";
 
 /* 基本設定 */
 /* デフォルトページ（ポップアップ時） */

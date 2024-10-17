@@ -1,5 +1,3 @@
-import { escape } from "querystring"
-
 /**
  * DOM内にあるURLをハイパーリンクに変換する。
  * @param element - HTML文字列

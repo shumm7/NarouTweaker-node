@@ -1,4 +1,4 @@
-import { OptionUI_Item } from "options/_lib/optionUI_type";
+import { OptionUI_Item } from "options/_utils/optionUI_type";
 import { novel_customHeaderSortable, novel_fontEditor, novel_replacePattern, novel_skinEditor } from "./_optionsAction";
 
 export const novel_optionsList: Array<OptionUI_Item> = [

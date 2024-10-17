@@ -1,4 +1,4 @@
-import { OptionUI_Item } from "options/_lib/optionUI_type"
+import { OptionUI_Item } from "options/_utils/optionUI_type"
 import { general_exportOptionData, general_exportOptionText, general_fixOptionData, general_importOptionData, general_insertOptionData, general_monitorOptionChanged, general_popupDefaultPage_Dropdown, general_removeOptionData } from "./_optionsAction"
 
 export const general_optionsList: Array<OptionUI_Item> = [

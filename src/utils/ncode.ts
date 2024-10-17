@@ -33,7 +33,7 @@ export class Ncode{
      * @param ncode - Nコード
      * @returns Nコードインデックス
     */
-    public index(ncode: string|number|Ncode|undefined): number|undefined {
+    index = (ncode?: string|number|Ncode): number|undefined => {
         var str: string|undefined
         if(ncode === undefined){
             str = this.value
@@ -56,16 +56,13 @@ export class Ncode{
 
     /**
      * Nコードを取得
-     * @returns {string} - 取得したNコード
-    */
-    public ncode(): string|undefined;
-
-    /**
+     * @returns {string|undefined} - Nコード
+     * 
      * Nコードを設定
      * @param {string|number|Ncode} ncode - 設定するNコード（またはNコードインデックス）
+     * 
     */
-    public ncode(ncode: string|number|Ncode): void;
-    public ncode(ncode?: string|number|Ncode): string|void {
+    ncode = (ncode?: string|number|Ncode): string|undefined => {
         if(ncode===undefined){
             return this.value
         }else{
@@ -76,7 +73,7 @@ export class Ncode{
     /**
      * Returns a string of a N-code.
     */
-    public toString(): string{
+    toString = (): string => {
         if(this.value===undefined){
             return ""
         }else{
@@ -130,16 +127,13 @@ export class Scode{
 
     /**
      * Sコードを取得
-     * @returns {string} - 取得したSコード
-    */
-    public scode(): string|undefined;
-
-    /**
+     * @returns {string|undefined} - Sコード
+     * 
      * Sコードを設定
      * @param {string|Scode} scode - 設定するSコード
+     * 
     */
-    public scode(scode: string|Scode): undefined;
-    public scode(scode?: string|Scode): string|undefined {
+    scode = (scode?: string|Scode): string|undefined => {
         if(scode===undefined){
             return this.value
         }else{
@@ -150,7 +144,7 @@ export class Scode{
     /**
      * Returns a string of a S-code.
     */
-    public toString(): string{
+    toString = (): string => {
         if(this.value===undefined){
             return ""
         }else{
@@ -159,14 +153,18 @@ export class Scode{
     }
 }
 
-
-export function getNcodeFromURL(_url:string|URL|Location): Ncode{
+/**
+ * 小説家になろうグループサイトのURLからNコードを取得
+ * @param {string|URL|Location} _url ページのURL
+ * @returns {Scode} Nコード
+ */
+export function getNcodeFromURL(_url?:string|URL|Location): Ncode|undefined{
     let url:URL
     if(typeof _url === "string"){
         try{
             url = new URL(_url)
         }catch(e){
-            return new Ncode()
+            return undefined
         }
     }else if(_url instanceof URL){
         url = _url
@@ -196,6 +194,9 @@ export function getNcodeFromURL(_url:string|URL|Location): Ncode{
         if (url.pathname.match(/^\/impression\/list\/ncode\/\d+\/*.*$/)){ /* Impression */
             return new Ncode(Number((url.pathname.match(/^\/impression\/list\/ncode\/(\d+)\/*.*$/) ?? "")[1]))
         }
+        else if (url.pathname.match(/^\/impressionres\/.*\/ncode\/(\d+)\/*.*$/)){ /* Impression Res */
+            return new Ncode(Number((url.pathname.match(/^\/impressionres\/.*\/ncode\/(\d+)\/*.*$/) ?? "")[1]))
+        }
         else if (url.pathname.match(/^\/novelreview\/list\/ncode\/(\d+)\/*.*$/)){ /* Review */
             return new Ncode(Number((url.pathname.match(/^\/novelreview\/list\/ncode\/(\d+)\/*.*$/) ?? "")[1]))
         }
@@ -213,13 +214,18 @@ export function getNcodeFromURL(_url:string|URL|Location): Ncode{
     return new Ncode()
 }
 
-export function getScodeFromURL(_url:string|URL|Location): Scode{
+/**
+ * 小説家になろうグループサイトのURLからSコードを取得
+ * @param {string|URL|Location} _url ページのURL
+ * @returns {Scode} Sコード
+ */
+export function getScodeFromURL(_url?:string|URL|Location): Scode|undefined{
     let url:URL
     if(typeof _url === "string"){
         try{
             url = new URL(_url)
         }catch(e){
-            return new Scode()
+            return
         }
     }else if(_url instanceof URL){
         url = _url

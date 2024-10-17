@@ -340,8 +340,3 @@ export function getExcludeIcons(lists: Array<CustomIconIDs>|CustomIconIDs, paren
     })
     return ret;
 }
-
-
-export function addFontAwesomeOriginaIcons(){
-    window.requestAnimationFrame = window.requestAnimationFrame.bind(window)
-}

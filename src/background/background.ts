@@ -1,4 +1,4 @@
-import { fixOption } from "../options/_lib/optionUI_libs"
+import { fixOption } from "../options/_utils/optionUI_utils"
 import { actionListener } from "./_action"
 import { messageListener } from "./_process"
 import { skinListener } from "./_skin"

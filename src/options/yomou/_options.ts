@@ -1,4 +1,4 @@
-import { OptionUI_Item } from "options/_lib/optionUI_type";
+import { OptionUI_Item } from "options/_utils/optionUI_type";
 
 export const yomou_optionsList: Array<OptionUI_Item> = [
     /* ランキング (rank) */

@@ -1,4 +1,4 @@
-import { OptionUI_Item } from "options/_lib/optionUI_type";
+import { OptionUI_Item } from "options/_utils/optionUI_type";
 import { workspace_customHeaderMenuSortable, workspace_customHeaderSortable } from "./_optionsAction";
 
 export const workspace_optionsList: Array<OptionUI_Item> = [
