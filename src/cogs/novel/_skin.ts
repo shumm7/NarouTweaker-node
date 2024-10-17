@@ -25,51 +25,59 @@ export function removeDefaultSkinClass(){
 export function _authorSkin(){
     changeAuthorSkin()
     chrome.storage.local.onChanged.addListener(function(changes){
-        if(changes.novelAuthorCustomSkin!=undefined || changes.novelAuthorCustomSkinWarning!=undefined){
-            changeAuthorSkin()
+        try{
+            if(changes.novelAuthorCustomSkin!=undefined || changes.novelAuthorCustomSkinWarning!=undefined){
+                changeAuthorSkin()
+            }
+        }catch(e){
+            console.warn(e)
         }
     })
 
     function changeAuthorSkin(){
         chrome.storage.local.get(["novelAuthorCustomSkin"], (_d)=>{
-            const data = new LocalOptions(_d)
-            if(data.novelAuthorCustomSkin){
-                var banner = $(".novelrankingtag a:has(img[alt='Narou Tweaker 作者スキン'])")
-                if(banner.length){
-                    var span = banner.find("span")
-                    if(span.length){
-                        try{
-                            // Escape HTML Tags
-                            var p = $("<p>")
-                            const node = (span.get(0)?.firstChild as HTMLElement).nodeValue
-                            if(node!==null){
-                                p.text(node)
-                                var text = p.text()
+            try{
+                const data = new LocalOptions(_d)
+                if(data.novelAuthorCustomSkin){
+                    var banner = $(".novelrankingtag a:has(img[alt='Narou Tweaker 作者スキン'])")
+                    if(banner.length){
+                        var span = banner.find("span")
+                        if(span.length){
+                            try{
+                                // Escape HTML Tags
+                                var p = $("<p>")
+                                const node = (span.get(0)?.firstChild as HTMLElement).nodeValue
+                                if(node!==null){
+                                    p.text(node)
+                                    var text = p.text()
+                                    
+                                    // Parse to Tags
+                                    var skinData = new SkinV1(JSON.parse(text))
+                                    chrome.storage.local.get(["novelCustomStyle", "novelAuthorCustomSkinWarning"], (data)=>{
+                                        const style = makeSkinCSS(skinData, data.novelCustomStyle)
+                                        $("#narou-tweaker-style--author-css").text(style)
+                                        if(data.novelAuthorCustomSkinWarning){
+                                            userSkinActive(true)
+                                        }else{
+                                            userSkinActive(false)
+                                        }
+                                    })
+                                }
                                 
-                                // Parse to Tags
-                                var skinData = new SkinV1(JSON.parse(text))
-                                chrome.storage.local.get(["novelCustomStyle", "novelAuthorCustomSkinWarning"], (data)=>{
-                                    const style = makeSkinCSS(skinData, data.novelCustomStyle)
-                                    $("#narou-tweaker-style--author-css").text(style)
-                                    if(data.novelAuthorCustomSkinWarning){
-                                        userSkinActive(true)
-                                    }else{
-                                        userSkinActive(false)
-                                    }
-                                })
-                            }
-                            
 
-                        }catch(e){
-                            console.warn(e)
-                            $("#narou-tweaker-style--author-css").text("")
-                            userSkinActive(false)
+                            }catch(e){
+                                console.warn(e)
+                                $("#narou-tweaker-style--author-css").text("")
+                                userSkinActive(false)
+                            }
                         }
                     }
+                }else{
+                    $("#narou-tweaker-style--author-css").text("")
+                    userSkinActive(false)
                 }
-            }else{
-                $("#narou-tweaker-style--author-css").text("")
-                userSkinActive(false)
+            }catch(e){
+                console.warn(e)
             }
             
         })
