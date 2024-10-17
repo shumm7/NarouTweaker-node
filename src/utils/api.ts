@@ -116,8 +116,8 @@ export function getEpisode(_url?:string|URL|Location): number{
     }
 
     if(url.hostname=="ncode.syosetu.com" || url.hostname=="novel18.syosetu.com"){
-        if (url.pathname.match(/^\/[n|N]\d{4}[a-zA-Z]{2}\/\d+\/*$/)){ /* Story */
-            var m = url.pathname.match(/^\/[n|N]\d{4}[a-zA-Z]{2}\/(\d+)\/*$/)
+        if (url.pathname.match(/^\/[n|N]\d+[a-zA-Z]+\/\d+\/*$/)){ /* Story */
+            var m = url.pathname.match(/^\/[n|N]\d+[a-zA-Z]+\/(\d+)\/*$/)
             if(m!==null){
                 const e = Number(m[1])
                 if(!isNaN(e)){
@@ -153,10 +153,10 @@ export function getPageType(_url?:string|URL|Location): string|undefined{
     }
 
     if(url.hostname=="ncode.syosetu.com" || url.hostname=="novel18.syosetu.com"){
-        if (url.pathname.match(/^\/[n|N]\d{4}[a-zA-Z]{2}\/\d+\/*$/)){ /* Story */
+        if (url.pathname.match(/^\/[n|N]\d+[a-zA-Z]+\/\d+\/*$/)){ /* Story */
             return "novel"
         }
-        else if (url.pathname.match(/^\/[n|N]\d{4}[a-zA-Z]{2}\/*$/)){ /* Top */
+        else if (url.pathname.match(/^\/[n|N]\d+[a-zA-Z]+\/*$/)){ /* Top */
             if((typeof $)!=="undefined"){
                 if($(".p-novel__body").length){
                     return "novel"
@@ -167,13 +167,13 @@ export function getPageType(_url?:string|URL|Location): string|undefined{
                 return "novel"
             }
         }
-        else if (url.pathname.match(/\/novelview\/infotop\/ncode\/[n|N]\d{4}[a-zA-Z]{2}\/*/)){ /* Novel Info */
+        else if (url.pathname.match(/\/novelview\/infotop\/ncode\/[n|N]\d+[a-zA-Z]+\/*/)){ /* Novel Info */
             return "info"
         }
-        else if(url.pathname.match(/^\/novelpdf\/creatingpdf\/ncode\/[n|N]\d{4}[a-zA-Z]{2}\/*$/)){ /* PDF */
+        else if(url.pathname.match(/^\/novelpdf\/creatingpdf\/ncode\/[n|N]\d+[a-zA-Z]+\/*$/)){ /* PDF */
             return "pdf"
         }
-        else if(url.pathname.match(/^\/txtdownload\/top\/ncode\/[n|N]\d{4}[a-zA-Z]{2}\/*$/)){ /* TXT */
+        else if(url.pathname.match(/^\/txtdownload\/top\/ncode\/[n|N]\d+[a-zA-Z]+\/*$/)){ /* TXT */
             return "txt"
         }
         else if(url.pathname.match(/^\/[s|S]\d{4}[a-zA-Z]{1,}\/*$/)){ /* シリーズ */

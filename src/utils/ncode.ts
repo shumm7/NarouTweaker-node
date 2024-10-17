@@ -13,7 +13,7 @@ export class Ncode{
     */
     constructor(ncode?: string|number|Ncode){
         if(typeof ncode === "string"){
-            if(ncode.match(/^[n|N]\d{4}[a-zA-Z]+$/)){
+            if(ncode.match(/^[n|N]\d+[a-zA-Z]+$/)){
                 this.value = ncode.toLowerCase()
             }
         }else if(typeof ncode === "number"){
@@ -84,7 +84,7 @@ export class Ncode{
     /* Ncode Parse */
     /* https://zenn.dev/qnighy/articles/5faa90ddfef843 */
     /* By Masaki Hara (2021/07/17)*/
-    private readonly ncode_re = /^[n|N](\d{4})([a-z]+)$/i
+    private readonly ncode_re = /^[n|N](\d+)([a-zA-Z]+)$/i
     private parseBase26(s:string) {
         const sl = s.toLowerCase();
         let ret = 0;
@@ -117,7 +117,7 @@ export class Scode{
 
     constructor(scode?: string|Scode){
         if(typeof scode === "string"){
-            if(scode.match(/^[s|S]\d{4}[a-zA-Z]+$/)){
+            if(scode.match(/^[s|S]\d+[a-zA-Z]+$/)){
                 this.value = scode.toLowerCase()
             }
         }else if(scode instanceof Scode){
@@ -171,44 +171,59 @@ export function getNcodeFromURL(_url?:string|URL|Location): Ncode|undefined{
     }else if(_url instanceof Location){
         url = new URL(_url.toString())
     }else{
-        url = new URL(location.toString())
+        url = new URL(window.location.toString())
     }
 
     if(url.hostname=="ncode.syosetu.com" || url.hostname=="novel18.syosetu.com"){
-        if (url.pathname.match(/^\/[n|N]\d{4}[a-zA-Z]{2}\/\d+\/*$/)){ /* Story */
-            return new Ncode((url.pathname.match(/^\/([n|N]\d{4}[a-zA-Z]{2})\/\d+\/*$/) ?? "")[1].toLowerCase())
+        var m: RegExpMatchArray|null = null
+        if (url.pathname.match(/^\/[n|N]\d+[a-zA-Z]+\/\d+\/*$/)){ /* Story */
+            m = url.pathname.match(/^\/([n|N]\d+[a-zA-Z]+)\/\d+\/*$/)
         }
-        else if (url.pathname.match(/^\/[n|N]\d{4}[a-zA-Z]{2}\/*$/)){ /* Top */
-            return new Ncode((url.pathname.match(/^\/([n|N]\d{4}[a-zA-Z]{2})\/*$/) ?? "")[1].toLowerCase())
+        else if (url.pathname.match(/^\/[n|N]\d+[a-zA-Z]+\/*$/)){ /* Top */
+            m = url.pathname.match(/^\/([n|N]\d+[a-zA-Z]+)\/*$/)
         }
-        else if (url.pathname.match(/\/novelview\/infotop\/ncode\/[n|N]\d{4}[a-zA-Z]{2}\/*/)){ /* Novel Info */
-            return new Ncode((url.pathname.match(/\/novelview\/infotop\/ncode\/([n|N]\d{4}[a-zA-Z]{2})\/*/) ?? "")[1].toLowerCase())
+        else if (url.pathname.match(/\/novelview\/infotop\/ncode\/[n|N]\d+[a-zA-Z]+\/*/)){ /* Novel Info */
+            m = url.pathname.match(/\/novelview\/infotop\/ncode\/([n|N]\d+[a-zA-Z]+)\/*/)
         }
-        else if(url.pathname.match(/^\/novelpdf\/creatingpdf\/ncode\/[n|N]\d{4}[a-zA-Z]{2}\/*$/)){ /* PDF */
-            return new Ncode((url.pathname.match(/^\/novelpdf\/creatingpdf\/ncode\/([n|N]\d{4}[a-zA-Z]{2})\/*$/) ?? "")[1].toLowerCase())
+        else if(url.pathname.match(/^\/novelpdf\/creatingpdf\/ncode\/[n|N]\d+[a-zA-Z]+\/*$/)){ /* PDF */
+            m = url.pathname.match(/^\/novelpdf\/creatingpdf\/ncode\/([n|N]\d+[a-zA-Z]+)\/*$/)
         }
-        else if(url.pathname.match(/^\/txtdownload\/top\/ncode\/[n|N]\d{4}[a-zA-Z]{2}\/*$/)){ /* TXT */
-            return new Ncode((url.pathname.match(/^\/txtdownload\/top\/ncode\/([n|N]\d{4}[a-zA-Z]{2})\/*$/) ?? "")[1].toLowerCase())
+        else if(url.pathname.match(/^\/txtdownload\/top\/ncode\/[n|N]\d+[a-zA-Z]+\/*$/)){ /* TXT */
+            m = url.pathname.match(/^\/txtdownload\/top\/ncode\/([n|N]\d+[a-zA-Z]+)\/*$/)
+        }
+        
+        if(m!==null){
+            return new Ncode(m[1])
         }
     }else if(url.hostname=="novelcom.syosetu.com" || url.hostname == "novelcom18.syosetu.com"){
+        var m: RegExpMatchArray|null = null
         if (url.pathname.match(/^\/impression\/list\/ncode\/\d+\/*.*$/)){ /* Impression */
-            return new Ncode(Number((url.pathname.match(/^\/impression\/list\/ncode\/(\d+)\/*.*$/) ?? "")[1]))
+            m = url.pathname.match(/^\/impression\/list\/ncode\/(\d+)\/*.*$/)
         }
         else if (url.pathname.match(/^\/impressionres\/.*\/ncode\/(\d+)\/*.*$/)){ /* Impression Res */
-            return new Ncode(Number((url.pathname.match(/^\/impressionres\/.*\/ncode\/(\d+)\/*.*$/) ?? "")[1]))
+            m = url.pathname.match(/^\/impressionres\/.*\/ncode\/(\d+)\/*.*$/)
         }
         else if (url.pathname.match(/^\/novelreview\/list\/ncode\/(\d+)\/*.*$/)){ /* Review */
-            return new Ncode(Number((url.pathname.match(/^\/novelreview\/list\/ncode\/(\d+)\/*.*$/) ?? "")[1]))
+            m = url.pathname.match(/^\/novelreview\/list\/ncode\/(\d+)\/*.*$/)
         }
         else if (url.pathname.match(/^\/novelreport\/input\/ncode\/(\d+)\/*.*$/)){ /* Review */
-            return new Ncode(Number((url.pathname.match(/^\/novelreport\/input\/ncode\/(\d+)\/*.*$/) ?? "")[1]))
+            m = url.pathname.match(/^\/novelreport\/input\/ncode\/(\d+)\/*.*$/)
+        }
+        
+        if(m!==null){
+            return new Ncode(Number(m[1]))
         }
     }else if(url.hostname=="syosetu.com"){
+        var m: RegExpMatchArray|null = null
         if (url.pathname.match(/^\/draftepisode\/input\/ncode\/\d+\/*/)){
-            return new Ncode(Number((url.pathname.match(/^\/draftepisode\/input\/ncode\/(\d+)\/*/) ?? "")[1]))
+            m = url.pathname.match(/^\/draftepisode\/input\/ncode\/(\d+)\/*/)
         }
         else if (url.pathname.match(/^\/usernoveldatamanage\/.*\/ncode\/\d+\/*.*$/)){
-            return new Ncode(Number((url.pathname?.match(/^\/usernoveldatamanage\/updateinput\/ncode\/(\d+)\/*.*$/) ?? "")[1]))
+            m = url.pathname?.match(/^\/usernoveldatamanage\/updateinput\/ncode\/(\d+)\/*.*$/)
+        }
+
+        if(m!==null){
+            return new Ncode(Number(m[1]))
         }
     }
     return new Ncode()
