@@ -490,6 +490,9 @@ export function makeSkinCSS(skin: SkinV1, novelCustomStyle?: boolean): CSS_Strin
         /* ヘッダの残像を非表示 */
         display: none !important;
     }
+    .p-announce-bkmfix {
+        color: #444;
+    }
 
     `
     /* 本文ページ以外 */
