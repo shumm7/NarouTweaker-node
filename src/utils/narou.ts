@@ -250,8 +250,7 @@ export function getPageType(_url?:string|URL|Location): string|undefined{
  * @param genre - 大ジャンル番号
  * @returns 大ジャンル名
 */
-export function getBigGenre(genre:number): string;
-export function getBigGenre(genre:number|any): string{
+export function getBigGenre(genre?:number): string{
     if(genre==1){
         return "恋愛"
     }
@@ -280,8 +279,7 @@ export function getBigGenre(genre:number|any): string{
  * @param genre - 大ジャンル名
  * @returns 大ジャンル番号
 */
-export function getBigGenreNumber(genre:string): number|null
-export function getBigGenreNumber(genre:string|any): number|null{
+export function getBigGenreNumber(genre?:string): number|null{
     if(genre=="恋愛"){
         return 1
     }
@@ -310,8 +308,7 @@ export function getBigGenreNumber(genre:string|any): number|null{
  * @param genre - ジャンル番号
  * @returns ジャンル名
 */
-export function getGenre(genre:number): string
-export function getGenre(genre:number|any): string{
+export function getGenre(genre?:number): string{
     if(genre==101){
         return "異世界〔恋愛〕"
     }
@@ -385,8 +382,7 @@ export function getGenre(genre:number|any): string{
  * @param genre - ジャンル名
  * @returns ジャンル番号
 */
-export function getGenreNumber(genre:string):number|null
-export function getGenreNumber(genre:string|any):number|null{
+export function getGenreNumber(genre?:string):number|null{
     if(genre=="異世界〔恋愛〕"){
         return 101
     }
@@ -460,8 +456,7 @@ export function getGenreNumber(genre:string|any):number|null{
  * @param type - 1:連載 / 2:短編
  * @returns 小説タイプ
 */
-export function getNovelType(type:Number): string
-export function getNovelType(type:Number|any): string{
+export function getNovelType(type?:Number): string{
     if(type==1){
         return "連載"
     }
@@ -477,12 +472,11 @@ export function getNovelType(type:Number|any): string{
  * @param state - 0:完結 / 1:連載中
  * @returns 小説タイプ
 */
-export function getNovelEnd(state:Number): string
-export function getNovelEnd(state:Number|any): string{
-    if(state==0){
+export function getNovelEnd(state?:Number|boolean): string{
+    if(state==0 || state==false){
         return "完結"
     }
-    else if(state==1){
+    else if(state==1 || state==true){
         return "連載中"
     }else{
         return ""
@@ -494,8 +488,7 @@ export function getNovelEnd(state:Number|any): string{
  * @param genre - 1:ノクターン / 2:ムーンライト / 3:ムーンライト（BL） / 4:ミッドナイト
  * @returns サイト名
 */
-export function getNocgenre(genre:Number): string
-export function getNocgenre(genre:Number|any): string{
+export function getNocgenre(genre?:Number): string{
     if(genre==1){
         return "ノクターンノベルズ(男性向け)"
     }

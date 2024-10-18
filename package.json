@@ -34,11 +34,11 @@
     "gsap": "^3.12.5",
     "highlight.js": "^11.10.0",
     "jquery": "^3.7.1",
-    "jquery-nstslider": "github:lokku/jquery-nstslider",
     "jquery.selection": "github:marcintabaka/jquery.selection",
     "pickadatejs": "^1.0.23",
     "qrcode": "^1.5.4",
     "sortablejs": "^1.15.3",
+    "toolcool-range-slider": "^4.0.28",
     "w3-css": "^4.1.0"
   }
 }

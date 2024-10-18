@@ -104,7 +104,18 @@ const manifest = defineManifest({
                 "*://*.eparet.net/*"
             ],
             run_at: "document_end"
-        }
+        },
+
+        /* kasasagi */
+        {
+            js: [
+                "cogs/kasasagi/main.ts",
+            ],
+            matches: [
+                "*://kasasagi.hinaproject.com/*"
+            ],
+            run_at: "document_end"
+        },
     ],
 
 });

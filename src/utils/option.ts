@@ -1,5 +1,5 @@
 import { getOptionFromID, getOptionPageFromID } from "../options/_utils/optionUI_utils"
-import { ReplacePatterns, ImpressionKanrino, CorrectionNumberMode } from "./data"
+import { ReplacePatterns, ImpressionKanrino, CorrectionNumberMode, GraphType } from "./data"
 import { CustomIconIDs, novelIconList, workspaceIconList, workspaceMenuIconList } from "./header"
 import { getExtensionVersion } from "./misc"
 import { CSS_String } from "./type"
@@ -124,13 +124,13 @@ export class LocalOptions{
     kasasagiShowGraph_MonthPV: boolean = true
     kasasagiShowGraph_MonthUnique: boolean = true
     
-    kasasagiGraphType_GeneralDay: string = "bar"
-    kasasagiGraphType_GeneralTotal: string = "bar"
-    kasasagiGraphType_ChapterUnique: string = "bar"
-    kasasagiGraphType_DayPV: string = "bar"
-    kasasagiGraphType_DayUnique: string = "bar"
-    kasasagiGraphType_MonthPV: string = "bar"
-    kasasagiGraphType_MonthUnique: string = "bar"
+    kasasagiGraphType_GeneralDay: GraphType = "bar"
+    kasasagiGraphType_GeneralTotal: GraphType = "bar"
+    kasasagiGraphType_ChapterUnique: GraphType = "bar"
+    kasasagiGraphType_DayPV: GraphType = "bar"
+    kasasagiGraphType_DayUnique: GraphType = "bar"
+    kasasagiGraphType_MonthPV: GraphType = "bar"
+    kasasagiGraphType_MonthUnique: GraphType = "bar"
 
     kasasagiShowTable_API: boolean = true
     kasasagiShowTable_Rank: boolean = true

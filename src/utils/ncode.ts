@@ -218,6 +218,15 @@ export function getNcodeFromURL(_url?:string|URL|Location): Ncode|undefined{
         if(m!==null){
             return new Ncode(Number(m[1]))
         }
+    }else if(url.hostname=="kasasagi.hinaproject.com"){
+        var m: RegExpMatchArray|null = null
+        if (url.pathname.match(/^\/access\/.*\/ncode\/[n|N]\d+[a-zA-Z]+\/*/)){
+            m = url.pathname.match(/^\/access\/.*\/ncode\/([n|N]\d+[a-zA-Z]+)\/*/)
+        }
+
+        if(m!==null){
+            return new Ncode(m[1])
+        }
     }
     return new Ncode()
 }
