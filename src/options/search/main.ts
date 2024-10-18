@@ -100,7 +100,7 @@ function search(searchWords: string){
 
 
 /* オプションを検索して、結果を取得 */
-function searchOption(searchWords): Array<OptionUI_SearchResult>{
+function searchOption(searchWords: string[]): Array<OptionUI_SearchResult>{
     /*
     const modeTitle = $(`#search-target--title`).prop('checked')
     const modeDescription = $(`#search-target--description`).prop('checked')
@@ -130,11 +130,12 @@ function searchOption(searchWords): Array<OptionUI_SearchResult>{
         }
     }
 
-    function getPageFromKeyword(w){
+    function getPageFromKeyword(w: string){
         var ret: Array<string> = []
         
-        if(w.match(/^\".+\"$/s)){
-            w = w.match(/^\"(.+)\"$/s)[1]
+        var m = w.match(/^\"(.+)\"$/s)
+        if(m!==null){
+            w = m[1]
             $.each(OptionUI_Pages, function(_, c){
                 if(!c.noindex){
                     if(c.title === w || c.id === w){
@@ -159,11 +160,11 @@ function searchOption(searchWords): Array<OptionUI_SearchResult>{
     }
 
     $.each(searchWords, function(k, w){
-        if(w.match(w.match(/^\-+page\:.+$/s))){ /* 特定のページを除外 */
-            w = w.match(/^\-+page\:(.+)$/s)[1]
+        var m = w.match(/^\-+page\:(.+)$/s)
+        if(m){ /* 特定のページを除外 */
+            w = m[1]
             $.each(w.split("&"), function(_, v){
-                v = getPageFromKeyword(v)
-                $.each(v, function(_, u){
+                $.each(getPageFromKeyword(v), function(_, u){
                     if(!pageFilter.blacklist.includes(u)){
                         pageFilter.blacklist.push(u)
                     }
@@ -171,42 +172,50 @@ function searchOption(searchWords): Array<OptionUI_SearchResult>{
             })
             searchWords[k] = ""
         }
-        else if(w.match(w.match(/^page\:.+$/s))){ /* 特定のページのみで検索 */
+        else if(w.match(/^page\:.+$/s)){ /* 特定のページのみで検索 */
             isWhitelistActive = true
-            w = w.match(/^page\:(.+)$/s)[1]
-            $.each(w.split("&"), function(_, v){
-                v = getPageFromKeyword(v)
-                $.each(v, function(_, u){
-                    if(!pageFilter.whitelist.includes(u)){
-                        pageFilter.whitelist.push(u)
+            var m = w.match(/^page\:(.+)$/s)
+            if(m){
+                w = m[1]
+                $.each(w.split("&"), function(_, v){
+                    $.each(getPageFromKeyword(v), function(_, u){
+                        if(!pageFilter.whitelist.includes(u)){
+                            pageFilter.whitelist.push(u)
+                        }
+                    })
+                })
+                searchWords[k] = ""
+            }
+        }
+        else if(w.match(/^\-+filter\:.+$/s)){
+            var m = w.match(/^\-+filter\:(.+)$/s)
+            if(m){
+                w = m[1]
+                $.each(w.split("&"), function(_, v){
+                    v = v.toLowerCase()
+                    if(v==="experiment" || v==="experimental" || v==="e"){
+                        modeFilter.blacklist.experimental = true
+                    }else if(v==="advance" || v==="advanced" || v==="a"){
+                        modeFilter.blacklist.advanced = true
                     }
                 })
-            })
-            searchWords[k] = ""
+                searchWords[k] = ""
+            }
         }
-        else if(w.match(w.match(/^\-+filter\:.+$/s))){
-            w = w.match(/^\-+filter\:(.+)$/s)[1]
-            $.each(w.split("&"), function(_, v){
-                v = v.toLowerCase()
-                if(v==="experiment" || v==="experimental" || v==="e"){
-                    modeFilter.blacklist.experimental = true
-                }else if(v==="advance" || v==="advanced" || v==="a"){
-                    modeFilter.blacklist.advanced = true
-                }
-            })
-            searchWords[k] = ""
-        }
-        else if(w.match(w.match(/^filter\:.+$/s))){
-            w = w.match(/^filter\:(.+)$/s)[1]
-            $.each(w.split("&"), function(_, v){
-                v = v.toLowerCase()
-                if(v==="experiment" || v==="experimental" || v==="e"){
-                    modeFilter.whitelist.experimental = true
-                }else if(v==="advance" || v==="advanced" || v==="a"){
-                    modeFilter.whitelist.advanced = true
-                }
-            })
-            searchWords[k] = ""
+        else if(w.match(/^filter\:.+$/s)){
+            var m = w.match(/^filter\:(.+)$/s)
+            if(m){
+                w = m[1]
+                $.each(w.split("&"), function(_, v){
+                    v = v.toLowerCase()
+                    if(v==="experiment" || v==="experimental" || v==="e"){
+                        modeFilter.whitelist.experimental = true
+                    }else if(v==="advance" || v==="advanced" || v==="a"){
+                        modeFilter.whitelist.advanced = true
+                    }
+                })
+                searchWords[k] = ""
+            }
         }else if(w.match(/^\*$/s)){
             magic_word = true
             searchWords[k] = ""
@@ -265,37 +274,43 @@ function searchOption(searchWords): Array<OptionUI_SearchResult>{
 
                         var score = 0
                         if(w.match(/^\-+.+$/s)){
-                            w = w.match(/^\-+(.+)$/s)[1]
-                            if(p_fullWords.includes(w)){
-                                exception = true
-                                return true
+                            var m = w.match(/^\-+(.+)$/s)
+                            if(m){
+                                w = m[1]
+                                if(p_fullWords.includes(w)){
+                                    exception = true
+                                    return true
+                                }
                             }
                         }else if(w.match(/^\".+\"$/s)){
-                            w = w.match(/^\"(.+)\"$/s)[1]
-                            if(!p_fullWords.includes(w)){
-                                exception = true
-                                return true
-                            }else{
-                                if(modeId){
-                                    score += (100 * countMult_include(v.id, w, 0)) * (1 + w.length / v.id.length)
-                                }
-                                if(modeTitle){
-                                    score += getSearchScore(v.title, w, 10) * countMult_include(v.title, w, 0.2)
-                                }
-                                if(modeDescription && v.description){
-                                    score += getSearchScore(v.description.text, w, 10) * countMult_include(v.description.text, w, 0.1)
-                                    score += getSearchScore(v.description.small, w, 8) * countMult_include(v.description.small, w, 0.08)
-                                    score += getSearchScore(v.description.attention, w, 8) * countMult_include(v.description.attention, w, 0.08)
-                                    score += getSearchScore(v.description.hidden, w, 10) * countMult_include(v.description.hidden, w, 0.1)
-                                }
-                                if(modeKeywords && v.description){
-                                    if(Array.isArray(v.description.keywords)){
-                                        $.each(v.description.keywords, function(_, k){
-                                            score += getSearchScore(k, w, 10) * countMult_include(k, w, 0)
-                                        })
+                            var m = w.match(/^\"(.+)\"$/s)
+                            if(m){
+                                w = m[1]
+                                if(!p_fullWords.includes(w)){
+                                    exception = true
+                                    return true
+                                }else{
+                                    if(modeId){
+                                        score += (100 * countMult_include(v.id, w, 0)) * (1 + w.length / v.id.length)
                                     }
+                                    if(modeTitle){
+                                        score += getSearchScore(v.title, w, 10) * countMult_include(v.title, w, 0.2)
+                                    }
+                                    if(modeDescription && v.description){
+                                        score += getSearchScore(v.description.text, w, 10) * countMult_include(v.description.text, w, 0.1)
+                                        score += getSearchScore(v.description.small, w, 8) * countMult_include(v.description.small, w, 0.08)
+                                        score += getSearchScore(v.description.attention, w, 8) * countMult_include(v.description.attention, w, 0.08)
+                                        score += getSearchScore(v.description.hidden, w, 10) * countMult_include(v.description.hidden, w, 0.1)
+                                    }
+                                    if(modeKeywords && v.description){
+                                        if(Array.isArray(v.description.keywords)){
+                                            $.each(v.description.keywords, function(_, k){
+                                                score += getSearchScore(k, w, 10) * countMult_include(k, w, 0)
+                                            })
+                                        }
+                                    }
+                                    score *= 1.5
                                 }
-                                score *= 1.5
                             }
                         }else{
                             if(modeId){
@@ -368,7 +383,7 @@ function searchOption(searchWords): Array<OptionUI_SearchResult>{
 }
 
 /* カテゴリを検索して、結果を取得 */
-function searchCategory(searchWords): Array<OptionUI_CategorySearchResult>{
+function searchCategory(searchWords: string[]): Array<OptionUI_CategorySearchResult>{
     var searchResult: Array<OptionUI_CategorySearchResult> = []
     $.each(OptionUI_Pages, function(_, v){
         if(!v.noindex){
@@ -388,20 +403,26 @@ function searchCategory(searchWords): Array<OptionUI_CategorySearchResult>{
             $.each(searchWords.filter(w => w.trim().length > 0), function(_, w){
                 var score = 0
                 if(w.match(/^\-+.+$/s)){
-                    w = w.match(/^\-+(.+)$/s)[1]
-                    if(fullWords.includes(w)){
-                        exception = true
-                        return true
+                    var m = w.match(/^\-+(.+)$/s)
+                    if(m){
+                        w = m[1]
+                        if(fullWords.includes(w)){
+                            exception = true
+                            return true
+                        }
                     }
                 }else if(w.match(/^\".+\"$/s)){
-                    w = w.match(/^\"(.+)\"$/s)[1]
-                    if(!fullWords.includes(w)){
-                        exception = true
-                        return true
-                    }else{
-                        score += getSearchScore(v.title, w, 10) * countMult_include(v.title, w, 0.2)
-                        score += getSearchScore(v.description, w, 10) * countMult_include(v.description, w, 0.1)
-                        score *= 1.5
+                    var m = w.match(/^\"(.+)\"$/s)
+                    if(m){
+                        w = m[1]
+                        if(!fullWords.includes(w)){
+                            exception = true
+                            return true
+                        }else{
+                            score += getSearchScore(v.title, w, 10) * countMult_include(v.title, w, 0.2)
+                            score += getSearchScore(v.description, w, 10) * countMult_include(v.description, w, 0.1)
+                            score *= 1.5
+                        }
                     }
                 }else{
                     score += getSearchScore(v.title, w, 10) * countMult(v.title, w, 0.2)
@@ -423,7 +444,7 @@ function searchCategory(searchWords): Array<OptionUI_CategorySearchResult>{
 
 
 /* キーワードを分割 */
-function splitWords(splitWords){
+function splitWords(splitWords: string){
     var list: Array<string> = []
     var word = ""
     var startBracket = false
@@ -469,7 +490,7 @@ function splitWords(splitWords){
 
 
 /* 得点付け関数 */
-function getSearchScore(target, word, mult){
+function getSearchScore(target: string|undefined, word: string, mult: number){
     if(!target){
         return 0
     }
@@ -479,7 +500,7 @@ function getSearchScore(target, word, mult){
     return 10 * stringSimilarity(target.toLowerCase(), word.toLowerCase()) * mult
 }
 
-function countMult_include(target, searchWord, mult){
+function countMult_include(target: string|undefined, searchWord: string, mult: number){
     if(!target){
         return 0
     }
@@ -494,7 +515,7 @@ function countMult_include(target, searchWord, mult){
     }
 }
 
-function countMult(target, searchWord, mult){
+function countMult(target: string|undefined, searchWord: string, mult: number){
     if(!target){
         return 0
     }

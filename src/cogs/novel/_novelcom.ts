@@ -1,5 +1,6 @@
 import { Ncode } from "../../utils/ncode"
 import { pushImpressionHiddenList, pushImpressionReadList } from "../../utils/data"
+import { getLocalOptions } from "../../utils/option"
 
 export function _novelcom(){
     _readImpression()
@@ -14,7 +15,7 @@ function _readImpression(){
                 const kanrino: string|undefined = m[2]
                 
                 if(ncode!==undefined && kanrino!==undefined){
-                    chrome.storage.local.get(null, function(data){
+                    getLocalOptions(null, function(data){
                         if(data.workspaceImpressionMarkAsReadWhenReply && data.workspaceImpressionMarkedButton){
                             if($("form #rescomment").length){
                                 

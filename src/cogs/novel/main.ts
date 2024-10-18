@@ -14,8 +14,8 @@ import "./novelVertical.css"
 
 /* Header */
 _header()
-changeHeaderScrollMode("#novel_header_right");
-changeHeaderScrollMode("#novel_header");
+changeHeaderScrollMode($("#novel_header_right"));
+changeHeaderScrollMode($("#novel_header"));
 
 /* Option Menu */
 _optionModal();

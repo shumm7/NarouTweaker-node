@@ -2,7 +2,7 @@
 import { Ncode } from "./ncode"
 import { SyncOptions } from "./option"
 /************************************************************************************* */
-/*                                 置換パターン                                       */
+/*                                 校正                                                */
 /************************************************************************************* */
 /**
  * 置換パターンリスト
@@ -22,6 +22,12 @@ export class ReplacePattern {
     public regex: boolean = false
     public active: boolean = true
 }
+
+
+/**
+ * 数値の変換モード
+ */
+export type CorrectionNumberMode = "full" | "half" | "default" | "kanji"
 
 
 /************************************************************************************* */

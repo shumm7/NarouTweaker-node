@@ -44,6 +44,7 @@ const manifest = defineManifest({
         "*://*.mitemin.net/*"
     ],
     content_scripts: [
+        /* novel */
         {
             js: [
                 "cogs/novel/main.ts"
@@ -58,7 +59,7 @@ const manifest = defineManifest({
         },
         {
             js: [
-                "cogs/skin_css/main.ts"
+                "cogs/css-novel/main.ts"
             ],
             matches: [
                 "*://ncode.syosetu.com/*",
@@ -68,6 +69,42 @@ const manifest = defineManifest({
             ],
             run_at: "document_start"
         },
+
+        /* narou */
+        {
+            js: [
+                "cogs/narou/main.ts"
+            ],
+            matches: [
+                "*://*.syosetu.com/*",
+                "*://*.eparet.net/*"
+            ],
+            run_at: "document_end"
+        },
+
+        /* mypage */
+        {
+            js: [
+                "cogs/mypage/main.ts"
+            ],
+            matches: [
+                "*://mypage.syosetu.com/*",
+                "*://xmypage.syosetu.com/*"
+            ],
+            run_at: "document_end"
+        },
+
+        /* mitemin */
+        {
+            js: [
+                "cogs/mitemin/main.ts"
+            ],
+            matches: [
+                "*://*.mitemin.net/*",
+                "*://*.eparet.net/*"
+            ],
+            run_at: "document_end"
+        }
     ],
 
 });

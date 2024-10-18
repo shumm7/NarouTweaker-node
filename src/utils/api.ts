@@ -132,6 +132,53 @@ export function getEpisode(_url?:string|URL|Location): number{
 
 
 /**
+ * 作者のユーザIDを取得
+ * @param {string|URL|Location} _url ページのURL
+ * @returns {string} - ユーザID
+ */
+export function getUserIdFromURL(_url?:string|URL|Location): string|undefined{
+    let url:URL
+    if(typeof _url === "string"){
+        try{
+            url = new URL(_url)
+        }catch(e){
+            return undefined
+        }
+    }else if(_url instanceof URL){
+        url = _url
+    }else if(_url instanceof Location){
+        url = new URL(_url.toString())
+    }else{
+        url = new URL(location.toString())
+    }
+
+    if(location.hostname == "mypage.syosetu.com"){
+        var m = location.pathname.match(/\/userid\/(\d+)\//)
+        if(m){
+            return m[1]
+        }
+    }else if(location.hostname == "xmypage.syosetu.com"){
+        var m = location.pathname.match(/\/xid\/(x\d+[a-zA-Z]*)\//)
+        if(m){
+            return m[1].toLowerCase()
+        }
+    }else if(location.hostname == "ncode.syosetu.com" || location.hostname == "novelcom.syosetu.com"){
+        const atom: string = $("link[href^='https://api.syosetu.com/writernovel/'][title='Atom']").prop("href")
+        var m = atom.match(/https:\/\/api\.syosetu\.com\/writernovel\/(\d+)\.Atom/)
+        if(m!==null){
+            return m[1]
+        }
+    }else if(location.hostname == "novel18.syosetu.com" || location.hostname == "novelcom18.syosetu.com"){
+        const atom: string = $("link[href^='https://api.syosetu.com/writernovel/'][title='Atom']").prop("href")
+        var m = atom.match(/https:\/\/api\.syosetu\.com\/writernovel\/(x\d+[a-zA-Z]+)\.Atom/)
+        if(m!==null){
+            return m[1].toLowerCase()
+        }
+    }
+}
+
+
+/**
  * 小説家になろうグループサイトのページ種別を判定します
  * @param {string|URL|Location} _url  ページのURL
  * @returns {string|undefined} 種類

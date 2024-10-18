@@ -1,5 +1,5 @@
 import { ReplacePattern } from "../../utils/data"
-import { CustomIconIDs, getExcludeIcons, novelIconList } from "../../utils/header"
+import { CustomIconID, CustomIconIDs, getExcludeIcons, novelIconList } from "../../utils/header"
 import { addFontEditButtonEvent, restoreFont } from "./_optionsAction_Font"
 import { addSkinEditButtonEvent, restoreSkins } from "./_optionsAction_Skin"
 import Sortable from 'sortablejs'
@@ -15,7 +15,7 @@ export function novel_customHeaderSortable(){
             }
         )
     
-        function getHeaderIconList(position){
+        function getHeaderIconList(position: "right" | "left" | "disabled"){
             if(position!="right" && position!="left" && position!="disabled") { return }
         
             var list: CustomIconIDs = []
@@ -32,7 +32,7 @@ export function novel_customHeaderSortable(){
     if($(".draggable_area[name='novel-header']").length){
         Sortable.create($(".draggable_area[name='novel-header']#left")[0], {
             handle: '.icon-element',
-            sort: 1,
+            sort: true,
             group: {
                 name: 'header-icon',
                 pull: true,
@@ -45,7 +45,7 @@ export function novel_customHeaderSortable(){
         });
         Sortable.create($(".draggable_area[name='novel-header']#right")[0], {
             handle: '.icon-element',
-            sort: 1,
+            sort: true,
             group: {
                 name: 'header-icon',
                 pull: true,
@@ -59,7 +59,7 @@ export function novel_customHeaderSortable(){
         Sortable.create($(".draggable_area[name='novel-header']#disabled")[0], {
             handle: '.icon-element',
             animation: 150,
-            sort: 1,
+            sort: true,
             group: {
                 name: 'header-icon',
                 pull: true,
@@ -72,7 +72,7 @@ export function novel_customHeaderSortable(){
     }
 
     /* Novel Header */
-    function getNovelHeaderIconElement(id){
+    function getNovelHeaderIconElement(id: CustomIconID){
         let icon = novelIconList[id]
         var text = icon.text
 
@@ -84,7 +84,7 @@ export function novel_customHeaderSortable(){
     }
 
     function restoreSortable(){
-        function restore(data, position){
+        function restore(data: CustomIconIDs, position: string){
             $(".draggable_area[name='novel-header']#"+position).empty()
             $.each(data, (_, icon)=>{
                 if(icon in novelIconList)

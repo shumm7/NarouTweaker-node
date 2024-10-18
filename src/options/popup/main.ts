@@ -1,3 +1,5 @@
+import { getLocalOptions } from "../../utils/option";
+
 import jQuery from "jquery";
 Object.assign(window, { $: jQuery, jQuery });
 
@@ -6,7 +8,7 @@ openDropdown()
 
 function openDropdown(){
     chrome.tabs.query({active: true, lastFocusedWindow:true}, tabs => {
-        chrome.storage.local.get("extPopupDefaultPage", function(data){
+        getLocalOptions("extPopupDefaultPage", function(data){
             if(data.extPopupDefaultPage === "__auto__"){
                 const tab = tabs[0]
                 try{

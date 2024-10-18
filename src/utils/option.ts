@@ -1,15 +1,18 @@
 import { getOptionFromID, getOptionPageFromID } from "../options/_utils/optionUI_utils"
-import { ReplacePatterns, ImpressionKanrino } from "./data"
+import { ReplacePatterns, ImpressionKanrino, CorrectionNumberMode } from "./data"
 import { CustomIconIDs, novelIconList, workspaceIconList, workspaceMenuIconList } from "./header"
 import { getExtensionVersion } from "./misc"
 import { CSS_String } from "./type"
 import { FontFamiliesV1 } from "./v1_font"
 import { SkinsV1 } from "./v1_skin"
 import { OptionID, OptionUI_Item, OptionUI_ItemID } from "../options/_utils/optionUI_type"
+import { Ncode } from "./ncode"
 /**
  * 設定データ（storage.local）
  */
 export class LocalOptions{
+    [key: string]: any
+
     /* Extension */
     extOptionsVersion: string = getExtensionVersion()
     extAdvancedSettings: boolean = false
@@ -21,6 +24,7 @@ export class LocalOptions{
     extNotifications: boolean = true
 
     /* Narou */
+    narouSkipAgeauth: boolean = false
     narouSyuppanShowBookImage: boolean = true
     narouSyuppanShowBookViewImage: boolean = true
 
@@ -167,9 +171,9 @@ export class LocalOptions{
     correctionOddDash: boolean = false
     correctionWaveDash: boolean = false
     correctionNumber: boolean = false
-    correctionNumberShort: string = "full"
-    correctionNumberLong: string = "half"
-    correctionNumberSymbol: string = "default"
+    correctionNumberShort: CorrectionNumberMode = "full"
+    correctionNumberLong: CorrectionNumberMode = "half"
+    correctionNumberSymbol: CorrectionNumberMode = "default"
     correctionShowIllustration: boolean = true
     correctionRemoveIllustrationLink: boolean = false
     correctionVerticalLayout_CombineWord: number = 0
@@ -272,44 +276,68 @@ export class LocalOptions{
         }
     ]
 
+    /**
+     * コンストラクタ
+     * @param {undefined|Record<string,any>} data - 辞書型のデータで初期値を設定する（無効な値は全て除外される）
+     */
     constructor(data?: Record<string,any>){
-        var p:any = this
-        if(data instanceof Object){
+        if(data !== undefined){
             Object.keys(data).forEach(function(key){
-                p.set(key, data[key])
+                this.set(key, data[key])
             })
         }
     }
 
-    public set = (key?: OptionID|Object, value?: any):void => {
-        if(key!==undefined){
-            if(typeof key==="string"){
-                var value = this._checkValue(key, value)
-                if(value!==undefined){
-                    this[key] = value
-                }
-            }else if(value instanceof Object){
-                value = this._exceptionProcess(value)
-                Object.keys(key).forEach(function(k){
-                    this.set(k, key[k])
-                })
+    /**
+     * キーに値を設定する
+     * @param {OptionID} key - キー
+     * @param {any} value - 設定する値
+     */
+    set(key: OptionID, value: any):void
+
+    /**
+     * キーに値を設定する
+     * @param {Record<string,any>} value - 設定するキーと値の辞書
+     */
+    set(value: Record<string,any>):void
+    set(key?: OptionID|Record<string,any>, value?: any):void{
+        if(typeof key==="string"){
+            var value = this._checkValue(key, value)
+            if(value!==undefined){
+                this[key] = value
             }
+        }else if(key!==undefined){
+            Object.keys(key).forEach(function(k){
+                this.set(k, key[k])
+            })
         }
     }
 
-    public get = (includeParameters?: null|OptionID|Array<OptionID>): Record<string,any> => {
-        var ret = {}
-        if(includeParameters!==undefined && includeParameters!==null){
+    /**
+     * キーと値を辞書型で取得する
+     * @returns すべてのデータを含む辞書型
+     */
+    get(): Record<string,any>
+    /**
+     * キーと値を辞書型で取得する
+     * @param {OptionID|Array<OptionID>} parameters - キーの文字列、またはそのリスト
+     * @returns 指定したデータを含む辞書型
+     */
+    get(parameters: OptionID|Array<OptionID>): Record<string,any>
+
+    get(parameters?: null|OptionID|Array<OptionID>): Record<string,any> {
+        var ret: Record<string,any> = {}
+        if(parameters!==undefined && parameters!==null){
             var params: Array<OptionID>
-            if(typeof includeParameters==="string"){
-                params = [includeParameters]
+            if(typeof parameters==="string"){
+                params = [parameters]
             }else{
-                params = includeParameters
+                params = parameters
             }
 
-            const obj = Object.entries(this)
-            for (const key of includeParameters){
-                var value: any = obj[key]
+            const obj: Record<string,any> = Object.entries(this)
+            for (const key of parameters){
+                var value = obj[key]
                 if(typeof value!=="undefined" && typeof value!=="function"){
                     ret[key] = value
                 }
@@ -325,23 +353,13 @@ export class LocalOptions{
         }
     }
 
-    public param = (key?: string): any => {
-        if(key){
-            var value = this[key]
-            if(typeof value !== "undefined" && typeof value!=="function"){
-                return value
-            }
-        }
-    }
-
-    public check = (key?: string, value?: any): any => {
-        if(key){
-            if(value===undefined){
-                if(this)
-                value = this[key]
-            }
-            return this._checkValue(key, value)
-        }
+    /**
+     * 過去のバージョンの設定データを更新する
+     * @param {Record<string,any>} data キーと値の辞書
+     */
+    update(data: Record<string,any>): void {
+        var updatedData = this._exceptionProcess(data)
+        this.set(updatedData)
     }
 
     // バージョンアップ時の対応
@@ -438,50 +456,75 @@ export class LocalOptions{
  * 設定データ（storage.sync）
  */
 export class SyncOptions{
+    [key: string]: any
+
     extLaunchCount: number = 0
     extLastLaunchTime: string = ""
-    history: Array<any> = []
-    history_data: Object = {}
+    novelHistory: Array<string> = []
+    novelHistoryData: Record<string, [number, number, string]> = {}
     workspaceImpressionMarked: ImpressionKanrino = {}
     workspaceImpressionHidden: ImpressionKanrino = {}
-    
+
+    /**
+     * コンストラクタ
+     * @param {undefined|Record<string,any>} data - 辞書型のデータで初期値を設定する（無効な値は全て除外される）
+     */    
     constructor(data?: Record<string,any>){
-        var p:any = this
         if(data instanceof Object){
             Object.keys(data).forEach(function(key){
-                p.set(key, data[key])
+                this.set(key, data[key])
             })
         }
     }
-    public set = (key?: OptionID|Object, value?: any):void => {
-        if(key!==undefined){
-            if(typeof key==="string"){
-                var value = this._checkValue(key, value)
-                if(value!==undefined){
-                    this[key] = value
-                }
-            }else if(value instanceof Object){
-                value = this._exceptionProcess(value)
-                Object.keys(key).forEach(function(k){
-                    this.set(k, key[k])
-                })
-            }
-        }
-    }
 
-    public get = (includeParameters?: null|OptionID|Array<OptionID>): Record<string,any> => {
-        var ret = {}
-        if(includeParameters!==undefined && includeParameters!==null){
+    /**
+     * キーに値を設定する
+     * @param {OptionID} key - キー
+     * @param {any} value - 設定する値
+     */
+    set(key: OptionID, value: any):void
+     /**
+     * キーに値を設定する
+     * @param {Record<string,any>} value - 設定するキーと値の辞書
+     */
+    set(value: Record<string,any>):void
+    set(key?: OptionID|Record<string,any>, value?: any):void{
+         if(typeof key==="string"){
+             var value = this._checkValue(key, value)
+             if(value!==undefined){
+                 this[key] = value
+             }
+         }else if(key!==undefined){
+             Object.keys(key).forEach(function(k){
+                 this.set(k, key[k])
+             })
+         }
+     }
+
+    /**
+     * キーと値を辞書型で取得する
+     * @returns すべてのデータを含む辞書型
+     */
+    get(): Record<string,any>
+    /**
+     * キーと値を辞書型で取得する
+     * @param {OptionID|Array<OptionID>} parameters - キーの文字列、またはそのリスト
+     * @returns 指定したデータを含む辞書型
+     */
+    get(parameters: OptionID|Array<OptionID>): Record<string,any>
+    get(parameters?: null|OptionID|Array<OptionID>): Record<string,any> {
+        var ret: Record<string,any> = {}
+        if(parameters!==undefined && parameters!==null){
             var params: Array<OptionID>
-            if(typeof includeParameters==="string"){
-                params = [includeParameters]
+            if(typeof parameters==="string"){
+                params = [parameters]
             }else{
-                params = includeParameters
+                params = parameters
             }
 
-            const obj = Object.entries(this)
-            for (const key of includeParameters){
-                var value: any = obj[key]
+            const obj: Record<string,any> = Object.entries(this)
+            for (const key of parameters){
+                var value = obj[key]
                 if(typeof value!=="undefined" && typeof value!=="function"){
                     ret[key] = value
                 }
@@ -497,34 +540,211 @@ export class SyncOptions{
         }
     }
 
-    public param = (key?: string): any => {
-        if(key){
-            var value = this[key]
-            if(typeof value !== "undefined" && typeof value!=="function"){
-                return value
-            }
-        }
-    }
-
-    public check = (key?: string, value?: any): any => {
-        if(key){
-            if(value===undefined){
-                if(this)
-                value = this[key]
-            }
-            return this._checkValue(key, value)
-        }
+    /**
+     * 過去のバージョンの設定データを更新する
+     * @param {Record<string,any>} data キーと値の辞書
+     */
+    update(data: Record<string,any>): void {
+        var updatedData = this._exceptionProcess(data)
+        this.set(updatedData)
     }
 
     // バージョンアップ時の対応
     protected _exceptionProcess = (obj: Record<string,any>): Record<string,any> =>{
+        if("history" in obj){
+            if(Array.isArray(obj.histroy)){
+                obj["novelHistory"] = obj.histroy
+                console.log(`Converted value: { history: [...] } -> { novelHistory: [...] } `)
+            }
+        }
+        if("history_data" in obj){
+            if(obj.history_data instanceof Object){
+                obj["novelHistoryData"] = obj.histroy_data
+                console.log(`Converted value: { history_data: {...} } -> { novelHistoryData: {...} } `)
+            }
+        }
         return obj
     }
 
     protected _checkValue = (key: OptionID, value: any): any => {
         if(typeof this[key] === typeof value && typeof this[key]!=="function"){
-            
+            if(key === "novelHistory"){
+                if(Array.isArray(value)){
+                    var list:  string[] = []
+                    for(const history of value){
+                        const ncode = new Ncode(history).ncode()
+                        if(ncode!==undefined){
+                            list.push(ncode)
+                        }
+                        return list
+                    }
+                }
+            }
+            else if(key === "novelHistoryData"){
+                if(value instanceof Object){
+                    var ret :Record<string, [number, number, string]> = {}
+                    for(const n of Object.keys(value)){
+                        const ncode = new Ncode(n).ncode()
+                        if(ncode!==undefined && Array.isArray(value[ncode])){
+                            if(value[ncode].length == 3){
+                                if(
+                                    typeof value[ncode][0] === "number" &&
+                                    typeof value[ncode][1] === "number" &&
+                                    typeof value[ncode][2] === "string"
+                                ){
+                                    ret[ncode] = [value[ncode][0], value[ncode][1], value[ncode][2]]
+                                }
+                            }
+                        }
+                    }
+                    return ret
+                }
+                return 
+            }
+        }
+    }
+}
+
+
+
+/**
+ * 設定データ（storage.session）
+ */
+export class SessionOptions{
+    [key: string]: any
+
+    novelSkinCustomCSS: string|undefined
+    novelFontCustomCSS: string|undefined
+    novelAppliedSkinCSS: string|undefined
+    novelAppliedFontCSS: string|undefined
+    yomouRankTop_AppliedCSS: string|undefined
+    yomouRank_AppliedCSS: string|undefined
+
+    novelOptionModalSelected: number = 0
+
+    /**
+     * コンストラクタ
+     * @param {undefined|Record<string,any>} data - 辞書型のデータで初期値を設定する（無効な値は全て除外される）
+     */    
+    constructor(data?: Record<string,any>){
+        if(data instanceof Object){
+            Object.keys(data).forEach(function(key){
+                this.set(key, data[key])
+            })
+        }
+    }
+
+    /**
+     * キーに値を設定する
+     * @param {OptionID} key - キー
+     * @param {any} value - 設定する値
+     */
+    set(key: OptionID, value: any):void
+     /**
+     * キーに値を設定する
+     * @param {Record<string,any>} value - 設定するキーと値の辞書
+     */
+    set(value: Record<string,any>):void
+    set(key?: OptionID|Record<string,any>, value?: any):void{
+         if(typeof key==="string"){
+             var value = this._checkValue(key, value)
+             if(value!==undefined){
+                 this[key] = value
+             }
+         }else if(key!==undefined){
+             Object.keys(key).forEach(function(k){
+                 this.set(k, key[k])
+             })
+         }
+     }
+
+    /**
+     * キーと値を辞書型で取得する
+     * @returns すべてのデータを含む辞書型
+     */
+    get(): Record<string,any>
+    /**
+     * キーと値を辞書型で取得する
+     * @param {OptionID|Array<OptionID>} parameters - キーの文字列、またはそのリスト
+     * @returns 指定したデータを含む辞書型
+     */
+    get(parameters: OptionID|Array<OptionID>): Record<string,any>
+    get(parameters?: null|OptionID|Array<OptionID>): Record<string,any> {
+        var ret: Record<string,any> = {}
+        if(parameters!==undefined && parameters!==null){
+            var params: Array<OptionID>
+            if(typeof parameters==="string"){
+                params = [parameters]
+            }else{
+                params = parameters
+            }
+
+            const obj: Record<string,any> = Object.entries(this)
+            for (const key of parameters){
+                var value = obj[key]
+                if(typeof value!=="undefined" && typeof value!=="function"){
+                    ret[key] = value
+                }
+            }
+            return ret
+        }else{
+            for (const [key, value] of Object.entries(this)){
+                if(typeof value !== "undefined" && typeof value!=="function"){
+                    ret[key] = value
+                }
+            }
+            return ret
+        }
+    }
+
+    protected _checkValue = (key: OptionID, value: any): any => {
+        if(typeof this[key] === typeof value && typeof this[key]!=="function"){
             return value
         }
     }
+}
+
+
+
+export function getLocalOptions(
+    keys: string | string[] | Partial<LocalOptions> | null | undefined,
+    callback: (items: LocalOptions) => void
+): void{
+    if(keys===undefined){keys = null}
+    chrome.storage.local.get(keys, function(data){
+        try{
+            callback(new LocalOptions(data))
+        }catch(e){
+            console.warn(e)
+        }
+    })
+}
+
+export function getSyncOptions(
+    keys: string | string[] | Partial<SyncOptions> | null | undefined,
+    callback: (items: SyncOptions) => void
+): void{
+    if(keys===undefined){keys = null}
+    chrome.storage.local.get(keys, function(data){
+        try{
+            callback(new SyncOptions(data))
+        }catch(e){
+            console.warn(e)
+        }
+    })
+}
+
+
+export function getSessionOptions(
+    keys: string | string[] | Partial<SyncOptions> | null | undefined,
+    callback: (items: SessionOptions) => void
+): void{
+    if(keys===undefined){keys = null}
+    chrome.storage.local.get(keys, function(data){
+        try{
+            callback(new SessionOptions(data))
+        }catch(e){
+            console.warn(e)
+        }
+    })
 }

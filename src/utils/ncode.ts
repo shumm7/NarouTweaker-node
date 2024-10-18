@@ -13,7 +13,7 @@ export class Ncode{
     */
     constructor(ncode?: string|number|Ncode){
         if(typeof ncode === "string"){
-            if(ncode.match(/^[n|N]\d+[a-zA-Z]+$/)){
+            if(ncode.trim().match(/^[n|N]\d+[a-zA-Z]+$/)){
                 this.value = ncode.toLowerCase()
             }
         }else if(typeof ncode === "number"){
@@ -33,25 +33,18 @@ export class Ncode{
      * @param ncode - Nコード
      * @returns Nコードインデックス
     */
-    index = (ncode?: string|number|Ncode): number|undefined => {
-        var str: string|undefined
-        if(ncode === undefined){
-            str = this.value
-        }else{
-            str = new Ncode(ncode).ncode()
-        }
+    index = (): number|undefined => {
+        var str: string|undefined = this.value
 
-        if(str === undefined){
-            return
+        if(str !== undefined){
+            const match = this.ncode_re.exec(str)
+            if (!match){
+                return
+            }
+            const lo = parseInt(match[1], 10)
+            const hi = this.parseBase26(match[2])
+            return hi * 9999 + lo
         }
-
-        const match = this.ncode_re.exec(str)
-        if (!match){
-            return
-        }
-        const lo = parseInt(match[1], 10)
-        const hi = this.parseBase26(match[2])
-        return hi * 9999 + lo
     }
 
     /**
@@ -117,7 +110,7 @@ export class Scode{
 
     constructor(scode?: string|Scode){
         if(typeof scode === "string"){
-            if(scode.match(/^[s|S]\d+[a-zA-Z]+$/)){
+            if(scode.trim().match(/^[s|S]\d+[a-zA-Z]+$/)){
                 this.value = scode.toLowerCase()
             }
         }else if(scode instanceof Scode){
@@ -256,4 +249,127 @@ export function getScodeFromURL(_url?:string|URL|Location): Scode|undefined{
         }
     }
     return new Scode
+}
+
+
+
+/**
+ * Iコード
+ */
+export class Icode{
+    private value: string|undefined;
+    private key: string|undefined;
+    [Symbol.toStringTag] = "Icode"
+
+    constructor(icode?: string|Icode|number, userid?: string|number){
+        if(typeof icode === "string" || typeof icode === "number" || icode === undefined){
+            if(typeof icode === "number"){
+                if(!isNaN(icode) && icode >= 0){
+                    this.value = "i" + icode.toString()
+                }
+            }else if(typeof icode === "string"){
+                if(icode.trim().match(/^[i|I]\d+$/)){
+                    this.value = icode.toLowerCase()
+                }else if(icode.trim().match(/^<(i\d+)\|(\d+)>$/)){
+                    var m = icode.trim().match(/^<(i\d+)\|(\d+)>$/)
+                    if(m!==null){
+                        this.value = m[1].toLowerCase()
+                        this.key = m[2].toLowerCase()
+                        return
+                    }
+                }
+            }
+
+            if(typeof userid === "number"){
+                if(!isNaN(userid) && userid >= 0){
+                    this.key = userid.toString()
+                }
+            }else if(typeof userid === "string"){
+                if(userid.trim().match(/^\d+$/)){
+                    this.key = userid
+                }
+            }
+        }else if(icode instanceof Icode){
+            var dict: Record<string,string|undefined> = icode.get()
+            this.value = dict.icode
+            this.key = dict.userid
+        }
+    }
+
+    get = (): Record<string,string|undefined> => {
+        return {icode: this.value, userid: this.key}
+    }
+
+    icode = (icode?: string|Icode|number):string|undefined => {
+        if(icode===undefined){
+            return this.value
+        }else{
+            this.value = new Icode(icode).icode()
+        }
+    }
+
+    userid = (userid?: string|number):string|undefined => {
+        if(userid===undefined){
+            return this.value
+        }else{
+            this.key = new Icode(undefined, userid).userid()
+        }
+    }
+
+    sasieTag = (): string|undefined => {
+        if(this.value!==undefined && this.userid!==undefined){
+            return `<i${this.value}|${this.key}>`
+        }
+    }
+
+    url = (): string|undefined => {
+        if(this.value!==undefined && this.userid!==undefined){
+            return `https://${this.key}.mitemin.net/${this.value}/`
+        }
+    }
+}
+
+
+export function getIcodeFromURL(_url?:string|URL|Location): Icode|undefined{
+    let url:URL
+    if(typeof _url === "string"){
+        try{
+            url = new URL(_url)
+        }catch(e){
+            return undefined
+        }
+    }else if(_url instanceof URL){
+        url = _url
+    }else if(_url instanceof Location){
+        url = new URL(_url.toString())
+    }else{
+        url = new URL(window.location.toString())
+    }
+
+    var icode: string|undefined
+    var userid: string|undefined
+    if(url.protocol=="https:" || url.protocol=="http:"){
+        if(url.host.match(/^[0-9]+\.mitemin\.net$/)){
+            var m = url.host.match(/^([0-9]+)\.mitemin\.net$/)
+            if(m!==null){
+                userid = m[1]
+                if(url.pathname.match(/^\/i[0-9]+\/*$/)){
+                    var n = url.pathname.match(/^\/(i[0-9]+)\/*$/)
+                    if(n!==null){
+                        icode = n[1]
+                    }
+                }
+            }
+            
+        }else if(url.host.match(/^trackback\.mitemin\.net$/) && url.pathname.match(/^\/send\/image\/icode\/[0-9]+\/*$/)){
+            var m = url.pathname.match(/^\/send\/image\/icode\/([0-9]+)\/*$/)
+            if(m!==null){
+                icode = "i" + m[1]
+            }
+        }
+    }
+
+    if(icode!==undefined || userid!==undefined){
+        return new Icode(icode, userid)
+    }
 }

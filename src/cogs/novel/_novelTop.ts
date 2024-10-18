@@ -1,9 +1,11 @@
+import { getLocalOptions } from "../../utils/option"
+
 export function novelTop(){
     _showAllExtext()
 }
 
 function _showAllExtext(){
-    chrome.storage.local.get(null, (data) => {
+    getLocalOptions(null, (data) => {
         try{
             if(data.novelShowAllExtext){
                 var Extext = $("#novel_ex")

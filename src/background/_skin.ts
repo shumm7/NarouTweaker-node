@@ -1,6 +1,7 @@
 import { FontFamiliesV1, FontFamilyV1, localFont, localFontFamilyV1 } from "../utils/v1_font"
 import { localSkinsV1, makeSkinCSS, SkinsV1, SkinV1 } from "../utils/v1_skin"
 import { CSS_String } from "../utils/type"
+import { getLocalOptions } from "../utils/option"
 
 export function skinListener(){
     makeSkin()
@@ -32,16 +33,16 @@ export function skinListener(){
 }
 
 function makeSkin(){
-    chrome.storage.local.get(null, (data) => {
-        const skin_idx: number = data.selectedSkin ?? 0
-        const skins: SkinsV1 = localSkinsV1.concat(data.skins ?? [])
+    getLocalOptions(null, (data) => {
+        const skin_idx: number = data.selectedSkin
+        const skins: SkinsV1 = localSkinsV1.concat(data.skins)
         const skin: SkinV1 = new SkinV1(skins[skin_idx])
 
         var rule = ""
 
         /* Font */
-        const selectedFontFamily: number = data.fontSelectedFontFamily ?? 0
-        var fontFamilyList: FontFamiliesV1 = localFontFamilyV1.concat(data.fontFontFamilyList ?? [])
+        const selectedFontFamily: number = data.fontSelectedFontFamily
+        var fontFamilyList: FontFamiliesV1 = localFontFamilyV1.concat(data.fontFontFamilyList)
         var fontFamily_Current: string
         var fontCss: CSS_String
 
@@ -120,9 +121,9 @@ function makeSkin(){
 }
 
 function makeEditorSkin(){
-    chrome.storage.local.get(null, (data) => {
-        let skin_idx: number = data.workspaceEditorSelectedSkin ?? 0
-        const skins: SkinsV1 = localSkinsV1.concat(data.skins ?? [])
+    getLocalOptions(null, (data) => {
+        let skin_idx: number = data.workspaceEditorSelectedSkin
+        const skins: SkinsV1 = localSkinsV1.concat(data.skins)
         if(skins.length<skin_idx || skin_idx<0){
             skin_idx = 0
             chrome.storage.local.set({workspaceEditorSelectedSkin: skin_idx})

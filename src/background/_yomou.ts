@@ -1,3 +1,5 @@
+import { getLocalOptions } from "../utils/option"
+
 export function yomouCssListener(){
     makeRankCSS()
     makeRankTopCSS()
@@ -36,7 +38,7 @@ export function yomouCssListener(){
 
 
 function makeRankCSS(){
-    chrome.storage.local.get(null, (data) => {
+    getLocalOptions(null, (data) => {
         var rule = ""
 
         if(data.yomouRank_DevidePointsUnit){
@@ -102,7 +104,7 @@ function makeRankCSS(){
 }
 
 function makeRankTopCSS(){
-    chrome.storage.local.get(null, (data) => {
+    getLocalOptions(null, (data) => {
         var rule = ""
 
         if(data.yomouRank_DevidePointsUnit){

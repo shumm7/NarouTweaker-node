@@ -1,7 +1,8 @@
 import { getPageType } from "../../utils/api";
 import { check } from "../../utils/misc"
 import { escapeHtml } from "../../utils/text";
-import { LocalOptions } from "../../utils/option";
+import { getLocalOptions } from "../../utils/option";
+import { ReplacePatterns, CorrectionNumberMode } from "../../utils/data";
 
 const bracket_begin = `「『＜《〈≪【（”“’‘\\\(\\\'`
 const bracket_end = `」』＞》〉≫】）”’\\\)\\\'`
@@ -31,7 +32,7 @@ const className = {
 
 export function correction(){
     if($(".p-novel__body").length && getPageType()=="novel"){
-        chrome.storage.local.get(null, (data) => {
+        getLocalOptions(null, (data) => {
             resetCorrection()
 
             // 記号
@@ -190,8 +191,7 @@ export function correction(){
 }
 
 export function restoreCorrectionMode(){
-    chrome.storage.local.get(null, (_d) => {
-        const data = new LocalOptions(_d)
+    getLocalOptions(null, (data) => {
         check("#novel-option--correction-indent", data.correctionIndent)
         check("#novel-option--correction-normalize-ellipses", data.correctionNormalizeEllipses)
         check("#novel-option--correction-normalize-dash", data.correctionNormalizeDash)
@@ -263,7 +263,14 @@ function checkLineType(string: string): string{
     return className.word
 }
 
-function replaceText(_elem: HTMLElement|JQuery<HTMLElement>, regexp: string|RegExp, replace: any, isReplaceAll?: boolean) {
+function replaceText(_elem: HTMLElement|JQuery<HTMLElement>,regexp: string | RegExp, replace: string,isReplaceAll?: boolean): void
+function replaceText(_elem: HTMLElement|JQuery<HTMLElement>,regexp: string | RegExp, replace: {(substring: string, ...args: any[]): string}, isReplaceAll?: boolean): void
+function replaceText(
+    _elem: HTMLElement|JQuery<HTMLElement>,
+    regexp: string | RegExp,
+    replace: any,
+    isReplaceAll?: boolean
+){
     const exceptTags = ["rp", "rt", "img"]
 
     function replaceHtml(str: string){
@@ -346,7 +353,7 @@ function correctionNormalizeEllipses(){
     /* 三点リーダー(・・・) → 三点リーダー（……） */
     $(".p-novel__body p.correction-replaced").each(function(){
         if($(this).text().match(/・{2,}/)){
-            replaceText(this, /・{2,}/g, function(s){
+            replaceText(this, /・{2,}/g, function(s: string){
                 var l = s.length
                 var p = 1
                 if(l>=2){
@@ -356,7 +363,7 @@ function correctionNormalizeEllipses(){
             })
         }
         if($(this).text().match(/\.{3,}/)){
-            replaceText(this, /\.{3,}/g, function(s){
+            replaceText(this, /\.{3,}/g, function(s: string){
                 var l = s.length
                 var p = 1
                 if(l>=3){
@@ -387,7 +394,7 @@ function correctionNormalizeExclamation(){
     2つ連続する感嘆符：‼️、⁉️、⁇、⁈
     3つ以上連続する感嘆符：半角
     */
-   function replaceExclamation(s: string){
+   function replaceExclamation(s: string): string{
        if(s.length==1){
            if(s=="！" || s=="？" || s=="‼" || s=="⁇" || s=="⁉" || s=="⁈"){
                return s
@@ -409,10 +416,11 @@ function correctionNormalizeExclamation(){
        }else{
            return s.replace(/！/g, "!").replace(/？/g, "?").replace(/‼/g, "!!").replace(/⁇/g, "??").replace(/⁉/g, "!?").replace(/⁈/g, "?!")
        }
+       return s
    }
 
     $(".p-novel__body p.correction-replaced").each(function(){
-        replaceText(this, new RegExp(`[${exclamation}]+`, "g"), replaceExclamation, true)
+        replaceText(this, new RegExp(`[${exclamation}]+`, "g"), (s:string) => {return replaceExclamation(s)}, true)
     })
 }
 
@@ -490,15 +498,21 @@ function correctionWaveDash(){
 
 
 // 数字表記
-function correctionNumber(option){
-    function convertNumber(s, numConvMode, symbolConvMode){
+interface CorrectionNumberOption{
+    short: CorrectionNumberMode
+    long: CorrectionNumberMode
+    symbol: CorrectionNumberMode
+}
+
+function correctionNumber(option: CorrectionNumberOption){
+    function convertNumber(s: string, numConvMode: CorrectionNumberMode, symbolConvMode: CorrectionNumberMode){
         const kanjiNum = "〇一二三四五六七八九"
         const fullNum = "０１２３４５６７８９"
         const halfNum = "0123456789"
 
         if(numConvMode=="half"){
             s = s.replace(/[０-９]/g, function(char){
-                return fullNum.indexOf(char)
+                return `${fullNum.indexOf(char)}`
             })
         }else if(numConvMode=="full"){
             s = s.replace(/\d/g, function(char){
@@ -552,7 +566,7 @@ function removeIllustrationLink(){
 
 
 // 縦中横設定
-function verticalLayout_CombineWord(max){
+function verticalLayout_CombineWord(max: number){
     /* 縦書き表示時の半角単語の縦中横 */
     $(".p-novel__body p.correction-replaced").each(function(){
         wrapTextWithTag($(this), new RegExp(`(?<![a-zA-Z\\d\.\,])[a-zA-Z\\d\.\,]{1,${max}}(?![a-zA-Z\\d\.\,])`, "g"), $("<span class='text-combine'>"), (rpl, tag)=>{
@@ -564,7 +578,7 @@ function verticalLayout_CombineWord(max){
     })
 }
 
-function verticalLayout_CombineNumber(max, ignoreCombineInWord){
+function verticalLayout_CombineNumber(max: number, ignoreCombineInWord?: boolean){
     /* 縦書き表示時の数字の縦中横 */
     const tag = $("<span class='text-combine'>")
 
@@ -577,7 +591,7 @@ function verticalLayout_CombineNumber(max, ignoreCombineInWord){
     })
 }
 
-function verticalLayout_CombineExclamation(max){
+function verticalLayout_CombineExclamation(max: number){
     /* 縦書き表示時の数字の縦中横 */
     const tag = $("<span class='text-combine'>")
 
@@ -586,7 +600,7 @@ function verticalLayout_CombineExclamation(max){
     })
 }
 
-function verticalLayout_SidewayWord(min){
+function verticalLayout_SidewayWord(min: number){
     /* 縦書き表示時の全角英数字の横向き表示 */
     $(".p-novel__body p.correction-replaced").each(function(){
         wrapTextWithTag($(this), new RegExp(`[ａ-ｚＡ-Ｚ０-９．，\\s]{${min},}`, "g"), $("<span class='text-sideways'>"))
@@ -594,7 +608,7 @@ function verticalLayout_SidewayWord(min){
 }
 
 
-function verticalLayout_SidewayExclamation(min){
+function verticalLayout_SidewayExclamation(min: number){
     /* 縦書き表示時の感嘆符の横向き表示 */
     const tag = "<span class='text-sideways'>"
 
@@ -605,7 +619,7 @@ function verticalLayout_SidewayExclamation(min){
 
 
 /* Replace Text from Patterns */
-function correctionReplaceFromPatterns(patterns){
+function correctionReplaceFromPatterns(patterns: ReplacePatterns){
     $.each(patterns, function(_, pattern){
         $(".p-novel__body p.correction-replaced").each(function(){
             if(pattern.active){

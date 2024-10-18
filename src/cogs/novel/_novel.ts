@@ -3,11 +3,12 @@ import { escapeHtml, replaceUrl } from "../../utils/text"
 import { novelTop } from "./_novelTop";
 import { getNcodeFromURL } from "../../utils/ncode";
 import { getDatetimeStringWithoutSecond } from "../../utils/time";
+import { getLocalOptions, getSyncOptions } from "../../utils/option";
 
 import gsap from 'gsap';
 
 export function _novel(){
-    chrome.storage.local.get(null, (data) => {
+    getLocalOptions(null, (data) => {
         try{
             const pageDetail = getPageType()
             if(data.novelCustomStyle){
@@ -175,7 +176,7 @@ function _tategaki(){
 
 function _autoURL(){
     /* Auto Url */
-    chrome.storage.local.get(null, (data) => {
+    getLocalOptions(null, (data) => {
         try{
             if(data.novelPrefaceAutoURL){
                 $('.p-novel__text--preface p').each(function (idx, elem) {
@@ -223,45 +224,46 @@ function _cursorHide(){
 }
 
 function _history(){
-    chrome.storage.local.get(null, function(data){
-        try{
-            var n = getNcodeFromURL()
-            if(n===undefined){
-                return
-            }
-            const ncode = n.ncode()
+    try{
+        var n = getNcodeFromURL()
+        if(n===undefined){
+            return
+        }
+        const ncode = n.ncode()
 
-            if(ncode){
-                if($(".p-eplist").length){
-                    var outer = $(`<div class="novelview_history-box"></div>`)
-                    var showHistory = false
+        if(ncode){
+            if($(".p-eplist").length){
+                var outer = $(`<div class="novelview_history-box"></div>`)
+                var showHistory = false
 
-                    if($(".novellingindex_bookmarker_no").length){
-                        var elm = $(".novellingindex_bookmarker_no")
-                        var link = elm.find("a").prop("href")
-                        var text = elm.find("a").text()
-                        outer.append(`
-                            <div class="novelview_history-item" id="novel_siori">
-                                <i class="fa-solid fa-bookmark"></i><a href="${link}">${text}</a>
-                            </div>
-                        `)
-                        showHistory = true
+                if($(".novellingindex_bookmarker_no").length){
+                    var elm = $(".novellingindex_bookmarker_no")
+                    var link = elm.find("a").prop("href")
+                    var text = elm.find("a").text()
+                    outer.append(`
+                        <div class="novelview_history-item" id="novel_siori">
+                            <i class="fa-solid fa-bookmark"></i><a href="${link}">${text}</a>
+                        </div>
+                    `)
+                    showHistory = true
 
-                    }else if($("meta[name='siori']").length){
-                        var elm = $("meta[name='siori']")
-                        var _link = elm.attr("content")
-                        var _text = elm.attr("property")
+                }else if($("meta[name='siori']").length){
+                    var elm = $("meta[name='siori']")
+                    var _link = elm.attr("content")
+                    var _text = elm.attr("property")
 
-                        outer.append(`
-                            <div class="novelview_history-item" id="novel_siori">
-                                <i class="fa-solid fa-bookmark"></i><a href="${_link}">${_text}</a>
-                            </div>
-                        `)
-                        showHistory = true
-                    }
+                    outer.append(`
+                        <div class="novelview_history-item" id="novel_siori">
+                            <i class="fa-solid fa-bookmark"></i><a href="${_link}">${_text}</a>
+                        </div>
+                    `)
+                    showHistory = true
+                }
 
-                    chrome.storage.sync.get(["history_data"], function(h){
-                        const history = h.history_data[ncode]
+                getSyncOptions(["novelHistoryData"], function(h){
+                    const historyData = h.novelHistoryData
+                    if(ncode in historyData){
+                        const history = historyData[ncode]
                         if(history){
                             const episode = history[0]
                             const date = getDatetimeStringWithoutSecond(new Date(history[1]))
@@ -284,13 +286,13 @@ function _history(){
                         if(showHistory){
                             $(".p-eplist").before(outer)
                         }
-                    })
-                }
+                    }
+                })
             }
-        }catch(e){
-            console.warn(e)
         }
-    })
+    }catch(e){
+        console.warn(e)
+    }
 }
 
 function _saveHistory(){
@@ -303,36 +305,32 @@ function _saveHistory(){
         const episode = getEpisode()
 
         if(ncode){
-            chrome.storage.sync.get(["history", "history_data"], function(data){
+            getSyncOptions(["novelHistory", "novelHistoryData"], function(data){
                 try{
                     
-                    var history = data.history
-                    var history_data = data.history_data
-                    if(typeof history != typeof []){
-                        history = []
-                    }
-                    if(typeof history_data != typeof {}){
-                        history_data = {}
-                    }
+                    const history = data.novelHistory
+                    const novelHistoryData = data.novelHistoryData
 
 
                     var new_history = history.filter(n => n != ncode);
                     new_history.unshift(ncode)
                     if(new_history.length > 300){
                         const key = new_history.pop()
-                        delete history_data[key]
+                        if(key!==undefined && key in novelHistoryData){
+                            delete novelHistoryData[key]
+                        }
                     }
                     if(episode){
                         var episode_name = $(".novel_subtitle").text()
                         if(episode_name.length>20){
                             episode_name = episode_name.substr(0, 20) + "…"
                         }
-                        history_data[ncode] = [episode, Date.now(), episode_name]
+                        novelHistoryData[ncode] = [episode, Date.now(), episode_name]
                     }
 
                     chrome.storage.sync.set({
                         history: new_history,
-                        history_data: history_data
+                        novelHistoryData: novelHistoryData
                     })
                 }catch(e){
                     console.warn(e)
@@ -365,7 +363,7 @@ function _authorLink(){
         }
 
         if(userid){
-            var userid_link
+            var userid_link: string
             if(r18){
                 userid_link =`https://xmypage.syosetu.com/${userid}/`
             }else{
@@ -471,8 +469,8 @@ function novelTopAttention(){
                         let tags = data.keyword.split(/\s/)
                         var site = data.nocgenre
 
-                        function removeItem(item){
-                            tags = tags.filter(n => n != item)
+                        function removeItem(item: string){
+                            tags = tags.filter((n:any) => n != item)
                         }
 
                         /*
@@ -499,7 +497,7 @@ function novelTopAttention(){
                         */
                         setTags()
 
-                        function setTags(officialTagList?){
+                        function setTags(officialTagList?: Array<string>){
                             if(r18){
                                 attention.append(`<span class="nt-novel-attention-label nt-novel-attention-label--rating-r18"><a href="${getNovelSearchURL(site)}">R18</a></span>`)
                             }

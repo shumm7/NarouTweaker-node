@@ -25,7 +25,7 @@ export function workspace_customHeaderSortable(){
     if($(".draggable_area[name='workspace-header']").length){
         Sortable.create($(".draggable_area[name='workspace-header']#active")[0], {
             handle: '.icon-element',
-            sort: 1,
+            sort: true,
             group: {
                 name: 'header-icon',
                 pull: true,
@@ -41,7 +41,7 @@ export function workspace_customHeaderSortable(){
         Sortable.create($(".draggable_area[name='workspace-header']#disabled")[0], {
             handle: '.icon-element',
             animation: 150,
-            sort: 1,
+            sort: true,
             group: {
                 name: 'header-icon',
                 pull: true,
@@ -104,7 +104,7 @@ export function workspace_customHeaderMenuSortable(){
             workspaceCustomMenu_Right: getMenuIconList("right"),
         })
     
-        function getMenuIconList(position){
+        function getMenuIconList(position: "left" | "middle" | "right" | "disabled"){
             if(position!="left" && position!="middle" && position!="right" && position!="disabled") { return }
         
             var list: CustomIconIDs = []
@@ -121,7 +121,7 @@ export function workspace_customHeaderMenuSortable(){
     if($(".draggable_area[name='workspace-header-menu']").length){
         Sortable.create($(".draggable_area[name='workspace-header-menu']#left")[0], {
             handle: '.icon-element',
-            sort: 1,
+            sort: true,
             group: {
                 name: 'menu-icon',
                 pull: true,
@@ -134,7 +134,7 @@ export function workspace_customHeaderMenuSortable(){
         });
         Sortable.create($(".draggable_area[name='workspace-header-menu']#middle")[0], {
             handle: '.icon-element',
-            sort: 1,
+            sort: true,
             group: {
                 name: 'menu-icon',
                 pull: true,
@@ -147,7 +147,7 @@ export function workspace_customHeaderMenuSortable(){
         });
         Sortable.create($(".draggable_area[name='workspace-header-menu']#right")[0], {
             handle: '.icon-element',
-            sort: 1,
+            sort: true,
             group: {
                 name: 'menu-icon',
                 pull: true,
@@ -160,7 +160,7 @@ export function workspace_customHeaderMenuSortable(){
         });
         Sortable.create($(".draggable_area[name='workspace-header-menu']#disabled")[0], {
             handle: '.icon-element',
-            sort: 1,
+            sort: true,
             group: {
                 name: 'menu-icon',
                 pull: true,

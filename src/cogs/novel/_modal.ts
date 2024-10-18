@@ -3,7 +3,7 @@ import { check, defaultValue } from "../../utils/misc"
 import { escapeHtml } from "../../utils/text";
 import { correction, restoreCorrectionMode } from "./_correction";
 import { generateNoDuplicateSkinName, localSkinsV1, SkinsV1, SkinV1 } from "../../utils/v1_skin";
-import { LocalOptions } from "../../utils/option";
+import { getLocalOptions, getSessionOptions } from "../../utils/option";
 import { ReplacePattern } from "../../utils/data";
 import { getNcodeFromURL } from "../../utils/ncode";
 import { getDatetimeString } from "../../utils/time";
@@ -31,7 +31,7 @@ export function _optionModal(){
 
         /* Modal Header */
         $("#novel-option--header").append("<ul></ul>")
-        function addTab(index, title){
+        function addTab(index: number, title: string){
             $("#novel-option--header ul").append("<li class='novel-option--header-tab novel-option-tab-"+index+"'><button type='button'><span class='novel-option--header-tab'>"+title+"</span></button></li>")
             $("#novel-option--contents").append("<div class='novel-option--content novel-option-tab-"+index+"'></div>")
             $(".novel-option--header-tab.novel-option-tab-"+index+" button").on("click", ()=>{
@@ -67,8 +67,8 @@ export function _optionModal(){
             });
         }
 
-        chrome.storage.session.get(["novelOptionModalSelected"], function(data){
-            var tab = $("#novel-option .novel-option-tab-"+defaultValue(data.novelOptionModalSelected, 0))
+        getSessionOptions(["novelOptionModalSelected"], function(data){
+            var tab = $("#novel-option .novel-option-tab-"+data.novelOptionModalSelected)
             if(tab.length){
                 tab.addClass("active")
             }else{
@@ -99,8 +99,7 @@ function restoreSkinOptions(skins: SkinsV1, selected: number){
 
 /* フォント設定 */
 function restoreFontOptions(){
-    chrome.storage.local.get(null, (_d)=>{
-        const data = new LocalOptions(_d)
+    getLocalOptions(null, (data)=>{
         var fontlist = localFontFamilyV1.concat(data.fontFontFamilyList)
 
         $("#novel-option--font-family #font-family").empty()
@@ -138,8 +137,8 @@ function restoreFontOptions(){
     })
 }
 
-function setOptionContentsDisplay(id){
-    chrome.storage.local.get(null, (data) => {
+function setOptionContentsDisplay(id: number){
+    getLocalOptions(null, (data) => {
         var outer = $(".novel-option--content.novel-option-tab-"+id)
 
         /* Skin */
@@ -241,14 +240,17 @@ function setOptionContentsDisplay(id){
         })
 
         /* Font Size */
-        function setFontSizeValue(value){
+        function setFontSizeValue(value: number){
             if(localFont["font-size"] + value < 50){
                 value = 50 - localFont["font-size"]
             }else if(localFont["font-size"] + value > 300){
                 value = 300 - localFont["font-size"]
             }
-            if(value>0){value = "+" + value}
-            $("#novel-option--font-size-input").val(value)
+            if(value>0){
+                $("#novel-option--font-size-input").val("+" + value)
+            }else{
+                $("#novel-option--font-size-input").val(value)
+            }
 
             chrome.storage.local.set({fontFontSize: Number(value)}, () => {})
         }
@@ -281,14 +283,17 @@ function setOptionContentsDisplay(id){
         })
 
         /* Line Height */
-        function setLineHeightValue(value){
+        function setLineHeightValue(value: number){
             if(localFont["line-height"] + value < 50){
                 value = 50 - localFont["line-height"]
             }else if(localFont["line-height"] + value > 300){
                 value = 300 - localFont["line-height"]
             }
-            if(value>0){value = "+" + value}
-            $("#novel-option--line-height-input").val(value)
+            if(value>0){
+                $("#novel-option--line-height-input").val("+" + value)
+            }else{
+                $("#novel-option--line-height-input").val(value)
+            }
 
             chrome.storage.local.set({fontLineHeight: Number(value)}, () => {})
         }
@@ -321,7 +326,7 @@ function setOptionContentsDisplay(id){
         })
 
         /* Width */
-        function setWidthValue(value){
+        function setWidthValue(value: number){
             if(value < 0){
                 value = 0
             }else if(value > 1000){
@@ -376,7 +381,7 @@ function setOptionContentsDisplay(id){
                 </div>
             </div>
         `)
-        chrome.storage.local.get(["novelCustomHeaderMode"], (data)=>{
+        getLocalOptions(["novelCustomHeaderMode"], (data)=>{
             $("#novelCustomHeaderMode").val(data.novelCustomHeaderMode)
         })
         $("#novelCustomHeaderMode").change(function(){
@@ -399,7 +404,7 @@ function setOptionContentsDisplay(id){
             restoreFontOptions()
         }
         if(changes.skins!=undefined || changes.selectedSkin!=undefined){
-            chrome.storage.local.get(null, (data)=>{
+            getLocalOptions(["skins", "selectedSkin"], (data)=>{
                 restoreSkinOptions(data.skins, data.selectedSkin)
             })
         }
@@ -408,8 +413,7 @@ function setOptionContentsDisplay(id){
 
 /* 文章校正 */
 function restoreReplacePattern(){
-    chrome.storage.local.get(["correctionReplacePatterns"], function(_d){
-        const data = new LocalOptions(_d)
+    getLocalOptions(["correctionReplacePatterns"], function(data){
         var elementsAmount = $(".novel-option--correction-replace--pattern-box").length
         var listLength = data.correctionReplacePatterns.length
         if(listLength<elementsAmount){
@@ -460,8 +464,7 @@ function restoreReplacePattern(){
         $(".novel-option--correction-replace--pattern-box .novel-option--correction-replace--move-front").on("click", function(){ // Up Button
             var idx = Number($(this).parent().parent().attr("data-for"))
             if(!isNaN(idx)){
-                chrome.storage.local.get(["correctionReplacePatterns"], function(_d){
-                    const data = new LocalOptions(_d)
+                getLocalOptions(["correctionReplacePatterns"], function(data){
                     var patterns = data.correctionReplacePatterns
                     if(idx>0){
                         [patterns[idx], patterns[idx-1]] = [patterns[idx-1], patterns[idx]]
@@ -474,7 +477,7 @@ function restoreReplacePattern(){
         $(".novel-option--correction-replace--pattern-box .novel-option--correction-replace--move-back").on("click", function(){ // Down Button
             var idx = Number($(this).parent().parent().attr("data-for"))
             if(!isNaN(idx)){
-                chrome.storage.local.get(["correctionReplacePatterns"], function(data){
+                getLocalOptions(["correctionReplacePatterns"], function(data){
                     var patterns = data.correctionReplacePatterns
                     if(idx<patterns.length-1){
                         [patterns[idx], patterns[idx+1]] = [patterns[idx+1], patterns[idx]]
@@ -487,7 +490,7 @@ function restoreReplacePattern(){
             var idx = Number($(this).parent().attr("data-for"))
             var elm = $(this)
             if(!isNaN(idx)){
-                chrome.storage.local.get(["correctionReplacePatterns"], function(data){
+                getLocalOptions(["correctionReplacePatterns"], function(data){
                     var patterns = data.correctionReplacePatterns
                     if(elm.hasClass("enabled")){
                         patterns[idx].regex = false
@@ -502,7 +505,7 @@ function restoreReplacePattern(){
             var idx = Number($(this).parent().attr("data-for"))
             var elm = $(this)
             if(!isNaN(idx)){
-                chrome.storage.local.get(["correctionReplacePatterns"], function(data){
+                getLocalOptions(["correctionReplacePatterns"], function(data){
                     var patterns = data.correctionReplacePatterns
                     if(elm.hasClass("enabled")){
                         patterns[idx].active = false
@@ -516,7 +519,7 @@ function restoreReplacePattern(){
         $(".novel-option--correction-replace--pattern-box .novel-option--correction-replace--remove-button").on("click", function(){ // Trash Button
             var idx = Number($(this).parent().attr("data-for"))
             if(!isNaN(idx)){
-                chrome.storage.local.get(["correctionReplacePatterns"], function(data){
+                getLocalOptions(["correctionReplacePatterns"], function(data){
                     var patterns = data.correctionReplacePatterns
                     patterns.splice(idx, 1)
                     chrome.storage.local.set({correctionReplacePatterns: patterns}, function(){})
@@ -527,10 +530,12 @@ function restoreReplacePattern(){
             var idx = Number($(this).parent().parent().attr("data-for"))
             var value = $(this).val()
             if(!isNaN(idx)){
-                chrome.storage.local.get(["correctionReplacePatterns"], function(data){
+                getLocalOptions(["correctionReplacePatterns"], function(data){
                     var patterns = data.correctionReplacePatterns
-                    patterns[idx].pattern = value
-                    chrome.storage.local.set({correctionReplacePatterns: patterns}, function(){})
+                    if(patterns.length > idx && typeof value=="string"){
+                        patterns[idx].pattern = value
+                        chrome.storage.local.set({correctionReplacePatterns: patterns}, function(){})
+                    }
                 })
             }
         })
@@ -538,17 +543,19 @@ function restoreReplacePattern(){
             var idx = Number($(this).parent().parent().attr("data-for"))
             var value = $(this).val()
             if(!isNaN(idx)){
-                chrome.storage.local.get(["correctionReplacePatterns"], function(data){
+                getLocalOptions(["correctionReplacePatterns"], function(data){
                     var patterns = data.correctionReplacePatterns
-                    patterns[idx].replacement = value
-                    chrome.storage.local.set({correctionReplacePatterns: patterns}, function(){})
+                    if(patterns.length > idx && typeof value=="string"){
+                        patterns[idx].replacement = value
+                        chrome.storage.local.set({correctionReplacePatterns: patterns}, function(){})
+                    }
                 })
             }
         })
     })
 }
 
-function setOptionContentsCorrection(id){
+function setOptionContentsCorrection(id: number){
     var outer = $(".novel-option--content.novel-option-tab-"+id)
 
     outer.append(`
@@ -636,7 +643,7 @@ function setOptionContentsCorrection(id){
 
     /* Toggle Clicked */
     $(".correction_mode.toggle").on("click", function(e){
-        var mode = {}
+        var mode: Record<string,any> = {}
         mode[$(this).prop("name")] = $(this).prop("checked")
 
         chrome.storage.local.set(mode, function(){})
@@ -655,8 +662,7 @@ function setOptionContentsCorrection(id){
 
     /* Replacement */
     $("#novel-option--correction-replace--pattern-box-addition").on("click", function(){
-        chrome.storage.local.get(["correctionReplacePatterns"], function(_d){
-            const data = new LocalOptions(_d)
+        getLocalOptions(["correctionReplacePatterns"], function(data){
             data.correctionReplacePatterns.push(new ReplacePattern())
             chrome.storage.local.set({correctionReplacePatterns: data.correctionReplacePatterns}, function(){})
         })
@@ -696,7 +702,7 @@ function setOptionContentsCorrection(id){
     
 }
 
-function setOptionContentsAuthorSkin(id){
+function setOptionContentsAuthorSkin(id: number){
     var outer = $(".novel-option--content.novel-option-tab-"+id)
 
     /* Author Skin */
@@ -724,7 +730,7 @@ function setOptionContentsAuthorSkin(id){
     })
 
     function restoreAuthorSkin(){
-        chrome.storage.local.get(null, (data) => {
+        getLocalOptions(null, (data) => {
             check("#novel-option--novel-author-skin", data.novelAuthorCustomSkin)
         })
     }
@@ -758,8 +764,7 @@ function setOptionContentsAuthorSkin(id){
                             var skin = new SkinV1(l)
         
                             // Import Skin
-                            chrome.storage.local.get(["skins"], function(_d) {
-                                const data = new LocalOptions(_d)
+                            getLocalOptions(["skins"], function(data) {
                                 var skins = data.skins
                                 skin.name = generateNoDuplicateSkinName(localSkinsV1.concat(skins), skin.name, -1)
                                 skins.push(skin)
