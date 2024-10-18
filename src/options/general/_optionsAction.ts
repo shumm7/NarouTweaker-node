@@ -219,7 +219,7 @@ export function general_exportOptionText() {
                 if(whitelist){
                     const input = $("#exportLocalOptionText_Input_Whitelist")
                     const lines = input.val()
-                    var ret = {}
+                    var ret: Record<string,any> = {}
                     if(typeof lines === "string"){
                         const appears = lines.split(/\s/)
                         $.each(appears, function(_, elm){
@@ -261,7 +261,7 @@ export function general_exportOptionText() {
                 if(whitelist){
                     var input = $("#exportSyncOptionText_Input_Whitelist")
                     const lines = input.val()
-                    var ret = {}
+                    var ret: Record<string,any> = {}
                     if(typeof lines === "string"){
                         const appears = lines.split(/\s/)
                         $.each(appears, function(_, elm){
@@ -302,7 +302,7 @@ export function general_exportOptionText() {
                 if(whitelist){
                     var input = $("#exportSessionOptionText_Input_Whitelist")
                     const lines = input.val()
-                    var ret = {}
+                    var ret: Record<string,any> = {}
                     if(typeof lines === "string"){
                         const appears = lines.split(/\s/)
                         $.each(appears, function(_, elm){
@@ -383,7 +383,7 @@ export function general_exportOptionText() {
 /* 設定データの変更履歴 */
 export function general_monitorOptionChanged(){
     try{
-        function addText(storageName: "local"|"sync"|"session", changes: Object){
+        function addText(storageName: "local"|"sync"|"session", changes: Record<string,any>){
             var field = $("#option-monitor--output")
 
             var currentLine: string = ""

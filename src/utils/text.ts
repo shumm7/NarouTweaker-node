@@ -97,6 +97,15 @@ export function escapeRegex(string: string): string{
 }
 
 /**
+ * CSSを縮小
+ * @param css - CSS文字列
+ * @returns minifyされたCSSを
+ */
+export function minifyCss(css: string): string{
+    return css.replace(/\n/g, '').replace(/\s\s+/g, ' ');
+}
+
+/**
  * コンマ付きの数値文字列を数値型に変換
  * @param {string} text - コンマ付きの数値文字列（例：1,000）
  * @returns {number} - 数値

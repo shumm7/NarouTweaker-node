@@ -87,17 +87,14 @@ function getSkinData(): SkinV1 {
 
 /* スキンのプレビューを表示 */
 export function showSkinPreview() {
-    chrome.storage.local.get(null, function (data) {
+    getLocalOptions(null, function (data) {
         /* skin */
         $("#skin-preview-style").remove()
         $("head").append('<style id="skin-preview-style" type="text/css">')
 
         var s = ""
-        let skins = localSkinsV1
-        if (data.skins !== undefined) {
-            skins = skins.concat(data.skins)
-        }
-        const selected: number = data.selectedSkin ?? 0
+        let skins = localSkinsV1.concat(data.skins)
+        const selected: number = data.selectedSkin
         const skin = new SkinV1(skins[selected])
         const style = skin.style
 
@@ -119,8 +116,8 @@ export function showSkinPreview() {
         $(".skin-color-field div[name='skin-sublist-underline-visited']").css("background", style.sublist.visited)
 
         /* font */
-        const selectedFontFamily = data.fontSelectedFontFamily ?? 0
-        var fontFamilyList = localFontFamilyV1.concat(data.fontFontFamilyList ?? [])
+        const selectedFontFamily = data.fontSelectedFontFamily
+        var fontFamilyList = localFontFamilyV1.concat(data.fontFontFamilyList)
         var fontFamily_Current
         var textRendering = data.fontTextRendering
         /*
@@ -305,8 +302,8 @@ export function addSkinEditButtonEvent() {
             return
         }
 
-        chrome.storage.local.get(["skins"], function (data) {
-            let skins: SkinsV1 = data.skins ?? []
+        getLocalOptions(["skins"], function (data) {
+            let skins: SkinsV1 = data.skins
             const skin = new SkinV1(raw)
             skin.name = generateNoDuplicateSkinName(skins.concat(localSkinsV1), skin.name, -1)
             skins.push(skin)
@@ -372,12 +369,10 @@ export function addSkinEditButtonEvent() {
     }
     showAuthorSkinBanner()
     $("#skin-author-export--submit").on("click", (e) => {
-        chrome.storage.local.get(["skins", "selectedSkin"], function (data) {
+        getLocalOptions(["skins", "selectedSkin"], function (data) {
             let skins: SkinsV1 = localSkinsV1
-            if (data.skins) {
-                skins = skins.concat(data.skins)
-            }
-            var idx = defaultValue(data.selectedSkin, 0)
+            skins = skins.concat(data.skins)
+            var idx = data.selectedSkin
             var skin: any = new SkinV1(skins[idx]).get()
 
             delete skin.name

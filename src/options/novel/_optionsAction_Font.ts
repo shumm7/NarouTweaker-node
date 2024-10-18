@@ -80,8 +80,8 @@ function saveSelectedFont() {
     var fontData = getFontData()
     var selectedFont = parseInt(`${$("#font-family-dropdown").val()}`)
 
-    chrome.storage.local.get(["fontFontFamilyList"], function (data) {
-        var fontList: FontFamiliesV1 = data.fontFontFamilyList ?? []
+    getLocalOptions(["fontFontFamilyList"], function (data) {
+        var fontList: FontFamiliesV1 = data.fontFontFamilyList
         if (fontData.name.trim().length == 0) { fontData.name = "新規フォント" }
         fontData.name = generateNoDuplicateFontFamilyName(localFontFamilyV1.concat(fontList), fontData.name, selectedFont)
 
@@ -124,8 +124,8 @@ export function addFontEditButtonEvent() {
     $("#font-family-selection--buttons button[name='new']").on("click", (e) => {
         saveSelectedFont()
 
-        chrome.storage.local.get(["fontFontFamilyList"], function (data) {
-            var fontList: FontFamiliesV1 = data.fontFontFamilyList ?? []
+        getLocalOptions(["fontFontFamilyList"], function (data) {
+            var fontList: FontFamiliesV1 = data.fontFontFamilyList
 
             var defaultFont = Object.assign({}, localFontFamilyV1[0])
 
@@ -150,8 +150,8 @@ export function addFontEditButtonEvent() {
         saveSelectedFont()
         var font = getFontData()
 
-        chrome.storage.local.get(["fontFontFamilyList"], function (data) {
-            var fontList: FontFamiliesV1 = data.fontFontFamilyList ?? []
+        getLocalOptions(["fontFontFamilyList"], function (data) {
+            var fontList: FontFamiliesV1 = data.fontFontFamilyList
             font.customizable = true
             font.name = generateNoDuplicateFontFamilyName(localFontFamilyV1.concat(fontList), font.name + " - コピー", -1)
             fontList.push(font)
@@ -162,10 +162,10 @@ export function addFontEditButtonEvent() {
 
     /* Delete Button */
     $("#font-family-option--buttons button[name='delete']").on("click", (e) => {
-        chrome.storage.local.get(["fontFontFamilyList", "fontSelectedFontFamily"], function (data) {
-            var selectedFont: number = data.fontSelectedFontFamily ?? 0
+        getLocalOptions(["fontFontFamilyList", "fontSelectedFontFamily"], function (data) {
+            var selectedFont: number = data.fontSelectedFontFamily
             var key = selectedFont - localFontFamilyV1.length
-            var fontList: FontFamiliesV1 = data.fontFontFamilyList ?? []
+            var fontList: FontFamiliesV1 = data.fontFontFamilyList
 
             if (fontList[key].customizable == true) {
                 fontList.splice(key, 1)

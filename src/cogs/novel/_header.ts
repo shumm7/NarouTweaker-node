@@ -1,7 +1,8 @@
 import { getNcodeFromURL } from "../../utils/ncode";
 import { CustomIconID, CustomIconIDs, getExcludeIcons } from "../../utils/header"
 import { getLocalOptions, getSyncOptions } from "../../utils/option";
-import { getEpisode, getPageType, isR18 } from "../../utils/api";
+import { getEpisode, getPageType, isR18 } from "../../utils/narou";
+import { fetchNovelApi } from "../../utils/api";
 
 import QRCode from 'qrcode'
 
@@ -322,34 +323,29 @@ export function _header(){
             
             if(r18){
                 var url = "https://api.syosetu.com/novel18api/api/?out=json&libtype=2&ncode=" + ncode
-                chrome.runtime.sendMessage({action: "fetch", format: "json", data: {url: url, options: {'method': 'GET'}}}, function(response){
-                    if(response){
-                        if(response.success && response.action=="fetch"){
-                            var data = response.result[1]
-                            if(data!=undefined){
-                                var l = $(".narou")
-                                if(data.nocgenre==1){
-                                    l.find("a").prop("href", "https://noc.syosetu.com/")
-                                    if(customHeaderType===2){
-                                        l.find(".title")[0].innerHTML = "ノクターン<br>ノベルズ"
-                                    }else if(customHeaderType===1){
-                                        l.find(".title").text("ノクターンノベルズ")
-                                    }
-                                }else if(data.nocgenre==2 || data.nocgenre==3){
-                                    l.find("a").prop("href", "https://mnlt.syosetu.com/")
-                                    if(customHeaderType===2){
-                                        l.find(".title")[0].innerHTML = "ムーンライト<br>ノベルズ"
-                                    }else if(customHeaderType===1){
-                                        l.find(".title").text("ムーンライトノベルズ")
-                                    }
-                                }else if(data.nocgenre==4){
-                                    l.find("a").prop("href", "https://mid.syosetu.com/")
-                                    if(customHeaderType===2){
-                                        l.find(".title")[0].innerHTML = "ミッドナイト<br>ノベルズ"
-                                    }else if(customHeaderType===1){
-                                        l.find(".title").text("ミッドナイトノベルズ")
-                                    }
-                                }
+                fetchNovelApi(ncode, r18, function(data){
+                    if(data){
+                        var l = $(".narou")
+                        if(data.nocgenre==1){
+                            l.find("a").prop("href", "https://noc.syosetu.com/")
+                            if(customHeaderType===2){
+                                l.find(".title")[0].innerHTML = "ノクターン<br>ノベルズ"
+                            }else if(customHeaderType===1){
+                                l.find(".title").text("ノクターンノベルズ")
+                            }
+                        }else if(data.nocgenre==2 || data.nocgenre==3){
+                            l.find("a").prop("href", "https://mnlt.syosetu.com/")
+                            if(customHeaderType===2){
+                                l.find(".title")[0].innerHTML = "ムーンライト<br>ノベルズ"
+                            }else if(customHeaderType===1){
+                                l.find(".title").text("ムーンライトノベルズ")
+                            }
+                        }else if(data.nocgenre==4){
+                            l.find("a").prop("href", "https://mid.syosetu.com/")
+                            if(customHeaderType===2){
+                                l.find(".title")[0].innerHTML = "ミッドナイト<br>ノベルズ"
+                            }else if(customHeaderType===1){
+                                l.find(".title").text("ミッドナイトノベルズ")
                             }
                         }
                     }
@@ -921,7 +917,9 @@ export function changeHeaderScrollMode(elm: HTMLElement|JQuery<HTMLElement>){
             }else if(header_mode=="scroll"){
                 $(elm).addClass("header-mode--scroll")
                 if(hidden_begin){
-                    $(elm + '.header-mode--scroll').addClass('hide');
+                    if($(elm).hasClass('header-mode--scroll')){
+                        $(elm).addClass('hide');
+                    }
                 }
             }
         })
@@ -931,12 +929,12 @@ export function changeHeaderScrollMode(elm: HTMLElement|JQuery<HTMLElement>){
     var pos = $(window).scrollTop();
     $(window).on("scroll", function(){
         const scrollTop = $(this).scrollTop()
-        if(typeof scrollTop === "number" && typeof pos === "number" && Math.abs(scrollTop - pos)>100){
-            if( scrollTop < pos ){
-                $(elm + '.header-mode--scroll').removeClass('hide'); /* Scroll Up */
+        if(typeof scrollTop === "number" && typeof pos === "number" && Math.abs(scrollTop - pos)>100 && $(elm).hasClass("header-mode--scroll")){
+            if( scrollTop < pos){
+                $(elm).removeClass('hide'); /* Scroll Up */
                 $("#novel_header_search_box.show").removeClass("show")
             }else{
-                $(elm + '.header-mode--scroll').addClass('hide'); /* Scroll Down */
+                $(elm).addClass('hide'); /* Scroll Down */
                 $("#novel_header_search_box.show").removeClass("show")
             }
             pos = $(this).scrollTop();

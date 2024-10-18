@@ -1,10 +1,11 @@
-import { LocalOptions } from "../../utils/option"
+import { getLocalOptions, LocalOptions } from "../../utils/option"
 import { OptionUI_CustomElement } from "./optionUI_custom"
 import { appendFavoriteOption, getOptionCategory, getOptionChildsFromID, getOptionFromID, getOptionPageFromID, moveFavoriteOption, removeFavoriteOption } from "./optionUI_utils"
 import { OptionHideParammeters, OptionUI_Item, OptionUI_ItemID } from "./optionUI_type"
 
 import "@melloware/coloris/dist/coloris.css";
 import { coloris, init } from "@melloware/coloris";
+import "highlight.js/styles/github.css"
 import hljs from 'highlight.js';
 
 /**o
@@ -64,39 +65,38 @@ export function optionHide(){
             types = types.slice(0, keys.length)
         }
 
-        chrome.storage.local.get(keys, function(_d){
-            const data = new LocalOptions(_d)
-            var _k: Array<OptionUI_ItemID> = []
-            var _a: Array<string> = []
+        getLocalOptions(keys, function(data){
+            var _o: Array<any> = []
+            var _v: Array<string> = []
             var _t: Array<string> = []
 
             $.each(keys, function(i, key){
-                const param = data.param(key)
+                const param = data[key]
                 if(param){
-                    _k.push(param)
-                    _a.push(values[i])
+                    _o.push(param)
+                    _v.push(values[i])
                     _t.push(types[i])
                 }
             })
-            if(_k.length>0){
-                change(_k, _a, _t, mode, logic)
+            if(_o.length>0){
+                change(_o, _v, _t, mode, logic)
             }
         })
 
         chrome.storage.local.onChanged.addListener(function(changes){
-            var _k: Array<OptionUI_ItemID> = []
-            var _a: Array<string> = []
+            var _o: Array<any> = []
+            var _v: Array<string> = []
             var _t: Array<string> = []
 
             $.each(keys, function(i, key){
                 if(changes[key]){
-                    _k.push(changes[key].newValue)
-                    _a.push(values[i])
+                    _o.push(changes[key].newValue)
+                    _v.push(values[i])
                     _t.push(types[i])
                 }
             })
-            if(_k.length>0){
-                change(_k, _a, _t, mode, logic)
+            if(_o.length>0){
+                change(_o, _v, _t, mode, logic)
             }
         })
 
@@ -118,17 +118,17 @@ export function optionHide(){
             return String(_original)===String(_value)
         }
 
-        function change(_keys: Array<string>, _values:Array<string>, _types: Array<string>, _mode: string, _logic: string){
+        function change(_originals: Array<any>, _values:Array<string>, _types: Array<string>, _mode: string, _logic: string){
             /* 論理値 */
             let condition: boolean = false
-            if(_keys.length>0){
+            if(_originals.length>0){
                 if(_logic=="and"){ condition = true }
 
-                $.each(_keys, function(i, _key){
+                $.each(_originals, function(i, _original){
                     if(_logic=="and" || _logic=="nand"){
-                        condition = condition && compare(_key, _values[i], _types[i])
+                        condition = condition && compare(_original, _values[i], _types[i])
                     }else{ // or - nor
-                        condition = condition || compare(_key, _values[i], _types[i])
+                        condition = condition || compare(_original, _values[i], _types[i])
                     }
                 })
                 if(_logic == "nor" || _logic == "nand"){
@@ -204,7 +204,7 @@ function additionalHide(){
         }
 
             
-        chrome.storage.local.get(["extExperimentalFeatures"], function(data){
+        getLocalOptions(["extExperimentalFeatures"], function(data){
             change(data.extExperimentalFeatures)
         })
 
@@ -242,7 +242,7 @@ function additionalHide(){
         }
 
             
-        chrome.storage.local.get(["extAdvancedSettings"], function(data){
+        getLocalOptions(["extAdvancedSettings"], function(data){
             change(data.extAdvancedSettings)
         })
 
@@ -285,7 +285,7 @@ function additionalHide(){
         }
 
             
-        chrome.storage.local.get(["extDebug"], function(data){
+        getLocalOptions(["extDebug"], function(data){
             change(data.extDebug)
         })
 

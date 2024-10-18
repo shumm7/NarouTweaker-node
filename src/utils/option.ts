@@ -282,9 +282,9 @@ export class LocalOptions{
      */
     constructor(data?: Record<string,any>){
         if(data !== undefined){
-            Object.keys(data).forEach(function(key){
+            for(var key of Object.keys(data)){
                 this.set(key, data[key])
-            })
+            }
         }
     }
 
@@ -307,9 +307,9 @@ export class LocalOptions{
                 this[key] = value
             }
         }else if(key!==undefined){
-            Object.keys(key).forEach(function(k){
+            for(var k of Object.keys(key)){
                 this.set(k, key[k])
-            })
+            }
         }
     }
 
@@ -471,9 +471,9 @@ export class SyncOptions{
      */    
     constructor(data?: Record<string,any>){
         if(data instanceof Object){
-            Object.keys(data).forEach(function(key){
+            for(var key of Object.keys(data)){
                 this.set(key, data[key])
-            })
+            }
         }
     }
 
@@ -495,9 +495,9 @@ export class SyncOptions{
                  this[key] = value
              }
          }else if(key!==undefined){
-             Object.keys(key).forEach(function(k){
-                 this.set(k, key[k])
-             })
+            for(var k of Object.keys(key)){
+                this.set(k, key[k])
+            }
          }
      }
 
@@ -628,9 +628,9 @@ export class SessionOptions{
      */    
     constructor(data?: Record<string,any>){
         if(data instanceof Object){
-            Object.keys(data).forEach(function(key){
-                this.set(key, data[key])
-            })
+            for(var k of Object.keys(data)){
+                this.set(k, data[k])
+            }
         }
     }
 
@@ -652,9 +652,9 @@ export class SessionOptions{
                  this[key] = value
              }
          }else if(key!==undefined){
-             Object.keys(key).forEach(function(k){
-                 this.set(k, key[k])
-             })
+            for(var k of Object.keys(key)){
+                this.set(k, key[k])
+            }
          }
      }
 

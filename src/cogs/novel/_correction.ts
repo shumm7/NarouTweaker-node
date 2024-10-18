@@ -1,4 +1,4 @@
-import { getPageType } from "../../utils/api";
+import { getPageType } from "../../utils/narou";
 import { check } from "../../utils/misc"
 import { escapeHtml } from "../../utils/text";
 import { getLocalOptions } from "../../utils/option";

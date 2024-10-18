@@ -1,9 +1,10 @@
-import { getEpisode, getNovelSearchURL, getNovelTagURL, getPageType, isR18 } from "../../utils/api";
+import { getEpisode, getNovelSearchURL, getNovelTagURL, getPageType, isR18 } from "../../utils/narou";
 import { escapeHtml, replaceUrl } from "../../utils/text"
 import { novelTop } from "./_novelTop";
 import { getNcodeFromURL } from "../../utils/ncode";
 import { getDatetimeStringWithoutSecond } from "../../utils/time";
 import { getLocalOptions, getSyncOptions } from "../../utils/option";
+import { fetchNovelApi, NovelApi } from "../../utils/api";
 
 import gsap from 'gsap';
 
@@ -308,8 +309,8 @@ function _saveHistory(){
             getSyncOptions(["novelHistory", "novelHistoryData"], function(data){
                 try{
                     
-                    const history = data.novelHistory
-                    const novelHistoryData = data.novelHistoryData
+                    var history = data.novelHistory
+                    var novelHistoryData = data.novelHistoryData
 
 
                     var new_history = history.filter(n => n != ncode);
@@ -329,7 +330,7 @@ function _saveHistory(){
                     }
 
                     chrome.storage.sync.set({
-                        history: new_history,
+                        novelHistory: new_history,
                         novelHistoryData: novelHistoryData
                     })
                 }catch(e){
@@ -456,94 +457,86 @@ function novelTopAttention(){
         const ncode = getNcodeFromURL()
         const r18 = isR18()
 
-        var url = "https://api.syosetu.com/novelapi/api/?out=json&libtype=2&ncode=" + ncode
-        if(r18){
-            var url = "https://api.syosetu.com/novel18api/api/?out=json&libtype=2&ncode=" + ncode
-        }
-
-        chrome.runtime.sendMessage({action: "fetch", format: "json", data: {url: url, options: {'method': 'GET'}}}, function(response){
+        fetchNovelApi(ncode, r18, function(data){
             try{
-                if(response){
-                    if(response.success && response.action=="fetch"){
-                        const data = response.result[1]
-                        let tags = data.keyword.split(/\s/)
-                        var site = data.nocgenre
+                if(data){
+                    let tags = (data.keyword ?? "").split(/\s/)
+                    var site = data.nocgenre
 
-                        function removeItem(item: string){
-                            tags = tags.filter((n:any) => n != item)
+                    function removeItem(item: string){
+                        tags = tags.filter((n:any) => n != item)
+                    }
+
+                    /*
+                    chrome.storage.local.get(["novelOfficialTags"], (data) => {
+                        if(data.novelOfficialTags){
+                            setTags(data.novelOfficialTags)
+                        }else{
+                            chrome.runtime.sendMessage({action: "fetch", format: "text", data: {url: "https://yomou.syosetu.com/", options: {'method': 'GET'}}}, function(response){
+                                if(response){
+                                if(response.success && response.action=="fetch"){
+                                    var html = $($.parseHTML(response.result))
+                                    var t = []
+                                    html.find(".p-search-novel .p-search-novel__keyword .p-search-novel__keyword-item").each(function(){
+                                        var tag = $(this).text()
+                                        t.push(tag)
+                                    })
+                                    chrome.storage.local.set({novelOfficialTags: t})
+                                    setTags(t)
+                                }
+                                }
+                            })
+                        }
+                    })
+                    */
+                    setTags(data)
+
+                    function setTags(data: NovelApi, officialTagList?: Array<string>){
+                        if(r18){
+                            attention.append(`<span class="nt-novel-attention-label nt-novel-attention-label--rating-r18"><a href="${getNovelSearchURL(site)}">R18</a></span>`)
+                        }
+                        if(tags.includes("R15")){
+                            attention.append(`<span class="nt-novel-attention-label nt-novel-attention-label--rating-r15"><a href="${getNovelSearchURL(site, {isr15: 1})}">R15</a></span>`)
+                            removeItem("R15")
+                        }
+                        
+                        if(tags.includes("二次創作")){
+                            attention.append(`<span class="nt-novel-attention-label"><a href="${getNovelTagURL("二次創作", site)}"><i class="fa-solid fa-code-merge"></i>二次創作</a></span>`)
+                            removeItem("二次創作")
+                        }
+                        if(data.iszankoku){
+                            attention.append(`<span class="nt-novel-attention-label"><a href="${getNovelSearchURL(site, {iszankoku: 1})}"><i class="fa-solid fa-gun"></i>残酷な描写あり</a></span>`)
+                            removeItem("残酷な描写あり")
+                        }
+                        if(data.isbl){
+                            attention.append(`<span class="nt-novel-attention-label"><a href="${getNovelSearchURL(site, {isbl: 1})}"><i class="fa-solid fa-mars-double"></i>ボーイズラブ</a></span>`)
+                            removeItem("ボーイズラブ")
+                        }
+                        if(data.isgl){
+                            attention.append(`<span class="nt-novel-attention-label"><a href="${getNovelSearchURL(site, {isgl: 1})}?isgl=1"><i class="fa-solid fa-venus-double"></i>ガールズラブ</a></span>`)
+                            removeItem("ガールズラブ")
+                        }
+                        if(data.istensei){
+                            attention.append(`<span class="nt-novel-attention-label"><a href="${getNovelSearchURL(site, {istensei: 1})}"><i class="fa-solid fa-earth-americas"></i>異世界転生</a></span>`)
+                            removeItem("異世界転生")
+                        }
+                        if(data.istenni){
+                            attention.append(`<span class="nt-novel-attention-label"><a href="${getNovelSearchURL(site, {istenni: 1})}"><i class="fa-solid fa-earth-americas"></i>異世界転移</a></span>`)
+                            removeItem("異世界転移")
                         }
 
                         /*
-                        chrome.storage.local.get(["novelOfficialTags"], (data) => {
-                            if(data.novelOfficialTags){
-                                setTags(data.novelOfficialTags)
-                            }else{
-                                chrome.runtime.sendMessage({action: "fetch", format: "text", data: {url: "https://yomou.syosetu.com/", options: {'method': 'GET'}}}, function(response){
-                                    if(response){
-                                    if(response.success && response.action=="fetch"){
-                                        var html = $($.parseHTML(response.result))
-                                        var t = []
-                                        html.find(".p-search-novel .p-search-novel__keyword .p-search-novel__keyword-item").each(function(){
-                                            var tag = $(this).text()
-                                            t.push(tag)
-                                        })
-                                        chrome.storage.local.set({novelOfficialTags: t})
-                                        setTags(t)
-                                    }
-                                    }
-                                })
-                            }
-                        })
-                        */
-                        setTags()
-
-                        function setTags(officialTagList?: Array<string>){
-                            if(r18){
-                                attention.append(`<span class="nt-novel-attention-label nt-novel-attention-label--rating-r18"><a href="${getNovelSearchURL(site)}">R18</a></span>`)
-                            }
-                            if(tags.includes("R15")){
-                                attention.append(`<span class="nt-novel-attention-label nt-novel-attention-label--rating-r15"><a href="${getNovelSearchURL(site, {isr15: 1})}">R15</a></span>`)
-                                removeItem("R15")
-                            }
-                            
-                            if(tags.includes("二次創作")){
-                                attention.append(`<span class="nt-novel-attention-label"><a href="${getNovelTagURL("二次創作", site)}"><i class="fa-solid fa-code-merge"></i>二次創作</a></span>`)
-                                removeItem("二次創作")
-                            }
-                            if(data.iszankoku){
-                                attention.append(`<span class="nt-novel-attention-label"><a href="${getNovelSearchURL(site, {iszankoku: 1})}"><i class="fa-solid fa-gun"></i>残酷な描写あり</a></span>`)
-                                removeItem("残酷な描写あり")
-                            }
-                            if(data.isbl){
-                                attention.append(`<span class="nt-novel-attention-label"><a href="${getNovelSearchURL(site, {isbl: 1})}"><i class="fa-solid fa-mars-double"></i>ボーイズラブ</a></span>`)
-                                removeItem("ボーイズラブ")
-                            }
-                            if(data.isgl){
-                                attention.append(`<span class="nt-novel-attention-label"><a href="${getNovelSearchURL(site, {isgl: 1})}?isgl=1"><i class="fa-solid fa-venus-double"></i>ガールズラブ</a></span>`)
-                                removeItem("ガールズラブ")
-                            }
-                            if(data.istensei){
-                                attention.append(`<span class="nt-novel-attention-label"><a href="${getNovelSearchURL(site, {istensei: 1})}"><i class="fa-solid fa-earth-americas"></i>異世界転生</a></span>`)
-                                removeItem("異世界転生")
-                            }
-                            if(data.istenni){
-                                attention.append(`<span class="nt-novel-attention-label"><a href="${getNovelSearchURL(site, {istenni: 1})}"><i class="fa-solid fa-earth-americas"></i>異世界転移</a></span>`)
-                                removeItem("異世界転移")
-                            }
-
-                            /*
-                            if(!r18){
-                                $.each(officialTagList, function(_, tag){
-                                    if(tags.includes(tag)){
-                                        attention.append(`<span class="nt-novel-attention-label nt-novel-attention-label--official"><a href="${getNovelTagURL(tag, site)}"><i class="fa-solid fa-flag"></i>${tag}</a></span>`)
-                                        removeItem("tag")
-                                    }
-                                })
-                            }
-                            */
+                        if(!r18){
+                            $.each(officialTagList, function(_, tag){
+                                if(tags.includes(tag)){
+                                    attention.append(`<span class="nt-novel-attention-label nt-novel-attention-label--official"><a href="${getNovelTagURL(tag, site)}"><i class="fa-solid fa-flag"></i>${tag}</a></span>`)
+                                    removeItem("tag")
+                                }
+                            })
                         }
-
+                        */
                     }
+
                 }
             }catch(e){
                 console.warn(e)

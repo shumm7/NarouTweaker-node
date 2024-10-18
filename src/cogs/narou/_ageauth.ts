@@ -1,4 +1,4 @@
-import { getLocalOptions } from "utils/option";
+import { getLocalOptions } from "../../utils/option";
 
 export function ageauth(){
     getLocalOptions(null, function(data){

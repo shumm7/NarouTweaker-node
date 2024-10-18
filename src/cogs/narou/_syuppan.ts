@@ -1,4 +1,4 @@
-import { getLocalOptions } from "utils/option.js"
+import { getLocalOptions } from "../../utils/option.js"
 import { escapeHtml } from "../../utils/text.js"
 
 export function syuppan(){

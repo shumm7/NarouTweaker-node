@@ -2,6 +2,7 @@ import { FontFamiliesV1, FontFamilyV1, localFont, localFontFamilyV1 } from "../u
 import { localSkinsV1, makeSkinCSS, SkinsV1, SkinV1 } from "../utils/v1_skin"
 import { CSS_String } from "../utils/type"
 import { getLocalOptions } from "../utils/option"
+import { minifyCss } from "../utils/text"
 
 export function skinListener(){
     makeSkin()
@@ -112,10 +113,10 @@ function makeSkin(){
         `
 
         chrome.storage.session.set({
-            novelAppliedSkinCSS: makeSkinCSS(skin, data.novelCustomStyle),
-            novelAppliedFontCSS: rule,
-            novelSkinCustomCSS: skin.css,
-            novelFontCustomCSS: fontCss
+            novelAppliedSkinCSS: minifyCss(makeSkinCSS(skin, data.novelCustomStyle)),
+            novelAppliedFontCSS: minifyCss(rule),
+            novelSkinCustomCSS: minifyCss(skin.css),
+            novelFontCustomCSS: minifyCss(fontCss)
         })
     })
 }
@@ -224,10 +225,10 @@ function makeEditorSkin(){
         `
 
         chrome.storage.session.set({
-            workspaceEditorAppliedSkinCSS: skin_rule,
-            workspaceEditorAppliedFontCSS: font_rule,
-            workspaceEditorSkinCustomCSS: skin.css,
-            workspaceEditorFontCustomCSS: fontCss
+            workspaceEditorAppliedSkinCSS: minifyCss(skin_rule),
+            workspaceEditorAppliedFontCSS: minifyCss(font_rule),
+            workspaceEditorSkinCustomCSS: minifyCss(skin.css),
+            workspaceEditorFontCustomCSS: minifyCss(fontCss)
         })
     })
 }
