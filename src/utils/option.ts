@@ -362,6 +362,10 @@ export class LocalOptions{
         this.set(updatedData)
     }
 
+    protected toJSON = () => {
+        return this.get()
+    }
+
     // バージョンアップ時の対応
     protected _exceptionProcess = (obj: Record<string,any>): Record<string,any> => {
         if("novelCustomHeader" in obj && obj.novelCustomHeader === true){
@@ -549,6 +553,10 @@ export class SyncOptions{
         this.set(updatedData)
     }
 
+    protected toJSON = () => {
+        return this.get()
+    }
+
     // バージョンアップ時の対応
     protected _exceptionProcess = (obj: Record<string,any>): Record<string,any> =>{
         if("history" in obj){
@@ -701,6 +709,10 @@ export class SessionOptions{
         if(typeof this[key] === typeof value && typeof this[key]!=="function"){
             return value
         }
+    }
+
+    protected toJSON = () => {
+        return this.get()
     }
 }
 

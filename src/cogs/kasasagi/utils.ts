@@ -10,7 +10,8 @@ export interface AnalyticsDataset {
 export interface GraphDataset {
     label: string,
     backgroundColor: string,
-    data: Array<number|null>
+    data: Array<number|null>,
+    hidden?: boolean
 }
 
 /* Utilities */
@@ -63,7 +64,11 @@ export function getValueFromTables(): AnalyticsDataset{
             }
         })
 
-        datasets.push({label: name, backgroundColor: color, data: []})
+        if(cls==="total"){
+            datasets.push({label: name, backgroundColor: color, data: []})
+        }else{
+            datasets.push({label: name, backgroundColor: color, data: [], hidden: true})
+        }
         classes.push(cls)
     })
 
@@ -120,7 +125,12 @@ export function makeGraph(_id: string, _graph_type: GraphType, _graph_name: stri
                 tooltip: {
                     callbacks: {
                         label: function(p){
-                            return p.dataset.label + ": " + p.raw + unit;
+                            var n = Number(p.raw)
+                            if(isFinite(n)){
+                                return `${p.dataset.label}: ${n.toLocaleString()}${unit.length > 0 ? " " + unit : ""}`
+                            }else{
+                                return `${p.dataset.label}: -${unit.length > 0 ? " " + unit : ""}`
+                            }
                         },
                         title: function(p) {
                             return _graph_name + ": " + p[0].label;

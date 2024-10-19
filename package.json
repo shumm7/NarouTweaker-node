@@ -37,8 +37,8 @@
     "jquery.selection": "github:marcintabaka/jquery.selection",
     "pickadatejs": "^1.0.23",
     "qrcode": "^1.5.4",
+    "range-slider-input": "^2.4.4",
     "sortablejs": "^1.15.3",
-    "toolcool-range-slider": "^4.0.28",
     "w3-css": "^4.1.0"
   }
 }

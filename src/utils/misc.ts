@@ -8,7 +8,7 @@ import { CSS_String } from "./type";
 export function saveJson(data:Object, filename: string): void{
     var url = 'data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 3))))
     chrome.runtime.sendMessage({action: "downloads", data: {url: url, filename: filename}}, function(_response){
-        
+        console.log(_response)
     });
 }
 

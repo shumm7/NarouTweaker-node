@@ -5,9 +5,9 @@ import { messageListener } from "./_process"
 import { skinListener } from "./_skin"
 import { yomouCssListener } from "./_yomou"
 
-/* Update Option Data */
+/* Installed */
 chrome.runtime.onInstalled.addListener((details) => {
-    if(details.reason === "update"){
+    if(details.reason === "update"){ // updated
         console.log("Updated: fixing option...")
         fixOption(true, true)
 
@@ -33,16 +33,9 @@ chrome.runtime.onInstalled.addListener((details) => {
                 }
             })
         }
-    }
-})
-
-/* Reset Options */
-chrome.storage.local.onChanged.addListener(function(changes){
-    if(changes.extOptionsVersion!=undefined){
-        if(typeof changes.extOptionsVersion.newValue != "undefined"){
-            console.log("Narou Tweaker's option was updated: "+changes.extOptionsVersion.oldValue+" -> "+changes.extOptionsVersion.newValue)
-            console.log(changes)
-        }
+    }else if(details.reason === "install"){ // installed
+        console.log("Updated: fixing option...")
+        fixOption(true, true)
     }
 })
 
@@ -60,6 +53,7 @@ getSyncOptions(null, function(data){
         extLastLaunchTime: new Date().toUTCString()
     })
 })
+
 
 /* Action */
 actionListener()

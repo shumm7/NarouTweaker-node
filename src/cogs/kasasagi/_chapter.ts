@@ -7,9 +7,8 @@ import { getLocalOptions } from "../../utils/option";
 import { GraphType } from "../../utils/data";
 
 import { Chart } from "chart.js/auto";
-import 'toolcool-range-slider';
-import 'toolcool-range-slider/dist/plugins/tcrs-moving-tooltip.min.js';
-import 'toolcool-range-slider/dist/plugins/tcrs-generated-labels.min.js';
+import rangeSlider from 'range-slider-input';
+import 'range-slider-input/dist/style.css';
 
 /* Chapter Unique */
 export function _chapterUnique(){
@@ -90,23 +89,79 @@ function _button(data: Array<number|null>){
 }
 
 function _graph(data: Array<number|null>, graphType: GraphType){
+    const m = 5
     const tickCounts = (labels: number, step: number) => (Math.ceil(labels / step));
+    const aryMax = function (a: number|null, b: number|null) {return Math.max(a ?? 0, b ?? 0);}
+    const sliderLabel = (v: number|null) =>{
+        const value = Number(v)
+        if(!isNaN(value)){
+            if(value==0){
+                return "1"
+            }else{
+                return `${value}`
+            }
+        }else{
+            return "-"
+        }
+    }
+    const setValue = (valMin: number, valMax: number) => {
+        valMax = Math.ceil((valMax===0 ? m : valMax) / m) * m
+        valMin = Math.ceil(valMin / m) * m
+        if(valMin === valMax && valMin - m >= 0){
+            valMin -= m
+        }
+        return [valMin, valMax]
+    }
+
+    const rangeMin = 0
+    const rangeMax = tickCounts(data.length, m) * m
     const unit = "人"
     var old_graph = $('.chapter-graph-list');
     var labels_show: number[] = [];
 
     /* Data */
-    for(let i=0; i<tickCounts(data.length, 5) * 5 ; i++) {
+    for(let i=rangeMin; i<rangeMax; i++) {
         labels_show[i] = i+1;
     }
 
     /* Range Bar */
-    const rangeMin = 0
-    const rangeMax = tickCounts(data.length, 5)
-    old_graph.before(`<div class="slider-outer" id="chapter-range">
-        <tc-range-slider id="chapter-slider" value1="${rangeMin}" value2="${rangeMax}" min="${rangeMin}" max="${rangeMax}" generate-labels="true" round="0"></tc-range-slider>
-    </div>
+    var [curMin, curMax] = setValue(rangeMin, rangeMax)
+    old_graph.before(`
+        <div class="slider-outer" id="chapter-range">
+            <div class="range-slider__label range-slider__leftlabel">${sliderLabel(curMin)}</div>
+            <div class="range-slider"><!-- range slider element -->
+                <input type="range" /><!-- hidden -->
+                <input type="range" /><!-- hidden -->
+                <div class="range-slider__thumb" data-lower></div>
+                <div class="range-slider__thumb" data-upper></div>
+                <div class="range-slider__range"></div>
+            </div>
+            <div class="range-slider__label range-slider__rightlabel">${sliderLabel(curMax)}</div>
+        </div>
     `)
+    
+    const slider = document.querySelector('#chapter-range .range-slider')
+    if(slider!==null){
+        rangeSlider(slider, {
+            min: rangeMin,
+            max: rangeMax,
+            step: "any",
+            value: [rangeMin, rangeMax],
+            onInput: (value: [number, number], userInteraction: boolean) => {
+                var [valMin, valMax] = setValue(value[0], value[1])
+                if(!isNaN(value[0]) && !isNaN(value[1]) && (curMin!==valMin || curMax!==valMax)){
+                    $("#chapter-range .range-slider__leftlabel").text(sliderLabel(valMin))
+                    $("#chapter-range .range-slider__rightlabel").text(sliderLabel(valMax))
+                    curMin = valMin
+                    curMax = valMax
+                    graph?.destroy()
+                    generateGraph(curMin, curMax)
+                }
+            }
+
+        })
+    }
+
 
     /* Graph */
     old_graph.before('<canvas class="access-chart" id="chapter" style="width: 100%; margin-bottom:10px;"></canvas>')
@@ -146,7 +201,7 @@ function _graph(data: Array<number|null>, graphType: GraphType){
                     scales: {
                         y: {
                             ticks: {
-                                stepSize: 10,
+                                stepSize: Math.max(10, Math.ceil((data.reduce(aryMax) ?? 0)/(1000*m))*m),
                                 callback: function(value, index){
                                     return value + unit;
                                 }
@@ -155,7 +210,7 @@ function _graph(data: Array<number|null>, graphType: GraphType){
                         x: {
                             ticks: {
                                 display: false,
-                                maxTicksLimit: tickCounts(max - min, 5) + 2,
+                                maxTicksLimit: tickCounts(max - min, m) + 2,
                             },
                             min: min,
                             max: max
@@ -166,31 +221,7 @@ function _graph(data: Array<number|null>, graphType: GraphType){
         }
     }
 
-    generateGraph(0, (tickCounts(data.length, 5) + 2) * 5);
-    const slider = document.getElementById('chapter-slider') as IGeneratedLabelsPlugin;
-    
-    slider.generateLabelsFormat = (v: string|number|undefined): string =>{
-        const value = Number(v)
-        if(!isNaN(value)){
-            if(value==0){
-                return "1"
-            }else{
-                return `${value * 5}`
-            }
-        }else{
-            return ""
-        }
-    }
-
-    // listen to the change event
-    slider?.addEventListener('change', (e: any) => {
-        const min: number|undefined = e?.detail?.value1
-        const max: number|undefined = e?.detail?.value2
-        if(min!==undefined && max!==undefined){
-            graph?.destroy();
-            generateGraph(min * 5, max * 5);
-        }
-    })
+    generateGraph(curMin, curMax);
 }
 
 function _table(data: Array<number|null>){
@@ -230,21 +261,33 @@ function _table(data: Array<number|null>){
 
                 /* 前エピソード比 */
                 var rate_before = Math.round(value / value_before * 100)
-                if(isNaN(rate_before) || isFinite(rate_before)){
+                if(isNaN(rate_before) || !isFinite(rate_before)){
                     s_rateBefore = ""
                 }else{
-                    s_rateBefore = rate_before + "%"
+                    s_rateBefore = `${rate_before}%`
                 }
 
                 /* 離脱数 */
                 var rate_declease = -(value_before - value);
                 if(isNaN(rate_declease)){
                     s_rateDeclease = "";
+                }else{
+                    s_rateDeclease = `${rate_declease}`
                 }
             }
 
 
-            table.append("<tr><td class='key'>"+ s_idx +"</td><td class='value'>"+s_value+"</td><td class='bar'><p class='graph' style='width:"+bar+"%;'></p></td><td class='rate'>"+s_rateBefore+"</td><td class='rate'>"+s_rateDeclease+"</td></tr>")
+            table.append(`
+                <tr>
+                    <td class='key'>${s_idx}</td>
+                    <td class='value'>${s_value}</td>
+                    <td class='bar'>
+                        <p class='graph' style='width: ${bar}%;'></p>
+                    </td>
+                    <td class='rate'>${s_rateBefore}</td>
+                    <td class='rate'>${s_rateDeclease}</td>
+                </tr>
+            `)
         }
         return outer;
     }
