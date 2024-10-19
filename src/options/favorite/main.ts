@@ -3,6 +3,8 @@ import { getOptionFromID } from "../_utils/optionUI_utils";
 import { getOptionElement, optionHide, syntaxHighlight } from "../_utils/utils";
 import { restoreOptions, setup } from "../general";
 
+import $ from 'jquery';
+
 setup()
 setupContents()
 

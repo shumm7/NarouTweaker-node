@@ -6,6 +6,8 @@ import { LocalOptions } from "../../utils/option";
 import { getDatetimeString, getDatetimeStringForFilename } from "../../utils/time";
 import { OptionUI_Page } from "options/_utils/optionUI_type";
 
+import $ from 'jquery';
+
 /* 基本設定 */
 /* デフォルトページ（ポップアップ時） */
 export function general_popupDefaultPage_Dropdown(){

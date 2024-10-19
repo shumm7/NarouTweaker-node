@@ -1,5 +1,4 @@
-import jQuery from "jquery";
-Object.assign(window, { $: jQuery, jQuery });
+import $ from 'jquery';
 
 chrome.storage.session.get(null, (data)=>{
     /* Skin Custom CSS */

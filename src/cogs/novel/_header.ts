@@ -4,6 +4,7 @@ import { getLocalOptions, getSyncOptions } from "../../utils/option";
 import { getEpisode, getPageType, isR18 } from "../../utils/narou";
 import { fetchNovelApi } from "../../utils/api";
 
+import $ from 'jquery';
 import QRCode from 'qrcode'
 
 /* Header */

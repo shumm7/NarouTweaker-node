@@ -3,6 +3,8 @@ import { LocalOptions, SyncOptions } from "../../utils/option";
 import { OptionUI_Category, OptionUI_CategoryID, OptionUI_Item, OptionUI_ItemID, OptionUI_Page, OptionUI_PageID } from "./optionUI_type";
 import { limit } from "../../utils/number";
 
+import $ from 'jquery';
+
 /* Option Category */
 export function getOptionPageFromID(id: OptionUI_PageID): OptionUI_Page|undefined{
     var ret: OptionUI_Page|undefined

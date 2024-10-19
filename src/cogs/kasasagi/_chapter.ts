@@ -6,6 +6,7 @@ import { getNcodeFromURL } from "../../utils/ncode";
 import { getLocalOptions } from "../../utils/option";
 import { GraphType } from "../../utils/data";
 
+import $ from 'jquery';
 import { Chart } from "chart.js/auto";
 import rangeSlider from 'range-slider-input';
 import 'range-slider-input/dist/style.css';

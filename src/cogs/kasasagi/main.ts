@@ -7,8 +7,7 @@ import { _monthUnique } from "./_monthUnique"
 import { getNcodeFromURL } from "../../utils/ncode"
 import { getLocalOptions } from "../../utils/option"
 
-import jQuery from "jquery";
-Object.assign(window, { $: jQuery, jQuery });
+import $ from 'jquery';
 
 import "../../common.css"
 import "./local.css"

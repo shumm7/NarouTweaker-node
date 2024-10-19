@@ -6,6 +6,7 @@ import { getDatetimeStringWithoutSecond } from "../../utils/time";
 import { getLocalOptions, getSyncOptions } from "../../utils/option";
 import { fetchNovelApi, NovelApi } from "../../utils/api";
 
+import $ from 'jquery';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 

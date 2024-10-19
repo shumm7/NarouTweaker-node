@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 /* Info Icon*/
 function balloonGeneral(html:string, icon:string, href?:string){
     var object

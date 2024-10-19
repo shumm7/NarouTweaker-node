@@ -1,5 +1,6 @@
 import { getLocalOptions } from "../../utils/option";
 import { makeSkinCSS, SkinV1 } from "../../utils/v1_skin";
+import $ from 'jquery';
 
 /* Skin */
 export function removeDefaultSkinClass(){

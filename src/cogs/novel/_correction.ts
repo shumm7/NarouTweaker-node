@@ -4,6 +4,8 @@ import { escapeHtml } from "../../utils/text";
 import { getLocalOptions } from "../../utils/option";
 import { ReplacePatterns, CorrectionNumberMode } from "../../utils/data";
 
+import $ from 'jquery';
+
 const bracket_begin = `「『＜《〈≪【（”“’‘\\\(\\\'`
 const bracket_end = `」』＞》〉≫】）”’\\\)\\\'`
 const brackets = [

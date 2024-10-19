@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 type RankPageDetail = {
     site?: string
     r18?: boolean

@@ -4,6 +4,8 @@ import { getOptionElement, optionHide, syntaxHighlight } from "../_utils/utils";
 import { restoreOptions, setup } from "../general";
 import { OptionUI_Items, OptionUI_Pages } from "../_utils/optionUI_items";
 
+import $ from 'jquery';
+
 setup()
 $("#search-box").focus()
 

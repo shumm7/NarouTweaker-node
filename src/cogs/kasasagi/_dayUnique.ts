@@ -6,6 +6,8 @@ import { makeGraph, getValueFromTables, GraphDataset } from "./utils"
 import { GraphType } from "../../utils/data"
 import { getLocalOptions } from "../../utils/option"
 
+import $ from 'jquery';
+
 /* Day Unique */
 export function _dayUnique(){
     getLocalOptions(null, (option)=>{

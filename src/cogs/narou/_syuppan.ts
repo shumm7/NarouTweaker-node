@@ -1,6 +1,8 @@
 import { getLocalOptions } from "../../utils/option.js"
 import { escapeHtml } from "../../utils/text.js"
 
+import $ from 'jquery';
+
 export function syuppan(){
     getLocalOptions(null, function(data){
         if(location.hostname==="syosetu.com" || location.hostname==="nl.syosetu.com"){

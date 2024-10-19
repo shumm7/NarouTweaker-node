@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 /**
  * 小説タグから検索URLを取得する
  * @param {string|Array<string>} tag 

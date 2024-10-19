@@ -1,5 +1,7 @@
 import { getLocalOptions } from "../../utils/option"
 
+import $ from 'jquery';
+
 export function _favuser(){
     getLocalOptions(null, function(data){
         try{

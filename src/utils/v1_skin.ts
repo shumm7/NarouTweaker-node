@@ -1,4 +1,7 @@
 import { CSS_String } from "./type"
+
+import $ from 'jquery';
+
 /**
  * スキンリスト(v1)
  */

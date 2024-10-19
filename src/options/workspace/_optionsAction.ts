@@ -1,6 +1,8 @@
 import { CustomIconID, CustomIconIDs, getExcludeIcons, workspaceIconList, workspaceMenuIconList } from "../../utils/header"
 import Sortable from 'sortablejs'
 
+import $ from 'jquery';
+
 export function workspace_customHeaderSortable(){
     /* Workspace Header */
     function storeWorkspaceHeader(){

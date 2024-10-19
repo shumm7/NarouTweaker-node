@@ -3,6 +3,8 @@ import { ReplacePattern } from "../../utils/data"
 import { CustomIconID, CustomIconIDs, getExcludeIcons, novelIconList } from "../../utils/header"
 import { addFontEditButtonEvent, restoreFont } from "./_optionsAction_Font"
 import { addSkinEditButtonEvent, restoreSkins } from "./_optionsAction_Skin"
+
+import $ from 'jquery';
 import Sortable from 'sortablejs'
 
 /* 全般 */

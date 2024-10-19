@@ -2,6 +2,8 @@ import { Ncode } from "../../utils/ncode"
 import { pushImpressionHiddenList, pushImpressionReadList } from "../../utils/data"
 import { getLocalOptions } from "../../utils/option"
 
+import $ from 'jquery';
+
 export function _novelcom(){
     _readImpression()
 }

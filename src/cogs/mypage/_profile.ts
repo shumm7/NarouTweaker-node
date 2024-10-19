@@ -4,6 +4,8 @@ import { getUserIdFromURL, isR18 } from "../../utils/narou"
 import { escapeHtml, replaceUrl } from "../../utils/text"
 import { fetchUserApi } from "../../utils/api"
 
+import $ from 'jquery';
+
 export function _profile(){
     $(".l-main .c-panel").attr("id", "introduction")
     const userid = getUserIdFromURL()

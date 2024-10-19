@@ -1,7 +1,5 @@
 import { checkRankPageDetail } from "../yomou/utils"
-
-import jQuery from "jquery";
-Object.assign(window, { $: jQuery, jQuery });
+import $ from 'jquery';
 
 const pageDetail = checkRankPageDetail()
 

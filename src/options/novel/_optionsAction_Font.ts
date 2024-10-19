@@ -3,6 +3,8 @@ import { check } from "../../utils/misc"
 import { FontFamiliesV1, FontFamilyV1, generateNoDuplicateFontFamilyName, localFont, localFontFamilyV1 } from "../../utils/v1_font";
 import { restoreSkins } from "./_optionsAction_Skin";
 
+import $ from 'jquery';
+
 /* Font Settings */
 /* フォントの表示設定 */
 export function restoreFont() {

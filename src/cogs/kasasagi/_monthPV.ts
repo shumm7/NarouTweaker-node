@@ -5,6 +5,7 @@ import { getNcodeFromURL } from "../../utils/ncode"
 import { GraphType } from "../../utils/data"
 import { getLocalOptions, LocalOptions } from "../../utils/option"
 
+import $ from 'jquery';
 import { Chart } from "chart.js/auto";
 
 var graph: Chart|null

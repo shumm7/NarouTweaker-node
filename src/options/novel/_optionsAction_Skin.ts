@@ -3,6 +3,8 @@ import { defaultValue, getCSSRule, saveJson } from "../../utils/misc";
 import { generateNoDuplicateSkinName, localSkinsV1, SkinsV1, SkinV1 } from "../../utils/v1_skin";
 import { getLocalOptions } from "../../utils/option";
 
+import $ from 'jquery';
+
 /* 指定したスキンを表示 */
 export function restoreSkins() {
     getLocalOptions(null, function (data) {

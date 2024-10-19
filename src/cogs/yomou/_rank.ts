@@ -6,6 +6,8 @@ import { getGenreNumber } from "../../utils/narou";
 import { getLocalOptions } from "../../utils/option";
 import { fetchNovelApi } from "../../utils/api";
 
+import $ from 'jquery';
+
 
 export function _rank(){
     const pageDetail = checkRankPageDetail()

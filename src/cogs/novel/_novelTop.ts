@@ -1,4 +1,5 @@
 import { getLocalOptions } from "../../utils/option"
+import $ from 'jquery';
 
 export function novelTop(){
     _showAllExtext()

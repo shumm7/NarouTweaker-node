@@ -3,9 +3,6 @@ import { _general } from "./_general.js";
 import { _favuser } from "./_misc.js";
 import { _profile } from "./_profile.js";
 
-import jQuery from "jquery";
-Object.assign(window, { $: jQuery, jQuery });
-
 import "./local.css"
 
 if($(".p-userheader__tab").length){

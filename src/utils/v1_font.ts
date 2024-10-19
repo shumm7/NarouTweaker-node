@@ -1,5 +1,7 @@
 import { CSS_String } from "./type"
 
+import $ from 'jquery';
+
 /**
  * フォントセットリスト(v1)
  */

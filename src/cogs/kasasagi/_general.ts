@@ -8,6 +8,7 @@ import { getLocalOptions } from "../../utils/option";
 import { fetchNovelApi, fetchRankinApi, NovelApi, RankinApi } from "../../utils/api";
 import { GraphType } from "../../utils/data";
 
+import $ from 'jquery';
 import { Chart } from "chart.js/auto";
 
 /* General */

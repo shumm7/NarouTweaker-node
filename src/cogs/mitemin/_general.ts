@@ -1,6 +1,8 @@
 import { getLocalOptions } from "../../utils/option"
 import { getIcodeFromURL, Icode } from "../../utils/ncode"
 
+import $ from 'jquery';
+
 export function _image(){
     getLocalOptions(null, function(data){
         // iコードを取得

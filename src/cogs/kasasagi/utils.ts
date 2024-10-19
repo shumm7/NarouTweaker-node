@@ -2,6 +2,8 @@ import { GraphType } from "../../utils/data";
 import { parseIntWithComma } from "../../utils/text";
 import { Chart } from "chart.js/auto";
 
+import $ from 'jquery';
+
 export interface AnalyticsDataset {
     labels: Array<string>
     datasets: Array<GraphDataset>

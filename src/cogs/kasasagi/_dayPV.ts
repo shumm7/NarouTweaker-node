@@ -5,6 +5,8 @@ import { getLocalOptions } from "../../utils/option"
 import { GraphType } from "../../utils/data"
 import { getNcodeFromURL } from "../../utils/ncode"
 
+import $ from 'jquery';
+
 /* Day PV */
 export function _dayPV(){
     getLocalOptions(null, (option)=>{

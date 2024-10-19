@@ -1,5 +1,7 @@
 import { getLocalOptions } from "../../utils/option";
 
+import $ from 'jquery';
+
 export function ageauth(){
     getLocalOptions(null, function(data){
         if(data.narouSkipAgeauth){

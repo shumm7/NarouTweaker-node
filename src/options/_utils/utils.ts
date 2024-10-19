@@ -3,6 +3,7 @@ import { OptionUI_CustomElement } from "./optionUI_custom"
 import { appendFavoriteOption, getOptionCategory, getOptionChildsFromID, getOptionFromID, getOptionPageFromID, moveFavoriteOption, removeFavoriteOption } from "./optionUI_utils"
 import { OptionHideParammeters, OptionUI_Item, OptionUI_ItemID } from "./optionUI_type"
 
+import $ from 'jquery';
 import "@melloware/coloris/dist/coloris.css";
 import { coloris, init } from "@melloware/coloris";
 import "highlight.js/styles/github.css"

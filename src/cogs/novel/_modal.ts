@@ -8,6 +8,8 @@ import { ReplacePattern } from "../../utils/data";
 import { getNcodeFromURL } from "../../utils/ncode";
 import { getDatetimeString } from "../../utils/time";
 
+import $ from 'jquery';
+
 export function _optionModal(){
     try{
         /* Option Modal */

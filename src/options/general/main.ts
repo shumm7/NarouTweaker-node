@@ -2,6 +2,8 @@ import { setup } from "../general";
 import { escapeHtml } from "../../utils/text";
 import { getExtensionVersion } from "../../utils/misc";
 
+import $ from 'jquery';
+
 setup()
 debugMode()
 showPatchnotes()
