@@ -1,6 +1,8 @@
 import { getLocalOptions } from "../../utils/option.js";
 import { replaceUrl } from "../../utils/text.js";
 
+import $ from 'jquery';
+
 export function _blog(){
     /* Blog Auto Url */
     getLocalOptions(null, (data) => {
