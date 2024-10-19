@@ -101,6 +101,10 @@ export function _header(){
             $("#novel_header_right").addClass("novel-icon-wrapper")
             $(".c-menu--foot").remove()
 
+            /* scroll mode */
+            changeHeaderScrollMode("#novel_header");
+            changeHeaderScrollMode("#novel_header_right");
+
             // Enactiveなアイコンを表示する
             if(data.novelCustomHeaderShowEnactiveItems){
                 $("body").addClass("narou-tweaker-header--show-enactive-icon")
@@ -895,7 +899,7 @@ export function _header(){
     })
 }
 
-export function changeHeaderScrollMode(elm: HTMLElement|JQuery<HTMLElement>){
+export function changeHeaderScrollMode(_elm: string){
         
     function changeMode(elm: HTMLElement|JQuery<HTMLElement>){
         getLocalOptions(null, (data) => {
@@ -924,17 +928,17 @@ export function changeHeaderScrollMode(elm: HTMLElement|JQuery<HTMLElement>){
             }
         })
     }
-    changeMode($(elm))
+    changeMode($(_elm))
 
     var pos = $(window).scrollTop();
     $(window).on("scroll", function(){
         const scrollTop = $(this).scrollTop()
-        if(typeof scrollTop === "number" && typeof pos === "number" && Math.abs(scrollTop - pos)>100 && $(elm).hasClass("header-mode--scroll")){
+        if(typeof scrollTop === "number" && typeof pos === "number" && Math.abs(scrollTop - pos)>100 && $(_elm).hasClass("header-mode--scroll")){
             if( scrollTop < pos){
-                $(elm).removeClass('hide'); /* Scroll Up */
+                $(_elm).removeClass('hide'); /* Scroll Up */
                 $("#novel_header_search_box.show").removeClass("show")
             }else{
-                $(elm).addClass('hide'); /* Scroll Down */
+                $(_elm).addClass('hide'); /* Scroll Down */
                 $("#novel_header_search_box.show").removeClass("show")
             }
             pos = $(this).scrollTop();
@@ -943,7 +947,7 @@ export function changeHeaderScrollMode(elm: HTMLElement|JQuery<HTMLElement>){
 
     chrome.storage.local.onChanged.addListener(function(changes){
         if(changes.novelCustomHeaderMode!=undefined || changes.novelCustomHeaderScrollHidden!=undefined){
-            changeMode(elm)
+            changeMode($(_elm))
         }
     })
 }

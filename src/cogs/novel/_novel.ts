@@ -6,7 +6,8 @@ import { getDatetimeStringWithoutSecond } from "../../utils/time";
 import { getLocalOptions, getSyncOptions } from "../../utils/option";
 import { fetchNovelApi, NovelApi } from "../../utils/api";
 
-import gsap from 'gsap';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 export function _novel(){
     getLocalOptions(null, (data) => {
@@ -132,7 +133,8 @@ function _novelPage(){
 
 function _tategaki(){
     try{
-        
+        gsap.registerPlugin(ScrollTrigger)
+
         $(".p-novel__body").wrap(`<div id="novel_vertical_wrapper" style="position: relative;"><div id="novel_vertical_items">`)
         $("body").addClass("narou-tweaker-vertical")
         var items = $("#novel_vertical_items")

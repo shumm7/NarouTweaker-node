@@ -183,7 +183,7 @@ function setOptionContentsDisplay(id: number){
                     <div class='novel-option-subheader'>縦書き</div>
                         <div id="novel-option--vertical" style="padding: 10px 0;">
                             <input type="checkbox" id="novel-option--vertical-toggle" class="toggle" name="novelVertical">
-                            <label for="novel-option--vertical-toggle" class="toggle">縦書き表示<span style="font-size: 90%">（再読み込みが必要）</span></label>
+                            <label for="novel-option--vertical-toggle" class="toggle">縦書き表示<span style="font-size: 90%"></span></label>
                         </div>
                     <div class='novel-option-subheader'>サイズ</div>
                         <div id="novel-option--font-size">
@@ -407,6 +407,10 @@ function setOptionContentsDisplay(id: number){
             getLocalOptions(["skins", "selectedSkin"], (data)=>{
                 restoreSkinOptions(data.skins, data.selectedSkin)
             })
+        }
+
+        if(changes.novelVertical){
+            location.reload()
         }
     })
 }

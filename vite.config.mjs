@@ -106,6 +106,26 @@ const manifest = defineManifest({
             run_at: "document_end"
         },
 
+        /* yomou */
+        {
+            js: [
+                "cogs/yomou/main.ts"
+            ],
+            matches: [
+                "*://yomou.syosetu.com/*"
+            ],
+            run_at: "document_end"
+        },
+        {
+            js: [
+                "cogs/css-yomou/main.ts"
+            ],
+            matches: [
+                "*://yomou.syosetu.com/*"
+            ],
+            run_at: "document_start"
+        },
+
         /* kasasagi */
         {
             js: [

@@ -1,0 +1,29 @@
+
+/* Ranking Top */
+.js-readmore-mypage__ellipsis[data-readmore] {
+    transition: height 100ms;
+    overflow: hidden;
+}
+.p-ranktop-item__points{
+    line-height: 1;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+.p-ranktop-item__story{
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(0, 0, 0, .1);
+}
+.p-ranktop-item__keyword{
+    color: #868e96;
+    font-size: 12px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(0, 0, 0, .1);
+}
+.p-ranktop-item__list_item::after {
+    margin: 0 2.5px;
+    content: '●';
+    color: rgba(153, 153, 153, .3);
+}

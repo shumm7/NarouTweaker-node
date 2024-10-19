@@ -8,6 +8,8 @@ const INVALID_DATE = new Date('invalid date');
 /*                                 なろう小説API                                        */
 /************************************************************************************* */
 export interface NovelApi {
+    [key: string]: any
+
     title: string|undefined
     ncode: Ncode|undefined
     userid: number|undefined
@@ -159,6 +161,8 @@ export function fetchNovelApi(ncode: Ncode|string|undefined, isR18: boolean = fa
 /************************************************************************************* */
 
 export interface RankinApi{
+    [key: string]: any
+
     pt: number|undefined,
     rank: number|undefined,
     rtype: string|undefined
@@ -197,6 +201,8 @@ export function fetchRankinApi(ncode: Ncode|string, callback: (data: Array<Ranki
 /*                                 なろうユーザ検索API                                  */
 /************************************************************************************* */
 export interface UserApi {
+    [key: string]: any
+    
     userid: number|undefined
     name: string|undefined
     yomikata: string|undefined
