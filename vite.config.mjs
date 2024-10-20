@@ -44,6 +44,39 @@ const manifest = defineManifest({
         "*://*.mitemin.net/*"
     ],
     content_scripts: [
+        /* css loader */
+        { // novel
+            js: [
+                "cogs/css-novel/main.ts"
+            ],
+            matches: [
+                "*://ncode.syosetu.com/*",
+                "*://novel18.syosetu.com/*",
+                "*://novelcom.syosetu.com/*",
+                "*://novelcom18.syosetu.com/*"
+            ],
+            run_at: "document_start"
+        },
+        { // yomou
+            js: [
+                "cogs/css-yomou/main.ts"
+            ],
+            matches: [
+                "*://yomou.syosetu.com/*"
+            ],
+            run_at: "document_start"
+        }, // workspace
+        {
+            js: [
+                "cogs/css-workspace/main.ts"
+            ],
+            matches: [
+                "*://syosetu.com/*"
+            ],
+            run_at: "document_start"
+        },
+
+
         /* novel */
         {
             js: [
@@ -56,18 +89,6 @@ const manifest = defineManifest({
                 "*://novelcom18.syosetu.com/*"
             ],
             run_at: "document_end"
-        },
-        {
-            js: [
-                "cogs/css-novel/main.ts"
-            ],
-            matches: [
-                "*://ncode.syosetu.com/*",
-                "*://novel18.syosetu.com/*",
-                "*://novelcom.syosetu.com/*",
-                "*://novelcom18.syosetu.com/*"
-            ],
-            run_at: "document_start"
         },
 
         /* narou */
@@ -116,15 +137,6 @@ const manifest = defineManifest({
             ],
             run_at: "document_end"
         },
-        {
-            js: [
-                "cogs/css-yomou/main.ts"
-            ],
-            matches: [
-                "*://yomou.syosetu.com/*"
-            ],
-            run_at: "document_start"
-        },
 
         /* kasasagi */
         {
@@ -133,6 +145,17 @@ const manifest = defineManifest({
             ],
             matches: [
                 "*://kasasagi.hinaproject.com/*"
+            ],
+            run_at: "document_end"
+        },
+
+        /* workspace */
+        {
+            js: [
+                "cogs/workspace/main.ts"
+            ],
+            matches: [
+                "*://syosetu.com/*"
             ],
             run_at: "document_end"
         },

@@ -1,11 +1,6 @@
-/* Font Awesome */
-@import url("../node_modules/@fortawesome/fontawesome-free/css/all.min.css");
-/* Icomoon */
-@import url("assets/fonts/icomoon/style.css");
 /* Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=BIZ+UDPGothic&family=BIZ+UDPMincho&family=DotGothic16&family=Noto+Sans+JP:wght@100..900&family=Noto+Serif+JP:wght@200..900&family=Sawarabi+Mincho&display=swap');
-/* W3-CSS */
-@import url("../node_modules/w3-css/w3.css");
+
 
 
 /* Font Family */

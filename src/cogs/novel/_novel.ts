@@ -200,11 +200,11 @@ function _autoURL(){
 }
 
 function _cursorHide(){
-    chrome.storage.local.get(null, (data) => {
+    getLocalOptions(null, (data) => {
         try{
             if(data.novelCursorHide){
                 var resizeTimer: NodeJS.Timeout|null = null
-                var timeout = parseFloat(data.novelCursorHideTimeout)
+                var timeout = data.novelCursorHideTimeout
     
                 if(!isNaN(timeout) || timeout>0){
                     $(window).on('load mousemove', function() {

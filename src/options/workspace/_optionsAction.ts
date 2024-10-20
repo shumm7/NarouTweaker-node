@@ -1,6 +1,7 @@
 import { CustomIconID, CustomIconIDs, getExcludeIcons, workspaceIconList, workspaceMenuIconList } from "../../utils/header"
-import Sortable from 'sortablejs'
+import { getLocalOptions } from "../../utils/option";
 
+import Sortable from 'sortablejs'
 import $ from 'jquery';
 
 export function workspace_customHeaderSortable(){
@@ -83,7 +84,7 @@ export function workspace_customHeaderSortable(){
                 $(".draggable_area[name='workspace-header']#"+position).append(getWorkspaceHeaderIconElement(icon))
             })
         }
-        chrome.storage.local.get(["workspaceCustomHeader"], function(data){
+        getLocalOptions(["workspaceCustomHeader"], function(data){
             restore(data.workspaceCustomHeader, "active")
             restore(getExcludeIcons([data.workspaceCustomHeader], workspaceIconList), "disabled")
         })
@@ -193,7 +194,7 @@ export function workspace_customHeaderMenuSortable(){
                 $(".draggable_area[name='workspace-header-menu']#"+position).append(getWorkspaceHeaderMenuIconElement(icon))
             })
         }
-        chrome.storage.local.get(["workspaceCustomMenu_Left", "workspaceCustomMenu_Middle", "workspaceCustomMenu_Right"], function(data){
+        getLocalOptions(["workspaceCustomMenu_Left", "workspaceCustomMenu_Middle", "workspaceCustomMenu_Right"], function(data){
             restore(data.workspaceCustomMenu_Left, "left")
             restore(data.workspaceCustomMenu_Middle, "middle")
             restore(data.workspaceCustomMenu_Right, "right")

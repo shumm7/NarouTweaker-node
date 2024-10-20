@@ -2,7 +2,7 @@ import { fixOption, getOptionPageFromID } from "../_utils/optionUI_utils";
 import { saveJson } from "../../utils/misc";
 import { OptionUI_Pages } from "../_utils/optionUI_items";
 import { escapeHtml } from "../../utils/text";
-import { LocalOptions } from "../../utils/option";
+import { getLocalOptions, LocalOptions } from "../../utils/option";
 import { getDatetimeString, getDatetimeStringForFilename } from "../../utils/time";
 import { OptionUI_Page } from "options/_utils/optionUI_type";
 
@@ -42,7 +42,7 @@ export function general_popupDefaultPage_Dropdown(){
         elm.val(value)
     }
 
-    chrome.storage.local.get("extPopupDefaultPage", function(data){
+    getLocalOptions("extPopupDefaultPage", function(data){
         restoreDropdown(data.extPopupDefaultPage)
     })
 
@@ -58,7 +58,7 @@ export function general_popupDefaultPage_Dropdown(){
 export function general_removeOptionData(){
     $("#removeOptionData").on("click", function(){
         if(window.confirm('スキンを含む、保存されているデータが全てリセットされます。\nこの操作は元に戻せません。')){
-            chrome.storage.local.get("extNotifications", function(data){
+            getLocalOptions("extNotifications", function(data){
                 chrome.storage.local.clear(()=>{
                     console.log("Reset all options.")
                     chrome.storage.local.set(new LocalOptions().get())
@@ -85,7 +85,7 @@ export function general_fixOptionData(){
         if(window.confirm('この操作を行うと、異なるバージョンのNarou Tweakerを利用している他のブラウザで不具合が発生する可能性があります。\n最新版に更新した上で実行してください。')){
             fixOption(true, true)
             
-            chrome.storage.local.get("extNotifications", function(data){
+            getLocalOptions("extNotifications", function(data){
                 if(data.extNotifications){
                     chrome.notifications.create("", {
                         iconUrl: "/assets/icons/icon_48.png",
@@ -103,21 +103,19 @@ export function general_fixOptionData(){
 export function general_exportOptionData(){
     /* Export Button */
     $("#option-export-json").on("click", (e)=>{
-        chrome.storage.local.get(null, function(data) {
+        getLocalOptions(null, function(data) {
             var date = getDatetimeStringForFilename()
-            var d = new LocalOptions(data)
-            if(d){
-                saveJson(d.get(), `nt-option-${date}.json`)
+            if(data){
+                saveJson(data.get(), `nt-option-${date}.json`)
             }
         });
     })
     $("#option-export-text").on("click", (e)=>{
         $("#option-export-output").css("display", "block")
-        chrome.storage.local.get(null, function(data) {
+        getLocalOptions(null, function(data) {
             var field = $("#option-export-output--field")
-            var d = new LocalOptions(data)
-            if(d){
-                field.val(JSON.stringify(d.get(), null, "\t"))
+            if(data){
+                field.val(JSON.stringify(data.get(), null, "\t"))
                 field.trigger("input")
             }
         });

@@ -627,6 +627,8 @@ export class SessionOptions{
     novelAppliedFontCSS: string|undefined
     yomouRankTop_AppliedCSS: string|undefined
     yomouRank_AppliedCSS: string|undefined
+    workspaceEditorAppliedSkinCSS: string|undefined
+    workspaceEditorAppliedFontCSS: string|undefined
 
     novelOptionModalSelected: number = 0
 

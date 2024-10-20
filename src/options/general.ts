@@ -1,10 +1,15 @@
-import { colorPicker, getOptionElement, optionHide, syntaxHighlight } from "./_utils/utils";
 import { check } from "../utils/misc"
+import { getLocalOptions } from "../utils/option";
+import { colorPicker, getOptionElement, optionHide, syntaxHighlight } from "./_utils/utils";
 import { OptionUI_Items, OptionUI_Pages } from "./_utils/optionUI_items";
 import { OptionUI_ItemID, OptionUI_Page, OptionUI_PageID } from "./_utils/optionUI_type";
 import { getOptionFromID, getOptionPageFromID } from "./_utils/optionUI_utils";
 
 import $ from 'jquery';
+
+import "@fortawesome/fontawesome-free/css/all.min.css";
+import "../assets/fonts/icomoon/style.css";
+import "w3-css/w3.css";
 
 const manifest = chrome.runtime.getManifest()
 let currentPage: OptionUI_PageID|undefined
@@ -377,7 +382,7 @@ function setupContents(){
         }
     }
 
-    chrome.storage.local.get("extFavoriteOptions", function(data){
+    getLocalOptions("extFavoriteOptions", function(data){
         markFavoriteOptions(data.extFavoriteOptions)
     })
     chrome.storage.local.onChanged.addListener(function(changes){
@@ -509,7 +514,7 @@ function hideOptionButtons(){
         }
     }
 
-    chrome.storage.local.get("extOptionPageButtons", function(data){
+    getLocalOptions("extOptionPageButtons", function(data){
         toggle(data.extOptionPageButtons)
     })
     chrome.storage.local.onChanged.addListener(function(changes){

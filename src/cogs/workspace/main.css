@@ -1,0 +1,50 @@
+/* ヘッダ */
+/* スクロールモード */
+.l-header {
+    z-index: 9;
+    width: 100vw;
+}
+body > div.top{
+    margin-top: 67.225px;
+}
+
+.l-header.header-mode--absolute {
+    position: absolute;
+}
+.l-header.header-mode--fixed {
+    position: fixed;
+}
+.l-header.header-mode--scroll {
+    position: fixed;
+    transition: transform .2s ease 0s;;
+}
+.l-header.header-mode--scroll.hide {
+    transform:translateY(-60px);
+}
+
+.p-up-header-pc__nav-item i {
+    margin-right: 7px;
+    font-size: 85%;
+}
+
+.p-up-header-pc__logo>a img {
+    object-fit: contain;
+}
+
+li.p-up-header-pc__nav-item {
+    text-wrap: nowrap;
+}
+li.p-up-header-pc__nav-item.disabled {
+    display: none;
+}
+
+/* Menu */
+.p-up-header-pc__gmenu-list-items:not(:first-child) {
+    margin-top: 15px;
+}
+.p-up-header-pc__gmenu-list-items.disabled{
+    display: none;
+}
+.p-up-header-pc__gmenu-column#p-up-header-pc__gmenu-column--hidden {
+    display: none;
+}

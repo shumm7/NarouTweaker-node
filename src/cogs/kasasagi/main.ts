@@ -9,8 +9,11 @@ import { getLocalOptions } from "../../utils/option"
 
 import $ from 'jquery';
 
-import "../../common.css"
-import "./local.css"
+/* Font Awesome */
+import "@fortawesome/fontawesome-free/css/all.min.css";
+import "w3-css/w3.css";
+import "../../common.css";
+import "./local.css";
 
 getLocalOptions(null, (option) => {
     var path = location.pathname;

@@ -1,6 +1,7 @@
 import { setup } from "../general";
 import { escapeHtml } from "../../utils/text";
 import { getExtensionVersion } from "../../utils/misc";
+import { getLocalOptions } from "../../utils/option";
 
 import $ from 'jquery';
 
@@ -122,7 +123,7 @@ function debugMode(){
     }
 
     /* デバッグモードを表示 */
-    chrome.storage.local.get(["extDebug"], function(data){
+    getLocalOptions(["extDebug"], function(data){
         tabMode(data.extDebug)
 
         if(data.extDebug){

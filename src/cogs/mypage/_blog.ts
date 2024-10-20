@@ -1,5 +1,5 @@
-import { getLocalOptions } from "../../utils/option.js";
-import { replaceUrl } from "../../utils/text.js";
+import { getLocalOptions } from "../../utils/option";
+import { replaceUrl } from "../../utils/text";
 
 import $ from 'jquery';
 

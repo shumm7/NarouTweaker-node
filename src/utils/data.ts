@@ -1,6 +1,6 @@
 
 import { Ncode } from "./ncode"
-import { SyncOptions } from "./option"
+import { getSyncOptions, SyncOptions } from "./option"
 /************************************************************************************* */
 /*                                 設定データ                                           */
 /************************************************************************************* */
@@ -40,66 +40,154 @@ export type CorrectionNumberMode = "full" | "half" | "default" | "kanji"
 /************************************************************************************* */
 export type ImpressionKanrino = Record<string,Array<string>>
 
-export function pushImpressionReadList(ncode: Ncode|string, kanrino: string){
-    const _ncode = new Ncode(ncode).ncode()
-    if(_ncode!==undefined){
-        chrome.storage.sync.get(["workspaceImpressionMarked"], function(_d){
-            const l = new SyncOptions(_d)
-            if(l.workspaceImpressionMarked==undefined){l.workspaceImpressionMarked = {}}
-            if(!(_ncode in l.workspaceImpressionMarked)){
-                l.workspaceImpressionMarked[_ncode] = []
+export function pushImpressionReadList(ncode: Ncode | Array<Ncode|string> | string, kanrino: string | Array<string>) {
+    var list: Array<Ncode> = []
+    if(typeof ncode === "string"){
+        list = [new Ncode(ncode)]
+    }else if (ncode instanceof Ncode) {
+        list = [ncode]
+    }else if (Array.isArray(ncode)){
+        for(const n of ncode){
+            if(typeof n === "string"){
+                list.push(new Ncode(n))
+            }else{
+                list.push(n)
             }
-            l.workspaceImpressionMarked[_ncode].push(kanrino)
-            chrome.storage.sync.set(l.get("workspaceImpressionMarked"))
-        })
+        }
     }
+    if (!Array.isArray(kanrino)) {
+        kanrino = [kanrino]
+    }
+    if (list.length !== kanrino.length ||  list.length === 0) {
+        return
+    }
+
+    getSyncOptions(["workspaceImpressionMarked"], function (l) {
+        list.forEach((n, i)=>{
+            const _ncode = n?.ncode()
+            if (_ncode !== undefined && kanrino !== undefined) {
+                if (l.workspaceImpressionMarked == undefined) { l.workspaceImpressionMarked = {} }
+                if (!(_ncode in l.workspaceImpressionMarked)) {
+                    l.workspaceImpressionMarked[_ncode] = []
+                }
+                l.workspaceImpressionMarked[_ncode].push(kanrino[i])
+            }
+        })
+        chrome.storage.sync.set({ workspaceImpressionMarked: l.workspaceImpressionMarked })
+    })
 }
 
-export function popImpressionReadList(ncode: Ncode|string, kanrino: string){
-    const _ncode = new Ncode(ncode).ncode()
-    if(_ncode!==undefined){
-        chrome.storage.sync.get(["workspaceImpressionMarked"], function(_d){
-            const l = new SyncOptions(_d)
-            if(l.workspaceImpressionMarked==undefined){l.workspaceImpressionMarked = {}}
-            if(_ncode in l.workspaceImpressionMarked){
-                l.workspaceImpressionMarked[_ncode] = l.workspaceImpressionMarked[_ncode].filter(d => d!=kanrino)
-                if(l.workspaceImpressionMarked[_ncode].length === 0)[
-                    delete l.workspaceImpressionMarked[_ncode]
-                ]
-                chrome.storage.sync.set(l.get("workspaceImpressionMarked"))
+export function popImpressionReadList(ncode: Ncode | Array<Ncode|string> | string, kanrino: string | Array<string>) {
+    var list: Array<Ncode> = []
+    if(typeof ncode === "string"){
+        list = [new Ncode(ncode)]
+    }else if (ncode instanceof Ncode) {
+        list = [ncode]
+    }else if (Array.isArray(ncode)){
+        for(const n of ncode){
+            if(typeof n === "string"){
+                list.push(new Ncode(n))
+            }else{
+                list.push(n)
+            }
+        }
+    }
+    if (!Array.isArray(kanrino)) {
+        kanrino = [kanrino]
+    }
+    if (list.length !== kanrino.length ||  list.length === 0) {
+        return
+    }
+
+    getSyncOptions(["workspaceImpressionMarked"], function (l) {
+        list.forEach((n, i)=>{
+            const _ncode = n?.ncode()
+            if (_ncode !== undefined && kanrino !== undefined) {
+                if (l.workspaceImpressionMarked == undefined) { l.workspaceImpressionMarked = {} }
+                if (_ncode in l.workspaceImpressionMarked) {
+                    l.workspaceImpressionMarked[_ncode] = l.workspaceImpressionMarked[_ncode].filter(d => d != kanrino[i])
+                    if (l.workspaceImpressionMarked[_ncode].length === 0) [
+                        delete l.workspaceImpressionMarked[_ncode]
+                    ]
+                }
             }
         })
-    }
+        chrome.storage.sync.set({ workspaceImpressionMarked: l.workspaceImpressionMarked })
+    })
 }
 
-export function pushImpressionHiddenList(ncode: Ncode|string, kanrino: string){
-    const _ncode = new Ncode(ncode).ncode()
-    if(_ncode!==undefined){
-        chrome.storage.sync.get(["workspaceImpressionHidden"], function(_d){
-            const l = new SyncOptions(_d)
-            if(l.workspaceImpressionHidden==undefined){l.workspaceImpressionHidden = {}}
-            if(!(_ncode in l.workspaceImpressionHidden)){
-                l.workspaceImpressionHidden[_ncode] = []
+export function pushImpressionHiddenList(ncode: Ncode | Array<Ncode|string> | string, kanrino: string | Array<string>) {
+    var list: Array<Ncode> = []
+    if(typeof ncode === "string"){
+        list = [new Ncode(ncode)]
+    }else if (ncode instanceof Ncode) {
+        list = [ncode]
+    }else if (Array.isArray(ncode)){
+        for(const n of ncode){
+            if(typeof n === "string"){
+                list.push(new Ncode(n))
+            }else{
+                list.push(n)
             }
-            l.workspaceImpressionHidden[_ncode].push(kanrino)
-            chrome.storage.sync.set(l.get("workspaceImpressionHidden"))
-        })
+        }
     }
+    if (!Array.isArray(kanrino)) {
+        kanrino = [kanrino]
+    }
+    if (list.length !== kanrino.length ||  list.length === 0) {
+        return
+    }
+
+    getSyncOptions(["workspaceImpressionHidden"], function (l) {
+        list.forEach((n, i)=>{
+            const _ncode = n?.ncode()
+            if (_ncode !== undefined && kanrino !== undefined) {
+                if (l.workspaceImpressionHidden == undefined) { l.workspaceImpressionHidden = {} }
+                if (!(_ncode in l.workspaceImpressionHidden)) {
+                    l.workspaceImpressionHidden[_ncode] = []
+                }
+                l.workspaceImpressionHidden[_ncode].push(kanrino[i])
+            }
+        })
+        chrome.storage.sync.set({ workspaceImpressionHidden: l.workspaceImpressionHidden })
+    })
 }
 
-export function popImpressionHiddenList(ncode: Ncode|string, kanrino: string){
-    const _ncode = new Ncode(ncode).ncode()
-    if(_ncode!==undefined){
-        chrome.storage.sync.get(["workspaceImpressionHidden"], function(_d){
-            const l = new SyncOptions(_d)
-            if(l.workspaceImpressionHidden==undefined){l.workspaceImpressionHidden = {}}
-            if(_ncode in l.workspaceImpressionHidden){
-                l.workspaceImpressionHidden[_ncode] = l.workspaceImpressionHidden[_ncode].filter(d => d!=kanrino)
-                if(l.workspaceImpressionHidden[_ncode].length === 0)[
-                    delete l.workspaceImpressionHidden[_ncode]
-                ]
-                chrome.storage.sync.set(l.get("workspaceImpressionHidden"))
+export function popImpressionHiddenList(ncode: Ncode | Array<Ncode|string> | string, kanrino: string | Array<string>) {
+    var list: Array<Ncode> = []
+    if(typeof ncode === "string"){
+        list = [new Ncode(ncode)]
+    }else if (ncode instanceof Ncode) {
+        list = [ncode]
+    }else if (Array.isArray(ncode)){
+        for(const n of ncode){
+            if(typeof n === "string"){
+                list.push(new Ncode(n))
+            }else{
+                list.push(n)
+            }
+        }
+    }
+    if (!Array.isArray(kanrino)) {
+        kanrino = [kanrino]
+    }
+    if (list.length !== kanrino.length ||  list.length === 0) {
+        return
+    }
+
+    getSyncOptions(["workspaceImpressionHidden"], function (l) {
+        list.forEach((n, i)=>{
+            const _ncode = n?.ncode()
+            if (_ncode !== undefined && kanrino !== undefined) {
+                if (l.workspaceImpressionHidden == undefined) { l.workspaceImpressionHidden = {} }
+                if (_ncode in l.workspaceImpressionHidden) {
+                    l.workspaceImpressionHidden[_ncode] = l.workspaceImpressionHidden[_ncode].filter(d => d != kanrino[i])
+                    if (l.workspaceImpressionHidden[_ncode].length === 0) [
+                        delete l.workspaceImpressionHidden[_ncode]
+                    ]
+                }
             }
         })
-    }
+        chrome.storage.sync.set({ workspaceImpressionHidden: l.workspaceImpressionHidden })
+    })
 }

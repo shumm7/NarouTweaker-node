@@ -94,6 +94,14 @@ export function isR18(_url?:string|URL|Location): boolean|undefined{
     else if(url.hostname == "xmypage.syosetu.com"){
         return true
     }
+    else if(url.hostname == "syosetu.com"){
+        if(url.pathname.match(/^\/user\/top\/*/)){
+            return false
+        }else if(url.pathname.match(/^\/xuser\/top\/*/)){
+            return true
+        }
+
+    }
 }
 
 /**

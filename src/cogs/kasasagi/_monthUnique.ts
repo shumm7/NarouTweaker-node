@@ -1,10 +1,10 @@
 import { addExclamationIconBalloon } from "../../utils/ui"
 import { getDateString, getDatetimeString } from "../../utils/time"
-import { saveJson } from "../../utils/misc.js"
-import { makeGraph, getValueFromTables, GraphDataset } from "./utils.js"
+import { saveJson } from "../../utils/misc"
+import { makeGraph, getValueFromTables, GraphDataset } from "./utils"
 import { getNcodeFromURL } from "../../utils/ncode"
-import { getLocalOptions, LocalOptions } from "../../utils/option.js"
-import { GraphType } from "../../utils/data.js"
+import { getLocalOptions, LocalOptions } from "../../utils/option"
+import { GraphType } from "../../utils/data"
 
 import $ from 'jquery';
 import { Chart } from "chart.js/auto";

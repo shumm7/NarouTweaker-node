@@ -1,5 +1,5 @@
 import { OptionUI_Items, OptionUI_Pages } from "./optionUI_items";
-import { LocalOptions, SyncOptions } from "../../utils/option";
+import { getLocalOptions, LocalOptions, SyncOptions } from "../../utils/option";
 import { OptionUI_Category, OptionUI_CategoryID, OptionUI_Item, OptionUI_ItemID, OptionUI_Page, OptionUI_PageID } from "./optionUI_type";
 import { limit } from "../../utils/number";
 
@@ -105,8 +105,7 @@ export function getOptionChildsFromID(id: OptionUI_ItemID): Array<OptionUI_Item>
 
 /* favorite */
 export function appendFavoriteOption(id: OptionUI_ItemID){
-    chrome.storage.local.get("extFavoriteOptions", function(_d){
-        const data = new LocalOptions(_d)
+    getLocalOptions("extFavoriteOptions", function(data){
         var list: Array<OptionUI_ItemID> = data.extFavoriteOptions
 
         var opt: OptionUI_Item|undefined = getOptionFromID(id)
@@ -163,8 +162,7 @@ export function appendFavoriteOption(id: OptionUI_ItemID){
 }
 
 export function removeFavoriteOption(id: OptionUI_ItemID){
-    chrome.storage.local.get("extFavoriteOptions", function(_d){
-       const data = new LocalOptions(_d)
+    getLocalOptions("extFavoriteOptions", function(data){
         var list: Array<OptionUI_ItemID> = data.extFavoriteOptions
 
         var opt = getOptionFromID(id)
@@ -204,8 +202,7 @@ export function removeFavoriteOption(id: OptionUI_ItemID){
 }
 
 export function moveFavoriteOption(id: OptionUI_ItemID, pos: number){
-    chrome.storage.local.get("extFavoriteOptions", function(_d){
-        const data = new LocalOptions(_d)
+    getLocalOptions("extFavoriteOptions", function(data){
         var list: Array<OptionUI_ItemID> = data.extFavoriteOptions
 
         if(!list.includes(id)){
@@ -278,11 +275,10 @@ export function moveFavoriteOption(id: OptionUI_ItemID, pos: number){
  */
 export function fixOption(_fixLocal: boolean = false, _fixSync: boolean = false){
     if(_fixLocal){
-        chrome.storage.local.get(null, (data)=>{
-            var option = new LocalOptions(data).get()
-            console.log(option)
+        getLocalOptions(null, (data)=>{
+            console.log(data)
             chrome.storage.local.clear(()=>{
-                chrome.storage.local.set(option, function(){
+                chrome.storage.local.set(data.get(), function(){
                     console.log("Fixed option data (local).")
                 })
             })

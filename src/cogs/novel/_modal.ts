@@ -1,4 +1,4 @@
-import { localFont, localFontFamilyV1 } from "../../utils/v1_font.js";
+import { localFont, localFontFamilyV1 } from "../../utils/v1_font";
 import { check, defaultValue } from "../../utils/misc"
 import { escapeHtml } from "../../utils/text";
 import { correction, restoreCorrectionMode } from "./_correction";

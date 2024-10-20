@@ -1,7 +1,7 @@
-import { _blog } from "./_blog.js";
-import { _general } from "./_general.js";
-import { _favuser } from "./_misc.js";
-import { _profile } from "./_profile.js";
+import { _blog } from "./_blog";
+import { _general } from "./_general";
+import { _favuser } from "./_misc";
+import { _profile } from "./_profile";
 
 import "./local.css"
 

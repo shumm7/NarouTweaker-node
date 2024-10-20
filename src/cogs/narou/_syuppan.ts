@@ -1,5 +1,5 @@
-import { getLocalOptions } from "../../utils/option.js"
-import { escapeHtml } from "../../utils/text.js"
+import { getLocalOptions } from "../../utils/option"
+import { escapeHtml } from "../../utils/text"
 
 import $ from 'jquery';
 

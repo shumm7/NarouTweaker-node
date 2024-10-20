@@ -4,6 +4,8 @@ import { _novel } from "./_novel";
 import { _optionModal } from "./_modal";
 import { _novelcom } from "./_novelcom";
 
+import "@fortawesome/fontawesome-free/css/all.min.css";
+import "../../assets/fonts/icomoon/style.css";
 import "../../common.css"
 import "./novel.css"
 import "./novelTop.css"

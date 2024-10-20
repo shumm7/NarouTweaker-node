@@ -62,7 +62,7 @@ export function _rankTop(){
 
                     chrome.storage.local.onChanged.addListener(function(changes){
                         if(changes.yomouRankTop_ShowDescription!=undefined){
-                            chrome.storage.local.get(null, function(option){
+                            getLocalOptions(null, function(option){
                                 if(option.yomouRankTop_ShowDescription){
                                     $(".p-ranktop-item__story").css("display", "")
                                 }else{
@@ -80,7 +80,7 @@ export function _rankTop(){
 }
 
 function showRankTop_NovelDetails(){
-    chrome.storage.local.get(null, function(data){
+    getLocalOptions(null, function(data){
         var i = 1
         $(".p-ranktop-item").each(function(){
             var outer = $(this)
