@@ -7,7 +7,7 @@ import { setDisplayEvent } from "./_editorCss"
 import { _toolCovertKakuyomuRubyDot, _toolExportAll, _toolExportEach, _toolIndent, _toolRuby, _toolRubyDot, _toolSasie, _toolSearch } from "./_editorTools"
 
 import $ from "jquery"
-import "jquery.selection/src/jquery.selection"
+import "@shumm7/jquery.selection"
 import Encoding from "encoding-japanese"
 import "pickadatejs/lib/picker"
 import "pickadatejs/lib/picker.date"

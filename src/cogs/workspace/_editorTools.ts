@@ -4,7 +4,7 @@ import { getDatetimeStringForFilename } from "../../utils/time"
 import { getSelectedContent } from "./_editor"
 
 import $ from "jquery"
-import "jquery.selection/src/jquery.selection"
+import "@shumm7/jquery.selection"
 
 function getForms(index: number|null){
     if(index==0){
