@@ -2,7 +2,7 @@ import { fixOption, getOptionPageFromID } from "../_utils/optionUI_utils";
 import { saveJson } from "../../utils/misc";
 import { OptionUI_Pages } from "../_utils/optionUI_items";
 import { escapeHtml } from "../../utils/text";
-import { getLocalOptions, LocalOptions, setLocalOptions } from "../../utils/option";
+import { getLocalOptions, LocalOptions, setLocalOptions, setSessionOptions, setSyncOptions } from "../../utils/option";
 import { getDatetimeString, getDatetimeStringForFilename } from "../../utils/time";
 import { OptionUI_Page } from "options/_utils/optionUI_type";
 
@@ -480,9 +480,9 @@ export function general_insertOptionData(){
                         if(storage=="local"){
                             setLocalOptions(dict)
                         }else if(storage=="sync"){
-                            chrome.storage.sync.set(dict)
+                            setSyncOptions(dict)
                         }else if(storage=="session"){
-                            chrome.storage.session.set(dict)
+                            setSessionOptions(dict)
                         }else{
                             $("#option-insert--error").text(`不正なストレージが指定されました: ${key}`)
                             return false

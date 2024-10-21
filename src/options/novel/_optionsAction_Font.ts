@@ -1,4 +1,4 @@
-import { getLocalOptions } from "../../utils/option";
+import { getLocalOptions, setLocalOptions } from "../../utils/option";
 import { check } from "../../utils/misc"
 import { FontFamiliesV1, FontFamilyV1, generateNoDuplicateFontFamilyName, localFont, localFontFamilyV1 } from "../../utils/v1_font";
 import { restoreSkins } from "./_optionsAction_Skin";
@@ -91,7 +91,7 @@ function saveSelectedFont() {
         if (fontList[key] != undefined) {
             if (fontList[key].customizable) {
                 fontList[key] = fontData
-                chrome.storage.local.set({ fontFontFamilyList: fontList }, function () { })
+                setLocalOptions({ fontFontFamilyList: fontList }, function () { })
             }
         }
     });
@@ -108,7 +108,7 @@ export function addFontEditButtonEvent() {
       $(".font-button.active").removeClass("active")
       $(this).parent().addClass("active")
   
-      chrome.storage.local.set({fontFontFamily: key}, function(){})
+      setLocalOptions({fontFontFamily: key}, function(){})
     })
     */
     $("#font-family-dropdown").change(function () {
@@ -116,10 +116,10 @@ export function addFontEditButtonEvent() {
         $(".font-button.active").removeClass("active")
         $(this).parent().addClass("active")
 
-        chrome.storage.local.set({ fontFontFamily: key }, function () { })
+        setLocalOptions({ fontFontFamily: key }, function () { })
     })
     $("#font-family-dropdown").on("change", () => {
-        chrome.storage.local.set({ fontSelectedFontFamily: parseInt(`${$("#font-family-dropdown").val()}`) }, function () { })
+        setLocalOptions({ fontSelectedFontFamily: parseInt(`${$("#font-family-dropdown").val()}`) }, function () { })
     })
 
     /* New Button */
@@ -138,7 +138,7 @@ export function addFontEditButtonEvent() {
             defaultFont.css = ""
 
             fontList.push(defaultFont)
-            chrome.storage.local.set({ fontFontFamilyList: fontList, fontSelectedFontFamily: localFontFamilyV1.length + fontList.length - 1 }, function () { })
+            setLocalOptions({ fontFontFamilyList: fontList, fontSelectedFontFamily: localFontFamilyV1.length + fontList.length - 1 }, function () { })
         });
     })
 
@@ -158,7 +158,7 @@ export function addFontEditButtonEvent() {
             font.name = generateNoDuplicateFontFamilyName(localFontFamilyV1.concat(fontList), font.name + " - コピー", -1)
             fontList.push(font)
 
-            chrome.storage.local.set({ fontFontFamilyList: fontList, fontSelectedFontFamily: localFontFamilyV1.length + fontList.length - 1 }, function () { })
+            setLocalOptions({ fontFontFamilyList: fontList, fontSelectedFontFamily: localFontFamilyV1.length + fontList.length - 1 }, function () { })
         });
     })
 
@@ -174,7 +174,7 @@ export function addFontEditButtonEvent() {
                 if (selectedFont >= fontList.length + localFontFamilyV1.length - 1) {
                     selectedFont = fontList.length + localFontFamilyV1.length - 1
                 }
-                chrome.storage.local.set({ fontFontFamilyList: fontList, fontSelectedFontFamily: selectedFont }, function () { })
+                setLocalOptions({ fontFontFamilyList: fontList, fontSelectedFontFamily: selectedFont }, function () { })
             }
         });
     })
@@ -197,7 +197,7 @@ export function addFontEditButtonEvent() {
             $("#font-size-input").val(value)
         }
 
-        chrome.storage.local.set({ fontFontSize: Number(value) }, function () { });
+        setLocalOptions({ fontFontSize: Number(value) }, function () { });
     }
 
     $("#font-size-minus").click(function () {
@@ -240,7 +240,7 @@ export function addFontEditButtonEvent() {
             $("#line-height-input").val(value)
         }
 
-        chrome.storage.local.set({ fontLineHeight: Number(value) }, function () { });
+        setLocalOptions({ fontLineHeight: Number(value) }, function () { });
     }
 
     $("#line-height-minus").click(function () {
@@ -279,7 +279,7 @@ export function addFontEditButtonEvent() {
         }
         $("#page-width-input").val(value)
 
-        chrome.storage.local.set({ fontWidth: Number(value) / 100 }, function () { });
+        setLocalOptions({ fontWidth: Number(value) / 100 }, function () { });
     }
 
     $("#page-width-minus").click(function () {

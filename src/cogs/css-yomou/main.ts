@@ -55,7 +55,7 @@ if(pageDetail?.site=="yomou"){
             }
         })
         
-        chrome.storage.local.get(["yomouRank_CustomCSS"], (data)=>{
+        getLocalOptions(["yomouRank_CustomCSS"], (data)=>{
             /* User CSS */
             if("yomouRank_CustomCSS" in data){
                 var l = $(`<style type="text/css" id="narou-tweaker-style--rank-user-css" class="narou-tweaker-style"></style>`)
