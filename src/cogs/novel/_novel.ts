@@ -14,8 +14,9 @@ export function _novel(){
     getLocalOptions(null, (data) => {
         try{
             const pageDetail = getPageType()
+            $("body").addClass("narou-tweaker--custom-skin")
             if(data.novelCustomStyle){
-                $("body").addClass("narou-tweaker")
+                $("body").addClass("narou-tweaker--custom-style")
                 $("#footer").remove()
 
                 if(pageDetail=="novel"){
@@ -47,7 +48,7 @@ export function _novel(){
                     novelTopAttention()
                 }
             }else if(pageDetail=="series"){
-                $("body").addClass("narou-tweaker--series")
+                $("body").addClass("js-customlayout1")
             }else{
                 $("body").addClass("narou-tweaker--novelcom-page")
             }
@@ -548,4 +549,24 @@ function novelTopAttention(){
     }catch(e){
         console.warn(e)
     }
+}
+
+
+export function _setCookie(){
+    getLocalOptions(null, function(data){
+        if(data.novelCustomStyle){
+            var expire = new Date()
+            expire.setFullYear(expire.getFullYear() + 1)
+
+            const cookieDetails = {
+                url: location.origin,
+                path:'/',
+                domain:'.syosetu.com',
+                expirationDate: expire.getTime(),
+                name: 'novellayout',
+                value: '1'
+            }
+            chrome.runtime.sendMessage({action: "cookies", function: "set", data: cookieDetails}, function(response){})
+        }
+    })
 }

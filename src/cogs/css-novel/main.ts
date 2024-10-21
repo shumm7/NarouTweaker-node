@@ -1,5 +1,7 @@
 import $ from 'jquery';
-import { getLocalOptions, getSessionOptions } from 'utils/option';
+import { getLocalOptions, getSessionOptions } from '../../utils/option';
+
+$("body").addClass("narou-tweaker--custom-skin")
 
 getSessionOptions(null, (data)=>{
     /* Skin Custom CSS */

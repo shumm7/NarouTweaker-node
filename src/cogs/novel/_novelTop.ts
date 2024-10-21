@@ -2,6 +2,12 @@ import { getLocalOptions } from "../../utils/option"
 import $ from 'jquery';
 
 export function novelTop(){
+    getLocalOptions(null, (data) => {
+        if(data.novelCustomStyle){
+            $("body").addClass("narou-tweaker--custom-skin")
+        }
+        $("body").addClass("narou-tweaker--novel-top")
+    })
     _showAllExtext()
 }
 
@@ -18,10 +24,6 @@ function _showAllExtext(){
                     $("#novel_ex span").remove()
                     Extext[0].innerHTML += text
                 }
-            }
-
-            if(data.novelCustomStyle){
-                $("body").addClass(["narou-tweaker", "narou-tweaker--novel-top"])
             }
         }catch(e){
             console.warn(e)

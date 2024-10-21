@@ -241,7 +241,7 @@ export function getPageType(_url?:string|URL|Location): string|undefined{
             return "impression"
         }
         else if (url.pathname.match(/^\/impressionres\/.*\/ncode\/\d+\/*.*$/)){ /* Impression Reply */
-            return "impressionres"
+            return "impression"
         }
         else if (url.pathname.match(/^\/novelreview\/list\/ncode\/\d+\/*.*$/)){ /* Review */
             return "review"
