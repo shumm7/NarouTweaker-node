@@ -8,6 +8,11 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import "../../assets/fonts/icomoon/style.css";
 import "../../common.css"
 import "./novel.css"
+import "./novelCom.css"
+import "./novelHeader.css"
+import "./novelMisc.css"
+import "./novelModal.css"
+import "./novelPage.css"
 import "./novelTop.css"
 import "./novelVertical.css"
 

@@ -108,7 +108,7 @@ export function _header(){
 
             // Enactiveなアイコンを表示する
             if(data.novelCustomHeaderShowEnactiveItems){
-                $("body").addClass("narou-tweaker-header--show-enactive-icon")
+                $("body").addClass("narou-tweaker-header--show-inactive-icon")
             }
 
             
@@ -162,7 +162,7 @@ export function _header(){
                     elm.append('<i class="fa-solid fa-house"></i><span class="title">'+text+'</span>')
                     elm.parent().addClass("home")
                 }else{
-                    // enactive
+                    // inactive
                     $("#novel_header ul").append('<li class="home"><a href="https://syosetu.com/user/top/"><i class="fa-solid fa-house"></i><span class="title">ホーム</span></a></li>')
                 }
             }else{
@@ -173,7 +173,7 @@ export function _header(){
                     elm.append('<i class="fa-solid fa-house"></i><span class="title">'+text+'</span>')
                     elm.parent().addClass("home")
                 }else{
-                    // enactive
+                    // inactive
                     $("#novel_header ul").append('<li class="home"><a href="https://syosetu.com/user/top/"><i class="fa-solid fa-house"></i><span class="title">ホーム</span></a></li>')
                 }
 
@@ -186,8 +186,8 @@ export function _header(){
                 elm.append('<i class="fa-solid fa-circle-info"></i><span class="title">作品情報</span>')
                 elm.parent().addClass("info")
             }else{
-                // enactive
-                $("#novel_header ul").append('<li class="info enactive"><a><i class="fa-solid fa-circle-info"></i><span class="title">作品情報</span></a></li>')
+                // inactive
+                $("#novel_header ul").append('<li class="info inactive"><a><i class="fa-solid fa-circle-info"></i><span class="title">作品情報</span></a></li>')
             }
 
             /* 感想 */
@@ -197,8 +197,8 @@ export function _header(){
                 elm.append('<i class="fa-solid fa-comments"></i><span class="title">感想</span>')
                 elm.parent().addClass("impression")
             }else{
-                // enactive
-                $("#novel_header ul").append('<li class="impression enactive"><a><i class="fa-solid fa-comments"></i><span class="title">感想</span></a></li>')
+                // inactive
+                $("#novel_header ul").append('<li class="impression inactive"><a><i class="fa-solid fa-comments"></i><span class="title">感想</span></a></li>')
             }
 
             /* レビュー */
@@ -208,8 +208,8 @@ export function _header(){
                 elm.append('<i class="fa-solid fa-flag"></i><span class="title">レビュー</span>')
                 elm.parent().addClass("review")
             }else{
-                // enactive
-                $("#novel_header ul").append('<li class="review enactive"><a><i class="fa-solid fa-flag"></i><span class="title">レビュー</span></a></li>')
+                // inactive
+                $("#novel_header ul").append('<li class="review inactive"><a><i class="fa-solid fa-flag"></i><span class="title">レビュー</span></a></li>')
             }
 
             /* PDF */
@@ -221,8 +221,8 @@ export function _header(){
                     $(this).parent().find("input[type='submit']").trigger("click")
                 })
             }else{
-                // enactive
-                $("#novel_header ul").append('<li class="pdf enactive"><a><i class="fa-solid fa-file-pdf"></i><span class="title">縦書きPDF</span></a></li>')
+                // inactive
+                $("#novel_header ul").append('<li class="pdf inactive"><a><i class="fa-solid fa-file-pdf"></i><span class="title">縦書きPDF</span></a></li>')
             }
 
             /* ブックマーク */
@@ -253,7 +253,7 @@ export function _header(){
                 is_login = false
                 if(customHeaderType===2){
                     elm = $("#novel_header li.booklist")
-                    elm.addClass("enactive")
+                    elm.addClass("inactive")
                     elm.find(".c-bookmark-button--disabled").remove()
                     elm.prepend(`<a><i class="fa-solid fa-book"></i><span class="title">${text}<br><span style="font-size: 90%;">（要ログイン）</span></span></a>`)
                 }else if(customHeaderType===1){
@@ -263,7 +263,7 @@ export function _header(){
                     $("#novel_header li.booklist").remove()
                 }else if(customHeaderType===1){
                     $("#novel_header ul").append(`
-                        <li class="booklist enactive">
+                        <li class="booklist inactive">
                             <span class="c-bookmark-button c-bookmark-button--disabled">${text}に追加</span>
                         </li>
                     `)
@@ -273,11 +273,11 @@ export function _header(){
 
             elm = $("#novel_header li.booklist")
             if(!elm.length){
-                // enactive
+                // inactive
                 if(customHeaderType===2){
-                    $("#novel_header ul").append('<li class="booklist enactive"><a><i class="fa-solid fa-book"></i><span class="title">ブックマーク</span></a></li>')
+                    $("#novel_header ul").append('<li class="booklist inactive"><a><i class="fa-solid fa-book"></i><span class="title">ブックマーク</span></a></li>')
                 }else if(customHeaderType===1){
-                    $("#novel_header ul").append('<li class="booklist enactive"><span class="c-bookmark-button c-bookmark-button--disabled">ブックマークに追加</span></li>')
+                    $("#novel_header ul").append('<li class="booklist inactive"><span class="c-bookmark-button c-bookmark-button--disabled">ブックマークに追加</span></li>')
                 }
             }
 
@@ -285,10 +285,10 @@ export function _header(){
             elm = $("#novel_header li.favlist_add")
             if(elm.length){
                 var button = elm.find(".p-favepisode-form__button")
-                elm.find(".p-favepisode-form__button").append(`<i class="fa-regular fa-star enactive-icon"></i><i class="fa-solid fa-star active-icon"></i><span class="title">お気に入りep</span>`)
+                elm.find(".p-favepisode-form__button").append(`<i class="fa-regular fa-star inactive-icon"></i><i class="fa-solid fa-star active-icon"></i><span class="title">お気に入りep</span>`)
             }else{
-                //enactive
-                $("#novel_header ul").append('<li class="favlist_add enactive"><a><i class="fa-regular fa-star"></i><span class="title">お気に入りep</span></a></li>')
+                //inactive
+                $("#novel_header ul").append('<li class="favlist_add inactive"><a><i class="fa-regular fa-star"></i><span class="title">お気に入りep</span></a></li>')
             }
 
             /* お気に入りep */
@@ -302,8 +302,8 @@ export function _header(){
                     elm.append('<i class="fa-solid fa-table-list"></i><span class="title">お気に入りep一覧</span>')
                 }
             }else{
-                //enactive
-                $("#novel_header ul").append('<li class="favepisode enactive"><a><i class="fa-solid fa-table-list"></i><span class="title">お気に入りep一覧</span></a></li>')
+                //inactive
+                $("#novel_header ul").append('<li class="favepisode inactive"><a><i class="fa-solid fa-table-list"></i><span class="title">お気に入りep一覧</span></a></li>')
             }
 
             /* 設定 */
@@ -372,16 +372,16 @@ export function _header(){
                     $("#novel_header ul").append('<li class="author"><a href="https://xmypage.syosetu.com/'+userid+'/"><i class="fa-solid fa-user"></i><span class="title">作者</span></a></li>')
                 }
             }else{
-                // enactive
-                $("#novel_header ul").append('<li class="author enactive"><a><i class="fa-solid fa-user"></i><span class="title">作者</span></a></li>')
+                // inactive
+                $("#novel_header ul").append('<li class="author inactive"><a><i class="fa-solid fa-user"></i><span class="title">作者</span></a></li>')
             }
 
             /* KASASAGI */
             if(ncode){
                 $("#novel_header ul").append('<li class="kasasagi"><a href="https://kasasagi.hinaproject.com/access/top/ncode/'+ncode+'/"><i class="fa-solid fa-chart-line"></i><span class="title">アクセス解析</span></a></li>')
             }else{
-                // enactive
-                $("#novel_header ul").append('<li class="kasasagi enactive"><a><i class="fa-solid fa-chart-line"></i><span class="title">アクセス解析</span></a></li>')
+                // inactive
+                $("#novel_header ul").append('<li class="kasasagi inactive"><a><i class="fa-solid fa-chart-line"></i><span class="title">アクセス解析</span></a></li>')
             }
 
             /* API */
@@ -392,16 +392,16 @@ export function _header(){
                     $("#novel_header ul").append('<li class="narou-api"><a href="https://api.syosetu.com/novel18api/api/?libtype=2&out=json&ncode='+ncode+'"><i class="fa-solid fa-file-code"></i><span class="title">なろうAPI</span></a></li>')
                 }
             }else{
-                // enactive
-                $("#novel_header ul").append('<li class="narou-api enactive"><a><i class="fa-solid fa-file-code"></i><span class="title">なろうAPI</span></a></li>')
+                // inactive
+                $("#novel_header ul").append('<li class="narou-api inactive"><a><i class="fa-solid fa-file-code"></i><span class="title">なろうAPI</span></a></li>')
             }
 
             /* RSS */
             if(atom){
                 $("#novel_header ul").append('<li class="rss"><a href="'+atom+'"><i class="fa-solid fa-rss"></i><span class="title">RSS</span></a></li>')
             }else{
-                // enactive
-                $("#novel_header ul").append('<li class="rss enactive"><a><i class="fa-solid fa-rss"></i><span class="title">RSS</span></a></li>')
+                // inactive
+                $("#novel_header ul").append('<li class="rss inactive"><a><i class="fa-solid fa-rss"></i><span class="title">RSS</span></a></li>')
             }
 
             /* TXT */
@@ -412,8 +412,8 @@ export function _header(){
                     $("#novel_header ul").append('<li class="text"><a href="https://novel18.syosetu.com/txtdownload/top/ncode/'+index+'/"><i class="fa-solid fa-file-lines"></i><span class="title">TXT</span></a></li>')
                 }
             }else{
-                // enactive
-                $("#novel_header ul").append('<li class="text enactive"><a><i class="fa-solid fa-file-lines"></i>TXT</span></a></li>')
+                // inactive
+                $("#novel_header ul").append('<li class="text inactive"><a><i class="fa-solid fa-file-lines"></i>TXT</span></a></li>')
             }
 
 
@@ -424,8 +424,8 @@ export function _header(){
                 }else if(pageType=="novel"){
                     $("#novel_header ul").append('<li class="typo"><a href="https://novelcom.syosetu.com/novelreport/input/ncode/'+index+'/no/'+episode+'/"><i class="fa-solid fa-keyboard"></i><span class="title">誤字報告</span></a></li>')
                 }else{
-                    // enactive
-                    $("#novel_header ul").append('<li class="typo enactive"><a><i class="fa-solid fa-keyboard"></i><span class="title">誤字報告</span></a></li>')
+                    // inactive
+                    $("#novel_header ul").append('<li class="typo inactive"><a><i class="fa-solid fa-keyboard"></i><span class="title">誤字報告</span></a></li>')
                 }
             }else{
                 if(episode==0 && pageType=="novel"){
@@ -433,8 +433,8 @@ export function _header(){
                 }else if(pageType=="novel"){
                     $("#novel_header ul").append('<li class="typo"><a href="https://novelcom18.syosetu.com/novelreport/input/ncode/'+index+'/no/'+episode+'/"><i class="fa-solid fa-keyboard"></i><span class="title">誤字報告</span></a></li>')
                 }else{
-                    // enactive
-                    $("#novel_header ul").append('<li class="typo enactive"><a><i class="fa-solid fa-keyboard"></i><span class="title">誤字報告</span></a></li>')
+                    // inactive
+                    $("#novel_header ul").append('<li class="typo inactive"><a><i class="fa-solid fa-keyboard"></i><span class="title">誤字報告</span></a></li>')
                 }
             }
 
@@ -442,16 +442,16 @@ export function _header(){
             if(index){
                 $("#novel_header ul").append('<li class="report"><a href="https://syosetu.com/ihantsuhou/input/ncode/'+index+'/"><i class="fa-solid fa-bullhorn"></i><span class="title">情報提供</span></a></li>')
             }else{
-                // enactive
-                $("#novel_header ul").append('<li class="report enactive"><a><i class="fa-solid fa-bullhorn"></i>情報提供</span></a></li>')
+                // inactive
+                $("#novel_header ul").append('<li class="report inactive"><a><i class="fa-solid fa-bullhorn"></i>情報提供</span></a></li>')
             }
             
             /* 編集 */
             if(is_logined_and_self){
                 $("#novel_header ul").append('<li class="edit"><a href="https://syosetu.com/usernovelmanage/top/ncode/'+index+'/"><i class="fa-solid fa-pen-to-square"></i><span class="title">編集</span></a></li>')
             }else{
-                // enactive
-                $("#novel_header ul").append('<li class="edit enactive"><a><i class="fa-solid fa-pen-to-square"></i><span class="title">編集</span></a></li>')
+                // inactive
+                $("#novel_header ul").append('<li class="edit inactive"><a><i class="fa-solid fa-pen-to-square"></i><span class="title">編集</span></a></li>')
             }
 
             /* スクロール */
@@ -515,8 +515,8 @@ export function _header(){
                     }
                 })
             }else{
-                // enactive
-                $("#novel_header ul").append('<li class="history enactive"><a><i class="fa-solid fa-clock-rotate-left"></i><span class="title">直近の閲覧履歴</span></a></li>')
+                // inactive
+                $("#novel_header ul").append('<li class="history inactive"><a><i class="fa-solid fa-clock-rotate-left"></i><span class="title">直近の閲覧履歴</span></a></li>')
             }
 
             /* 検索 */
@@ -632,8 +632,8 @@ export function _header(){
                     $("#novel_header ul").append('<li class="twitter"><a href="'+encodeURI(uri)+'"><i class="fa-brands fa-x-twitter"></i><span class="title">'+txt+'</span></a></li>')
                 }
             }else{
-                // enactive
-                $("#novel_header ul").append('<li class="twitter enactive"><a><i class="fa-brands fa-x-twitter"></i><span class="title">'+txt+'</span></a></li>')
+                // inactive
+                $("#novel_header ul").append('<li class="twitter inactive"><a><i class="fa-brands fa-x-twitter"></i><span class="title">'+txt+'</span></a></li>')
             }
             
 
@@ -648,8 +648,8 @@ export function _header(){
                 var uri:string|undefined = `https://www.facebook.com/share.php?u=${meta_url}`
                 $("#novel_header ul").append('<li class="facebook"><a href="'+encodeURI(uri)+'"><i class="fa-brands fa-facebook"></i><span class="title">'+txt+'</span></a></li>')
             }else{
-                // enactive
-                $("#novel_header ul").append('<li class="facebook enactive"><a><i class="fa-brands fa-facebook"></i><span class="title">'+txt+'</span></a></li>')
+                // inactive
+                $("#novel_header ul").append('<li class="facebook inactive"><a><i class="fa-brands fa-facebook"></i><span class="title">'+txt+'</span></a></li>')
             }
 
             /* LINE */
@@ -663,8 +663,8 @@ export function _header(){
                 var uri: string|undefined = "https://social-plugins.line.me/lineit/share?url=" + meta_url
                 $("#novel_header ul").append('<li class="line"><a href="'+encodeURI(uri)+'"><i class="fa-brands fa-line"></i><span class="title">'+txt+'</span></a></li>')
             }else{
-                // enactive
-                $("#novel_header ul").append('<li class="line enactive"><a><i class="fa-brands fa-line"></i><span class="title">'+txt+'</span></a></li>')
+                // inactive
+                $("#novel_header ul").append('<li class="line inactive"><a><i class="fa-brands fa-line"></i><span class="title">'+txt+'</span></a></li>')
             }
 
             /* はてなブックマーク */
@@ -683,8 +683,8 @@ export function _header(){
                 }
                 $("#novel_header ul").append('<li class="hatena-bookmark"><a href="'+encodeURI(uri)+'"><i class="fa-brands fa-hatena-bookmark"></i><span class="title">'+txt+'</span></a></li>')
             }else{
-                // enactive
-                $("#novel_header ul").append('<li class="hatena-bookmark enactive"><a><i class="fa-brands fa-hatena-bookmark"></i><span class="title">'+txt+'</span></a></li>')
+                // inactive
+                $("#novel_header ul").append('<li class="hatena-bookmark inactive"><a><i class="fa-brands fa-hatena-bookmark"></i><span class="title">'+txt+'</span></a></li>')
             }
 
             /* Feedly */
@@ -698,16 +698,16 @@ export function _header(){
                 var uri: string|undefined = `https://feedly.com/i/subscription/feed/${atom}`
                 $("#novel_header ul").append('<li class="feedly"><a href="'+encodeURI(uri)+'"><i class="fa-brands fa-feedly"></i><span class="title">'+txt+'</span></a></li>')
             }else{
-                // enactive
-                $("#novel_header ul").append('<li class="feedly enactive"><a><i class="fa-brands fa-feedly"></i><span class="title">'+txt+'</span></a></li>')
+                // inactive
+                $("#novel_header ul").append('<li class="feedly inactive"><a><i class="fa-brands fa-feedly"></i><span class="title">'+txt+'</span></a></li>')
             }
 
             if(ncode){
                 var uri: string|undefined = "https://www.facebook.com/share.php?u=" + meta_url
                 $("#novel_header ul").append('<li class="rawi"><a href="https://rawi-novel.work/writer/ai?ncode='+ncode+'"><i class="fa-solid fa-robot"></i><span class="title">RaWi</span></a></li>')
             }else{
-                // enactive
-                $("#novel_header ul").append('<li class="rawi enactive"><a><i class="fa-solid fa-robot"></i><span class="title">RaWi</span></a></li>')
+                // inactive
+                $("#novel_header ul").append('<li class="rawi inactive"><a><i class="fa-solid fa-robot"></i><span class="title">RaWi</span></a></li>')
             }
 
             /* コピー */
@@ -889,9 +889,9 @@ export function _header(){
                 }else if(changes.novelCustomHeaderShowEnactiveItems){
                     getLocalOptions(["novelCustomHeaderShowEnactiveItems"], (data) => {
                         if(data.novelCustomHeaderShowEnactiveItems){
-                            $("body").addClass("narou-tweaker-header--show-enactive-icon")
+                            $("body").addClass("narou-tweaker-header--show-inactive-icon")
                         }else{
-                            $("body").removeClass("narou-tweaker-header--show-enactive-icon")
+                            $("body").removeClass("narou-tweaker-header--show-inactive-icon")
                         }
                     })
                 }
