@@ -1,3 +1,4 @@
+import { getExtensionVersion } from "../../utils/misc"
 import { OptionHideParammeters } from "./optionUI_type"
 
 const oh = OptionHideParammeters
@@ -37,7 +38,7 @@ export const OptionUI_CustomElement: OptionUI_Custom = {
             <img src="/assets/image/wide.png">
             <span class="title">Narou Tweaker</span>
             <div class="subtitle">
-                <span class="version extension-version"></span>
+                <span class="version">${getExtensionVersion()}</span>
             </div>
         </div>
     `,

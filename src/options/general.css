@@ -570,6 +570,8 @@ input[type=file] {
     min-width: 130px;
     border-right: 1px solid #ddd;
     cursor: pointer;
+    text-wrap: nowrap;
+    white-space: nowrap;
 }
 .header-menu-item.selected {
     background: #fafafa;
