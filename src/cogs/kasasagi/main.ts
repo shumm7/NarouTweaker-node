@@ -36,7 +36,7 @@ getLocalOptions(null, (option) => {
 
     /* Design */
     if(option.kasasagiCustomStyle){
-        $("body").addClass("narou-tweaker")
+        $("body").addClass("narou-tweaker--custom-style")
 
         /* Header */
         $("#container").before("<div class='l-header'></div>")
