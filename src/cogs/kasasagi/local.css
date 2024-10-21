@@ -248,39 +248,19 @@ body.narou-tweaker--custom-style {
 
 /* Range Slider */
 .slider-outer {
-	-webkit-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
+	display: flex;
+	align-items: center;
 	width: 50%;
 	margin: 0 auto;
 	position: relative;
-}
-.slider-outer .nstSlider {
-	width: 100%;
-	background: #eeeeee;
-	border: 2px solid #eeeeee;
-}
-.slider-outer .nstSlider .bar {
-	background: var(--kasasagi-blue);
-}
-.slider-outer .nstSlider .rightGrip,
-.slider-outer .nstSlider .leftGrip {
-	-webkit-border-radius: 10px;
-	border-radius: 10px;
-	width: 21px;
-	height: 21px;
-	background: var(--kasasagi-blue);
-}
-.slider-outer .leftLabel {
-	position: absolute;
-	left: -60px;
-	top: 0;
-}
-.slider-outer .rightLabel {
-	position: absolute;
-	right: -50px;
-	top: 0;
+	gap: 20px;
+
+	.range-slider .range-slider__range {
+		background-color: var(--kasasagi-blue);
+	}
+	.range-slider .range-slider__thumb {
+		background-color: var(--kasasagi-blue);
+	}
 }
 
 /* Date Picker */
