@@ -1,5 +1,5 @@
 import { CustomIconID, CustomIconIDs, getExcludeIcons, workspaceIconList, workspaceMenuIconList } from "../../utils/header"
-import { getLocalOptions } from "../../utils/option";
+import { getLocalOptions, setLocalOptions } from "../../utils/option";
 
 import Sortable from 'sortablejs'
 import $ from 'jquery';
@@ -7,9 +7,7 @@ import $ from 'jquery';
 export function workspace_customHeaderSortable(){
     /* Workspace Header */
     function storeWorkspaceHeader(){
-        chrome.storage.local.set({
-            workspaceCustomHeader: getHeaderIconList("active"),
-        })
+        setLocalOptions("workspaceCustomHeader", getHeaderIconList("active"), ()=>{})
     
         function getHeaderIconList(position: string){
             if(position!="active" && position!="disabled") { return }
@@ -101,7 +99,7 @@ export function workspace_customHeaderSortable(){
 export function workspace_customHeaderMenuSortable(){
     /* Workspace Header Menu */
     function storeWorkspaceHeaderMenu(){
-        chrome.storage.local.set({
+        setLocalOptions({
             workspaceCustomMenu_Left: getMenuIconList("left"),
             workspaceCustomMenu_Middle: getMenuIconList("middle"),
             workspaceCustomMenu_Right: getMenuIconList("right"),

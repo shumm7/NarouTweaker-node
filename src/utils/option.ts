@@ -10,7 +10,7 @@ import { Ncode } from "./ncode"
 /**
  * 設定データ（storage.local）
  */
-export class LocalOptions{
+export class LocalOptions {
     [key: string]: any
 
     /* Extension */
@@ -30,7 +30,7 @@ export class LocalOptions{
 
     /* Novel */
     novelCustomStyle: boolean = true
-    novelCustomHeaderType: number|string = "2"
+    novelCustomHeaderType: number | string = "2"
     novelCustomCSS: CSS_String = ""
     novelLegacyHeaderIcon: boolean = true
     novelVertical: boolean = false
@@ -59,9 +59,9 @@ export class LocalOptions{
     workspaceCustomMenu_Middle: CustomIconIDs = ["reaction", "block-mute", "x-home"]
     workspaceCustomMenu_Right: CustomIconIDs = ["find", "support"]
     workspaceHeaderAdditionalMenu: boolean = false
-    workspaceBookmarkLayout: number|string = "0"
+    workspaceBookmarkLayout: number | string = "0"
     workspaceBookmarkReplaceEpisode: boolean = false
-    workspaceBookmarkCategoryLayout: number|string = "2"
+    workspaceBookmarkCategoryLayout: number | string = "2"
     workspaceImpressionMarkedButton: boolean = true
     workspaceImpressionMarkAsReadWhenReply: boolean = true
     workspaceImpressionHideButton: boolean = true
@@ -97,7 +97,7 @@ export class LocalOptions{
     yomouRankTop_ShowRaWi: boolean = false
     yomouRankTop_CustomCSS: CSS_String = ""
     //yomouRankTop_DailyShowList: ["101", "102", "201", "202", "301", "302", "303", "304", "305", "306", "307", "401", "402", "403", "404", "9901", "9902", "9903", "9999"],
-    
+
     /* Mypage */
     mypageShowUserId: boolean = true
     mypageNovellistShowReaction: boolean = false
@@ -123,7 +123,7 @@ export class LocalOptions{
     kasasagiShowGraph_DayUnique: boolean = true
     kasasagiShowGraph_MonthPV: boolean = true
     kasasagiShowGraph_MonthUnique: boolean = true
-    
+
     kasasagiGraphType_GeneralDay: GraphType = "bar"
     kasasagiGraphType_GeneralTotal: GraphType = "bar"
     kasasagiGraphType_ChapterUnique: GraphType = "bar"
@@ -278,14 +278,10 @@ export class LocalOptions{
 
     /**
      * コンストラクタ
-     * @param {undefined|Record<string,any>} data - 辞書型のデータで初期値を設定する（無効な値は全て除外される）
+     * @param {undefined|Record<string,any>|LocalOptions} data - 辞書型のデータで初期値を設定する（無効な値は全て除外される）
      */
-    constructor(data?: Record<string,any>){
-        if(data !== undefined){
-            for(var key of Object.keys(data)){
-                this.set(key, data[key])
-            }
-        }
+    constructor(data?: Record<string, any> | LocalOptions) {
+        this.set(data)
     }
 
     /**
@@ -293,21 +289,30 @@ export class LocalOptions{
      * @param {OptionID} key - キー
      * @param {any} value - 設定する値
      */
-    set(key: OptionID, value: any):void
+    set(key: OptionID, value: any): void
 
     /**
      * キーに値を設定する
      * @param {Record<string,any>} value - 設定するキーと値の辞書
      */
-    set(value: Record<string,any>):void
-    set(key?: OptionID|Record<string,any>, value?: any):void{
-        if(typeof key==="string"){
-            var value = this._checkValue(key, value)
-            if(value!==undefined){
+    set(value: Record<string, any>): void
+    /**
+     * キーに値を設定する
+     * @param {LocalOptions} value
+     */
+    set(value: Record<string, any>): void
+    set(key?: OptionID | Record<string, any> | LocalOptions, value?: any): void;
+    set(key?: OptionID | Record<string, any> | LocalOptions, value?: any): void {
+        if (key instanceof LocalOptions) {
+            this.set(key.get())
+        }
+        else if (typeof key === "string") {
+            var value = LocalOptions._checkValue(key, value)
+            if (value !== undefined) {
                 this[key] = value
             }
-        }else if(key!==undefined){
-            for(var k of Object.keys(key)){
+        } else if (key !== undefined) {
+            for (var k of Object.keys(key)) {
                 this.set(k, key[k])
             }
         }
@@ -317,35 +322,36 @@ export class LocalOptions{
      * キーと値を辞書型で取得する
      * @returns すべてのデータを含む辞書型
      */
-    get(): Record<string,any>
+    get(): Record<string, any>
     /**
      * キーと値を辞書型で取得する
      * @param {OptionID|Array<OptionID>} parameters - キーの文字列、またはそのリスト
      * @returns 指定したデータを含む辞書型
      */
-    get(parameters: OptionID|Array<OptionID>): Record<string,any>
+    get(parameters: OptionID | Array<OptionID>): Record<string, any>
 
-    get(parameters?: null|OptionID|Array<OptionID>): Record<string,any> {
-        var ret: Record<string,any> = {}
-        if(parameters!==undefined && parameters!==null){
+    get(parameters?: null | OptionID | Array<OptionID>): Record<string, any> {
+        var ret: Record<string, any> = {}
+        if (parameters !== undefined && parameters !== null) {
             var params: Array<OptionID>
-            if(typeof parameters==="string"){
+            if (typeof parameters === "string") {
                 params = [parameters]
-            }else{
+            } else {
                 params = parameters
             }
 
-            const obj: Record<string,any> = Object.entries(this)
-            for (const key of parameters){
-                var value = obj[key]
-                if(typeof value!=="undefined" && typeof value!=="function"){
-                    ret[key] = value
+            for (const key of params) {
+                if (key in this) {
+                    var value = this[key]
+                    if (value !== undefined && typeof value !== "function") {
+                        ret[key] = value
+                    }
                 }
             }
             return ret
-        }else{
-            for (const [key, value] of Object.entries(this)){
-                if(typeof value !== "undefined" && typeof value!=="function"){
+        } else {
+            for (const [key, value] of Object.entries(this)) {
+                if (typeof value !== "undefined" && typeof value !== "function") {
                     ret[key] = value
                 }
             }
@@ -357,7 +363,7 @@ export class LocalOptions{
      * 過去のバージョンの設定データを更新する
      * @param {Record<string,any>} data キーと値の辞書
      */
-    update(data: Record<string,any>): void {
+    update(data: Record<string, any>): void {
         var updatedData = this._exceptionProcess(data)
         this.set(updatedData)
     }
@@ -367,11 +373,11 @@ export class LocalOptions{
     }
 
     // バージョンアップ時の対応
-    protected _exceptionProcess = (obj: Record<string,any>): Record<string,any> => {
-        if("novelCustomHeader" in obj && obj.novelCustomHeader === true){
+    protected _exceptionProcess = (obj: Record<string, any>): Record<string, any> => {
+        if ("novelCustomHeader" in obj && obj.novelCustomHeader === true) {
             console.log(`Converted value: { novelCustomHeader: true } -> { novelCustomHeaderType: "2" } `)
             obj.novelCustomHeaderType = "2"
-        }else if("novelCustomHeader" in obj && obj.novelCustomHeader === false){
+        } else if ("novelCustomHeader" in obj && obj.novelCustomHeader === false) {
             console.log(`Converted value: { novelCustomHeader: false } -> { novelCustomHeaderType: "1" } `)
             obj.novelCustomHeaderType = "1"
         }
@@ -379,74 +385,92 @@ export class LocalOptions{
         return obj
     }
 
-    protected _checkValue = (key: OptionID, value: any): any => {
-        if(typeof this[key] === typeof value && typeof this[key]!=="function"){
-            if(key === "extOptionsVersion"){
+    static check(key: OptionID, value: any): any;
+    static check(key: Record<string,any>): any;
+    static check(key: OptionID|Record<string,any>, value?: any): any{
+        if(typeof key === "string"){
+            return LocalOptions._checkValue(key, value)
+        }else if(key instanceof Object){
+            var ret: Record<string,any> = {}
+            for (const k of Object.keys(key)) {
+                const c = LocalOptions._checkValue(k, key[k])
+                if(c!==undefined){
+                    ret[k] = c
+                }
+            }
+            return ret
+        }
+    }
+
+    protected static _checkValue = (key: OptionID, value: any): any => {
+        var opt = new LocalOptions()
+        if (typeof opt[key] === typeof value && typeof opt[key] !== "function") {
+            if (key === "extOptionsVersion") {
                 return
-            }else if(["kasasagiGraphType_GeneralDay", "kasasagiGraphType_GeneralTotal", "kasasagiGraphType_ChapterUnique", "kasasagiGraphType_DayPV", "kasasagiGraphType_DayUnique", "kasasagiGraphType_MonthPV", "kasasagiGraphType_MonthUnique"].includes(key)){
-                if(!["bar", "line"].includes(value)){
+            } else if (["kasasagiGraphType_GeneralDay", "kasasagiGraphType_GeneralTotal", "kasasagiGraphType_ChapterUnique", "kasasagiGraphType_DayPV", "kasasagiGraphType_DayUnique", "kasasagiGraphType_MonthPV", "kasasagiGraphType_MonthUnique"].includes(key)) {
+                if (!["bar", "line"].includes(value)) {
                     return
                 }
-            }else if(["novelCustomHeaderMode", "workspaceCustomHeaderMode"].includes(key)){
-                if(!["absolute", "fixed", "scroll"].includes(value)){
+            } else if (["novelCustomHeaderMode", "workspaceCustomHeaderMode"].includes(key)) {
+                if (!["absolute", "fixed", "scroll"].includes(value)) {
                     return
                 }
             }
-            else if(key==="correctionNumberShort" || key==="correctionNumberLong" || key==="correctionNumberSymbol"){
-                if(!["default", "half", "full", "kanji"].includes(value)){
+            else if (key === "correctionNumberShort" || key === "correctionNumberLong" || key === "correctionNumberSymbol") {
+                if (!["default", "half", "full", "kanji"].includes(value)) {
                     return
                 }
-            }else if(["novelCustomHeaderLeft", "novelCustomHeaderRight"].includes(key)){
-                if(!Array.isArray(value)){return}
+            } else if (["novelCustomHeaderLeft", "novelCustomHeaderRight"].includes(key)) {
+                if (!Array.isArray(value)) { return }
 
                 var list: CustomIconIDs = []
-                value.forEach(function(id){
-                    if(id in novelIconList){
+                value.forEach(function (id) {
+                    if (id in novelIconList) {
                         list.push(id)
                     }
                 })
                 return list
-            }else if("workspaceCustomHeader" === key){
-                if(!Array.isArray(value)){return}
+            } else if ("workspaceCustomHeader" === key) {
+                if (!Array.isArray(value)) { return }
 
                 var list: CustomIconIDs = []
-                value.forEach(function(id){
-                    if(id in workspaceIconList){
+                value.forEach(function (id) {
+                    if (id in workspaceIconList) {
                         list.push(id)
                     }
                 })
                 return list
 
-            }else if(["workspaceCustomMenu_Left", "workspaceCustomMenu_Middle", "workspaceCustomMenu_Right"].includes(key)){
-                if(!Array.isArray(value)){return}
+            } else if (["workspaceCustomMenu_Left", "workspaceCustomMenu_Middle", "workspaceCustomMenu_Right"].includes(key)) {
+                if (!Array.isArray(value)) { return }
 
                 var list: CustomIconIDs = []
-                value.forEach(function(id){
-                    if(id in workspaceMenuIconList){
+                value.forEach(function (id) {
+                    if (id in workspaceMenuIconList) {
                         list.push(id)
                     }
                 })
                 return list
-            }else if("extFavoriteOptions" === key){
-                if(Array.isArray(value)){
+            } else if ("extFavoriteOptions" === key) {
+                if (Array.isArray(value)) {
                     var list: Array<OptionUI_ItemID> = []
-                    value.forEach(function(option){
-                        var optionData: OptionUI_Item|undefined = getOptionFromID(option)
-                        if(optionData?.value?.buttons?.favorite){
+                    value.forEach(function (option) {
+                        var optionData: OptionUI_Item | undefined = getOptionFromID(option)
+                        if (optionData?.value?.buttons?.favorite) {
                             list.push(optionData.id)
                         }
                     })
                     var listNoDuplicate = list.filter((e, i) => {
                         return list.indexOf(e) == i;
-                    }) 
+                    })
                     return listNoDuplicate
                 }
                 return
-            }else if("extPopupDefaultPage" === key){
-                if(value!=="__auto__"){
+            } else if ("extPopupDefaultPage" === key) {
+                if (value !== "__auto__") {
                     var page = getOptionPageFromID(value)
-                    if((page?.popup?.defaultPage && page?.title && page?.id)){
-                            return value
+                    if ((page?.popup?.defaultPage && page?.title && page?.id)) {
+                        return value
                     }
                 }
                 return
@@ -459,7 +483,7 @@ export class LocalOptions{
 /**
  * 設定データ（storage.sync）
  */
-export class SyncOptions{
+export class SyncOptions {
     [key: string]: any
 
     extLaunchCount: number = 0
@@ -471,14 +495,10 @@ export class SyncOptions{
 
     /**
      * コンストラクタ
-     * @param {undefined|Record<string,any>} data - 辞書型のデータで初期値を設定する（無効な値は全て除外される）
-     */    
-    constructor(data?: Record<string,any>){
-        if(data instanceof Object){
-            for(var key of Object.keys(data)){
-                this.set(key, data[key])
-            }
-        }
+     * @param {undefined|Record<string,any>|SyncOptions} data - 辞書型のデータで初期値を設定する（無効な値は全て除外される）
+     */
+    constructor(data?: Record<string, any> | SyncOptions) {
+        this.set(data)
     }
 
     /**
@@ -486,57 +506,65 @@ export class SyncOptions{
      * @param {OptionID} key - キー
      * @param {any} value - 設定する値
      */
-    set(key: OptionID, value: any):void
-     /**
-     * キーに値を設定する
-     * @param {Record<string,any>} value - 設定するキーと値の辞書
-     */
-    set(value: Record<string,any>):void
-    set(key?: OptionID|Record<string,any>, value?: any):void{
-         if(typeof key==="string"){
-             var value = this._checkValue(key, value)
-             if(value!==undefined){
-                 this[key] = value
-             }
-         }else if(key!==undefined){
-            for(var k of Object.keys(key)){
+    set(key: OptionID, value: any): void
+    /**
+    * キーに値を設定する
+    * @param {Record<string,any>} value - 設定するキーと値の辞書
+    */
+    set(value: Record<string, any>): void
+    /**
+    * キーに値を設定する
+    * @param {SyncOptions} value
+    */
+    set(value: SyncOptions): void
+    set(key?: OptionID | Record<string, any> | SyncOptions, value?: any): void;
+    set(key?: OptionID | Record<string, any> | SyncOptions, value?: any): void {
+        if (key instanceof SyncOptions) {
+            this.set(key.get())
+        }
+        else if (typeof key === "string") {
+            var value = SyncOptions._checkValue(key, value)
+            if (value !== undefined) {
+                this[key] = value
+            }
+        } else if (key !== undefined) {
+            for (var k of Object.keys(key)) {
                 this.set(k, key[k])
             }
-         }
-     }
+        }
+    }
 
     /**
      * キーと値を辞書型で取得する
      * @returns すべてのデータを含む辞書型
      */
-    get(): Record<string,any>
+    get(): Record<string, any>
     /**
      * キーと値を辞書型で取得する
      * @param {OptionID|Array<OptionID>} parameters - キーの文字列、またはそのリスト
      * @returns 指定したデータを含む辞書型
      */
-    get(parameters: OptionID|Array<OptionID>): Record<string,any>
-    get(parameters?: null|OptionID|Array<OptionID>): Record<string,any> {
-        var ret: Record<string,any> = {}
-        if(parameters!==undefined && parameters!==null){
+    get(parameters: OptionID | Array<OptionID>): Record<string, any>
+    get(parameters?: null | OptionID | Array<OptionID>): Record<string, any> {
+        var ret: Record<string, any> = {}
+        if (parameters !== undefined && parameters !== null) {
             var params: Array<OptionID>
-            if(typeof parameters==="string"){
+            if (typeof parameters === "string") {
                 params = [parameters]
-            }else{
+            } else {
                 params = parameters
             }
 
-            const obj: Record<string,any> = Object.entries(this)
-            for (const key of parameters){
-                var value = obj[key]
-                if(typeof value!=="undefined" && typeof value!=="function"){
+            for (const key of params) {
+                var value = this[key]
+                if (typeof value !== "undefined" && typeof value !== "function") {
                     ret[key] = value
                 }
             }
             return ret
-        }else{
-            for (const [key, value] of Object.entries(this)){
-                if(typeof value !== "undefined" && typeof value!=="function"){
+        } else {
+            for (const [key, value] of Object.entries(this)) {
+                if (typeof value !== "undefined" && typeof value !== "function") {
                     ret[key] = value
                 }
             }
@@ -548,9 +576,26 @@ export class SyncOptions{
      * 過去のバージョンの設定データを更新する
      * @param {Record<string,any>} data キーと値の辞書
      */
-    update(data: Record<string,any>): void {
+    update(data: Record<string, any>): void {
         var updatedData = this._exceptionProcess(data)
         this.set(updatedData)
+    }
+
+    static check(key: OptionID, value: any): any;
+    static check(key: Record<string,any>): any;
+    static check(key: OptionID|Record<string,any>, value?: any): any{
+        if(typeof key === "string"){
+            return SyncOptions._checkValue(key, value)
+        }else if(key instanceof Object){
+            var ret: Record<string,any> = {}
+            for (const k of Object.keys(key)) {
+                const c = SyncOptions._checkValue(k, key[k])
+                if(c!==undefined){
+                    ret[k] = c
+                }
+            }
+            return ret
+        }
     }
 
     protected toJSON = () => {
@@ -558,15 +603,15 @@ export class SyncOptions{
     }
 
     // バージョンアップ時の対応
-    protected _exceptionProcess = (obj: Record<string,any>): Record<string,any> =>{
-        if("history" in obj){
-            if(Array.isArray(obj.histroy)){
+    protected _exceptionProcess = (obj: Record<string, any>): Record<string, any> => {
+        if ("history" in obj) {
+            if (Array.isArray(obj.histroy)) {
                 obj["novelHistory"] = obj.histroy
                 console.log(`Converted value: { history: [...] } -> { novelHistory: [...] } `)
             }
         }
-        if("history_data" in obj){
-            if(obj.history_data instanceof Object){
+        if ("history_data" in obj) {
+            if (obj.history_data instanceof Object) {
                 obj["novelHistoryData"] = obj.histroy_data
                 console.log(`Converted value: { history_data: {...} } -> { novelHistoryData: {...} } `)
             }
@@ -574,32 +619,33 @@ export class SyncOptions{
         return obj
     }
 
-    protected _checkValue = (key: OptionID, value: any): any => {
-        if(typeof this[key] === typeof value && typeof this[key]!=="function"){
-            if(key === "novelHistory"){
-                if(Array.isArray(value)){
-                    var list:  string[] = []
-                    for(const history of value){
+    protected static _checkValue = (key: OptionID, value: any): any => {
+        var opt = new LocalOptions()
+        if (typeof opt[key] === typeof value && typeof opt[key] !== "function") {
+            if (key === "novelHistory") {
+                if (Array.isArray(value)) {
+                    var list: string[] = []
+                    for (const history of value) {
                         const ncode = new Ncode(history).ncode()
-                        if(ncode!==undefined){
+                        if (ncode !== undefined) {
                             list.push(ncode)
                         }
                         return list
                     }
                 }
             }
-            else if(key === "novelHistoryData"){
-                if(value instanceof Object){
-                    var ret :Record<string, [number, number, string]> = {}
-                    for(const n of Object.keys(value)){
+            else if (key === "novelHistoryData") {
+                if (value instanceof Object) {
+                    var ret: Record<string, [number, number, string]> = {}
+                    for (const n of Object.keys(value)) {
                         const ncode = new Ncode(n).ncode()
-                        if(ncode!==undefined && Array.isArray(value[ncode])){
-                            if(value[ncode].length == 3){
-                                if(
+                        if (ncode !== undefined && Array.isArray(value[ncode])) {
+                            if (value[ncode].length == 3) {
+                                if (
                                     typeof value[ncode][0] === "number" &&
                                     typeof value[ncode][1] === "number" &&
                                     typeof value[ncode][2] === "string"
-                                ){
+                                ) {
                                     ret[ncode] = [value[ncode][0], value[ncode][1], value[ncode][2]]
                                 }
                             }
@@ -607,8 +653,9 @@ export class SyncOptions{
                     }
                     return ret
                 }
-                return 
+                return
             }
+            return value
         }
     }
 }
@@ -618,30 +665,26 @@ export class SyncOptions{
 /**
  * 設定データ（storage.session）
  */
-export class SessionOptions{
+export class SessionOptions {
     [key: string]: any
 
-    novelSkinCustomCSS: string|undefined
-    novelFontCustomCSS: string|undefined
-    novelAppliedSkinCSS: string|undefined
-    novelAppliedFontCSS: string|undefined
-    yomouRankTop_AppliedCSS: string|undefined
-    yomouRank_AppliedCSS: string|undefined
-    workspaceEditorAppliedSkinCSS: string|undefined
-    workspaceEditorAppliedFontCSS: string|undefined
+    novelSkinCustomCSS: string | undefined
+    novelFontCustomCSS: string | undefined
+    novelAppliedSkinCSS: string | undefined
+    novelAppliedFontCSS: string | undefined
+    yomouRankTop_AppliedCSS: string | undefined
+    yomouRank_AppliedCSS: string | undefined
+    workspaceEditorAppliedSkinCSS: string | undefined
+    workspaceEditorAppliedFontCSS: string | undefined
 
     novelOptionModalSelected: number = 0
 
     /**
      * コンストラクタ
-     * @param {undefined|Record<string,any>} data - 辞書型のデータで初期値を設定する（無効な値は全て除外される）
-     */    
-    constructor(data?: Record<string,any>){
-        if(data instanceof Object){
-            for(var k of Object.keys(data)){
-                this.set(k, data[k])
-            }
-        }
+     * @param {undefined|Record<string,any>|SessionOptions} data - 辞書型のデータで初期値を設定する（無効な値は全て除外される）
+     */
+    constructor(data?: Record<string, any> | SessionOptions) {
+        this.set(data)
     }
 
     /**
@@ -649,57 +692,65 @@ export class SessionOptions{
      * @param {OptionID} key - キー
      * @param {any} value - 設定する値
      */
-    set(key: OptionID, value: any):void
-     /**
-     * キーに値を設定する
-     * @param {Record<string,any>} value - 設定するキーと値の辞書
-     */
-    set(value: Record<string,any>):void
-    set(key?: OptionID|Record<string,any>, value?: any):void{
-         if(typeof key==="string"){
-             var value = this._checkValue(key, value)
-             if(value!==undefined){
-                 this[key] = value
-             }
-         }else if(key!==undefined){
-            for(var k of Object.keys(key)){
+    set(key: OptionID, value: any): void
+    /**
+    * キーに値を設定する
+    * @param {Record<string,any>} value - 設定するキーと値の辞書
+    */
+    set(value: Record<string, any>): void
+    /**
+    * キーに値を設定する
+    * @param {SessionOptions} value
+    */
+    set(value: SessionOptions): void
+    set(key?: OptionID | Record<string, any> | SessionOptions, value?: any): void;
+    set(key?: OptionID | Record<string, any> | SessionOptions, value?: any): void {
+        if (key instanceof SessionOptions) {
+            this.set(key.get())
+        }
+        else if (typeof key === "string") {
+            var value = SessionOptions._checkValue(key, value)
+            if (value !== undefined) {
+                this[key] = value
+            }
+        } else if (key !== undefined) {
+            for (var k of Object.keys(key)) {
                 this.set(k, key[k])
             }
-         }
-     }
+        }
+    }
 
     /**
      * キーと値を辞書型で取得する
      * @returns すべてのデータを含む辞書型
      */
-    get(): Record<string,any>
+    get(): Record<string, any>
     /**
      * キーと値を辞書型で取得する
      * @param {OptionID|Array<OptionID>} parameters - キーの文字列、またはそのリスト
      * @returns 指定したデータを含む辞書型
      */
-    get(parameters: OptionID|Array<OptionID>): Record<string,any>
-    get(parameters?: null|OptionID|Array<OptionID>): Record<string,any> {
-        var ret: Record<string,any> = {}
-        if(parameters!==undefined && parameters!==null){
+    get(parameters: OptionID | Array<OptionID>): Record<string, any>
+    get(parameters?: null | OptionID | Array<OptionID>): Record<string, any> {
+        var ret: Record<string, any> = {}
+        if (parameters !== undefined && parameters !== null) {
             var params: Array<OptionID>
-            if(typeof parameters==="string"){
+            if (typeof parameters === "string") {
                 params = [parameters]
-            }else{
+            } else {
                 params = parameters
             }
 
-            const obj: Record<string,any> = Object.entries(this)
-            for (const key of parameters){
-                var value = obj[key]
-                if(typeof value!=="undefined" && typeof value!=="function"){
+            for (const key of params) {
+                var value = this[key]
+                if (typeof value !== "undefined" && typeof value !== "function") {
                     ret[key] = value
                 }
             }
             return ret
-        }else{
-            for (const [key, value] of Object.entries(this)){
-                if(typeof value !== "undefined" && typeof value!=="function"){
+        } else {
+            for (const [key, value] of Object.entries(this)) {
+                if (typeof value !== "undefined" && typeof value !== "function") {
                     ret[key] = value
                 }
             }
@@ -707,8 +758,26 @@ export class SessionOptions{
         }
     }
 
-    protected _checkValue = (key: OptionID, value: any): any => {
-        if(typeof this[key] === typeof value && typeof this[key]!=="function"){
+    static check(key: OptionID, value: any): any;
+    static check(key: Record<string,any>): any;
+    static check(key: OptionID|Record<string,any>, value?: any): any{
+        if(typeof key === "string"){
+            return SessionOptions._checkValue(key, value)
+        }else if(key instanceof Object){
+            var ret: Record<string,any> = {}
+            for (const k of Object.keys(key)) {
+                const c = SessionOptions._checkValue(k, key[k])
+                if(c!==undefined){
+                    ret[k] = c
+                }
+            }
+            return ret
+        }
+    }
+
+    protected static _checkValue = (key: OptionID, value: any): any => {
+        var opt = new SessionOptions()
+        if (typeof opt[key] === typeof value && typeof opt[key] !== "function") {
             return value
         }
     }
@@ -719,46 +788,187 @@ export class SessionOptions{
 }
 
 
-
 export function getLocalOptions(
     keys: string | string[] | Partial<LocalOptions> | null | undefined,
     callback: (items: LocalOptions) => void
-): void{
-    if(keys===undefined){keys = null}
-    chrome.storage.local.get(keys, function(data){
-        try{
-            callback(new LocalOptions(data))
-        }catch(e){
-            console.warn(e)
-        }
-    })
+): void;
+export function getLocalOptions(
+    keys: string | string[] | Partial<LocalOptions> | null | undefined
+): Promise<{[key: string]: any}>; 
+export function getLocalOptions(
+    keys: string | string[] | Partial<LocalOptions> | null | undefined,
+    callback?: (items: LocalOptions) => void
+): void | Promise<{[key: string]: any}> {
+    if (keys === undefined) { keys = null }
+    if(callback!==undefined){
+        chrome.storage.local.get(keys, function (data) {
+            try {
+                callback(new LocalOptions(data))
+            } catch (e) {
+                console.warn(e)
+            }
+        })
+    }else{
+        return chrome.storage.local.get(keys)
+    }
 }
 
 export function getSyncOptions(
     keys: string | string[] | Partial<SyncOptions> | null | undefined,
     callback: (items: SyncOptions) => void
-): void{
-    if(keys===undefined){keys = null}
-    chrome.storage.local.get(keys, function(data){
-        try{
-            callback(new SyncOptions(data))
-        }catch(e){
-            console.warn(e)
-        }
-    })
+): void;
+export function getSyncOptions(
+    keys: string | string[] | Partial<SyncOptions> | null | undefined
+): Promise<{[key: string]: any}>;
+export function getSyncOptions(
+    keys: string | string[] | Partial<SyncOptions> | null | undefined,
+    callback?: (items: SyncOptions) => void
+): void | Promise<{[key: string]: any}> {
+    if (keys === undefined) { keys = null }
+    if(callback!==undefined){
+        chrome.storage.local.get(keys, function (data) {
+            try {
+                callback(new SyncOptions(data))
+            } catch (e) {
+                console.warn(e)
+            }
+        })
+    }else{
+        return chrome.storage.local.get(keys)
+    }
 }
-
 
 export function getSessionOptions(
     keys: string | string[] | Partial<SyncOptions> | null | undefined,
     callback: (items: SessionOptions) => void
-): void{
-    if(keys===undefined){keys = null}
-    chrome.storage.local.get(keys, function(data){
-        try{
-            callback(new SessionOptions(data))
-        }catch(e){
-            console.warn(e)
+): void;
+export function getSessionOptions(
+    keys: string | string[] | Partial<SyncOptions> | null | undefined
+): Promise<{[key: string]: any}>;
+export function getSessionOptions(
+    keys: string | string[] | Partial<SyncOptions> | null | undefined,
+    callback?: (items: SessionOptions) => void
+): void|Promise<{[key: string]: any}> {
+    if (keys === undefined) { keys = null }
+    if(callback!==undefined){
+        chrome.storage.local.get(keys, function (data) {
+            try {
+                callback(new SessionOptions(data))
+            } catch (e) {
+                console.warn(e)
+            }
+        })
+    }else{
+        return chrome.storage.local.get(keys)
+    }
+}
+
+
+export function setLocalOptions(key: string, value: any): Promise<{[key: string]: any}>
+export function setLocalOptions(key: string, value: any, callback: (data?: {[key: string]: any}) => void): void
+export function setLocalOptions(data?: LocalOptions | Partial<LocalOptions> | Record<string,any> | null): Promise<{[key: string]: any}>
+export function setLocalOptions(data?: LocalOptions | Partial<LocalOptions> | Record<string,any> | null, callback?: (data?: {[key: string]: any}) => void): void
+export function setLocalOptions(
+    data: LocalOptions | Partial<LocalOptions> | Record<string,any> | null | undefined | string,
+    value?: any,
+    callback?: (data?: {[key: string]: any}) => void
+): void | Promise<{[key: string]: any}> {
+    var v: Record<string,any> = {}
+    if(data instanceof LocalOptions){
+        v = data.get()
+        return f(v, value)
+    }else if(data instanceof Object){
+        v = LocalOptions.check(data)
+        return f(v, value)
+    }else if(typeof data === "string"){
+        const c = LocalOptions.check(data, value)
+        if(c!==undefined){
+            v[data] = c
         }
-    })
+        return f(v, callback)
+    }else{
+        return f(v, value)
+    }
+
+    function f(v: Record<string,any>, c?: (data?: {[key: string]: any})=>void): void | Promise<{[key: string]: any}>{
+        if(c===undefined){
+            return chrome.storage.local.set(v).then(()=>{return v})
+        }else{
+            chrome.storage.local.set(v, ()=>{c(v)})
+        }
+        return
+    }
+}
+
+
+export function setSyncOptions(key: string, value: any): Promise<{[key: string]: any}>
+export function setSyncOptions(key: string, value: any, callback: (data?: {[key: string]: any}) => void): void
+export function setSyncOptions(data?: SyncOptions | Partial<SyncOptions> | Record<string,any> | null): Promise<{[key: string]: any}>
+export function setSyncOptions(data?: SyncOptions | Partial<SyncOptions> | Record<string,any> | null, callback?: (data?: {[key: string]: any}) => void): void
+export function setSyncOptions(
+    data: SyncOptions | Partial<SyncOptions> | Record<string,any> | null | undefined | string,
+    value?: any,
+    callback?: (data?: {[key: string]: any}) => void
+): void | Promise<{[key: string]: any}> {
+    var v: Record<string,any> = {}
+    if(data instanceof SyncOptions){
+        v = data.get()
+        return f(v, value)
+    }else if(data instanceof Object){
+        v = SyncOptions.check(data)
+        return f(v, value)
+    }else if(typeof data === "string"){
+        const c = SyncOptions.check(data, value)
+        if(c!==undefined){
+            v[data] = c
+        }
+        return f(v, callback)
+    }else{
+        return f(v, value)
+    }
+
+    function f(v: Record<string,any>, c?: (data?: {[key: string]: any})=>void): void | Promise<{[key: string]: any}> {
+        if(c===undefined){
+            return chrome.storage.sync.set(v).then(()=>{return v})
+        }else{
+            chrome.storage.sync.set(v, ()=>{c(v)})
+        }
+        return
+    }
+}
+
+export function setSessionOptions(key: string, value: any): Promise<{[key: string]: any}>
+export function setSessionOptions(key: string, value: any, callback: (data?: {[key: string]: any}) => void): void
+export function setSessionOptions(data?: SessionOptions | Partial<SessionOptions> | Record<string,any> | null): Promise<{[key: string]: any}>
+export function setSessionOptions(data?: SessionOptions | Partial<SessionOptions> | Record<string,any> | null, callback?: (data?: {[key: string]: any}) => void): void
+export function setSessionOptions(
+    data: SessionOptions | Partial<SessionOptions> | Record<string,any> | null | undefined | string,
+    value?: any,
+    callback?: (data?: {[key: string]: any}) => void
+): void | Promise<{[key: string]: any}> {
+    var v: Record<string,any> = {}
+    if(data instanceof SessionOptions){
+        v = data.get()
+        return f(v, value)
+    }else if(data instanceof Object){
+        v = SessionOptions.check(data)
+        return f(v, value)
+    }else if(typeof data === "string"){
+        const c = SessionOptions.check(data, value)
+        if(c!==undefined){
+            v[data] = c
+        }
+        return f(v, callback)
+    }else{
+        return f(v, value)
+    }
+
+    function f(v: Record<string,any>, c?: (data?: {[key: string]: any})=>void): void | Promise<{[key: string]: any}> {
+        if(c===undefined){
+            return chrome.storage.session.set(v).then(() => {return v})
+        }else{
+            chrome.storage.session.set(v, ()=>{c(v)})
+        }
+        return
+    }
 }

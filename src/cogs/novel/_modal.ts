@@ -3,7 +3,7 @@ import { check, defaultValue } from "../../utils/misc"
 import { escapeHtml } from "../../utils/text";
 import { correction, restoreCorrectionMode } from "./_correction";
 import { generateNoDuplicateSkinName, localSkinsV1, SkinsV1, SkinV1 } from "../../utils/v1_skin";
-import { getLocalOptions, getSessionOptions } from "../../utils/option";
+import { getLocalOptions, getSessionOptions, setLocalOptions, setSessionOptions } from "../../utils/option";
 import { ReplacePattern } from "../../utils/data";
 import { getNcodeFromURL } from "../../utils/ncode";
 import { getDatetimeString } from "../../utils/time";
@@ -37,7 +37,7 @@ export function _optionModal(){
             $("#novel-option--header ul").append("<li class='novel-option--header-tab novel-option-tab-"+index+"'><button type='button'><span class='novel-option--header-tab'>"+title+"</span></button></li>")
             $("#novel-option--contents").append("<div class='novel-option--content novel-option-tab-"+index+"'></div>")
             $(".novel-option--header-tab.novel-option-tab-"+index+" button").on("click", ()=>{
-                chrome.storage.session.set({"novelOptionModalSelected": index}, function(){
+                setSessionOptions("novelOptionModalSelected", index, function(){
                     $("#novel-option .novel-option--header-tab").removeClass("active")
                     $("#novel-option .novel-option--content").removeClass("active")
                     $("#novel-option .novel-option-tab-" + index).addClass("active")
@@ -74,7 +74,7 @@ export function _optionModal(){
             if(tab.length){
                 tab.addClass("active")
             }else{
-                chrome.storage.session.set({novelOptionModalSelected: 0}, function(){
+                setSessionOptions("novelOptionModalSelected", 0, function(){
                     $("#novel-option .novel-option-tab-0").addClass("active")
                 })
             }
@@ -162,7 +162,7 @@ function setOptionContentsDisplay(id: number){
             if(typeof v === "string"){
                 var n = Number(v)
                 if(!isNaN(n)){
-                    chrome.storage.local.set({selectedSkin: n}, function() {})
+                    setLocalOptions("selectedSkin", n, ()=>{})
                 }
             }
         })
@@ -223,7 +223,7 @@ function setOptionContentsDisplay(id: number){
             $(".novel-option--font-button.active").removeClass("active")
             $(this).parent().addClass("active")
 
-            chrome.storage.local.set({fontFontFamily: key}, () => {})
+            setLocalOptions({fontFontFamily: key}, () => {})
         })
         */
         $("#novel-option--font-family #font-family").on("change",() => {
@@ -231,14 +231,14 @@ function setOptionContentsDisplay(id: number){
             if(typeof v === "string"){
                 var n = Number(v)
                 if(!isNaN(n)){
-                    chrome.storage.local.set({fontSelectedFontFamily: n}, function() {})
+                    setLocalOptions({fontSelectedFontFamily: n}, function() {})
                 }
             }
         })
 
         /* Vertical */
         $("#novel-option--vertical-toggle").on("click", function(){
-            chrome.storage.local.set({novelVertical: $(this).prop("checked")})
+            setLocalOptions({novelVertical: $(this).prop("checked")})
         })
 
         /* Font Size */
@@ -254,7 +254,7 @@ function setOptionContentsDisplay(id: number){
                 $("#novel-option--font-size-input").val(value)
             }
 
-            chrome.storage.local.set({fontFontSize: Number(value)}, () => {})
+            setLocalOptions({fontFontSize: Number(value)}, () => {})
         }
 
         $("#novel-option--font-size-minus").click(function(){
@@ -297,7 +297,7 @@ function setOptionContentsDisplay(id: number){
                 $("#novel-option--line-height-input").val(value)
             }
 
-            chrome.storage.local.set({fontLineHeight: Number(value)}, () => {})
+            setLocalOptions({fontLineHeight: Number(value)}, () => {})
         }
 
         $("#novel-option--line-height-minus").click(function(){
@@ -336,7 +336,7 @@ function setOptionContentsDisplay(id: number){
             }
             $("#novel-option--page-width-input").val(value)
 
-            chrome.storage.local.set({fontWidth: Number(value)/100}, () => {})
+            setLocalOptions({fontWidth: Number(value)/100}, () => {})
         }
 
         $("#novel-option--page-width-minus").click(function(){
@@ -387,7 +387,7 @@ function setOptionContentsDisplay(id: number){
             $("#novelCustomHeaderMode").val(data.novelCustomHeaderMode)
         })
         $("#novelCustomHeaderMode").change(function(){
-            chrome.storage.local.set({novelCustomHeaderMode: $("#novelCustomHeaderMode").val()}, ()=>{})
+            setLocalOptions({novelCustomHeaderMode: $("#novelCustomHeaderMode").val()}, ()=>{})
         })
     })
 
@@ -474,7 +474,7 @@ function restoreReplacePattern(){
                     var patterns = data.correctionReplacePatterns
                     if(idx>0){
                         [patterns[idx], patterns[idx-1]] = [patterns[idx-1], patterns[idx]]
-                        chrome.storage.local.set({correctionReplacePatterns: patterns}, function(){})
+                        setLocalOptions({correctionReplacePatterns: patterns}, function(){})
     
                     }
                 })
@@ -487,7 +487,7 @@ function restoreReplacePattern(){
                     var patterns = data.correctionReplacePatterns
                     if(idx<patterns.length-1){
                         [patterns[idx], patterns[idx+1]] = [patterns[idx+1], patterns[idx]]
-                        chrome.storage.local.set({correctionReplacePatterns: patterns}, function(){})
+                        setLocalOptions({correctionReplacePatterns: patterns}, function(){})
                     }
                 })
             }
@@ -503,7 +503,7 @@ function restoreReplacePattern(){
                     }else{
                         patterns[idx].regex = true
                     }
-                    chrome.storage.local.set({correctionReplacePatterns: patterns}, function(){})
+                    setLocalOptions({correctionReplacePatterns: patterns}, function(){})
                 })
             }
         })
@@ -518,7 +518,7 @@ function restoreReplacePattern(){
                     }else{
                         patterns[idx].active = true
                     }
-                    chrome.storage.local.set({correctionReplacePatterns: patterns}, function(){})
+                    setLocalOptions({correctionReplacePatterns: patterns}, function(){})
                 })
             }
         })
@@ -528,7 +528,7 @@ function restoreReplacePattern(){
                 getLocalOptions(["correctionReplacePatterns"], function(data){
                     var patterns = data.correctionReplacePatterns
                     patterns.splice(idx, 1)
-                    chrome.storage.local.set({correctionReplacePatterns: patterns}, function(){})
+                    setLocalOptions({correctionReplacePatterns: patterns}, function(){})
                 })
             }
         })
@@ -540,7 +540,7 @@ function restoreReplacePattern(){
                     var patterns = data.correctionReplacePatterns
                     if(patterns.length > idx && typeof value=="string"){
                         patterns[idx].pattern = value
-                        chrome.storage.local.set({correctionReplacePatterns: patterns}, function(){})
+                        setLocalOptions({correctionReplacePatterns: patterns}, function(){})
                     }
                 })
             }
@@ -553,7 +553,7 @@ function restoreReplacePattern(){
                     var patterns = data.correctionReplacePatterns
                     if(patterns.length > idx && typeof value=="string"){
                         patterns[idx].replacement = value
-                        chrome.storage.local.set({correctionReplacePatterns: patterns}, function(){})
+                        setLocalOptions({correctionReplacePatterns: patterns}, function(){})
                     }
                 })
             }
@@ -652,7 +652,7 @@ function setOptionContentsCorrection(id: number){
         var mode: Record<string,any> = {}
         mode[$(this).prop("name")] = $(this).prop("checked")
 
-        chrome.storage.local.set(mode, function(){})
+        setLocalOptions(mode, function(){})
     })
 
     /* Scroll Replacement Pattern List */
@@ -670,7 +670,7 @@ function setOptionContentsCorrection(id: number){
     $("#novel-option--correction-replace--pattern-box-addition").on("click", function(){
         getLocalOptions(["correctionReplacePatterns"], function(data){
             data.correctionReplacePatterns.push(new ReplacePattern())
-            chrome.storage.local.set({correctionReplacePatterns: data.correctionReplacePatterns}, function(){})
+            setLocalOptions({correctionReplacePatterns: data.correctionReplacePatterns}, function(){})
         })
     })
 
@@ -744,7 +744,7 @@ function setOptionContentsAuthorSkin(id: number){
     /* Event */
     // Click Toggle
     $("#novel-option--novel-author-skin").on("click", function(e){
-        chrome.storage.local.set({novelAuthorCustomSkin: $(this).prop("checked")})
+        setLocalOptions({novelAuthorCustomSkin: $(this).prop("checked")})
     })
 
     // Import Button
@@ -775,7 +775,7 @@ function setOptionContentsAuthorSkin(id: number){
                                 skin.name = generateNoDuplicateSkinName(localSkinsV1.concat(skins), skin.name, -1)
                                 skins.push(skin)
                                 
-                                chrome.storage.local.set({skins: skins}, function(){
+                                setLocalOptions({skins: skins}, function(){
                                     pushSkinImportInfo(`インポートに成功しました (${skin.name})`, "info")
                                 })
                             })

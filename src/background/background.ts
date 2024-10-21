@@ -1,4 +1,4 @@
-import { getLocalOptions, getSyncOptions } from "../utils/option"
+import { getLocalOptions, getSyncOptions, setSyncOptions } from "../utils/option"
 import { fixOption } from "../options/_utils/optionUI_utils"
 import { actionListener } from "./_action"
 import { messageListener } from "./_process"
@@ -48,7 +48,7 @@ getSyncOptions(null, function(data){
         count = 1
     }
 
-    chrome.storage.sync.set({
+    setSyncOptions({
         extLaunchCount: count,
         extLastLaunchTime: new Date().toUTCString()
     })

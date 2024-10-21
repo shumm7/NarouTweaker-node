@@ -1,7 +1,7 @@
 import { FontFamiliesV1, FontFamilyV1, localFont, localFontFamilyV1 } from "../utils/v1_font"
 import { localSkinsV1, makeSkinCSS, SkinsV1, SkinV1 } from "../utils/v1_skin"
 import { CSS_String } from "../utils/type"
-import { getLocalOptions } from "../utils/option"
+import { getLocalOptions, setLocalOptions, setSessionOptions } from "../utils/option"
 import { minifyCss } from "../utils/text"
 
 export function skinListener(){
@@ -112,7 +112,7 @@ function makeSkin(){
         }
         `
 
-        chrome.storage.session.set({
+        setSessionOptions({
             novelAppliedSkinCSS: minifyCss(makeSkinCSS(skin, data.novelCustomStyle)),
             novelAppliedFontCSS: minifyCss(rule),
             novelSkinCustomCSS: minifyCss(skin.css),
@@ -127,7 +127,7 @@ function makeEditorSkin(){
         const skins: SkinsV1 = localSkinsV1.concat(data.skins)
         if(skins.length<skin_idx || skin_idx<0){
             skin_idx = 0
-            chrome.storage.local.set({workspaceEditorSelectedSkin: skin_idx})
+            setLocalOptions({workspaceEditorSelectedSkin: skin_idx})
         }
         const skin = skins[skin_idx]
         const s = skin.style
@@ -224,7 +224,7 @@ function makeEditorSkin(){
         }
         `
 
-        chrome.storage.session.set({
+        setSessionOptions({
             workspaceEditorAppliedSkinCSS: minifyCss(skin_rule),
             workspaceEditorAppliedFontCSS: minifyCss(font_rule),
             workspaceEditorSkinCustomCSS: minifyCss(skin.css),

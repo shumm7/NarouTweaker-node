@@ -1,4 +1,4 @@
-import { getLocalOptions, LocalOptions } from "../../utils/option"
+import { getLocalOptions, LocalOptions, setLocalOptions } from "../../utils/option"
 import { OptionUI_CustomElement } from "./optionUI_custom"
 import { appendFavoriteOption, getOptionCategory, getOptionChildsFromID, getOptionFromID, getOptionPageFromID, moveFavoriteOption, removeFavoriteOption } from "./optionUI_utils"
 import { OptionHideParammeters, OptionUI_Item, OptionUI_ItemID } from "./optionUI_type"
@@ -882,7 +882,7 @@ export function getOptionElement(option: OptionUI_Item, mode?: optionType){
                     var ret = {}
                     var option = getOptionFromID(id)
                     ret = reset(option, ret)
-                    chrome.storage.local.set(ret, function(){})
+                    setLocalOptions(ret, function(){})
                 }
             })
 

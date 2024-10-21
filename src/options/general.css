@@ -613,6 +613,8 @@ input[type=file] {
     min-width: 130px;
     border-right: 1px solid var(--narou-tweaker--option--color-tab-border);
     cursor: pointer;
+    text-wrap: nowrap;
+    white-space: nowrap;
 }
 .header-menu-item.selected {
     background: var(--narou-tweaker--option--color-tab-bg-hover);

@@ -3,7 +3,7 @@ import { escapeHtml, replaceUrl } from "../../utils/text"
 import { novelTop } from "./_novelTop";
 import { getNcodeFromURL } from "../../utils/ncode";
 import { getDatetimeStringWithoutSecond } from "../../utils/time";
-import { getLocalOptions, getSyncOptions } from "../../utils/option";
+import { getLocalOptions, getSyncOptions, setSyncOptions } from "../../utils/option";
 import { fetchNovelApi, NovelApi } from "../../utils/api";
 
 import $ from 'jquery';
@@ -332,7 +332,7 @@ function _saveHistory(){
                         novelHistoryData[ncode] = [episode, Date.now(), episode_name]
                     }
 
-                    chrome.storage.sync.set({
+                    setSyncOptions({
                         novelHistory: new_history,
                         novelHistoryData: novelHistoryData
                     })

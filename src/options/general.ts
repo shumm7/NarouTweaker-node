@@ -1,5 +1,5 @@
 import { check } from "../utils/misc"
-import { getLocalOptions } from "../utils/option";
+import { getLocalOptions, setLocalOptions, setSessionOptions } from "../utils/option";
 import { colorPicker, getOptionElement, optionHide, syntaxHighlight } from "./_utils/utils";
 import { OptionUI_Items, OptionUI_Pages } from "./_utils/optionUI_items";
 import { OptionUI_ItemID, OptionUI_Page, OptionUI_PageID } from "./_utils/optionUI_type";
@@ -117,10 +117,10 @@ function setupDOM(){
         _sidepanelHide(data.extOptionSidePanelShow)
     })
     $("#sidebar-icon--hide").on("click", function(){
-        chrome.storage.session.set({extOptionSidePanelShow: false}, function(){})
+        setSessionOptions("extOptionSidePanelShow", false, function(){})
     })
     $("#sidebar-open").on("click", function(){
-        chrome.storage.session.set({extOptionSidePanelShow: true}, function(){})
+        setSessionOptions("extOptionSidePanelShow", true, function(){})
     })
     chrome.storage.session.onChanged.addListener(function(changes){
         if(changes.extOptionSidePanelShow!=undefined){
@@ -452,7 +452,7 @@ export function restoreOptions(){
         }
     
         if(value[name]!=undefined){
-            chrome.storage.local.set(value);
+            setLocalOptions(value);
         }
     });
 
@@ -492,7 +492,7 @@ export function restoreOptions(){
         }
     
         if(value[name]!=undefined){
-            chrome.storage.local.set(value);
+            setLocalOptions(value);
         }
     });
 
@@ -576,11 +576,11 @@ function urlScheme(){
         chrome.storage.session.get(["extOptionSidePanelShow"], d =>{
             if(p_panel==="1"){
                 if(!d.extOptionSidePanelShow){
-                    chrome.storage.local.set({extOptionSidePanelShow: true}, function(){})
+                    setLocalOptions({extOptionSidePanelShow: true}, function(){})
                 }
             }else if(p_panel==="0"){
                 if(d.extOptionSidePanelShow){
-                    chrome.storage.local.set({extOptionSidePanelShow: false}, function(){})
+                    setLocalOptions({extOptionSidePanelShow: false}, function(){})
                 }
             }
 

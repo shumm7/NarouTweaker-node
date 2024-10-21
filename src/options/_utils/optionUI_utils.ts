@@ -1,5 +1,5 @@
 import { OptionUI_Items, OptionUI_Pages } from "./optionUI_items";
-import { getLocalOptions, LocalOptions, SyncOptions } from "../../utils/option";
+import { getLocalOptions, LocalOptions, setLocalOptions, setSyncOptions, SyncOptions } from "../../utils/option";
 import { OptionUI_Category, OptionUI_CategoryID, OptionUI_Item, OptionUI_ItemID, OptionUI_Page, OptionUI_PageID } from "./optionUI_type";
 import { limit } from "../../utils/number";
 
@@ -156,7 +156,7 @@ export function appendFavoriteOption(id: OptionUI_ItemID){
             })
             list.splice(targetIdx, 0, ...objectIds)
             data.set("extFavoriteOptions", list)
-            chrome.storage.local.set(data.get("extFavoriteOptions"))
+            setLocalOptions(data.get("extFavoriteOptions"))
         }
     })
 }
@@ -196,7 +196,7 @@ export function removeFavoriteOption(id: OptionUI_ItemID){
                 }
             }
 
-            chrome.storage.local.set({extFavoriteOptions: list})
+            setLocalOptions({extFavoriteOptions: list})
         }
     })
 }
@@ -261,7 +261,7 @@ export function moveFavoriteOption(id: OptionUI_ItemID, pos: number){
             })
             data.set("extFavoriteOptions", list)
 
-            chrome.storage.local.set(data.get("extFavoriteOptions"))
+            setLocalOptions(data.get("extFavoriteOptions"))
         }
     })
 }
@@ -278,7 +278,7 @@ export function fixOption(_fixLocal: boolean = false, _fixSync: boolean = false)
         getLocalOptions(null, (data)=>{
             console.log(data)
             chrome.storage.local.clear(()=>{
-                chrome.storage.local.set(data.get(), function(){
+                setLocalOptions(data.get(), function(){
                     console.log("Fixed option data (local).")
                 })
             })
@@ -289,7 +289,7 @@ export function fixOption(_fixLocal: boolean = false, _fixSync: boolean = false)
         chrome.storage.sync.get(null, (data)=>{
             var option = new SyncOptions(data).get()
             chrome.storage.sync.clear(()=>{
-                chrome.storage.sync.set(option, function(){
+                setSyncOptions(option, function(){
                     console.log("Fixed option data (sync).")
                 })
             })

@@ -1,4 +1,4 @@
-import { getLocalOptions } from "../../utils/option"
+import { getLocalOptions, setLocalOptions } from "../../utils/option"
 import { ReplacePattern } from "../../utils/data"
 import { CustomIconID, CustomIconIDs, getExcludeIcons, novelIconList } from "../../utils/header"
 import { addFontEditButtonEvent, restoreFont } from "./_optionsAction_Font"
@@ -11,7 +11,7 @@ import Sortable from 'sortablejs'
 export function novel_customHeaderSortable(){
     /* Novel Header */
     function storeNovelHeader(){
-        chrome.storage.local.set(
+        setLocalOptions(
             {
                 novelCustomHeaderLeft: getHeaderIconList("left"),
                 novelCustomHeaderRight: getHeaderIconList("right")
@@ -143,7 +143,7 @@ export function novel_replacePattern(){
     $("#correction-replace--pattern-box-addition").on("click", function(){
         getLocalOptions(["correctionReplacePatterns"], function(data){
             data.correctionReplacePatterns.push(new ReplacePattern)
-            chrome.storage.local.set({correctionReplacePatterns: data.correctionReplacePatterns}, function(){})
+            setLocalOptions({correctionReplacePatterns: data.correctionReplacePatterns}, function(){})
         })
     })
 
@@ -213,7 +213,7 @@ export function novel_replacePattern(){
                             var patterns = data.correctionReplacePatterns
                             if(idx>0){
                                 [patterns[idx], patterns[idx-1]] = [patterns[idx-1], patterns[idx]]
-                                chrome.storage.local.set({correctionReplacePatterns: patterns}, function(){})
+                                setLocalOptions({correctionReplacePatterns: patterns}, function(){})
     
                             }
                         })
@@ -229,7 +229,7 @@ export function novel_replacePattern(){
                             var patterns = data.correctionReplacePatterns
                             if(idx<patterns.length-1){
                                 [patterns[idx], patterns[idx+1]] = [patterns[idx+1], patterns[idx]]
-                                chrome.storage.local.set({correctionReplacePatterns: patterns}, function(){})
+                                setLocalOptions({correctionReplacePatterns: patterns}, function(){})
                             }
                         })
                     }
@@ -248,7 +248,7 @@ export function novel_replacePattern(){
                             }else{
                                 patterns[idx].regex = true
                             }
-                            chrome.storage.local.set({correctionReplacePatterns: patterns}, function(){})
+                            setLocalOptions({correctionReplacePatterns: patterns}, function(){})
                         })
                     }
                 }
@@ -266,7 +266,7 @@ export function novel_replacePattern(){
                             }else{
                                 patterns[idx].active = true
                             }
-                            chrome.storage.local.set({correctionReplacePatterns: patterns}, function(){})
+                            setLocalOptions({correctionReplacePatterns: patterns}, function(){})
                         })
                     }
                 }
@@ -279,7 +279,7 @@ export function novel_replacePattern(){
                         getLocalOptions(["correctionReplacePatterns"], function(data){
                             var patterns = data.correctionReplacePatterns
                             patterns.splice(idx, 1)
-                            chrome.storage.local.set({correctionReplacePatterns: patterns}, function(){})
+                            setLocalOptions({correctionReplacePatterns: patterns}, function(){})
                         })
                     }
                 }
@@ -294,7 +294,7 @@ export function novel_replacePattern(){
                             var patterns = data.correctionReplacePatterns
                             if(typeof value === "string"){
                                 patterns[idx].pattern = value
-                                chrome.storage.local.set({correctionReplacePatterns: patterns}, function(){})
+                                setLocalOptions({correctionReplacePatterns: patterns}, function(){})
                             }
                         })
                     }
@@ -310,7 +310,7 @@ export function novel_replacePattern(){
                             var patterns = data.correctionReplacePatterns
                             if(typeof value === "string"){
                                 patterns[idx].replacement = value
-                                chrome.storage.local.set({correctionReplacePatterns: patterns}, function(){})
+                                setLocalOptions("correctionReplacePatterns", patterns, function(){})
                             }
                         })
                     }

@@ -1,5 +1,5 @@
 import { minifyCss } from "../utils/text"
-import { getLocalOptions } from "../utils/option"
+import { getLocalOptions, setSessionOptions } from "../utils/option"
 
 export function yomouCssListener(){
     makeRankCSS()
@@ -100,7 +100,7 @@ function makeRankCSS(){
             `
         }
 
-        chrome.storage.session.set({yomouRank_AppliedCSS: minifyCss(rule)})
+        setSessionOptions({yomouRank_AppliedCSS: minifyCss(rule)})
     })
 }
 
@@ -184,6 +184,6 @@ function makeRankTopCSS(){
             `
         }
 
-        chrome.storage.session.set({yomouRankTop_AppliedCSS: minifyCss(rule)})
+        setSessionOptions({yomouRankTop_AppliedCSS: minifyCss(rule)})
     })
 }

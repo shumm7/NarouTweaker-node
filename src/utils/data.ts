@@ -1,6 +1,6 @@
 
 import { Ncode } from "./ncode"
-import { getSyncOptions, SyncOptions } from "./option"
+import { getSyncOptions, setSyncOptions, SyncOptions } from "./option"
 /************************************************************************************* */
 /*                                 設定データ                                           */
 /************************************************************************************* */
@@ -73,7 +73,7 @@ export function pushImpressionReadList(ncode: Ncode | Array<Ncode|string> | stri
                 l.workspaceImpressionMarked[_ncode].push(kanrino[i])
             }
         })
-        chrome.storage.sync.set({ workspaceImpressionMarked: l.workspaceImpressionMarked })
+        setSyncOptions({ workspaceImpressionMarked: l.workspaceImpressionMarked })
     })
 }
 
@@ -112,7 +112,7 @@ export function popImpressionReadList(ncode: Ncode | Array<Ncode|string> | strin
                 }
             }
         })
-        chrome.storage.sync.set({ workspaceImpressionMarked: l.workspaceImpressionMarked })
+        setSyncOptions({ workspaceImpressionMarked: l.workspaceImpressionMarked })
     })
 }
 
@@ -149,7 +149,7 @@ export function pushImpressionHiddenList(ncode: Ncode | Array<Ncode|string> | st
                 l.workspaceImpressionHidden[_ncode].push(kanrino[i])
             }
         })
-        chrome.storage.sync.set({ workspaceImpressionHidden: l.workspaceImpressionHidden })
+        setSyncOptions({ workspaceImpressionHidden: l.workspaceImpressionHidden })
     })
 }
 
@@ -188,6 +188,6 @@ export function popImpressionHiddenList(ncode: Ncode | Array<Ncode|string> | str
                 }
             }
         })
-        chrome.storage.sync.set({ workspaceImpressionHidden: l.workspaceImpressionHidden })
+        setSyncOptions("workspaceImpressionHidden", l.workspaceImpressionHidden, ()=>{})
     })
 }

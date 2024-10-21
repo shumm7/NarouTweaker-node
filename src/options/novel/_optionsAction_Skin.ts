@@ -1,7 +1,7 @@
 import { localFont, localFontFamilyV1 } from "../../utils/v1_font";
 import { defaultValue, getCSSRule, saveJson } from "../../utils/misc";
 import { generateNoDuplicateSkinName, localSkinsV1, SkinsV1, SkinV1 } from "../../utils/v1_skin";
-import { getLocalOptions } from "../../utils/option";
+import { getLocalOptions, setLocalOptions } from "../../utils/option";
 
 import $ from 'jquery';
 
@@ -158,7 +158,7 @@ function saveSelectedSkin() {
         if (skins[key] != undefined) {
             if (skins[key].customizable) {
                 skins[key] = skinData
-                chrome.storage.local.set({ skins: skins }, function () { })
+                setLocalOptions("skins", skins, ()=>{})
             }
         }
     });
@@ -169,7 +169,7 @@ export function addSkinEditButtonEvent() {
     $("#skin").on("change", () => { /* Select Dropdown */
         var n = $("#skin").val()
         if(n!==undefined && !isNaN(Number(n))){
-            chrome.storage.local.set({ selectedSkin: Number(n) }, function () { })
+            setLocalOptions({ selectedSkin: Number(n) }, function () { })
         }
     });
 
@@ -186,7 +186,7 @@ export function addSkinEditButtonEvent() {
             defaultSkin.description = ""
 
             skins.push(defaultSkin)
-            chrome.storage.local.set({ skins: skins, selectedSkin: localSkinsV1.length + skins.length - 1 }, function () { })
+            setLocalOptions({ skins: skins, selectedSkin: localSkinsV1.length + skins.length - 1 }, function () { })
         });
     })
 
@@ -206,7 +206,7 @@ export function addSkinEditButtonEvent() {
             skin.name = generateNoDuplicateSkinName(localSkinsV1.concat(skins), skin.name + " - コピー", -1)
             skins.push(skin)
 
-            chrome.storage.local.set({ skins: skins, selectedSkin: localSkinsV1.length + skins.length - 1 }, function () { })
+            setLocalOptions({ skins: skins, selectedSkin: localSkinsV1.length + skins.length - 1 }, function () { })
         });
     })
 
@@ -222,7 +222,7 @@ export function addSkinEditButtonEvent() {
                 if (selectedSkin >= skins.length + localSkinsV1.length - 1) {
                     selectedSkin = skins.length + localSkinsV1.length - 1
                 }
-                chrome.storage.local.set({ skins: skins, selectedSkin: selectedSkin }, function () { })
+                setLocalOptions({ skins: skins, selectedSkin: selectedSkin }, function () { })
             }
         });
     })
@@ -314,7 +314,7 @@ export function addSkinImportEvent(){
             skin.name = generateNoDuplicateSkinName(skins.concat(localSkinsV1), skin.name, -1)
             skins.push(skin)
 
-            chrome.storage.local.set({ skins: skins, selectedSkin: localSkinsV1.length + skins.length - 1 }, function () {
+            setLocalOptions({ skins: skins, selectedSkin: localSkinsV1.length + skins.length - 1 }, function () {
                 var field = $("#skin-import-input--field")
                 field.val("")
                 field.trigger("input")

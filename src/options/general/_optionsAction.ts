@@ -2,7 +2,7 @@ import { fixOption, getOptionPageFromID } from "../_utils/optionUI_utils";
 import { saveJson } from "../../utils/misc";
 import { OptionUI_Pages } from "../_utils/optionUI_items";
 import { escapeHtml } from "../../utils/text";
-import { getLocalOptions, LocalOptions } from "../../utils/option";
+import { getLocalOptions, LocalOptions, setLocalOptions } from "../../utils/option";
 import { getDatetimeString, getDatetimeStringForFilename } from "../../utils/time";
 import { OptionUI_Page } from "options/_utils/optionUI_type";
 
@@ -17,12 +17,12 @@ export function general_popupDefaultPage_Dropdown(){
             if(pageId!=="__auto__"){
                 const page: OptionUI_Page|undefined = getOptionPageFromID(pageId)
                 if(page?.popup?.defaultPage && page?.title && page?.id){
-                    chrome.storage.local.set({extPopupDefaultPage: pageId})
+                    setLocalOptions({extPopupDefaultPage: pageId})
                 }else{
-                    chrome.storage.local.set({extPopupDefaultPage: "__auto__"})
+                    setLocalOptions({extPopupDefaultPage: "__auto__"})
                 }
             }else{
-                chrome.storage.local.set({extPopupDefaultPage: pageId})
+                setLocalOptions({extPopupDefaultPage: pageId})
             }
         }
     })
@@ -61,7 +61,7 @@ export function general_removeOptionData(){
             getLocalOptions("extNotifications", function(data){
                 chrome.storage.local.clear(()=>{
                     console.log("Reset all options.")
-                    chrome.storage.local.set(new LocalOptions().get())
+                    setLocalOptions(new LocalOptions().get())
                     console.log("Set all options.")
 
                     /* notify */
@@ -180,7 +180,7 @@ export function general_importOptionData(){
                     var raw = JSON.parse(lines)
                     var option = new LocalOptions(raw)
                     if(option){
-                        chrome.storage.local.set(option.get(), function(){
+                        setLocalOptions(option.get(), function(){
                             var field = $("#option-import-input--field")
                             field.val("")
                             field.trigger("input")
@@ -478,7 +478,7 @@ export function general_insertOptionData(){
                         }
 
                         if(storage=="local"){
-                            chrome.storage.local.set(dict)
+                            setLocalOptions(dict)
                         }else if(storage=="sync"){
                             chrome.storage.sync.set(dict)
                         }else if(storage=="session"){

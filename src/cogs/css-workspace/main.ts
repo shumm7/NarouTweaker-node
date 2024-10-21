@@ -1,6 +1,7 @@
 import $ from "jquery";
+import { getLocalOptions, getSessionOptions } from "../../utils/option";
 
-chrome.storage.local.get(null, (data)=>{
+getLocalOptions(null, (data)=>{
     /* Skin Custom CSS */
     if("workspaceEditorSkinCustomCSS" in data){
         var l = $(`<style type="text/css" id="narou-tweaker-style--editor-skin-user" class="narou-tweaker-style"></style>`)
@@ -20,11 +21,11 @@ chrome.storage.local.get(null, (data)=>{
     }
 })
 
-chrome.storage.session.get(null, (data)=>{
+getSessionOptions(null, (data)=>{
     /* Skin */
     if("workspaceEditorAppliedSkinCSS" in data){
         var l = $(`<style type="text/css" id="narou-tweaker-style--editor-skin" class="narou-tweaker-style"></style>`)
-        l.text(data.workspaceEditorAppliedSkinCSS)
+        l.text(data.workspaceEditorAppliedSkinCSS ?? "")
         $("html").append(l)
     }else{
         $("html").append(`<style type="text/css" id="narou-tweaker-style--editor-skin" class="narou-tweaker-style"></style>`)
@@ -33,7 +34,7 @@ chrome.storage.session.get(null, (data)=>{
     /* Font */
     if("workspaceEditorAppliedFontCSS" in data){
         var l = $(`<style type="text/css" id="narou-tweaker-style--editor-font" class="narou-tweaker-style"></style>`)
-        l.text(data.workspaceEditorAppliedFontCSS)
+        l.text(data.workspaceEditorAppliedFontCSS ?? "")
         $("html").append(l)
     }else{
         $("html").append(`<style type="text/css" id="narou-tweaker-style--editor-font" class="narou-tweaker-style"></style>`)
