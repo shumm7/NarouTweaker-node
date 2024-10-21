@@ -427,10 +427,19 @@ table tr td.right {
 	flex-direction: column;
 	font-size: 110%;
 }
+.external_urls-header {
+	font-weight: bold;
+	font-size: 90%;
+}
 .external_urls-column {
 	display: flex;
 	gap: 15px;
 }
-.external_urls-item i {
+.external_urls-item a i {
+	color: inherit;
+}
+
+.external_urls-item i,
+.external_urls-header i {
 	margin-right: 3px;
 }

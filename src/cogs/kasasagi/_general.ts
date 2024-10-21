@@ -2,7 +2,7 @@ import { parseIntWithComma, escapeHtml } from "../../utils/text";
 import {getBigGenre, getGenre, getNovelType, getNovelEnd, getNocgenre} from "../../utils/narou"
 import { addQuestionIconBalloon, addExclamationIconBalloon } from "../../utils/ui";
 import { saveJson } from "../../utils/misc";
-import { minuteStringJapanese, getDateString, getYesterday, getDatetimeString, getDateStringJapanese } from "../../utils/time";
+import { minuteStringJapanese, getDateString, getYesterday, getDatetimeString, getDateStringJapanese, getDatetimeFromString, getDatetimeStringWithoutMilisecond } from "../../utils/time";
 import { getNcodeFromURL, Ncode } from "../../utils/ncode";
 import { getLocalOptions } from "../../utils/option";
 import { fetchNovelApi, fetchRankinApi, NovelApi, RankinApi } from "../../utils/api";
@@ -306,31 +306,38 @@ function link(r18?: boolean){
             if(!r18){
                 const url = `https://ncode.syosetu.com/${ncode}/`
                 box.append(`
+                    <div class="external_urls-header">Google検索</div>
                     <div class="external_urls-column">
-                        <span class="external_urls-item"><a href="https://www.google.com/search?q=${title}" target="_blank"><i class="fa-solid fa-magnifying-glass"></i>作品タイトルを検索</a></span>
-                        <span class="external_urls-item"><a href="https://x.com/search?q=${url}" target="_blank"><i class="fa-brands fa-square-x-twitter"></i>Xで検索</a></span>
-                        <span class="external_urls-item"><a href="https://x.com/hashtag/narou${ncode.toUpperCase()}" target="_blank"><i class="fa-solid fa-hashtag"></i>Xでハッシュタグ検索</a></span>
+                        <span class="external_urls-item"><a href="https://www.google.com/search?q=${title}" target="_blank"><i class="fa-solid fa-magnifying-glass"></i>作品タイトル</a></span>
+                        <span class="external_urls-item"><a href="https://www.google.com/search?q=${ncode}" target="_blank"><i class="fa-solid fa-tag"></i>Nコード</a></span>
+                        <span class="external_urls-item"><a href="https://www.google.com/search?q=site:mypage.syosetu.com/mypagenovelhyoka/list%20%22${title}%22" target="_blank"><i class="fa-regular fa-star"></i>評価したユーザ</a></span>
+                        <span class="external_urls-item"><a href="https://www.google.com/search?q=site:mypage.syosetu.com/mypagefavnovelmain/list%20%22${title}%22" target="_blank"><i class="fa-solid fa-book-bookmark"></i>ブクマしたユーザ</a></span>
                     </div>
+                    <div class="external_urls-header">X</div>
+                    <div class="external_urls-column">
+                        <span class="external_urls-item"><a href="https://x.com/search?q=${title}" target="_blank"><i class="fa-solid fa-magnifying-glass"></i>作品タイトル</a></span>
+                        <span class="external_urls-item"><a href="https://x.com/search?q=${url}" target="_blank"><i class="fa-solid fa-link"></i>作品URL</a></span>
+                        <span class="external_urls-item"><a href="https://x.com/hashtag/narou${ncode.toUpperCase()}" target="_blank"><i class="fa-solid fa-hashtag"></i>ハッシュタグ</a></span>
+                    </div>
+                    <div class="external_urls-header">外部サービス</div>
                     <div class="external_urls-column">
                         <span class="external_urls-item"><a href="https://rawi-novel.work/writer/ai?ncode=${ncode}" target="_blank"><i class="fa-solid fa-robot"></i>RaWiで分析</a></span>
                         <span class="external_urls-item"><a href="https://db.narou.fun/works/${ncode.toUpperCase()}" target="_blank"><i class="fa-solid fa-database"></i>なろうファンDB</a></span>
-                    </div>
-                    <div class="external_urls-column">
-                        <span class="external_urls-item"><a href="https://www.google.com/search?q=site:mypage.syosetu.com/mypagenovelhyoka/list%20%22${title}%22" target="_blank"><i class="fa-regular fa-star"></i>評価したユーザを検索</a></span>
-                        <span class="external_urls-item"><a href="https://www.google.com/search?q=site:mypage.syosetu.com/mypagefavnovelmain/list%20%22${title}%22" target="_blank"><i class="fa-solid fa-book-bookmark"></i>ブクマしたユーザを検索</a></span>
                     </div>
                 `)
             }else{
                 const url = `https://novel18.syosetu.com/${ncode}/`
                 box.append(`
+                    <div class="external_urls-header">Google検索</div>
                     <div class="external_urls-column">
-                        <span class="external_urls-item"><a href="https://www.google.com/search?q=${title}" target="_blank"><i class="fa-solid fa-magnifying-glass"></i>作品タイトルを検索</a></span>
-                        <span class="external_urls-item"><a href="https://x.com/search?q=${url}" target="_blank"><i class="fa-brands fa-square-x-twitter"></i>Xで検索</a></span>
+                        <span class="external_urls-item"><a href="https://www.google.com/search?q=${title}" target="_blank"><i class="fa-solid fa-magnifying-glass"></i>作品タイトル</a></span>
+                        <span class="external_urls-item"><a href="https://www.google.com/search?q=${ncode}" target="_blank"><i class="fa-solid fa-tag"></i>Nコード</a></span>
+                        <span class="external_urls-item"><a href="https://www.google.com/search?q=site:xmypage.syosetu.com/mypagenovelhyoka/list%20%22${title}%22" target="_blank"><i class="fa-regular fa-star"></i>評価したユーザ</a></span>
+                        <span class="external_urls-item"><a href="https://www.google.com/search?q=site:xmypage.syosetu.com/mypagefavnovelmain18/list%20%22${title}%22" target="_blank"><i class="fa-solid fa-book-bookmark"></i>ブクマしたユーザ</a></span>
+                    <div class="external_urls-header">X</div>
+                        <span class="external_urls-item"><a href="https://x.com/search?q=${title}" target="_blank"><i class="fa-solid fa-magnifying-glass"></i>作品タイトル</a></span>
+                        <span class="external_urls-item"><a href="https://x.com/search?q=${url}" target="_blank"><i class="fa-solid fa-link"></i>作品URL</a></span>
                         <span class="external_urls-item"><a href="https://x.com/hashtag/narou${ncode.toUpperCase()}" target="_blank"><i class="fa-solid fa-hashtag"></i>Xでハッシュタグ検索</a></span>
-                    </div>
-                    <div class="external_urls-column">
-                        <span class="external_urls-item"><a href="https://www.google.com/search?q=site:xmypage.syosetu.com/mypagenovelhyoka/list%20%22${title}%22" target="_blank"><i class="fa-regular fa-star"></i>評価したユーザを検索</a></span>
-                        <span class="external_urls-item"><a href="https://www.google.com/search?q=site:xmypage.syosetu.com/mypagefavnovelmain18/list%20%22${title}%22" target="_blank"><i class="fa-solid fa-book-bookmark"></i>ブクマしたユーザを検索</a></span>
                     </div>
                 `)
             }
@@ -588,8 +595,6 @@ function _tableApi(ncode: string, d: NovelApi, r18?:boolean){
             }else{
                 value = "0"
             }
-        }else if(value == undefined){
-            value = ""
         }
 
         if(!noEscape){
@@ -626,8 +631,15 @@ function _tableApi(ncode: string, d: NovelApi, r18?:boolean){
     }
 
     function numLocale(n: number|null|undefined, unit?: string): string{
-        if(typeof n === "number" && !isNaN(n) && !isFinite(n)){
-            return n.toLocaleString() + (unit ?? "")
+        if(typeof n === "number" && isFinite(n)){
+            return n.toLocaleString() + (typeof unit === "string" ? " " + unit : "")
+        }
+        return ""
+    }
+
+    function getDateStr(v: Date | undefined): string{
+        if(v instanceof Date){
+            return getDatetimeStringWithoutMilisecond(v)
         }
         return ""
     }
@@ -638,7 +650,7 @@ function _tableApi(ncode: string, d: NovelApi, r18?:boolean){
     }else{
         addValue("タイトル", d.title ?? "")
     }
-    addValue("Nコード", ncode, getNcodeStr(d.ncode))
+    addValue("Nコード", ncode, getNcodeStr(d.ncode).toUpperCase())
     addValue("あらすじ", d.story ?? "")
     addValue("キーワード", d.keyword ?? "")
     if(!r18){
@@ -655,10 +667,10 @@ function _tableApi(ncode: string, d: NovelApi, r18?:boolean){
         addValue("掲載サイト", getNocgenre(d.nocgenre), d.nocgenre)
     }
     addValue("連載状態", getNovelEnd(d.end), d.end)
-    addValue("初回掲載日", `${d.general_firstup}`)
-    addValue("最終掲載日", `${d.general_lastup}`)
-    addValue("最終更新日", `${d.novelupdated_at}`)
-    addValue("話数", numLocale(d.general_all_no), d.general_all_no)
+    addValue("初回掲載日", `${getDateStr(d.general_firstup)}`)
+    addValue("最終掲載日", `${getDateStr(d.general_lastup)}`)
+    addValue("最終更新日", `${getDateStr(d.novelupdated_at)}`)
+    addValue("話数", numLocale(d.general_all_no, "話"), d.general_all_no)
     addValue("長期連載停止中", getYesNo(d.isstop), d.isstop)
     if(!r18){
         addValue("R15", getYesNo(d.isr15), d.isr15)
@@ -674,9 +686,9 @@ function _tableApi(ncode: string, d: NovelApi, r18?:boolean){
     table = $("#novel_detail .novel_statics table tbody")
 
     table.append("<tr class='header'><th>作品統計</th><th>項目</th><th>データ</th></tr>")
-    addValue("文字数", numLocale(d.length), d.length)
+    addValue("文字数", numLocale(d.length, "字"), d.length)
     addValue("読了時間", minuteStringJapanese(d.time ?? ""), d.time)
-    addValue("挿絵数", numLocale(d.sasie_cnt), d.sasie_cnt)
+    addValue("挿絵数", numLocale(d.sasie_cnt, "個"), d.sasie_cnt)
     addValue("会話率", numLocale(d.kaiwaritu,"%"), d.kaiwaritu)
     addValue("総合ポイント", numLocale(d.global_point, "pt"), d.global_point)
     addValue("日間ポイント", numLocale(d.daily_point, "pt"), d.daily_point)
@@ -685,15 +697,15 @@ function _tableApi(ncode: string, d: NovelApi, r18?:boolean){
     addValue("四半期ポイント", numLocale(d.quarter_point, "pt"), d.quarter_point)
     addValue("年間ポイント", numLocale(d.yearly_point, "pt"), d.yearly_point)
     if(!r18){
-        addValue("ブックマーク数", numLocale(d.fav_novel_cnt), d.fav_novel_cnt)
+        addValue("ブックマーク数", numLocale(d.fav_novel_cnt, "件"), d.fav_novel_cnt)
     }else{
-        addValue("Xブックマーク数", numLocale(d.fav_novel_cnt), d.fav_novel_cnt)
+        addValue("Xブックマーク数", numLocale(d.fav_novel_cnt, "件"), d.fav_novel_cnt)
     }
-    addValue("感想数", numLocale(d.impression_cnt), d.impression_cnt)
-    addValue("レビュー数", numLocale(d.review_cnt), d.review_cnt)
-    addValue("評価ポイント", numLocale(d.all_point), d.all_point)
-    addValue("評価者数", numLocale(d.all_hyoka_cnt), d.all_hyoka_cnt)
-    addValue("最終更新日時<br>（システム用）", `${d.updated_at}`)
+    addValue("感想数", numLocale(d.impression_cnt, "件"), d.impression_cnt)
+    addValue("レビュー数", numLocale(d.review_cnt, "件"), d.review_cnt)
+    addValue("評価ポイント", numLocale(d.all_point, "pt"), d.all_point)
+    addValue("評価者数", numLocale(d.all_hyoka_cnt, "人"), d.all_hyoka_cnt)
+    addValue("最終更新日時<br>（システム用）", `${getDateStr(d.updated_at)}`)
 }
 
 function _buttonApi(ncode: string, data: NovelApi){

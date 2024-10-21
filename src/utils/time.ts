@@ -39,8 +39,8 @@ export function getDatetimeFromString(str:string): Date{
  * @returns {string} - 日時の文字列
 */
 export function getDatetimeString(date:Date=new Date()): string{
-    if(date===null){return ""}
-    return date.getFullYear() + '/' + ('0' + (date.getMonth() + 1)).slice(-2) + '/' +('0' + date.getDate()).slice(-2) + ' ' +  ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2) + ':' + ('0' + date.getSeconds()).slice(-2) + '.' + date.getMilliseconds();
+    if(date===null || date===undefined){return ""}
+    return date.getFullYear() + '/' + ('0' + (date.getMonth() + 1)).slice(-2) + '/' +('0' + date.getDate()).slice(-2) + ' ' +  ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2) + ':' + ('0' + date.getSeconds()).slice(-2) + '.' + ('00' + date.getMilliseconds()).slice(-3);
 }
 
 /**
@@ -49,9 +49,19 @@ export function getDatetimeString(date:Date=new Date()): string{
  * @returns {string} - 日時の文字列
 */
 export function getDatetimeStringForFilename(date:Date=new Date()): string{
-    if(date===null){return ""}
+    if(date===null || date===undefined){return ""}
     return date.getFullYear() + '.' + ('0' + (date.getMonth() + 1)).slice(-2) + '.' +('0' + date.getDate()).slice(-2) + '-' +  ('0' + date.getHours()).slice(-2) + '.' + ('0' + date.getMinutes()).slice(-2) + '.' + ('0' + date.getSeconds()).slice(-2);
 
+}
+
+/**
+ * ミリ秒表示のない日時の文字列を取得する（yyyy/MM/dd HH:mm:ss）
+ * @param {Date} date - Dateオブジェクト（未指定の場合は現在時刻）
+ * @returns {string} - 日時の文字列
+*/
+export function getDatetimeStringWithoutMilisecond(date:Date=new Date()): string{
+    if(date===null || date===undefined){return ""}
+    return date.getFullYear() + '/' + ('0' + (date.getMonth() + 1)).slice(-2) + '/' +('0' + date.getDate()).slice(-2) + ' ' +  ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2) + ':' + ('0' + date.getSeconds()).slice(-2);
 }
 
 /**
@@ -60,7 +70,7 @@ export function getDatetimeStringForFilename(date:Date=new Date()): string{
  * @returns {string} - 日時の文字列
 */
 export function getDatetimeStringWithoutSecond(date:Date=new Date()): string{
-    if(date===null){return ""}
+    if(date===null || date===undefined){return ""}
     return date.getFullYear() + '/' + ('0' + (date.getMonth() + 1)).slice(-2) + '/' +('0' + date.getDate()).slice(-2) + ' ' +  ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2);
 }
 
