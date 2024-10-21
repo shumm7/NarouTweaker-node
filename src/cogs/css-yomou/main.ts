@@ -1,4 +1,4 @@
-import { getLocalOptions, getSessionOptions } from "utils/option";
+import { getLocalOptions, getSessionOptions } from "../../utils/option";
 import { checkRankPageDetail } from "../yomou/utils"
 import $ from 'jquery';
 
