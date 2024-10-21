@@ -5,43 +5,7 @@ import $ from 'jquery';
 /**
  * スキンリスト(v1)
  */
-export type SkinsV1 = Array<SkinV1_Data>
-
-
-export class SkinV1_Data {
-    name: string = "新規スキン"
-    description: string = ""
-    customizable: boolean =  true
-    show: boolean =  true
-    style: SkinV1_Style = new SkinV1_Style
-    css: CSS_String = ""
-
-    constructor(skin?: SkinV1|Record<string,any>){
-        if(skin instanceof Object){
-            if("name" in skin && typeof skin.name==="string"){
-                this.name = skin.name
-                if(this.name.length == 0){
-                    this.name="新規スキン"
-                }
-            }
-            if("description" in skin && typeof skin.description==="string"){
-                this.description = skin.description
-            }
-            if("customizable" in skin && typeof skin.customizable==="boolean"){
-                this.customizable = skin.customizable
-            }
-            if("show" in skin && typeof skin.show==="boolean"){
-                this.show = skin.show
-            }
-            if("style" in skin && typeof skin.style==="object"){
-                this.style = new SkinV1_Style(skin.style)
-            }
-            if("css" in skin && typeof skin.css==="string"){
-                this.css = skin.css
-            }
-        }
-    }
-}
+export type SkinsV1 = Array<SkinV1>
 
 /**
  * スキン(v1)
@@ -52,8 +16,62 @@ export class SkinV1_Data {
  * @param {SkinV1_Style} style - スタイルデータのオブジェクト
  * @param {CSS_String} css - カスタムCSS
  */
-export class SkinV1 extends SkinV1_Data{
-    get = ():Record<string,any> =>{
+export class SkinV1{
+    [key: string]: any
+
+    name: string = "新規スキン"
+    description: string = ""
+    customizable: boolean =  true
+    show: boolean =  true
+    style: SkinV1_Style = new SkinV1_Style
+    css: CSS_String = ""
+
+    constructor(skin?: SkinV1|Record<string,any>){
+        this.set(skin)
+    }
+
+    set(key?: Record<string,any>|SkinV1): void;
+    set(key: string, value: any): void;
+    set(key?: any, value?: any): void{
+        if(key instanceof SkinV1){
+            this.name = key.name
+            this.description = key.description
+            this.customizable = key.customizable
+            this.show = key.show
+            this.style = key.style
+            this.css = key.css
+        }else if(typeof key === "object" && key!==null){
+            for(var k of ["name", "description", "customizable", "show", "style", "css"]){
+                if(k in key){
+                    this.set(k, key[k])
+                }
+            }
+        }else if(typeof key === "string"){
+            if("name" === key && typeof key==="string"){
+                this.name = value
+                if(this.name.length == 0){
+                    this.name="新規スキン"
+                }
+            }
+            else if("description" === key && typeof value==="string"){
+                this.description = value
+            }
+            else if("customizable" === key && typeof value==="boolean"){
+                this.customizable = value
+            }
+            else if("show" === key && typeof value==="boolean"){
+                this.show = value
+            }
+            else if("style" === key && typeof value==="object"){
+                this.style = new SkinV1_Style(value)
+            }
+            else if("css" === key && typeof value==="string"){
+                this.css = value
+            }
+        }
+    }
+
+    get():Record<string,any> {
         return {
             name: this.name,
             description: this.description,
@@ -78,6 +96,10 @@ export class SkinV1 extends SkinV1_Data{
                 }
             }
         }
+    }
+
+    protected toJSON(){
+        return this.get()
     }
 }
 class SkinV1_Style {
@@ -162,7 +184,7 @@ class SkinV1_Style_Sublist{
  * デフォルトのスキン
  */
 export const localSkinsV1: SkinsV1 = [
-    {
+    new SkinV1({
         name: "ライト〔標準〕",
         description: "Narou Tweaker オリジナル",
         customizable: false,
@@ -185,8 +207,8 @@ export const localSkinsV1: SkinsV1 = [
             }
         },
         css: ""
-    },
-    {
+    }),
+    new SkinV1({
         name: "ダーク〔標準〕",
         description: "Narou Tweaker オリジナル",
         customizable: false,
@@ -209,8 +231,8 @@ export const localSkinsV1: SkinsV1 = [
             }
         },
         css: ""
-    },
-    {
+    }),
+    new SkinV1({
         name: "生成り〔標準〕",
         description: "Narou Tweaker オリジナル",
         customizable: false,
@@ -233,8 +255,8 @@ export const localSkinsV1: SkinsV1 = [
             }
         },
         css: ""
-    },
-    {
+    }),
+    new SkinV1({
         name: "水色〔標準〕",
         description: "Narou Tweaker オリジナル",
         customizable: false,
@@ -257,8 +279,8 @@ export const localSkinsV1: SkinsV1 = [
             }
         },
         css: ""
-    },
-    {
+    }),
+    new SkinV1({
         name: "標準設定〔小説家になろう〕",
         description: "サイトのデフォルト",
         customizable: false,
@@ -281,8 +303,8 @@ export const localSkinsV1: SkinsV1 = [
             }
         },
         css: ""
-    },
-    {
+    }),
+    new SkinV1({
         name: "ブラックモード1〔小説家になろう〕",
         description: "サイトのデフォルト",
         customizable: false,
@@ -305,8 +327,8 @@ export const localSkinsV1: SkinsV1 = [
             }
         },
         css: ""
-    },
-    {
+    }),
+    new SkinV1({
         name: "ブラックモード2〔小説家になろう〕",
         description: "サイトのデフォルト",
         customizable: false,
@@ -329,8 +351,8 @@ export const localSkinsV1: SkinsV1 = [
             }
         },
         css: ""
-    },
-    {
+    }),
+    new SkinV1({
         name: "通常1〔小説家になろう〕",
         description: "サイトのデフォルト",
         customizable: false,
@@ -353,8 +375,8 @@ export const localSkinsV1: SkinsV1 = [
             }
         },
         css: ""
-    },
-    {
+    }),
+    new SkinV1({
         name: "通常2〔小説家になろう〕",
         description: "サイトのデフォルト",
         customizable: false,
@@ -377,8 +399,8 @@ export const localSkinsV1: SkinsV1 = [
             }
         },
         css: ""
-    },
-    {
+    }),
+    new SkinV1({
         name: "シンプル〔小説家になろう〕",
         description: "サイトのデフォルト",
         customizable: false,
@@ -401,8 +423,8 @@ export const localSkinsV1: SkinsV1 = [
             }
         },
         css: ""
-    },
-    {
+    }),
+    new SkinV1({
         name: "おすすめ設定〔小説家になろう〕",
         description: "サイトのデフォルト",
         customizable: false,
@@ -425,7 +447,7 @@ export const localSkinsV1: SkinsV1 = [
             }
         },
         css: ""
-    }
+    })
 ]
 
 /**

@@ -1,5 +1,5 @@
 import { OptionUI_Item } from "options/_utils/optionUI_type";
-import { novel_customHeaderSortable, novel_fontEditor, novel_replacePattern, novel_skinEditor } from "./_optionsAction";
+import { novel_authorSkin, novel_customHeaderSortable, novel_fontEditor, novel_replacePattern, novel_skinEditor, novel_skinExport, novel_skinImport } from "./_optionsAction";
 
 export const novel_optionsList: Array<OptionUI_Item> = [
     /* 全般 (general) */
@@ -551,6 +551,7 @@ export const novel_optionsList: Array<OptionUI_Item> = [
             type: "custom",
             name: "default",
             data: "ui_novelSkinExportButtons",
+            action: novel_skinExport
         },
         location: {
             page: "novel",
@@ -576,6 +577,7 @@ export const novel_optionsList: Array<OptionUI_Item> = [
             type: "custom",
             name: "default",
             data: "ui_novelSkinImportButtons",
+            action: novel_skinImport
         },
         location: {
             page: "novel",
@@ -681,6 +683,7 @@ export const novel_optionsList: Array<OptionUI_Item> = [
             type: "custom",
             name: "default",
             data: "ui_novelAuthorCustomSkinGenerator",
+            action: novel_authorSkin
         },
         location: {
             page: "novel",

@@ -2,7 +2,7 @@ import { getLocalOptions } from "../../utils/option"
 import { ReplacePattern } from "../../utils/data"
 import { CustomIconID, CustomIconIDs, getExcludeIcons, novelIconList } from "../../utils/header"
 import { addFontEditButtonEvent, restoreFont } from "./_optionsAction_Font"
-import { addSkinEditButtonEvent, restoreSkins } from "./_optionsAction_Skin"
+import { addAuthorSkinEvent, addSkinEditButtonEvent, addSkinExportEvent, addSkinImportEvent, restoreSkins } from "./_optionsAction_Skin"
 
 import $ from 'jquery';
 import Sortable from 'sortablejs'
@@ -114,6 +114,21 @@ export function novel_customHeaderSortable(){
 export function novel_skinEditor(){
     addSkinEditButtonEvent()
     restoreSkins()
+}
+
+/* スキンのエクスポート */
+export function novel_skinExport(){
+    addSkinExportEvent()
+}
+
+/* スキンのインスポート */
+export function novel_skinImport(){
+    addSkinImportEvent()
+}
+
+/* 作者スキン */
+export function novel_authorSkin(){
+    addAuthorSkinEvent()
 }
 
 /* フォント */

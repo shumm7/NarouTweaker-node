@@ -226,7 +226,9 @@ export function addSkinEditButtonEvent() {
             }
         });
     })
+}
 
+export function addSkinExportEvent(){
     /* Export Button */
     $("#skin-export-json").on("click", (e) => {
         getLocalOptions(["skins", "selectedSkin"], function (data) {
@@ -245,7 +247,9 @@ export function addSkinEditButtonEvent() {
             field.trigger("input")
         });
     })
+}
 
+export function addSkinImportEvent(){
     /* Import Button */
     $("#skin-import-json").on("change", (evt: any) => {
         $("#skin-import-warnings").empty()
@@ -317,7 +321,9 @@ export function addSkinEditButtonEvent() {
             })
         })
     })
+}
 
+export function addAuthorSkinEvent(){
     /* Author Skin */
     const authorSkinImage: Record<string, any> = {
         "tiny-light": {
@@ -370,12 +376,13 @@ export function addSkinEditButtonEvent() {
         }
     }
     showAuthorSkinBanner()
+    
     $("#skin-author-export--submit").on("click", (e) => {
         getLocalOptions(["skins", "selectedSkin"], function (data) {
             let skins: SkinsV1 = localSkinsV1
             skins = skins.concat(data.skins)
             var idx = data.selectedSkin
-            var skin: any = new SkinV1(skins[idx]).get()
+            var skin: Record<string,any> = new SkinV1(skins[idx]).get()
 
             delete skin.name
             delete skin.description

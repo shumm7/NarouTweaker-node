@@ -157,6 +157,7 @@ input[type="number"] {
 .syntax-highlight-wrap {
     position: relative;
     width: 100%;
+    line-height: 18px;
 }
 .syntax-highlight-wrap textarea.syntax-highlight {
     appearance: none;
@@ -165,8 +166,10 @@ input[type="number"] {
     caret-color: #000;
     color: transparent;
     font-family: "BizinGothicDiscord", monospace;
-    line-height: 120%;
+    line-height: 100%;
     font-size: 100%;
+    white-space: pre-wrap;
+    word-break: break-all;
 }
 .syntax-highlight-wrap textarea.syntax-highlight::selection {
     background: rgba(77, 144, 254, 0.8);
@@ -195,7 +198,6 @@ input[type="number"] {
     height: 100%;
     white-space: pre-wrap;
     word-break: break-all;
-    line-height: 120%;
     user-select: none;
     font-family: "BizinGothicDiscord", monospace;
 }
