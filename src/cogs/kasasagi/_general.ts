@@ -610,19 +610,19 @@ function _tableApi(ncode: string, d: NovelApi, r18?:boolean){
         }
     }
 
-    function getYesNo(state?: number|boolean){
-        if(state==0 || state==false){
+    function getYesNo(state?: number){
+        if(state==0){
             return "いいえ"
         }
-        else if(state==1 || state==true){
+        else if(state==1){
             return "はい"
         }else{
             return ""
         }
     }
-    function getNcodeStr(ncode?: Ncode){
+    function getNcodeStr(ncode?: string){
         if(ncode!==undefined){
-            var n = ncode.ncode()
+            var n = new Ncode(ncode).ncode()
             if(n){
                 return n
             }
@@ -637,9 +637,9 @@ function _tableApi(ncode: string, d: NovelApi, r18?:boolean){
         return ""
     }
 
-    function getDateStr(v: Date | undefined): string{
-        if(v instanceof Date){
-            return getDatetimeStringWithoutMilisecond(v)
+    function getDateStr(v: string | undefined): string{
+        if(typeof v === "string"){
+            return getDatetimeStringWithoutMilisecond(getDatetimeFromString(v))
         }
         return ""
     }
@@ -650,7 +650,7 @@ function _tableApi(ncode: string, d: NovelApi, r18?:boolean){
     }else{
         addValue("タイトル", d.title ?? "")
     }
-    addValue("Nコード", ncode, getNcodeStr(d.ncode).toUpperCase())
+    addValue("Nコード", getNcodeStr(d.ncode), d.ncode ?? "")
     addValue("あらすじ", d.story ?? "")
     addValue("キーワード", d.keyword ?? "")
     if(!r18){
@@ -667,9 +667,9 @@ function _tableApi(ncode: string, d: NovelApi, r18?:boolean){
         addValue("掲載サイト", getNocgenre(d.nocgenre), d.nocgenre)
     }
     addValue("連載状態", getNovelEnd(d.end), d.end)
-    addValue("初回掲載日", `${getDateStr(d.general_firstup)}`)
-    addValue("最終掲載日", `${getDateStr(d.general_lastup)}`)
-    addValue("最終更新日", `${getDateStr(d.novelupdated_at)}`)
+    addValue("初回掲載日", getDateStr(d.general_firstup), d.general_firstup)
+    addValue("最終掲載日", getDateStr(d.general_lastup), d.general_lastup)
+    addValue("最終更新日", getDateStr(d.novelupdated_at), d.novelupdated_at)
     addValue("話数", numLocale(d.general_all_no, "話"), d.general_all_no)
     addValue("長期連載停止中", getYesNo(d.isstop), d.isstop)
     if(!r18){
@@ -705,7 +705,7 @@ function _tableApi(ncode: string, d: NovelApi, r18?:boolean){
     addValue("レビュー数", numLocale(d.review_cnt, "件"), d.review_cnt)
     addValue("評価ポイント", numLocale(d.all_point, "pt"), d.all_point)
     addValue("評価者数", numLocale(d.all_hyoka_cnt, "人"), d.all_hyoka_cnt)
-    addValue("最終更新日時<br>（システム用）", `${getDateStr(d.updated_at)}`)
+    addValue("最終更新日時<br>（システム用）", getDateStr(d.updated_at), d.updated_at)
 }
 
 function _buttonApi(ncode: string, data: NovelApi){

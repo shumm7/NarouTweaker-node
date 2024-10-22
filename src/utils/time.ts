@@ -1,3 +1,5 @@
+const INVALID_DATE = new Date('invalid date');
+
 /**
  * 日本語の日付の文字列を取得する（yyyy年MM月dd日）
  * @param {Date} date - Dateオブジェクト（未指定の場合は現在時刻）

@@ -1,8 +1,5 @@
 import { Ncode } from "./ncode"
 import { escapeHtml } from "./text"
-import { getDatetimeFromString } from "./time"
-
-const INVALID_DATE = new Date('invalid date');
 
 /************************************************************************************* */
 /*                                 なろう小説API                                        */
@@ -11,7 +8,7 @@ export interface NovelApi {
     [key: string]: any
 
     title: string|undefined
-    ncode: Ncode|undefined
+    ncode: string|undefined
     userid: number|undefined
     writer: string|undefined
     story: string|undefined
@@ -20,20 +17,20 @@ export interface NovelApi {
     genre: number|undefined
     gensaku: string|undefined
     keyword: string|undefined
-    general_firstup: Date|undefined
-    general_lastup: Date|undefined
+    general_firstup: string|undefined
+    general_lastup: string|undefined
     novel_type: number|undefined
     end: number|undefined
     general_all_no: number|undefined
     length: number|undefined
     time: number|undefined
-    isstop: boolean|undefined
-    isr15: boolean|undefined
-    isbl: boolean|undefined
-    isgl: boolean|undefined
-    iszankoku: boolean|undefined
-    istensei: boolean|undefined
-    istenni: boolean|undefined
+    isstop: number|undefined
+    isr15: number|undefined
+    isbl: number|undefined
+    isgl: number|undefined
+    iszankoku: number|undefined
+    istensei: number|undefined
+    istenni: number|undefined
     global_point: number|undefined
     daily_point: number|undefined
     weekly_point: number|undefined
@@ -47,8 +44,8 @@ export interface NovelApi {
     all_hyoka_cnt: number|undefined
     sasie_cnt: number|undefined
     kaiwaritu: number|undefined
-    novelupdated_at: Date|undefined
-    updated_at: Date|undefined
+    novelupdated_at: string|undefined
+    updated_at: string|undefined
 }
 
 
@@ -60,28 +57,6 @@ function strOrUndefined(v: any): string|undefined{
 function numOrUndefined(v: any): number|undefined{
     if(typeof v === "number"){
         return v
-    }
-}
-
-function dateOrUndefined(v: any): Date|undefined {
-    if(v instanceof Date){
-        if(v!== INVALID_DATE){
-            return v
-        }
-    }else if(typeof v==="string"){
-        return dateOrUndefined(getDatetimeFromString(v))
-    }
-}
-
-function boolOrUndefined(v: any): boolean|undefined{
-    if(typeof v === "boolean"){
-        return v
-    }else if(typeof v === "number"){
-        if(v==0){
-            return false
-        }else if(v===1){
-            return true
-        }
     }
 }
 
@@ -107,7 +82,7 @@ export function fetchNovelApi(ncode: Ncode|string|undefined, isR18: boolean = fa
 
             var api: NovelApi = {
                 title: strOrUndefined(n?.title),
-                ncode: new Ncode(strOrUndefined(n?.ncode)),
+                ncode: strOrUndefined(n?.ncode),
                 userid: numOrUndefined(n?.userid),
                 writer: strOrUndefined(n?.writer),
                 story: strOrUndefined(n?.story),
@@ -116,20 +91,20 @@ export function fetchNovelApi(ncode: Ncode|string|undefined, isR18: boolean = fa
                 genre: numOrUndefined(n?.genre),
                 gensaku: strOrUndefined(n?.gensaku),
                 keyword: strOrUndefined(n?.keyword),
-                general_firstup: dateOrUndefined(n?.general_firstup),
-                general_lastup: dateOrUndefined(n?.general_lastup),
+                general_firstup: strOrUndefined(n?.general_firstup),
+                general_lastup: strOrUndefined(n?.general_lastup),
                 novel_type: numOrUndefined(n?.novel_type),
                 end: numOrUndefined(n?.end),
                 general_all_no: numOrUndefined(n?.general_all_no),
                 length: numOrUndefined(n?.length),
                 time: numOrUndefined(n?.time),
-                isstop: boolOrUndefined(n?.isstop),
-                isr15: boolOrUndefined(n?.isr15),
-                isbl: boolOrUndefined(n?.isbl),
-                isgl: boolOrUndefined(n?.isgl), 
-                iszankoku: boolOrUndefined(n?.iszankoku), 
-                istensei: boolOrUndefined(n?.istensei), 
-                istenni: boolOrUndefined(n?.istenni), 
+                isstop: numOrUndefined(n?.isstop),
+                isr15: numOrUndefined(n?.isr15),
+                isbl: numOrUndefined(n?.isbl),
+                isgl: numOrUndefined(n?.isgl), 
+                iszankoku: numOrUndefined(n?.iszankoku), 
+                istensei: numOrUndefined(n?.istensei), 
+                istenni: numOrUndefined(n?.istenni), 
                 global_point: numOrUndefined(n?.global_point),
                 daily_point: numOrUndefined(n?.daily_point),
                 weekly_point: numOrUndefined(n?.weekly_point),
@@ -143,8 +118,8 @@ export function fetchNovelApi(ncode: Ncode|string|undefined, isR18: boolean = fa
                 all_hyoka_cnt: numOrUndefined(n?.all_hyoka_cnt),
                 sasie_cnt: numOrUndefined(n?.sasie_cnt),
                 kaiwaritu: numOrUndefined(n?.kaiwaritu),
-                novelupdated_at: dateOrUndefined(n?.novelupdated_at),
-                updated_at: dateOrUndefined(n?.updated_at),
+                novelupdated_at: strOrUndefined(n?.novelupdated_at),
+                updated_at: strOrUndefined(n?.updated_at),
             }
             callback(api)
             return
