@@ -1,7 +1,7 @@
 import { getNcodeFromURL } from "../../utils/ncode";
 import { checkRankPageDetail } from "./utils";
 import { escapeHtml } from "../../utils/text";
-import { getDatetimeStringWithoutSecond } from "../../utils/time";
+import { getDatetimeFromString, getDatetimeStringWithoutSecond } from "../../utils/time";
 import { getGenreNumber } from "../../utils/narou";
 import { getLocalOptions } from "../../utils/option";
 import { fetchNovelApi } from "../../utils/api";
@@ -235,7 +235,7 @@ function showRankTop_NovelDetails(){
                             // 最終更新日時を表示
                             var str = ""
                             if(n.general_lastup!==undefined){
-                                str = `最終更新日：${getDatetimeStringWithoutSecond(n.general_lastup)}`
+                                str = `最終更新日：${getDatetimeStringWithoutSecond(getDatetimeFromString(n.general_lastup))}`
                             }
                             elem.find(".p-ranktop-item__infomation").append(`
                                 <span class="p-ranktop-item__separator p-ranktop-item__update-date">
