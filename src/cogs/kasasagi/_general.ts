@@ -586,15 +586,9 @@ function _tableApi(ncode: string, d: NovelApi, r18?:boolean){
     $("#novel_detail .novel_info").append("<table class='access-table'><tbody></tbody></table>")
     var table = $("#novel_detail .novel_info table tbody")
 
-    function addValue(key: string, desc:string, value?:string|number|boolean, noEscape?:boolean){
+    function addValue(key: string, desc:string, value?:string|number, noEscape?:boolean){
         if(typeof value == "number"){
             value = `${value}`
-        }else if(typeof value == "boolean"){
-            if(value){
-                value = "1"
-            }else{
-                value = "0"
-            }
         }
 
         if(!noEscape){
