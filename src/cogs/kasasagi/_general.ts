@@ -695,6 +695,7 @@ function _tableApi(ncode: string, d: NovelApi, r18?:boolean){
     }else{
         addValue("Xブックマーク数", numLocale(d.fav_novel_cnt, "件"), d.fav_novel_cnt)
     }
+    addValue("週間ユニークユーザ", numLocale(d.weekly_unique, "人"), d.weekly_unique)
     addValue("感想数", numLocale(d.impression_cnt, "件"), d.impression_cnt)
     addValue("レビュー数", numLocale(d.review_cnt, "件"), d.review_cnt)
     addValue("評価ポイント", numLocale(d.all_point, "pt"), d.all_point)

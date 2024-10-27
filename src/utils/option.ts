@@ -7,6 +7,8 @@ import { FontFamiliesV1 } from "./v1_font"
 import { SkinsV1 } from "./v1_skin"
 import { OptionID, OptionUI_Item, OptionUI_ItemID } from "../options/_utils/optionUI_type"
 import { Ncode } from "./ncode"
+import { AvailableSkin, maxLocalSkins, SkinV2 } from "./v2_skin"
+
 /**
  * 設定データ（storage.local）
  */
@@ -151,6 +153,27 @@ export class LocalOptions {
     novelAuthorCustomSkin: boolean = true
     novelAuthorCustomSkinWarning: boolean = true
 
+    /* v2 Skin */
+    novelSkinsAvailable: Array<AvailableSkin> = [
+        {src: "internal", key: 0},
+        {src: "internal", key: 1},
+        {src: "local", key: 0},
+    ]
+    novelSkinSelected: number = 0
+    novelSkins: Array<SkinV2> = [
+        new SkinV2({
+            name: "スキン",
+            description: "サンプル",
+            version: 2,
+            preview: {
+                text: "red",
+                background: "yellow"
+            },
+            style: [],
+            css: ""
+        })
+    ]
+
     /* Font */
     fontSelectedFontFamily: number = 0
     fontFontFamilyList: FontFamiliesV1 = []
@@ -278,9 +301,9 @@ export class LocalOptions {
 
     /**
      * コンストラクタ
-     * @param {undefined|Record<string,any>|LocalOptions} data - 辞書型のデータで初期値を設定する（無効な値は全て除外される）
+     * @param {undefined|Record<string,any>|Partial<LocalOptions>|LocalOptions} data - 辞書型のデータで初期値を設定する（無効な値は全て除外される）
      */
-    constructor(data?: Record<string, any> | LocalOptions) {
+    constructor(data?: Record<string, any> | Partial<LocalOptions> | LocalOptions) {
         this.set(data)
     }
 
@@ -293,25 +316,39 @@ export class LocalOptions {
 
     /**
      * キーに値を設定する
-     * @param {Record<string,any>} value - 設定するキーと値の辞書
+     * @param {Record<string,any>|Partial<LocalOptions>} value - 設定するキーと値の辞書
      */
-    set(value: Record<string, any>): void
+    set(value: Record<string, any>|Partial<LocalOptions>): void
     /**
      * キーに値を設定する
      * @param {LocalOptions} value
      */
     set(value: Record<string, any>): void
-    set(key?: OptionID | Record<string, any> | LocalOptions, value?: any): void;
-    set(key?: OptionID | Record<string, any> | LocalOptions, value?: any): void {
+    set(key?: OptionID | Record<string, any> | LocalOptions | Partial<LocalOptions>, value?: any): void;
+    set(key?: OptionID | Record<string, any> | LocalOptions | Partial<LocalOptions>, value?: any): void {
         if (key instanceof LocalOptions) {
+            this.novelSkins = []
             this.set(key.get())
         }
         else if (typeof key === "string") {
-            var value = LocalOptions._checkValue(key, value)
-            if (value !== undefined) {
-                this[key] = value
+            /** novelSkin_X */
+            const m = key.match(/^novelSkin_(\d)+$/)
+            if(m!==null){
+                const idx = Number(m[1])
+                if(isFinite(idx) && idx < maxLocalSkins && idx >= 0 && value instanceof Object){
+                    this.novelSkins[idx] = new SkinV2(value)
+                }
+            }
+            
+            /** others */
+            else {
+                var value = LocalOptions._checkValue(key, value)
+                if (value !== undefined) {
+                    this[key] = value
+                }
             }
         } else if (key !== undefined) {
+            this.novelSkins = []
             for (var k of Object.keys(key)) {
                 this.set(k, key[k])
             }
@@ -330,9 +367,9 @@ export class LocalOptions {
      */
     get(parameters: OptionID | Array<OptionID>): Record<string, any>
 
-    get(parameters?: null | OptionID | Array<OptionID>): Record<string, any> {
-        var ret: Record<string, any> = {}
-        if (parameters !== undefined && parameters !== null) {
+    get(parameters?: null | OptionID | Array<OptionID>): Partial<LocalOptions> {
+        var ret: Partial<LocalOptions> = {}
+        if (parameters !== undefined && parameters !== null) { // export each
             var params: Array<OptionID>
             if (typeof parameters === "string") {
                 params = [parameters]
@@ -341,7 +378,24 @@ export class LocalOptions {
             }
 
             for (const key of params) {
-                if (key in this) {
+                /** novelSkin_X */
+                const m = key.match(/^novelSkin_(\d)+$/)
+                if(m!==null){
+                    const skinIdx = Number(m[1])
+                    if( isFinite(skinIdx) && this.novelSkinIndex.includes(skinIdx) && this.novelSkins.length > skinIdx && skinIdx >= 0 && this.novelSkins.at(skinIdx)!==undefined ){
+                        ret[`novelSkin_${skinIdx}`] = this.novelSkins.at(skinIdx)
+                        continue
+                    }
+                }else if(key==="novelSkins"){
+                    for(const [key, value] of this.novelSkins.entries()){
+                        if(value!==undefined ){
+                            ret[`novelSkin_${key}`] = value
+                        }
+                    }
+                }
+
+                /** others */
+                else if (key in this) {
                     var value = this[key]
                     if (value !== undefined && typeof value !== "function") {
                         ret[key] = value
@@ -349,9 +403,20 @@ export class LocalOptions {
                 }
             }
             return ret
-        } else {
+        } else { // export all
             for (const [key, value] of Object.entries(this)) {
-                if (typeof value !== "undefined" && typeof value !== "function") {
+                /** novelSkin_X */
+                if(key === "novelSkins"){
+                    for(const idx of this.novelSkinIndex){
+                        if( this.novelSkins.length > idx && idx >= 0 && this.novelSkins.at(idx) instanceof SkinV2 ){
+                            ret[`novelSkin_${idx}`] = this.novelSkins.at(idx)
+                            continue
+                        }
+                    }
+                }
+
+                /** others */
+                else if (typeof value !== "undefined" && typeof value !== "function") {
                     ret[key] = value
                 }
             }
@@ -474,6 +539,24 @@ export class LocalOptions {
                     }
                 }
                 return
+            } else if("novelSkinsAvailable" === key){
+                if(Array.isArray(value)){
+                    var p: Array<AvailableSkin> = []
+                    for(let i = 0; i<value.length; i++){
+                        const src = value[i]?.src
+                        const key = value[i]?.key
+                        if((src==="internal" || src==="local" || src==="sync") && typeof key === "number" && isFinite(key)){
+                            p.push(value[i])
+                        }
+                    }
+                    return p
+                }
+            } else if("novelSkinSelected" === key){
+                const src = value?.src
+                const key = value?.key
+                if((src==="internal" || src==="local" || src==="sync") && typeof key === "number" && isFinite(key)){
+                    return {src: src, key: key}
+                }
             }
             return value
         }
@@ -492,6 +575,7 @@ export class SyncOptions {
     novelHistoryData: Record<string, [number, number, string]> = {}
     workspaceImpressionMarked: ImpressionKanrino = {}
     workspaceImpressionHidden: ImpressionKanrino = {}
+    novelSkins: Array<SkinV2> = []
 
     /**
      * コンストラクタ
@@ -509,25 +593,39 @@ export class SyncOptions {
     set(key: OptionID, value: any): void
     /**
     * キーに値を設定する
-    * @param {Record<string,any>} value - 設定するキーと値の辞書
+    * @param {Record<string,any>|Partial<SyncOptions>} value - 設定するキーと値の辞書
     */
-    set(value: Record<string, any>): void
+    set(value: Record<string, any>|Partial<SyncOptions>): void
     /**
     * キーに値を設定する
     * @param {SyncOptions} value
     */
     set(value: SyncOptions): void
-    set(key?: OptionID | Record<string, any> | SyncOptions, value?: any): void;
-    set(key?: OptionID | Record<string, any> | SyncOptions, value?: any): void {
+    set(key?: OptionID | Record<string, any> | Partial<SyncOptions> | SyncOptions, value?: any): void;
+    set(key?: OptionID | Record<string, any> | Partial<SyncOptions> | SyncOptions, value?: any): void {
         if (key instanceof SyncOptions) {
+            this.novelSkins = []
             this.set(key.get())
         }
         else if (typeof key === "string") {
-            var value = SyncOptions._checkValue(key, value)
-            if (value !== undefined) {
-                this[key] = value
+            /** novelSkin_X */
+            const m = key.match(/^novelSkin_(\d)+$/)
+            if(m!==null){
+                const idx = Number(m[1])
+                if(isFinite(idx) && idx < maxLocalSkins && idx >= 0 && value instanceof Object){
+                    this.novelSkins[idx] = new SkinV2(value)
+                }
+            }
+            
+            /** others */
+            else {
+                var value = SyncOptions._checkValue(key, value)
+                if (value !== undefined) {
+                    this[key] = value
+                }
             }
         } else if (key !== undefined) {
+            this.novelSkins = []
             for (var k of Object.keys(key)) {
                 this.set(k, key[k])
             }
@@ -556,15 +654,45 @@ export class SyncOptions {
             }
 
             for (const key of params) {
-                var value = this[key]
-                if (typeof value !== "undefined" && typeof value !== "function") {
-                    ret[key] = value
+                /** novelSkin_X */
+                const m = key.match(/^novelSkin_(\d)+$/)
+                if(m!==null){
+                    const skinIdx = Number(m[1])
+                    if( isFinite(skinIdx) && this.novelSkinIndex.includes(skinIdx) && this.novelSkins.length > skinIdx && skinIdx >= 0 && this.novelSkins.at(skinIdx)!==undefined ){
+                        ret[`novelSkin_${skinIdx}`] = this.novelSkins.at(skinIdx)
+                        continue
+                    }
+                }else if(key==="novelSkins"){
+                    for(const [key, value] of this.novelSkins.entries()){
+                        if(value!==undefined ){
+                            ret[`novelSkin_${key}`] = value
+                        }
+                    }
+                }
+
+                /** others */
+                else if (key in this) {
+                    var value = this[key]
+                    if (typeof value !== "undefined" && typeof value !== "function") {
+                        ret[key] = value
+                    }
                 }
             }
             return ret
         } else {
             for (const [key, value] of Object.entries(this)) {
-                if (typeof value !== "undefined" && typeof value !== "function") {
+                /** novelSkin_X */
+                if(key === "novelSkins"){
+                    for(const idx of this.novelSkinIndex){
+                        if( this.novelSkins.length > idx && idx >= 0 && this.novelSkins.at(idx) instanceof SkinV2 ){
+                            ret[`novelSkin_${idx}`] = this.novelSkins.at(idx)
+                            continue
+                        }
+                    }
+                }
+
+                /** others */
+                else if (typeof value !== "undefined" && typeof value !== "function") {
                     ret[key] = value
                 }
             }
@@ -695,16 +823,16 @@ export class SessionOptions {
     set(key: OptionID, value: any): void
     /**
     * キーに値を設定する
-    * @param {Record<string,any>} value - 設定するキーと値の辞書
+    * @param {Record<string,any>|Partial<SessionOptions>} value - 設定するキーと値の辞書
     */
-    set(value: Record<string, any>): void
+    set(value: Record<string, any>|Partial<SessionOptions>): void
     /**
     * キーに値を設定する
     * @param {SessionOptions} value
     */
     set(value: SessionOptions): void
-    set(key?: OptionID | Record<string, any> | SessionOptions, value?: any): void;
-    set(key?: OptionID | Record<string, any> | SessionOptions, value?: any): void {
+    set(key?: OptionID | Record<string, any> | Partial<SessionOptions> | SessionOptions, value?: any): void;
+    set(key?: OptionID | Record<string, any> | Partial<SessionOptions> | SessionOptions, value?: any): void {
         if (key instanceof SessionOptions) {
             this.set(key.get())
         }

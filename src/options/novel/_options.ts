@@ -515,6 +515,32 @@ export const novel_optionsList: Array<OptionUI_Item> = [
 
     /* スキン (style) */
     {
+        id: "novelSkinV2",
+        title: "スキン",
+        description: {
+            text: "小説ページの外観を変更します。",
+            keywords: ["すきん", "レイアウト", "デザイン", "外観", "スキン", "スキン設定", "CSS"],
+        },
+        ui: {
+            type: "custom",
+            name: "wide",
+            data: "ui_novelSkinSelect",
+            action: novel_skinEditor,
+        },
+        location: {
+            page: "novel",
+            category: "style",
+        },
+        value: {
+            buttons: {
+                reset: true,
+                favorite: true,
+            },
+            related: ["selectedSkin"],
+        },
+    },
+
+    {
         id: "novelSkin",
         title: "スキン",
         description: {

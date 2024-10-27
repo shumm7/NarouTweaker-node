@@ -46,6 +46,7 @@ export interface NovelApi {
     kaiwaritu: number|undefined
     novelupdated_at: string|undefined
     updated_at: string|undefined
+    weekly_unique: number|undefined
 }
 
 
@@ -67,9 +68,9 @@ export function fetchNovelApi(ncode: Ncode|string|undefined, isR18: boolean = fa
     let url
     if(_ncode){
         if(isR18){
-            url = `https://api.syosetu.com/novel18api/api/?out=json&libtype=2&ncode=${_ncode}`
+            url = `https://api.syosetu.com/novel18api/api/?out=json&libtype=2&opt=weekly&ncode=${_ncode}`
         }else{
-            url = `https://api.syosetu.com/novelapi/api/?out=json&libtype=2&ncode=${_ncode}`
+            url = `https://api.syosetu.com/novelapi/api/?out=json&libtype=2&opt=weekly&ncode=${_ncode}`
         }
     }else{
         callback(undefined)
@@ -120,6 +121,7 @@ export function fetchNovelApi(ncode: Ncode|string|undefined, isR18: boolean = fa
                 kaiwaritu: numOrUndefined(n?.kaiwaritu),
                 novelupdated_at: strOrUndefined(n?.novelupdated_at),
                 updated_at: strOrUndefined(n?.updated_at),
+                weekly_unique: numOrUndefined(n?.weekly_unique)
             }
             callback(api)
             return

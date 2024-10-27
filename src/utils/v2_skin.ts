@@ -1,9 +1,11 @@
-import { LocalOptions } from "./option"
+import { ArrayExt } from "./array"
+import { getLocalOptions, getSyncOptions, LocalOptions, setLocalOptions, setSyncOptions, SyncOptions } from "./option"
 import { checkSkinVersion } from "./skin"
 import { minifyCss } from "./text"
 import { CSS_String } from "./type"
 import { SkinV1 } from "./v1_skin"
 
+export type SkinV2Src = "internal"|"local"|"sync"
 export const maxLocalSkins = 30
 export const maxSyncSkins = 10
 
@@ -13,7 +15,7 @@ export const maxSyncSkins = 10
  * @param {string} description - 説明文
  * @param {boolean} customizable - 編集可能かどうか
  * @param {boolean} show - 表示するかどうか
- * @param {SkinV1_Style} style - スタイルデータのオブジェクト
+ * @param {SkinV2Style} style - スタイルデータのオブジェクト
  * @param {CSS_String} css - カスタムCSS
  */
 export class SkinV2{
@@ -200,6 +202,12 @@ class SkinV2Style {
     }
 }
 
+/** 使用可能スキン */
+export interface AvailableSkin {
+    src: SkinV2Src
+    key: number
+}
+
 
 export const localSkinsV2: Array<SkinV2> = [
     new SkinV2({
@@ -371,27 +379,28 @@ function convertSkinV1toV2(skin: Record<string,any>|SkinV1): SkinV2{
     })
 }
 
-function generateSkinVariable(style: Array<any>){
-    var root = ""
-
-    /* .js-customlayout */
-    style.forEach(function(_s){
-        const s = new SkinV2Style(_s)
-        if(s){
-            if(typeof s.value ==="string" && typeof s.key ==="string"){
-                if(s.type=="v"){
-                    root += `--${s.key}:var(--${s.value})!important;`
-                }else if(s.type=="c"){
-                    root += `--${s.key}:${s.value}!important;`
-                }
-            }
-        }
-    })
-    return `:root,body,*[class^="js-customlayout"],.narou-tweaker--custom-skin[class^="js-customlayout"]{${root}}`
-}
-
 /* スキン用CSSを生成 */
 export function makeSkinCSS(skin: SkinV2, local?: LocalOptions){
+    function generateSkinVariable(style: Array<any>){
+        var root = ""
+    
+        /* .js-customlayout */
+        style.forEach(function(_s){
+            const s = new SkinV2Style(_s)
+            if(s){
+                if(typeof s.value ==="string" && typeof s.key ==="string"){
+                    if(s.type=="v"){
+                        root += `--${s.key}:var(--${s.value})!important;`
+                    }else if(s.type=="c"){
+                        root += `--${s.key}:${s.value}!important;`
+                    }
+                }
+            }
+        })
+        return `:root,body,*[class^="js-customlayout"],.narou-tweaker--custom-skin[class^="js-customlayout"]{${root}}`
+    }
+
+    
     var rule = ""
 
     /* データからスキンを生成 */
@@ -522,4 +531,168 @@ export function makeSkinCSS(skin: SkinV2, local?: LocalOptions){
 
 
     return minifyCss(rule)
+}
+
+/* ツール */
+export function getSkin(src: "internal", key: number): SkinV2|undefined
+export function getSkin(src: "local", key: number, local?: LocalOptions): SkinV2|undefined
+export function getSkin(src: "sync", key: number, sync?: SyncOptions): SkinV2|undefined
+export function getSkin(src: SkinV2Src, key: number, local?: LocalOptions|SyncOptions, sync?: SyncOptions): SkinV2|undefined;
+export function getSkin(src: SkinV2Src, key: number, local?: LocalOptions|SyncOptions, sync?: SyncOptions): SkinV2|undefined{
+    if(src === "internal"){
+        return localSkinsV2.at(key)
+    }else if(src === "local" && local instanceof LocalOptions){
+        return local.novelSkins.at(key)
+    }else if(src === "sync" && local instanceof SyncOptions){
+        return local.novelSkins.at(key)
+    }else if(src === "sync" && sync instanceof SyncOptions){
+        return sync.novelSkins.at(key)
+    }
+}
+
+export function getSkinList(src: "internal"): Array<SkinV2>
+export function getSkinList(src: "local", local?: LocalOptions): Array<SkinV2>
+export function getSkinList(src: "sync", sync?: SyncOptions): Array<SkinV2>
+export function getSkinList(src: SkinV2Src, local?: LocalOptions|SyncOptions, sync?: SyncOptions): Array<SkinV2>;
+export function getSkinList(src: SkinV2Src, local?: LocalOptions|SyncOptions, sync?: SyncOptions): Array<SkinV2>{
+    if(src === "internal"){
+        return localSkinsV2
+    }else if(src === "local" && local instanceof LocalOptions){
+        return local.novelSkins
+    }else if(src === "sync" && local instanceof SyncOptions){
+        return local.novelSkins
+    }else if(src === "sync" && sync instanceof SyncOptions){
+        return sync.novelSkins
+    }
+    return []
+}
+
+export function getSkinFromIndex(i: number, local: LocalOptions, sync: SyncOptions): SkinV2|undefined{
+    const l = local.novelSkinsAvailable.at(i)
+    if(l!==undefined){
+        return getSkin(l.src, l.key, local, sync)
+    }
+}
+
+export function getSelectedSkin(local: LocalOptions, sync: SyncOptions): SkinV2|undefined{
+    return getSkinFromIndex(local.novelSkinSelected, local, sync)
+}
+
+
+export function addSkin(skin: SkinV2, src: "local"|"sync"): void{
+    if(src==="local"){
+        getLocalOptions(null, (local)=>{
+            const key: number = ArrayExt.putIn(local.novelSkins, skin)
+            local.novelSkinsAvailable.push({src: "sync", key: key})
+            setLocalOptions(local.get([`novelSkin_${key}`, "novelSkinsAvailable"]))
+        })
+    }else if(src === "sync"){
+        getSyncOptions(null, (sync)=>{
+        getLocalOptions(null, (local)=>{
+            const key: number = ArrayExt.putIn(sync.novelSkins, skin)
+            local.novelSkinsAvailable.push({src: "sync", key: key})
+            setLocalOptions(local.get(["novelSkinsAvailable"])).then(()=>{
+                setSyncOptions(sync.get(`novelSkin_${key}`))
+            })
+        })
+        })
+    }
+}
+
+export function removeSkin(i: number){
+    getLocalOptions(null, (local)=>{
+        const list = local.novelSkinsAvailable.at(i)
+
+        if(list!==undefined && list.src!=="internal"){
+            if(i===local.novelSkinSelected){
+                local.novelSkinSelected = local.novelSkinSelected - 1
+            }
+            if(local.novelSkinSelected < 0){
+                local.novelSkinSelected = 0
+            }
+
+            if(list.src==="local"){
+                local.novelSkinsAvailable = local.novelSkinsAvailable.filter((v)=>{return v?.src!==list.src || v?.key!==list.key})
+                chrome.storage.local.remove(`novelSkin_${list.key}`, ()=>{
+                    setLocalOptions(local.get(["novelSkinsAvailable", "novelSkinSelected"]))
+                })
+            }else if(list.src === "sync"){
+                local.novelSkinsAvailable = local.novelSkinsAvailable.filter((v)=>{return v?.src!==list.src || v?.key!==list.key})
+                chrome.storage.sync.remove(`novelSkin_${list.key}`, ()=>{
+                    setLocalOptions(local.get(["novelSkinsAvailable", "novelSkinSelected"]))
+                })
+            }
+        }
+
+    })
+}
+
+export function activateSkin(src: SkinV2Src, key: number, selectThis?: boolean){
+    getLocalOptions(null, (local)=>{
+        if(src === "internal"){
+            if(localSkinsV2.at(key)!==undefined){
+                const p = ArrayExt.putIn(local.novelSkinsAvailable, {src: src, key: key})
+                if(selectThis){
+                    local.novelSkinSelected = p
+                }else if(p <= local.novelSkinSelected){
+                    local.novelSkinSelected += 1
+                }
+                setLocalOptions(local.get(["novelSkinsAvailable", "novelSkinSelected"]))
+            }
+        }else if(src === "local"){
+            if(local.novelSkins.at(key)!==undefined){
+                const p = ArrayExt.putIn(local.novelSkinsAvailable, {src: src, key: key})
+                if(selectThis){
+                    local.novelSkinSelected = p
+                }else if(p <= local.novelSkinSelected){
+                    local.novelSkinSelected += 1
+                }
+                setLocalOptions(local.get(["novelSkinsAvailable", "novelSkinSelected"]))
+            }
+        }else if(src === "sync"){
+            getSyncOptions(null, (sync)=> {
+                if(sync.novelSkins.at(key)!==undefined){
+                    const p = ArrayExt.putIn(local.novelSkinsAvailable, {src: src, key: key})
+                    if(selectThis){
+                        local.novelSkinSelected = p
+                    }else if(p <= local.novelSkinSelected){
+                        local.novelSkinSelected += 1
+                    }
+                    setLocalOptions(local.get(["novelSkinsAvailable", "novelSkinSelected"]))
+                }
+            })
+        }
+    })
+}
+
+export function inactivateSkin(i: number){
+    getLocalOptions(null, (local)=>{
+        const list = local.novelSkinsAvailable.at(i)
+        if(list!==undefined){
+            if(i===local.novelSkinSelected){
+                local.novelSkinSelected = local.novelSkinSelected - 1
+            }
+            if(local.novelSkinSelected < 0){
+                local.novelSkinSelected = 0
+            }
+
+            ArrayExt.removeAt(local.novelSkinsAvailable, i)
+            setLocalOptions(local.get(["novelSkinsAvailable", "novelSkinSelected"]))
+        }
+    })
+}
+
+export function swapAvailableSkin(from: number, to: number){
+    getLocalOptions(null, (local)=>{
+        const list = local.novelSkinsAvailable
+        if(list.at(from)!==undefined && list.at(to)!==undefined){
+            ArrayExt.swap(list, from, to)
+            if(from===local.novelSkinSelected){
+                local.novelSkinSelected = to
+            }else if(to===local.novelSkinSelected){
+                local.novelSkinSelected = from
+            }
+            setLocalOptions(local.get(["novelSkinsAvailable", "novelSkinSelected"]))
+        }
+    })
 }
