@@ -1,5 +1,4 @@
 import { nt } from "../../utils/narou-tweaker"
-import { escapeHtml } from "../../utils/text"
 
 import $ from 'jquery';
 
@@ -24,7 +23,7 @@ function _viewBookImage(){
         var image = $(".p-syuppan-detail__image-link[href^='https://www.amazon.co.jp/dp/']")
         var amazonLink = image.prop("href")
 
-        var amazonId = escapeHtml(amazonLink.match(/^https\:\/\/www\.amazon\.co\.jp\/dp\/(.*)\/$/)[1])
+        var amazonId = nt.text.escapeHtml(amazonLink.match(/^https\:\/\/www\.amazon\.co\.jp\/dp\/(.*)\/$/)[1])
         var imageUrl = `https://images.amazon.com/images/P/${amazonId}.09_SL500_.jpg`
 
         image.empty()
@@ -51,7 +50,7 @@ function _listBookImage(){
                             var image = body.find(".p-syuppan-detail__image-link[href^='https://www.amazon.co.jp/dp/']")
                             var amazonLink = image.prop("href")
                     
-                            var amazonId = escapeHtml(amazonLink.match(/^https\:\/\/www\.amazon\.co\.jp\/dp\/(.*)\/$/)[1])
+                            var amazonId = nt.text.escapeHtml(amazonLink.match(/^https\:\/\/www\.amazon\.co\.jp\/dp\/(.*)\/$/)[1])
                             var imageUrl = `https://images.amazon.com/images/P/${amazonId}.09_SL500_.jpg`
 
                             listImage.removeClass("p-syuppan-list__image--noimage")

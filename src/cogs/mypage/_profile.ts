@@ -1,7 +1,6 @@
 
 import { nt } from "../../utils/narou-tweaker"
 import { getUserIdFromURL, isR18 } from "../../utils/narou"
-import { escapeHtml, replaceUrl } from "../../utils/text"
 import { fetchUserApi } from "../../utils/api"
 
 import $ from 'jquery';
@@ -88,7 +87,7 @@ export function _profile(){
                     
                     comment.children("p").each(function (idx, elem) {
                         let str = $(elem).html();
-                        replaceUrl(elem, !data.mypageDisableExternalURLWarning)
+                        nt.text.replaceUrl(elem, !data.mypageDisableExternalURLWarning)
                     });
                 });
             }
@@ -143,12 +142,12 @@ export function _profile(){
                                 }
                                 list.push({
                                     userid: userid,
-                                    author: escapeHtml(author),
-                                    title: escapeHtml(title),
-                                    link: escapeHtml(link),
-                                    publisher: escapeHtml(publisher),
-                                    label: escapeHtml(label),
-                                    date: escapeHtml(date)
+                                    author: nt.text.escapeHtml(author),
+                                    title: nt.text.escapeHtml(title),
+                                    link: nt.text.escapeHtml(link),
+                                    publisher: nt.text.escapeHtml(publisher),
+                                    label: nt.text.escapeHtml(label),
+                                    date: nt.text.escapeHtml(date)
                                 })
                             }
                         })

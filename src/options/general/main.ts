@@ -1,5 +1,4 @@
 import { setup } from "../general";
-import { escapeHtml } from "../../utils/text";
 import { getExtensionVersion } from "../../utils/misc";
 import { nt } from "../../utils/narou-tweaker";
 
@@ -38,9 +37,9 @@ function showPatchnotes(){
             `)
 
             const currentVersion = getExtensionVersion()
-            const version = escapeHtml(data?.version)
-            const date = escapeHtml(data?.date ?? "")
-            const url = escapeHtml(data?.url ?? `https://github.com/shumm7/Narou-Tweaker/releases/tag/${version}`)
+            const version = nt.text.escapeHtml(data?.version)
+            const date = nt.text.escapeHtml(data?.date ?? "")
+            const url = nt.text.escapeHtml(data?.url ?? `https://github.com/shumm7/Narou-Tweaker/releases/tag/${version}`)
             const release = data?.release
             const patchnote = data?.patchnote[lang]
             const headerList = {

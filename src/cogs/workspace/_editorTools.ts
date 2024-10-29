@@ -1,5 +1,4 @@
 import { saveText } from "../../utils/misc"
-import { autoIndent, escapeHtml, escapeRegex } from "../../utils/text"
 import { getSelectedContent } from "./_editor"
 import { nt } from "../../utils/narou-tweaker"
 
@@ -135,11 +134,11 @@ export function _toolSearch(){
         var startIndex = 0
         if(searchResult.length>0){
             $.each(searchResult, function(i, result){
-                ret += escapeHtml(text.substring(startIndex, result.start))
+                ret += nt.text.escapeHtml(text.substring(startIndex, result.start))
                 if(i==focusIndex){
-                    ret += `<mark class="focused">${escapeHtml(text.substring(result.start ?? 0, (result.end ?? 0) + 1))}</mark>`
+                    ret += `<mark class="focused">${nt.text.escapeHtml(text.substring(result.start ?? 0, (result.end ?? 0) + 1))}</mark>`
                 }else{
-                    ret += `<mark>${escapeHtml(text.substring(result.start ?? 0, (result.end ?? 0) + 1))}</mark>`
+                    ret += `<mark>${nt.text.escapeHtml(text.substring(result.start ?? 0, (result.end ?? 0) + 1))}</mark>`
                 }
                 startIndex = (result.end ?? 0) + 1
             })
@@ -157,7 +156,7 @@ export function _toolSearch(){
         else{regexMode = "gi"}
 
         // プレーンテキスト
-        if(!searchMode.regex){pattern = escapeRegex(pattern)}
+        if(!searchMode.regex){pattern = nt.text.escapeRegex(pattern)}
 
         // 単語単位での検索
         if(searchMode.word){pattern = `\\b${pattern}\\b`}
@@ -621,7 +620,7 @@ export function _toolIndent(){
         if(form!==undefined && $(form).length){
             var text = $(form).val()
             if(typeof text === "string" && text.length>0){
-                $(form).val(autoIndent(text))
+                $(form).val(nt.text.autoIndent(text))
                 $(form).trigger("input")
             }
         }

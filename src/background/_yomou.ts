@@ -1,4 +1,3 @@
-import { minifyCss } from "../utils/text"
 import { nt } from "../utils/narou-tweaker"
 
 export function yomouCssListener(){
@@ -100,7 +99,7 @@ function makeRankCSS(){
             `
         }
 
-        nt.storage.session.set({yomouRank_AppliedCSS: minifyCss(rule)})
+        nt.storage.session.set({yomouRank_AppliedCSS: nt.text.minifyCss(rule)})
     })
 }
 
@@ -184,6 +183,6 @@ function makeRankTopCSS(){
             `
         }
 
-        nt.storage.session.set({yomouRankTop_AppliedCSS: minifyCss(rule)})
+        nt.storage.session.set({yomouRankTop_AppliedCSS: nt.text.minifyCss(rule)})
     })
 }

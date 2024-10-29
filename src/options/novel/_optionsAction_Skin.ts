@@ -3,7 +3,6 @@ import { defaultValue, getCSSRule, saveJson } from "../../utils/misc";
 import { generateNoDuplicateSkinName, localSkinsV1, SkinsV1, SkinV1 } from "../../utils/v1_skin";
 import { nt } from "../../utils/narou-tweaker";
 import { AvailableSkin, getSkin, getSkinFromIndex } from "../../utils/v2_skin";
-import { escapeHtml } from "../../utils/text";
 
 import $ from 'jquery';
 import Sortable from 'sortablejs'
@@ -54,7 +53,7 @@ function skinEditor_restoreList(){
                         <div class="novel-skins--list-item--preview">あAa</div>
                         <div class="novel-skins--list-item--title">
                             <div class="novel-skins--list-item--title-storage"></div>
-                            <div class="novel-skins--list-item--title-name">${escapeHtml(skin.name)}</div>
+                            <div class="novel-skins--list-item--title-name">${nt.text.escapeHtml(skin.name)}</div>
                         </div>
                         <div class="novel-skins--list-item--buttons"></div>
                     </div>

@@ -1,8 +1,7 @@
-import { parseIntWithComma } from "../../utils/text";
-import { Chart } from "chart.js/auto";
-import { nt } from "utils/narou-tweaker";
+import { nt } from "../../utils/narou-tweaker";
 
 import $ from 'jquery';
+import { Chart } from "chart.js/auto";
 
 export interface AnalyticsDataset {
     labels: Array<string>
@@ -87,13 +86,13 @@ export function getValueFromTables(): AnalyticsDataset{
                 if(m==null){
                     num = 0
                 }else{
-                    num = parseIntWithComma(m[1])
+                    num = nt.text.parseIntWithComma(m[1])
                 }
                 if(isNaN(num)){
                     num = 0
                 }
             }else if(value_type=="PV"){
-                num = parseIntWithComma(pv)
+                num = nt.text.parseIntWithComma(pv)
                 if(isNaN(num)){
                     num = 0
                 }

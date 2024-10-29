@@ -1,5 +1,4 @@
 import { nt } from "../../utils/narou-tweaker";
-import { replaceUrl } from "../../utils/text";
 
 import $ from 'jquery';
 
@@ -18,7 +17,7 @@ export function _blog(){
             });
 
             $('.c-panel__item p').each(function (idx, elem) {
-                replaceUrl(elem, !data.mypageDisableExternalURLWarning)
+                nt.text.replaceUrl(elem, !data.mypageDisableExternalURLWarning)
             });
         }
     })
@@ -36,7 +35,7 @@ export function _blog(){
                 });
                 
                 comment.children("p").each(function (idx, elem) {
-                    replaceUrl(elem, !data.mypageDisableExternalURLWarning)
+                    nt.text.replaceUrl(elem, !data.mypageDisableExternalURLWarning)
                 });
             });
         }

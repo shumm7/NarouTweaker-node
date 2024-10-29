@@ -1,5 +1,4 @@
 import { Ncode } from "../../utils/ncode"
-import { convertRubyTags, convertSasieTags, countLines, countManuscriptPaper, countTime, escapeHtml, countCharacters } from "../../utils/text"
 import { fetchNovelApi } from "../../utils/api"
 import { nt } from "../../utils/narou-tweaker"
 import { setDisplayEvent } from "./_editorCss"
@@ -691,7 +690,7 @@ function showPreview(){
 
     // subtitle
     $("#nt-preview--novel_subtitle").empty()
-    const subtitle = escapeHtml(`${$(`input[name="subtitle"]`).val() ?? ""}`)
+    const subtitle = nt.text.escapeHtml(`${$(`input[name="subtitle"]`).val() ?? ""}`)
     if(subtitle.length>0){
         $("#nt-preview--novel_subtitle").text(subtitle)
     }else{
@@ -700,10 +699,10 @@ function showPreview(){
 
     // preface
     $("#nt-preview--novel_p").empty()
-    const preface = escapeHtml(`${$(`textarea[name="preface"]`).val() ?? ""}`.replace(/\r\n/g, '\n').replace(/\r/g, '\n'))
+    const preface = nt.text.escapeHtml(`${$(`textarea[name="preface"]`).val() ?? ""}`.replace(/\r\n/g, '\n').replace(/\r/g, '\n'))
     if(preface.length>0){
         $.each(preface.split(/\n/), function(i, text){
-            var p = $(`<p id="Lp${i+1}">${convertRubyTags(text, true)}</p>`)
+            var p = $(`<p id="Lp${i+1}">${nt.text.convertRubyTags(text, true)}</p>`)
             isEmpty(p)
             $("#nt-preview--novel_p").append(p)
         })
@@ -713,11 +712,11 @@ function showPreview(){
 
     // honbun
     $("#nt-preview--novel_honbun").empty()
-    const honbun = escapeHtml(`${$(`textarea[name="novel"]`).val() ?? ""}`.replace(/\r\n/g, '\n').replace(/\r/g, '\n'))
+    const honbun = nt.text.escapeHtml(`${$(`textarea[name="novel"]`).val() ?? ""}`.replace(/\r\n/g, '\n').replace(/\r/g, '\n'))
     if(honbun.length>0){
         $.each(honbun.split(/\n/), function(i, text){
-            var p = $(`<p id="L${i+1}">${convertRubyTags(text, true)}</p>`)
-            convertSasieTags(p)
+            var p = $(`<p id="L${i+1}">${nt.text.convertRubyTags(text, true)}</p>`)
+            nt.text.convertSasieTags(p)
             isEmpty(p)
             $("#nt-preview--novel_honbun").append(p)
         })
@@ -727,10 +726,10 @@ function showPreview(){
 
     // postscript
     $("#nt-preview--novel_a").empty()
-    const postscript = escapeHtml(`${$(`textarea[name="postscript"]`).val() ?? ""}`.replace(/\r\n/g, '\n').replace(/\r/g, '\n'))
+    const postscript = nt.text.escapeHtml(`${$(`textarea[name="postscript"]`).val() ?? ""}`.replace(/\r\n/g, '\n').replace(/\r/g, '\n'))
     if(postscript.length>0){
         $.each(postscript.split(/\n/), function(i, text){
-            var p = $(`<p id="La${i+1}">${convertRubyTags(text, true)}</p>`)
+            var p = $(`<p id="La${i+1}">${nt.text.convertRubyTags(text, true)}</p>`)
             isEmpty(p)
             $("#nt-preview--novel_a").append(p)
         })
@@ -748,17 +747,17 @@ function textCount(){
                 const mode = $(this).attr("data")
                 var number: string|number
                 if(mode=="1"){ //空白・改行含まない
-                    number = countCharacters(text, false, false, false);
+                    number = nt.text.countCharacters(text, false, false, false);
                 }else if(mode=="2"){ //行数
-                    number = countLines(text)
+                    number = nt.text.countLines(text)
                 }else if(mode=="3"){ //読了時間（分/数値のみ）
-                    number = countTime(text)
+                    number = nt.text.countTime(text)
                 }else if(mode=="4"){ //読了時間（hh時間mm分）
-                    number = nt.time.minuteStringJapanese(countTime(text))
+                    number = nt.time.minuteStringJapanese(nt.text.countTime(text))
                 }else if(mode=="5"){ //原稿用紙換算
-                    number = countManuscriptPaper(text)
+                    number = nt.text.countManuscriptPaper(text)
                 }else{ //空白・改行含む
-                    number = countCharacters(text, true, true, true);
+                    number = nt.text.countCharacters(text, true, true, true);
                 }
 
                 if(typeof number === "string"){

@@ -1,5 +1,5 @@
+import { nt } from "./narou-tweaker"
 import { Ncode } from "./ncode"
-import { escapeHtml } from "./text"
 
 /************************************************************************************* */
 /*                                 なろう小説API                                        */
@@ -52,7 +52,7 @@ export interface NovelApi {
 
 function strOrUndefined(v: any): string|undefined{
     if(typeof v === "string"){
-        return escapeHtml(v)
+        return nt.text.escapeHtml(v)
     }
 }
 function numOrUndefined(v: any): number|undefined{
@@ -216,7 +216,7 @@ export function fetchUserApi(userid: number|string, callback: (data: UserApi|und
 
     function strOrNullOrUndefined(v: any): string|null|undefined{
         if(typeof v === "string"){
-            return escapeHtml(v)
+            return nt.text.escapeHtml(v)
         }else if(v === null){
             return v
         }

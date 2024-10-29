@@ -1,6 +1,5 @@
 import { getPageType } from "../../utils/narou";
 import { check } from "../../utils/misc"
-import { escapeHtml } from "../../utils/text";
 import { nt } from "../../utils/narou-tweaker";
 
 import $ from 'jquery';
@@ -626,9 +625,9 @@ function correctionReplaceFromPatterns(patterns: nt.storage.local.ReplacePattern
             if(pattern.active){
                 if(pattern.pattern.trim().length>0){
                     if(pattern.regex){
-                        replaceText(this, new RegExp(pattern.pattern, "g"), escapeHtml(pattern.replacement)) 
+                        replaceText(this, new RegExp(pattern.pattern, "g"), nt.text.escapeHtml(pattern.replacement)) 
                     }else{
-                        replaceText(this, pattern.pattern, escapeHtml(pattern.replacement), true)
+                        replaceText(this, pattern.pattern, nt.text.escapeHtml(pattern.replacement), true)
                     }
                 }
             }

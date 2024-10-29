@@ -1,8 +1,8 @@
 import { OptionUI_Category, OptionUI_Item } from "../_utils/optionUI_type";
-import { searchCount, stringSimilarity } from "../../utils/text";
 import { getOptionElement, optionHide, syntaxHighlight } from "../_utils/utils";
 import { restoreOptions, setup } from "../general";
 import { OptionUI_Items, OptionUI_Pages } from "../_utils/optionUI_items";
+import { nt } from "../../utils/narou-tweaker";
 
 import $ from 'jquery';
 
@@ -499,7 +499,7 @@ function getSearchScore(target: string|undefined, word: string, mult: number){
     if(mult===undefined){
         mult = 1  
     }
-    return 10 * stringSimilarity(target.toLowerCase(), word.toLowerCase()) * mult
+    return 10 * nt.text.stringSimilarity(target.toLowerCase(), word.toLowerCase()) * mult
 }
 
 function countMult_include(target: string|undefined, searchWord: string, mult: number){
@@ -509,7 +509,7 @@ function countMult_include(target: string|undefined, searchWord: string, mult: n
     if(mult===undefined){
         mult = 0.1    
     }
-    var s = searchCount(target.toLowerCase(), searchWord.toLowerCase())
+    var s = nt.text.searchCount(target.toLowerCase(), searchWord.toLowerCase())
     if(s <= 0){
         return 0
     }else{
@@ -524,6 +524,6 @@ function countMult(target: string|undefined, searchWord: string, mult: number){
     if(mult===undefined){
         mult = 0.1    
     }
-    var s = searchCount(target.toLowerCase(), searchWord.toLowerCase())
+    var s = nt.text.searchCount(target.toLowerCase(), searchWord.toLowerCase())
     return 1 + mult * s
 }

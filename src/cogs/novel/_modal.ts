@@ -1,6 +1,5 @@
 import { localFont, localFontFamilyV1 } from "../../utils/v1_font";
 import { check, defaultValue } from "../../utils/misc"
-import { escapeHtml } from "../../utils/text";
 import { correction, restoreCorrectionMode } from "./_correction";
 import { generateNoDuplicateSkinName, localSkinsV1, SkinsV1, SkinV1 } from "../../utils/v1_skin";
 import { nt } from "../../utils/narou-tweaker";
@@ -90,7 +89,7 @@ function restoreSkinOptions(skins: SkinsV1, selected: number){
     $("#novel-option--skin #skin").empty()
     $.each(skins, function(i, skin){
         if(skin.show==true){
-            $("#novel-option--skin #skin").append(`<option value="${i}">${escapeHtml(skin.name)}</option>`)
+            $("#novel-option--skin #skin").append(`<option value="${i}">${nt.text.escapeHtml(skin.name)}</option>`)
         }
     })
     $("#skin").val(String(selected))
@@ -792,11 +791,11 @@ function setOptionContentsAuthorSkin(id: number){
         $("#novel-option--import-author-skin-notice").empty()
         if(type=="warn"){
             $("#novel-option--import-author-skin-notice").append(`
-                <div class="novel-option--import-author-skin--notice-warn"><i class="fa-solid fa-triangle-exclamation"></i> ${escapeHtml(message)}</div>
+                <div class="novel-option--import-author-skin--notice-warn"><i class="fa-solid fa-triangle-exclamation"></i> ${nt.text.escapeHtml(message)}</div>
             `)
         }else{
             $("#novel-option--import-author-skin-notice").append(`
-                <div class="novel-option--import-author-skin--notice-info"><i class="fa-solid fa-circle-check"></i> ${escapeHtml(message)}</div>
+                <div class="novel-option--import-author-skin--notice-info"><i class="fa-solid fa-circle-check"></i> ${nt.text.escapeHtml(message)}</div>
             `)
         }
     }

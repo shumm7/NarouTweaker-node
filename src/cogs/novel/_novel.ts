@@ -1,5 +1,4 @@
 import { getEpisode, getNovelSearchURL, getNovelTagURL, getPageType, isR18 } from "../../utils/narou";
-import { escapeHtml, replaceUrl } from "../../utils/text"
 import { novelTop } from "./_novelTop";
 import { getNcodeFromURL } from "../../utils/ncode";
 import { nt } from "../../utils/narou-tweaker";
@@ -184,13 +183,13 @@ function _autoURL(){
         try{
             if(data.novelPrefaceAutoURL){
                 $('.p-novel__text--preface p').each(function (idx, elem) {
-                    replaceUrl(elem, false)
+                    nt.text.replaceUrl(elem, false)
                 });
             }
             
             if(data.novelAfterwordAutoURL){
                 $('.p-novel__text--afterword p').each(function (idx, elem) {
-                    replaceUrl(elem, false)
+                    nt.text.replaceUrl(elem, false)
                 });
             }
         }catch(e){
@@ -382,7 +381,7 @@ function _authorLink(){
                         var e = author_text.get(0)
                         if(m!==null && e!==undefined){
                             var author = m[1]
-                            e.innerHTML = `作者：<a href="${escapeHtml(userid_link)}">${escapeHtml(author)}</a>`
+                            e.innerHTML = `作者：<a href="${nt.text.escapeHtml(userid_link)}">${nt.text.escapeHtml(author)}</a>`
                         }
                     }
                 }
@@ -393,7 +392,7 @@ function _authorLink(){
                         var e = author_text.get(0)
                         if(m!==null && e!==undefined){
                             var author = m[1]
-                            e.innerHTML = `作者：<a href="${escapeHtml(userid_link)}">${escapeHtml(author)}</a>`
+                            e.innerHTML = `作者：<a href="${nt.text.escapeHtml(userid_link)}">${nt.text.escapeHtml(author)}</a>`
                         }
                     }
                 }

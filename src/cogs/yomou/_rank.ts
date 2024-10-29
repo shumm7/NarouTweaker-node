@@ -1,6 +1,5 @@
 import { getNcodeFromURL } from "../../utils/ncode";
 import { checkRankPageDetail } from "./utils";
-import { escapeHtml } from "../../utils/text";
 import { getGenreNumber } from "../../utils/narou";
 import { nt } from "../../utils/narou-tweaker";
 import { fetchNovelApi } from "../../utils/api";
@@ -26,7 +25,7 @@ export function _rank(){
                             if(text){
                                 var pt = text[1].replace(/,/g, "")
                                 elm.text("")
-                                elm.append(`<span class="p-ranklist-item__points-value">${escapeHtml(pt)}</span><span class="p-ranklist-item__points-unit">pt</span>`)
+                                elm.append(`<span class="p-ranklist-item__points-value">${nt.text.escapeHtml(pt)}</span><span class="p-ranklist-item__points-unit">pt</span>`)
                             }
         
                             // 要素追加・削除

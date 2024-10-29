@@ -1,4 +1,3 @@
-import { parseIntWithComma, escapeHtml } from "../../utils/text";
 import {getBigGenre, getGenre, getNovelType, getNovelEnd, getNocgenre} from "../../utils/narou"
 import { addQuestionIconBalloon, addExclamationIconBalloon } from "../../utils/ui";
 import { saveJson } from "../../utils/misc";
@@ -67,14 +66,14 @@ function today(){
         var i = 0
         $("#today_data .oneday_graph tr td.pv").each(function() {
             if(i<=hour){
-                today_pv.push(parseIntWithComma($(this).text()))
+                today_pv.push(nt.text.parseIntWithComma($(this).text()))
             }else{
                 today_pv.push(null)
             }
             i++
         });
         $("#yesterday_data .oneday_graph tr td.pv").each(function() {
-            yesterday_pv.push(parseIntWithComma($(this).text()))
+            yesterday_pv.push(nt.text.parseIntWithComma($(this).text()))
         });
 
         // Sum
@@ -114,7 +113,7 @@ function today(){
             }
 
             if(key && v.length){
-                today_total[key] = parseIntWithComma(v.text())
+                today_total[key] = nt.text.parseIntWithComma(v.text())
             }
         })
 
@@ -137,7 +136,7 @@ function today(){
             }
 
             if(key && v.length){
-                yesterday_total[key] = parseIntWithComma(v.text())
+                yesterday_total[key] = nt.text.parseIntWithComma(v.text())
             }
         })
 
@@ -180,8 +179,8 @@ function total(){
                 key = "smp"
             }
             if(key){
-                total_pv[key] = parseIntWithComma(pv)
-                total_unique[key] = parseIntWithComma(unique)
+                total_pv[key] = nt.text.parseIntWithComma(pv)
+                total_unique[key] = nt.text.parseIntWithComma(unique)
             }
         })
 
@@ -190,7 +189,7 @@ function total(){
         var week_pv: Array<number|null> = []
         var week: Array<string> = []
         $("#access_all .total_graph tr:not(.header)").each(function(){
-            week_pv.push(parseIntWithComma($(this).children("td.pv").text()))
+            week_pv.push(nt.text.parseIntWithComma($(this).children("td.pv").text()))
             week.push($(this).children("td.day").text())
         })
 
@@ -590,9 +589,9 @@ function _tableApi(ncode: string, d: NovelApi, r18?:boolean){
         }
 
         if(!noEscape){
-            desc = escapeHtml(desc)
+            desc = nt.text.escapeHtml(desc)
             if(value){
-                value = escapeHtml(value)
+                value = nt.text.escapeHtml(value)
             }
         }
         if(value==undefined){
@@ -638,7 +637,7 @@ function _tableApi(ncode: string, d: NovelApi, r18?:boolean){
 
     table.append("<tr class='header'><th>作品情報</th><th>項目</th><th>データ</th></tr>")
     if(ncode.length > 0){
-        addValue("タイトル", "<a href='https://ncode.syosetu.com/"+ncode+"/'>"+escapeHtml(d.title ?? "")+"</a>", undefined, true)
+        addValue("タイトル", `<a href='https://ncode.syosetu.com/${ncode}/'>${nt.text.escapeHtml(d.title ?? "")}</a>`, undefined, true)
     }else{
         addValue("タイトル", d.title ?? "")
     }
@@ -646,7 +645,7 @@ function _tableApi(ncode: string, d: NovelApi, r18?:boolean){
     addValue("あらすじ", d.story ?? "")
     addValue("キーワード", d.keyword ?? "")
     if(!r18){
-        addValue("作者", `<a href='https://mypage.syosetu.com/${d.userid}/'>${escapeHtml(d.writer ?? "")}</a>`, d.userid, true)
+        addValue("作者", `<a href='https://mypage.syosetu.com/${d.userid}/'>${nt.text.escapeHtml(d.writer ?? "")}</a>`, d.userid, true)
     }else{
         addValue("作者", d.writer ?? "")
     }

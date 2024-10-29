@@ -1,6 +1,5 @@
 import { nt } from "./narou-tweaker"
 import { checkSkinVersion } from "./skin"
-import { minifyCss } from "./text"
 import { SkinV1 } from "./v1_skin"
 
 export type SkinV2Src = "internal"|"local"|"sync"
@@ -528,7 +527,7 @@ export function makeSkinCSS(skin: SkinV2, local?: nt.storage.local.options){
     }
 
 
-    return minifyCss(rule)
+    return nt.text.minifyCss(rule)
 }
 
 /* ツール */

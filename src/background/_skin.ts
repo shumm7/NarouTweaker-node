@@ -1,7 +1,6 @@
 import { FontFamiliesV1, FontFamilyV1, localFont, localFontFamilyV1 } from "../utils/v1_font"
 import { localSkinsV1, makeSkinCSS, SkinsV1, SkinV1 } from "../utils/v1_skin"
 import { nt } from "../utils/narou-tweaker"
-import { minifyCss } from "../utils/text"
 
 export function skinListener(){
     makeSkin()
@@ -112,10 +111,10 @@ function makeSkin(){
         `
 
         nt.storage.session.set({
-            novelAppliedSkinCSS: minifyCss(makeSkinCSS(skin, data.novelCustomStyle)),
-            novelAppliedFontCSS: minifyCss(rule),
-            novelSkinCustomCSS: minifyCss(skin.css),
-            novelFontCustomCSS: minifyCss(fontCss)
+            novelAppliedSkinCSS: nt.text.minifyCss(makeSkinCSS(skin, data.novelCustomStyle)),
+            novelAppliedFontCSS: nt.text.minifyCss(rule),
+            novelSkinCustomCSS: nt.text.minifyCss(skin.css),
+            novelFontCustomCSS: nt.text.minifyCss(fontCss)
         })
     })
 }
@@ -224,10 +223,10 @@ function makeEditorSkin(){
         `
 
         nt.storage.session.set({
-            workspaceEditorAppliedSkinCSS: minifyCss(skin_rule),
-            workspaceEditorAppliedFontCSS: minifyCss(font_rule),
-            workspaceEditorSkinCustomCSS: minifyCss(skin.css),
-            workspaceEditorFontCustomCSS: minifyCss(fontCss)
+            workspaceEditorAppliedSkinCSS: nt.text.minifyCss(skin_rule),
+            workspaceEditorAppliedFontCSS: nt.text.minifyCss(font_rule),
+            workspaceEditorSkinCustomCSS: nt.text.minifyCss(skin.css),
+            workspaceEditorFontCustomCSS: nt.text.minifyCss(fontCss)
         })
     })
 }

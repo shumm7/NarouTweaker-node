@@ -1,7 +1,6 @@
 import { fixOption, getOptionPageFromID } from "../_utils/optionUI_utils";
 import { saveJson } from "../../utils/misc";
 import { OptionUI_Pages } from "../_utils/optionUI_items";
-import { escapeHtml } from "../../utils/text";
 import { nt } from "../../utils/narou-tweaker";
 import { OptionUI_Page } from "options/_utils/optionUI_type";
 
@@ -35,7 +34,7 @@ export function general_popupDefaultPage_Dropdown(){
         $.each(OptionUI_Pages, function(_, page){
             if(page.popup){
                 if(page.popup.defaultPage && page.title && page.id){
-                    elm.append(`<option value="${escapeHtml(page.id)}">ページ「${escapeHtml(page.title)}」</option>`)
+                    elm.append(`<option value="${nt.text.escapeHtml(page.id)}">ページ「${nt.text.escapeHtml(page.title)}」</option>`)
                 }
             }
         })
