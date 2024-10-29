@@ -1,52 +1,133 @@
+import { nt } from "utils/narou-tweaker"
+import browser from "webextension-polyfill"
+
 /* Message */
 export function messageListener(){
-    chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+    browser.runtime.onMessage.addListener(function (_message, sender, sendResponse) {
+
+        const message = new nt.runtime.SentMessage(_message)
         if (message.action == "fetch"){
             if(message.format == "json" || message.format==undefined){
                 fetch(message.data.url, message.data.options)
                 .then(response => response.json())
                 .then(data => {
-                    sendResponse({action: "fetch", result: data, format: message.format, success: true, id: message.id, message: message.data})
+                    sendResponse({
+                        action: message.action,
+                        id: message.id,
+                        data: message.data,
+                        format: message.format,
+                        success: true, 
+                        result: data,
+                    } as nt.runtime.ReceiveMessage)
                 })
                 .catch((e) => {
-                    sendResponse({action: "fetch", result: e, format: message.format, success: false, id: message.id, message: message.data})
+                    sendResponse({
+                        action: message.action,
+                        id: message.id,
+                        data: message.data,
+                        format: message.format,
+                        success: false,
+                        result: e,
+                    } as nt.runtime.ReceiveMessage)
                 })
-                return true
                 
             }else if(message.format == "text"){
                 fetch(message.data.url, message.data.options)
                 .then(response => response.text())
                 .then(data => {
-                    sendResponse({action: "fetch", result: data, format: message.format, success: true, id: message.id, message: message.data})
+                    sendResponse({
+                        action: message.action,
+                        id: message.id,
+                        data: message.data,
+                        format: message.format,
+                        success: true,
+                        result: data,
+                    } as nt.runtime.ReceiveMessage)
                 })
                 .catch((e) => {
-                    sendResponse({action: "fetch", result: e, format: message.format, success: false, id: message.id, message: message.data})
+                    sendResponse({
+                        action: message.action,
+                        id: message.id,
+                        data: message.data,
+                        format: message.format,
+                        success: false,
+                        result: e,
+                    } as nt.runtime.ReceiveMessage)
                 })
-                return true
             }
         }else if(message.action == "downloads"){
-            chrome.downloads.download({
+            browser.downloads.download({
                 url: message.data.url,
-                filename: message.data.filename
-            }, function(downloadId){
-                sendResponse({action: "downloads", id: downloadId, message: message.data});
-            });
-            return true;
+                filename: message.data.filename,
+                body: message.data.body,
+                saveAs: message.data.saveAs,
+                headers: message.data.headers,
+                method: message.data.method,
+                conflictAction: message.data.conflictAction
+            }).then(function(downloadId){
+                sendResponse({
+                    action: message.action,
+                    id: message.id,
+                    data: message.data,
+                    format: message.format,
+                    success: true,
+                    result: downloadId,
+                } as nt.runtime.ReceiveMessage);
+            }).catch((e) => {
+                sendResponse({
+                    action: message.action,
+                    id: message.id,
+                    data: message.data,
+                    format: message.format,
+                    success: false,
+                    result: e,
+                } as nt.runtime.ReceiveMessage);
+            })
         }else if(message.action == "cookies"){
-            if(message.function == "set"){
-                chrome.cookies.set(message.data, function(cookie){
-                    sendResponse({action: "cookies", function: message.function, result: cookie, message: message.data});
-                });
-                return true;
-            }else if(message.function == "get"){
-                chrome.cookies.get(message.data, function(cookie){
-                    sendResponse({action: "cookies", function: message.function, result: cookie, message: message.data});
-                });
-                return true;
+            if(message.format == "set"){
+                browser.cookies.set(message.data).then(function(cookie){
+                    sendResponse({
+                        action: message.action,
+                        id: message.id,
+                        data: message.data,
+                        format: message.format,
+                        result: cookie,
+                        success: true
+                    } as nt.runtime.ReceiveMessage);
+                }).catch((e) => {
+                    sendResponse({
+                        action: message.action,
+                        id: message.id,
+                        data: message.data,
+                        message: message.data,
+                        success: false,
+                        result: e,
+                    } as nt.runtime.ReceiveMessage);
+                })
+            }else if(message.format == "get"){
+                browser.cookies.get(message.data).then(function(cookie){
+                    sendResponse({
+                        action: message.action,
+                        id: message.id,
+                        data: message.data,
+                        format: message.format,
+                        result: cookie,
+                        success: true
+                    } as nt.runtime.ReceiveMessage);
+                }).catch((e) => {
+                    sendResponse({
+                        action: message.action,
+                        id: message.id,
+                        data: message.data,
+                        message: message.data,
+                        success: false,
+                        result: e,
+                    } as nt.runtime.ReceiveMessage);
+                })
             }
         }
         
-        sendResponse()
-        return
+        sendResponse({action: message.action, result: undefined, format: message.format, success: false, id: message.id, data: message.data} as nt.runtime.ReceiveMessage)
+        return undefined
     })
 }

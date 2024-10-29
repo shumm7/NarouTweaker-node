@@ -209,10 +209,8 @@ function additionalHide(){
             change(data.extExperimentalFeatures)
         })
 
-        chrome.storage.local.onChanged.addListener(function(changes){
-            if(changes.extExperimentalFeatures!=undefined){
-                change(changes.extExperimentalFeatures.newValue)
-            }
+        nt.storage.local.changed("extExperimentalFeatures", function(changes){
+            change(changes?.extExperimentalFeatures?.newValue)
         })
     })
 
@@ -247,10 +245,8 @@ function additionalHide(){
             change(data.extAdvancedSettings)
         })
 
-        chrome.storage.local.onChanged.addListener(function(changes){
-            if(changes.extAdvancedSettings!=undefined){
-                change(changes.extAdvancedSettings.newValue)
-            }
+        nt.storage.local.changed("extAdvancedSettings", function(changes){
+            change(changes?.extAdvancedSettings?.newValue)
         })
     })
 
@@ -290,10 +286,8 @@ function additionalHide(){
             change(data.extDebug)
         })
 
-        chrome.storage.local.onChanged.addListener(function(changes){
-            if(changes.extDebug!=undefined){
-                change(changes.extDebug.newValue)
-            }
+        nt.storage.local.changed("extDebug", function(changes){
+            change(changes?.extDebug?.newValue)
         })
     })
 }

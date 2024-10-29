@@ -307,19 +307,20 @@ export function addFontEditButtonEvent() {
     })
 
     /* Storage Listener */
-    chrome.storage.local.onChanged.addListener(function (changes) {
+    nt.storage.local.changed(function (changes) {
         if (
-            changes.fontSelectedFontFamily != undefined ||
-            changes.fontFontFamilyList != undefined ||
-            changes.fontFontSize != undefined ||
-            changes.fontLineHeight != undefined ||
-            changes.fontTextRendering != undefined ||
-            changes.fontWidth != undefined
+            changes?.fontSelectedFontFamily != undefined ||
+            changes?.fontFontFamilyList != undefined ||
+            changes?.fontFontSize != undefined ||
+            changes?.fontLineHeight != undefined ||
+            changes?.fontTextRendering != undefined ||
+            changes?.fontWidth != undefined
         ) {
             restoreFont()
         }
-        if (changes.novelVertical != undefined) {
-            check("#novelVertical", changes.novelVertical.newValue)
+        const vertical = changes?.novelVertical?.newValue
+        if (typeof vertical === "boolean" || vertical === undefined) {
+            check("#novelVertical", vertical)
         }
     })
 }

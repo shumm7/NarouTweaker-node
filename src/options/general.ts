@@ -11,7 +11,7 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import "../assets/fonts/icomoon/style.css";
 import "w3-css/w3.css";
 
-const manifest = chrome.runtime.getManifest()
+const manifest = nt.extension.manifest
 let currentPage: OptionUI_PageID|undefined
 
 export function setup(){
@@ -113,7 +113,7 @@ function setupDOM(){
 
 
     /* Sidepanel Events */
-    chrome.storage.session.get("extOptionSidePanelShow", function(data){
+    nt.storage.session.get("extOptionSidePanelShow").then(function(data){
         _sidepanelHide(data.extOptionSidePanelShow)
     })
     $("#sidebar-icon--hide").on("click", function(){
@@ -122,10 +122,8 @@ function setupDOM(){
     $("#sidebar-open").on("click", function(){
         nt.storage.session.set("extOptionSidePanelShow", true)
     })
-    chrome.storage.session.onChanged.addListener(function(changes){
-        if(changes.extOptionSidePanelShow!=undefined){
-            _sidepanelHide(changes.extOptionSidePanelShow.newValue)
-        }
+    nt.storage.session.changed("extOptionSidePanelShow", function(changes){
+        _sidepanelHide(changes?.extOptionSidePanelShow?.newValue)
     })
     function _sidepanelHide(mode?: any){
         if(mode==undefined){mode = true}
@@ -385,9 +383,12 @@ function setupContents(){
     nt.storage.local.get("extFavoriteOptions").then(function(data){
         markFavoriteOptions(data.extFavoriteOptions)
     })
-    chrome.storage.local.onChanged.addListener(function(changes){
-        if(changes.extFavoriteOptions){
-            markFavoriteOptions(changes.extFavoriteOptions.newValue)
+    nt.storage.local.changed("extFavoriteOptions", function(changes){
+        const list = changes?.extFavoriteOptions?.newValue
+        if(Array.isArray(list)){
+            markFavoriteOptions(list)
+        }else{
+            markFavoriteOptions([])
         }
     })
 }
@@ -427,7 +428,7 @@ function restoreValues(data: Record<string,any>){
   }
 
 export function restoreOptions(){
-    chrome.storage.local.onChanged.addListener(function(_changes){
+    nt.storage.local.changed(function(_changes){
       chrome.storage.local.get(null, function(data) {
         restoreValues(data)
       })
@@ -518,7 +519,7 @@ function hideOptionButtons(){
         toggle(data.extOptionPageButtons)
     })
     nt.storage.local.changed("extOptionPageButtons", function(changes){
-        toggle(changes.extOptionPageButtons)
+        toggle(changes?.extOptionPageButtons?.newValue)
     }) 
 }
 
@@ -571,14 +572,14 @@ function urlScheme(){
         }
     }
     if(p_panel!==null){
-        chrome.storage.session.get(["extOptionSidePanelShow"], d =>{
+        nt.storage.session.get(["extOptionSidePanelShow"]).then((d) =>{
             if(p_panel==="1"){
                 if(!d.extOptionSidePanelShow){
-                    nt.storage.local.set({extOptionSidePanelShow: true})
+                    nt.storage.session.set({extOptionSidePanelShow: true})
                 }
             }else if(p_panel==="0"){
                 if(d.extOptionSidePanelShow){
-                    nt.storage.local.set({extOptionSidePanelShow: false})
+                    nt.storage.session.set({extOptionSidePanelShow: false})
                 }
             }
 

@@ -2,7 +2,6 @@ import { getEpisode, getNovelSearchURL, getNovelTagURL, getPageType, isR18 } fro
 import { novelTop } from "./_novelTop";
 import { getNcodeFromURL } from "../../utils/ncode";
 import { nt } from "../../utils/narou-tweaker";
-import { fetchNovelApi, NovelApi } from "../../utils/api";
 
 import $ from 'jquery';
 import { gsap } from 'gsap';
@@ -459,7 +458,7 @@ function novelTopAttention(){
         const ncode = getNcodeFromURL()
         const r18 = isR18()
 
-        fetchNovelApi(ncode, r18, function(data){
+        nt.api.novel.fetch(ncode, r18, function(data){
             try{
                 if(data){
                     let tags = (data.keyword ?? "").split(/\s/)
@@ -470,30 +469,30 @@ function novelTopAttention(){
                     }
 
                     /*
-                    chrome.storage.local.get(["novelOfficialTags"], (data) => {
+                    nt.storage.session.get("novelOfficialTags").then((data) => {
                         if(data.novelOfficialTags){
                             setTags(data.novelOfficialTags)
                         }else{
-                            chrome.runtime.sendMessage({action: "fetch", format: "text", data: {url: "https://yomou.syosetu.com/", options: {'method': 'GET'}}}, function(response){
+                            nt.runtime.action({action: "fetch", format: "text", data: {url: "https://yomou.syosetu.com/", options: {'method': 'GET'}}}).then(function(response){
                                 if(response){
                                 if(response.success && response.action=="fetch"){
                                     var html = $($.parseHTML(response.result))
-                                    var t = []
+                                    var t: Array<string> = []
                                     html.find(".p-search-novel .p-search-novel__keyword .p-search-novel__keyword-item").each(function(){
                                         var tag = $(this).text()
                                         t.push(tag)
                                     })
-                                    chrome.storage.local.set({novelOfficialTags: t})
+                                    nt.storage.local.set({novelOfficialTags: t})
                                     setTags(t)
                                 }
                                 }
                             })
                         }
                     })
-                    */
                     setTags(data)
+                    */
 
-                    function setTags(data: NovelApi, officialTagList?: Array<string>){
+                    function setTags(data: nt.api.novel.data, officialTagList?: Array<string>){
                         if(r18){
                             attention.append(`<span class="nt-novel-attention-label nt-novel-attention-label--rating-r18"><a href="${getNovelSearchURL(site)}">R18</a></span>`)
                         }
@@ -528,7 +527,7 @@ function novelTopAttention(){
                         }
 
                         /*
-                        if(!r18){
+                        if(!r18 && officialTagList!==undefined){
                             $.each(officialTagList, function(_, tag){
                                 if(tags.includes(tag)){
                                     attention.append(`<span class="nt-novel-attention-label nt-novel-attention-label--official"><a href="${getNovelTagURL(tag, site)}"><i class="fa-solid fa-flag"></i>${tag}</a></span>`)
@@ -564,7 +563,7 @@ export function _setCookie(){
                 name: 'novellayout',
                 value: '1'
             }
-            chrome.runtime.sendMessage({action: "cookies", function: "set", data: cookieDetails}, function(response){})
+            nt.cookie.set(cookieDetails)
         }
     })
 }

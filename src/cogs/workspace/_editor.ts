@@ -1,5 +1,4 @@
 import { Ncode } from "../../utils/ncode"
-import { fetchNovelApi } from "../../utils/api"
 import { nt } from "../../utils/narou-tweaker"
 import { setDisplayEvent } from "./_editorCss"
 import { _toolCovertKakuyomuRubyDot, _toolExportAll, _toolExportEach, _toolIndent, _toolRuby, _toolRubyDot, _toolSasie, _toolSearch } from "./_editorTools"
@@ -638,7 +637,7 @@ function changeEditorPageLikePreview(){
     }*/
 
     const localString = (v: number|undefined, def: string = ""): string => {if(v===undefined){return def}else{return v.toLocaleString()}}
-    fetchNovelApi(ncode, false, function(data){
+    nt.api.novel.fetch(ncode, false, function(data){
         const box = $("#nt-panel--tab-content--info")
         if(data!=undefined && box.length>0){
             box.find("#novel-title").text(data.title ?? "")
@@ -1114,31 +1113,33 @@ function editorSkinChangeEvent(){
         }
     }
 
-    chrome.storage.session.onChanged.addListener(function(changes){
-        if(changes.workspaceEditorSkinCustomCSS!=undefined){
-            if($("#narou-tweaker-style--editor-skin-user").length){
-                $("#narou-tweaker-style--editor-skin-user").text(changes.workspaceEditorSkinCustomCSS.newValue)
-                _triggerInput()
-            }
-        }
-        if(changes.workspaceEditorFontCustomCSS!=undefined){
-            if($("#narou-tweaker-style--font-user").length){
-                $("#narou-tweaker-style--editor-font-user").text(changes.workspaceEditorFontCustomCSS.newValue)
-                _triggerInput()
-            }
+    nt.storage.session.changed(function(changes){
+        var css = changes?.workspaceEditorSkinCustomCSS?.newValue
+        var elm = $("#narou-tweaker-style--editor-skin-user")
+        if(typeof css === "string" && elm.length){
+            elm.text(css)
+            _triggerInput()
         }
 
-        if(changes.workspaceEditorAppliedSkinCSS!=undefined){
-            if($("#narou-tweaker-style--editor-skin").length){
-                $("#narou-tweaker-style--editor-skin").text(changes.workspaceEditorAppliedSkinCSS.newValue)
-                _triggerInput()
-            }
+        var css = changes?.workspaceEditorFontCustomCSS?.newValue
+        var elm = $("#narou-tweaker-style--editor-font-user")
+        if(typeof css === "string" && elm.length){
+            elm.text(css)
+            _triggerInput()
         }
-        if(changes.workspaceEditorAppliedFontCSS!=undefined){
-            if($("#narou-tweaker-style--editor-font").length){
-                $("#narou-tweaker-style--editor-font").text(changes.workspaceEditorAppliedFontCSS.newValue)
-                _triggerInput()
-            }
+
+        var css = changes?.workspaceEditorAppliedSkinCSS?.newValue
+        var elm = $("#narou-tweaker-style--editor-skin")
+        if(typeof css === "string" && elm.length){
+            elm.text(css)
+            _triggerInput()
+        }
+
+        var css = changes?.workspaceEditorAppliedFontCSS?.newValue
+        var elm = $("#narou-tweaker-style--editor-font")
+        if(typeof css === "string" && elm.length){
+            elm.text(css)
+            _triggerInput()
         }
     })
 }

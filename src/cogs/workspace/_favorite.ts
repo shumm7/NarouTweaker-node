@@ -286,9 +286,10 @@ function bookmarkCategoryLayout(){
             })
         }
 
-        chrome.storage.local.onChanged.addListener(function(changes){
-            if(changes.workspaceBookmarkCategoryLayout!=undefined){
-                resetTags(changes.workspaceBookmarkCategoryLayout.newValue)
+        nt.storage.local.changed("workspaceBookmarkCategoryLayout", function(changes){
+            const layout = changes?.workspaceBookmarkCategoryLayout?.newValue
+            if(typeof layout === "number" || typeof layout === "string" || layout === undefined){
+                resetTags(layout)
             }
         })
     })

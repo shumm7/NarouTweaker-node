@@ -1,5 +1,4 @@
 
-import { saveJson } from "../../utils/misc";
 import { addExclamationIconBalloon } from "../../utils/ui";
 import { getNcodeFromURL } from "../../utils/ncode";
 import { nt } from "../../utils/narou-tweaker";
@@ -82,7 +81,7 @@ function _button(data: Array<number|null>){
                     unique: data
                 }
             }
-            saveJson(raw, `chapter-unique_${ncode}_${date}.json`);
+            nt.download.json(raw, `chapter-unique_${ncode}_${date}.json`);
         }
     })
 }

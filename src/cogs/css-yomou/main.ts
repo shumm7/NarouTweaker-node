@@ -28,14 +28,14 @@ if(pageDetail?.site=="yomou"){
         })
 
         nt.storage.session.changed("yomouRankTop_AppliedCSS", function(changes){
-            const css = changes.yomouRankTop_AppliedCSS.newValue
+            const css = changes?.yomouRankTop_AppliedCSS?.newValue
             var elm = $("#narou-tweaker-style--rank-css")
             if(typeof css === "string" && elm.length){
                 $("#narou-tweaker-style--rank-css").text(css)
             }
         })
         nt.storage.local.changed("yomouRankTop_CustomCSS", function(changes){
-            const css = changes.yomouRankTop_CustomCSS.newValue
+            const css = changes?.yomouRankTop_CustomCSS?.newValue
             var elm = $("#narou-tweaker-style--rank-user-css")
             if(typeof css === "string" && elm.length){
                 elm.text(css)
@@ -66,18 +66,18 @@ if(pageDetail?.site=="yomou"){
             }
         })
 
-        chrome.storage.session.onChanged.addListener(function(changes){
-            if(changes.yomouRank_AppliedCSS!=undefined){
-                if($("#narou-tweaker-style--rank-css").length){
-                    $("#narou-tweaker-style--rank-css").text(changes.yomouRank_AppliedCSS.newValue)
-                }
+        nt.storage.session.changed(function(changes){
+            const css = changes.yomouRank_AppliedCSS.newValue
+            var elm = $("#narou-tweaker-style--rank-css")
+            if(typeof css === "string" && elm.length){
+                elm.text(css)
             }
         })
-        chrome.storage.local.onChanged.addListener(function(changes){
-            if(changes.yomouRank_CustomCSS!=undefined){
-                if($("#narou-tweaker-style--rank-user-css").length){
-                    $("#narou-tweaker-style--rank-user-css").text(changes.yomouRank_CustomCSS.newValue)
-                }
+        nt.storage.local.changed(function(changes){
+            const css = changes.yomouRank_CustomCSS.newValue
+            var elm = $("#narou-tweaker-style--rank-user-css")
+            if(typeof css === "string" && elm.length){
+                elm.text(css)
             }
         })
     }

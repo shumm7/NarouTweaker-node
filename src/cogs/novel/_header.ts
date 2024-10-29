@@ -2,7 +2,6 @@ import { getNcodeFromURL } from "../../utils/ncode";
 import { CustomIconID, CustomIconIDs, getExcludeIcons } from "../../utils/header"
 import { nt } from "../../utils/narou-tweaker";
 import { getEpisode, getPageType, isR18 } from "../../utils/narou";
-import { fetchNovelApi } from "../../utils/api";
 
 import $ from 'jquery';
 import QRCode from 'qrcode'
@@ -328,7 +327,7 @@ export function _header(){
             
             if(r18){
                 var url = "https://api.syosetu.com/novel18api/api/?out=json&libtype=2&ncode=" + ncode
-                fetchNovelApi(ncode, r18, function(data){
+                nt.api.novel.fetch(ncode, r18, function(data){
                     if(data){
                         var l = $(".narou")
                         if(data.nocgenre==1){
@@ -873,12 +872,12 @@ export function _header(){
             }
 
             /* Storage Listener */
-            chrome.storage.local.onChanged.addListener(function(changes){
-                if(changes.novelCustomHeaderLeft!=undefined || changes.novelCustomHeaderRight!=undefined){
+            nt.storage.local.changed(function(changes){
+                if(changes?.novelCustomHeaderLeft!=undefined || changes?.novelCustomHeaderRight!=undefined){
                     nt.storage.local.get(["novelCustomHeaderLeft", "novelCustomHeaderRight"]).then((data) => {
                         resetHeader(data.novelCustomHeaderLeft, data.novelCustomHeaderRight)
                     })
-                }else if(changes.novelLegacyHeaderIcon != undefined){
+                }else if(changes?.novelLegacyHeaderIcon != undefined){
                     nt.storage.local.get(["novelLegacyHeaderIcon"]).then((data) => {
                         if(!data.novelLegacyHeaderIcon){
                             $("body").addClass("narou-tweaker-header--hide-icon")
@@ -886,7 +885,7 @@ export function _header(){
                             $("body").removeClass("narou-tweaker-header--hide-icon")
                         }
                     })
-                }else if(changes.novelCustomHeaderShowEnactiveItems){
+                }else if(changes?.novelCustomHeaderShowEnactiveItems){
                     nt.storage.local.get(["novelCustomHeaderShowEnactiveItems"]).then((data) => {
                         if(data.novelCustomHeaderShowEnactiveItems){
                             $("body").addClass("narou-tweaker-header--show-inactive-icon")
@@ -946,9 +945,7 @@ export function changeHeaderScrollMode(_elm: string){
         }
     });
 
-    chrome.storage.local.onChanged.addListener(function(changes){
-        if(changes.novelCustomHeaderMode!=undefined || changes.novelCustomHeaderScrollHidden!=undefined){
-            changeMode($(_elm))
-        }
+    nt.storage.local.changed(["novelCustomHeaderMode", "novelCustomHeaderScrollHidden"], function(changes){
+        changeMode($(_elm))
     })
 }

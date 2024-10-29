@@ -1,6 +1,3 @@
-import { localFont, localFontFamilyV1 } from "../../utils/v1_font";
-import { defaultValue, getCSSRule, saveJson } from "../../utils/misc";
-import { generateNoDuplicateSkinName, localSkinsV1, SkinsV1, SkinV1 } from "../../utils/v1_skin";
 import { nt } from "../../utils/narou-tweaker";
 import { AvailableSkin, getSkin, getSkinFromIndex } from "../../utils/v2_skin";
 
@@ -24,12 +21,8 @@ export function skinEditor(){
         });
         skinEditor_restoreList()
 
-        chrome.storage.local.onChanged.addListener(function(changes){
-            if(changes.novelSkinsAvailable!==undefined ||
-                changes.novelSkinSelected!==undefined
-            ){
-                skinEditor_restoreList()
-            }
+        nt.storage.local.changed(["novelSkinsAvailable", "changes.novelSkinSelected"], function(changes){
+            skinEditor_restoreList()
         })
     }
 }

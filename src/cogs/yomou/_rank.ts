@@ -2,7 +2,6 @@ import { getNcodeFromURL } from "../../utils/ncode";
 import { checkRankPageDetail } from "./utils";
 import { getGenreNumber } from "../../utils/narou";
 import { nt } from "../../utils/narou-tweaker";
-import { fetchNovelApi } from "../../utils/api";
 
 import $ from 'jquery';
 
@@ -58,16 +57,14 @@ export function _rankTop(){
                     // ランキングトップ（要素追加）
                     showRankTop_NovelDetails()
 
-                    chrome.storage.local.onChanged.addListener(function(changes){
-                        if(changes.yomouRankTop_ShowDescription!=undefined){
-                            nt.storage.local.get().then(function(option){
-                                if(option.yomouRankTop_ShowDescription){
-                                    $(".p-ranktop-item__story").css("display", "")
-                                }else{
-                                    $(".p-ranktop-item__story").css("display", "none")
-                                }
-                            })
-                        }
+                    nt.storage.local.changed("yomouRankTop_ShowDescription", function(changes){
+                        nt.storage.local.get().then(function(option){
+                            if(option.yomouRankTop_ShowDescription){
+                                $(".p-ranktop-item__story").css("display", "")
+                            }else{
+                                $(".p-ranktop-item__story").css("display", "none")
+                            }
+                        })
                     })
 
                 }
@@ -120,7 +117,7 @@ function showRankTop_NovelDetails(){
                 const marginHeight = 16
 
                 if(ncode){
-                    fetchNovelApi(ncode, false, function(n){
+                    nt.api.novel.fetch(ncode, false, function(n){
                         if(n){
                             // あらすじを表示
                             const j = i

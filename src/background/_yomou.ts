@@ -6,29 +6,29 @@ export function yomouCssListener(){
 
     nt.storage.local.changed(function(changes){
         if(
-            changes.yomouRank_ShowNovelInfoLink!=undefined ||
-            changes.yomouRank_ShowKasasagi!=undefined ||
-            changes.yomouRank_ShowRaWi!=undefined ||
-            changes.yomouRank_ShowDescription!=undefined ||
-            changes.yomouRank_ShowTags!=undefined ||
-            changes.yomouRank_ShowNovelInfoLink!=undefined ||
-            changes.yomouRank_DevidePointsUnit!=undefined ||
-            changes.yomouRank_PointsColor!=undefined
+            changes?.yomouRank_ShowNovelInfoLink!=undefined ||
+            changes?.yomouRank_ShowKasasagi!=undefined ||
+            changes?.yomouRank_ShowRaWi!=undefined ||
+            changes?.yomouRank_ShowDescription!=undefined ||
+            changes?.yomouRank_ShowTags!=undefined ||
+            changes?.yomouRank_ShowNovelInfoLink!=undefined ||
+            changes?.yomouRank_DevidePointsUnit!=undefined ||
+            changes?.yomouRank_PointsColor!=undefined
         ){
             makeRankCSS()
         }
 
         if(
-            changes.yomouRank_DevidePointsUnit!=undefined ||
-            changes.yomouRank_PointsColor!=undefined ||
-            changes.yomouRankTop_ShowDescription!=undefined ||
-            changes.yomouRankTop_ShowTags!=undefined ||
-            changes.yomouRankTop_ShowLength!=undefined ||
-            changes.yomouRankTop_ShowPoints!=undefined ||
-            changes.yomouRankTop_ShowNovelInfoLink!=undefined ||
-            changes.yomouRankTop_ShowUpdateDate!=undefined ||
-            changes.yomouRankTop_ShowKasasagi!=undefined ||
-            changes.yomouRankTop_ShowRaWi!=undefined
+            changes?.yomouRank_DevidePointsUnit!=undefined ||
+            changes?.yomouRank_PointsColor!=undefined ||
+            changes?.yomouRankTop_ShowDescription!=undefined ||
+            changes?.yomouRankTop_ShowTags!=undefined ||
+            changes?.yomouRankTop_ShowLength!=undefined ||
+            changes?.yomouRankTop_ShowPoints!=undefined ||
+            changes?.yomouRankTop_ShowNovelInfoLink!=undefined ||
+            changes?.yomouRankTop_ShowUpdateDate!=undefined ||
+            changes?.yomouRankTop_ShowKasasagi!=undefined ||
+            changes?.yomouRankTop_ShowRaWi!=undefined
         ){
             makeRankTopCSS()
         }

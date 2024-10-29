@@ -276,7 +276,7 @@ export function fixOption(_fixLocal: boolean = false, _fixSync: boolean = false)
     if(_fixLocal){
         nt.storage.local.get(null).then((data)=>{
             console.log(data)
-            chrome.storage.local.clear(()=>{
+            nt.storage.local.clear().then(()=>{
                 nt.storage.local.set(data.get()).then(function(){
                     console.log("Fixed option data (local).")
                 })
@@ -285,9 +285,9 @@ export function fixOption(_fixLocal: boolean = false, _fixSync: boolean = false)
     }
     
     if(_fixSync){
-        chrome.storage.sync.get(null, (data)=>{
+        nt.storage.sync.get(null).then((data)=>{
             var option = new nt.storage.sync.options(data).get()
-            chrome.storage.sync.clear(()=>{
+            nt.storage.sync.clear().then(()=>{
                 nt.storage.sync.set(option).then(function(){
                     console.log("Fixed option data (sync).")
                 })

@@ -390,25 +390,25 @@ function setOptionContentsDisplay(id: number){
 
 
     /* Storage Listener */
-    chrome.storage.local.onChanged.addListener(function(changes){
+    nt.storage.local.changed(function(changes){
         if(
-            changes.fontSelectedFontFamily!=undefined ||
-            changes.fontFontFamilyList!=undefined ||
-            changes.fontFontSize!=undefined ||
-            changes.fontLineHeight!=undefined ||
-            changes.fontTextRendering!=undefined ||
-            changes.fontWidth!=undefined ||
-            changes.novelVertical!=undefined
+            changes?.fontSelectedFontFamily!=undefined ||
+            changes?.fontFontFamilyList!=undefined ||
+            changes?.fontFontSize!=undefined ||
+            changes?.fontLineHeight!=undefined ||
+            changes?.fontTextRendering!=undefined ||
+            changes?.fontWidth!=undefined ||
+            changes?.novelVertical!=undefined
         ){
             restoreFontOptions()
         }
-        if(changes.skins!=undefined || changes.selectedSkin!=undefined){
+        if(changes?.skins!=undefined || changes?.selectedSkin!=undefined){
             nt.storage.local.get(["skins", "selectedSkin"]).then((data)=>{
                 restoreSkinOptions(data.skins, data.selectedSkin)
             })
         }
 
-        if(changes.novelVertical){
+        if(changes?.novelVertical!==undefined){
             location.reload()
         }
     })
@@ -672,35 +672,34 @@ function setOptionContentsCorrection(id: number){
     })
 
     /* Storage Listener */
-    chrome.storage.local.onChanged.addListener(function(changes){
-        if(changes.correctionIndent!=undefined ||
-            changes.correctionNormalizeEllipses!=undefined ||
-            changes.correctionNormalizeDash!=undefined ||
-            changes.correctionNormalizeExclamation!=undefined ||
-            changes.correctionRepeatedSymbols!=undefined ||
-            changes.correctionPeriodWithBrackets!=undefined ||
-            changes.correctionNoSpaceExclamation!=undefined ||
-            changes.correctionOddEllipses!=undefined ||
-            changes.correctionOddDash!=undefined ||
-            changes.correctionWaveDash!=undefined ||
-            changes.correctionNumber!=undefined ||
-            changes.correctionNumberShort!=undefined ||
-            changes.correctionNumberLong!=undefined ||
-            changes.correctionNumberSymbol!=undefined ||
-            changes.correctionReplacePatterns!=undefined  ||
-            changes.correctionShowIllustration!=undefined ||
-            changes.correctionRemoveIllustrationLink!=undefined ||
-            changes.correctionVerticalLayout_CombineWord!=undefined ||
-            changes.correctionVerticalLayout_CombineNumber!=undefined ||
-            changes.correctionVerticalLayout_IgnoreCombineNumberInWord!=undefined ||
-            changes.correctionVerticalLayout_CombineExclamation!=undefined ||
-            changes.correctionVerticalLayout_SidewayWord!=undefined ||
-            changes.correctionVerticalLayout_SidewayExclamation!=undefined
-        ){
-            restoreCorrectionMode()
-            restoreReplacePattern()
-            correction()
-        }
+    nt.storage.local.changed([
+        "correctionIndent",
+        "correctionNormalizeEllipses",
+        "correctionNormalizeDash",
+        "correctionNormalizeExclamation",
+        "correctionRepeatedSymbols",
+        "correctionPeriodWithBrackets",
+        "correctionNoSpaceExclamation",
+        "correctionOddEllipses",
+        "correctionOddDash",
+        "correctionWaveDash",
+        "correctionNumber",
+        "correctionNumberShort",
+        "correctionNumberLong",
+        "correctionNumberSymbol",
+        "correctionReplacePatterns",
+        "correctionShowIllustration",
+        "correctionRemoveIllustrationLink",
+        "correctionVerticalLayout_CombineWord",
+        "correctionVerticalLayout_CombineNumber",
+        "correctionVerticalLayout_IgnoreCombineNumberInWord",
+        "correctionVerticalLayout_CombineExclamation",
+        "correctionVerticalLayout_SidewayWord",
+        "correctionVerticalLayout_SidewayExclamation"
+    ], function(changes){
+        restoreCorrectionMode()
+        restoreReplacePattern()
+        correction()
     })
     
 }
@@ -726,10 +725,8 @@ function setOptionContentsAuthorSkin(id: number){
 
     /* Restore Values */
     restoreAuthorSkin()
-    chrome.storage.local.onChanged.addListener(function(changes){
-        if(changes.novelAuthorCustomSkin!=undefined){
-            restoreAuthorSkin()
-        }
+    nt.storage.local.changed("novelAuthorCustomSkin", function(changes){
+        restoreAuthorSkin()
     })
 
     function restoreAuthorSkin(){

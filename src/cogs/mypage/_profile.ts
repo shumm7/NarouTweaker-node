@@ -1,7 +1,6 @@
 
 import { nt } from "../../utils/narou-tweaker"
 import { getUserIdFromURL, isR18 } from "../../utils/narou"
-import { fetchUserApi } from "../../utils/api"
 
 import $ from 'jquery';
 
@@ -24,7 +23,7 @@ export function _profile(){
 
             /* User Detail */
             if(data.mypageProfileStatics && !r18){
-                fetchUserApi(userid, function(d){
+                nt.api.user.fetch(userid, function(d){
                     if(d){
                         $(".c-panel__headline").attr("id", "user-detail-header")
                         $(".c-side-list").attr("id", "user-detail")
@@ -101,7 +100,7 @@ export function _profile(){
                     url = `https://nl.syosetu.com/syuppan/list/?noc=on&mnlt=on&mid=on&word=${userid}`
                 }
                 
-                chrome.runtime.sendMessage ({action: "fetch", format: "text", data: {url: url, options: {'method': 'GET'}}}, function(response) {
+                nt.runtime.action({action: "fetch", format: "text", data: {url: url, options: {'method': 'GET'}}}).then(function(response) {
                 if(response){   
                     if(response.success && response.action=="fetch"){
                         var list: Array<Record<string,string>> = []

@@ -1,4 +1,3 @@
-import { saveText } from "../../utils/misc"
 import { getSelectedContent } from "./_editor"
 import { nt } from "../../utils/narou-tweaker"
 
@@ -659,7 +658,7 @@ export function _toolExportEach(){
             var name = $(form).attr("name")
             var text = $(form).val()
             if(name!==undefined && typeof text==="string"){
-                saveText(text, `${name}-${nt.time.getDatetimeStringForFilename()}.txt`)
+                nt.download.text(text, `${name}-${nt.time.getDatetimeStringForFilename()}.txt`)
             }
         }
     })
@@ -674,6 +673,6 @@ export function _toolExportAll(){
         text += `【前書き】\n${$("textarea[name='preface']").val() ?? ""}\n\n\n\n`
         text += `【後書き】\n${$("textarea[name='postscript']").val() ?? ""}\n\n\n\n`
         text += `【フリーメモ】\n${$("textarea[name='freememo']").val() ?? ""}`
-        saveText(text, `${name}-${nt.time.getDatetimeStringForFilename()}.txt`)
+        nt.download.text(text, `${name}-${nt.time.getDatetimeStringForFilename()}.txt`)
     })
 }

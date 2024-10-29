@@ -6,25 +6,25 @@ export function skinListener(){
     makeSkin()
 
     nt.storage.local.changed(function(changes){
-        if(changes.skins!=undefined ||
-            changes.selectedSkin!=undefined ||
-            changes.fontSelectedFontFamily!=undefined ||
-            changes.fontFontFamilyList!=undefined ||
-            changes.fontFontSize!=undefined ||
-            changes.fontLineHeight!=undefined ||
-            changes.fontTextRendering!=undefined ||
-            changes.fontWidth!=undefined
+        if(changes?.skins!=undefined ||
+            changes?.selectedSkin!=undefined ||
+            changes?.fontSelectedFontFamily!=undefined ||
+            changes?.fontFontFamilyList!=undefined ||
+            changes?.fontFontSize!=undefined ||
+            changes?.fontLineHeight!=undefined ||
+            changes?.fontTextRendering!=undefined ||
+            changes?.fontWidth!=undefined
         ){
             makeSkin()
         }
-        if(changes.skins!=undefined ||
-            changes.workspaceEditorSelectedSkin!=undefined ||
-            changes.workspaceEditorSelectedFontFamily!=undefined ||
-            changes.workspaceEditorFontFamilyList!=undefined ||
-            changes.workspaceEditorFontSize!=undefined ||
-            changes.workspaceEditorLineHeight!=undefined ||
-            changes.workspaceEditorTextRendering!=undefined ||
-            changes.workspaceEditorWidth!=undefined
+        if(changes?.skins!=undefined ||
+            changes?.workspaceEditorSelectedSkin!=undefined ||
+            changes?.workspaceEditorSelectedFontFamily!=undefined ||
+            changes?.workspaceEditorFontFamilyList!=undefined ||
+            changes?.workspaceEditorFontSize!=undefined ||
+            changes?.workspaceEditorLineHeight!=undefined ||
+            changes?.workspaceEditorTextRendering!=undefined ||
+            changes?.workspaceEditorWidth!=undefined
         ){
             makeEditorSkin()
         }

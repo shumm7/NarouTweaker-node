@@ -40,28 +40,26 @@ function _listBookImage(){
         listImage.find(".c-syuppan-noimage__title").append(`<div class="p-syuppan-list__image--searchimage">（クリックで書影を取得）</div>`)
         
         listImage.on("click", function(){
-            chrome.runtime.sendMessage({action: "fetch", format: "text", data: {url: url, options: {'method': 'GET'}}}, function(response){
-                if(response){
-                    if(response.success && response.action=="fetch"){
-                        var body = $($.parseHTML(response.result))
+            nt.runtime.action({action: "fetch", format: "text", data: {url: url, options: {'method': 'GET'}}}).then(function(response){
+                if(response?.success && response?.action=="fetch"){
+                    var body = $($.parseHTML(response.result))
 
-                        listImage.removeClass("p-syuppan-list__image--nosearch")
-                        if(body.find(".p-syuppan-detail__image-link[href^='https://www.amazon.co.jp/dp/'] .c-syuppan-noimage").length){
-                            var image = body.find(".p-syuppan-detail__image-link[href^='https://www.amazon.co.jp/dp/']")
-                            var amazonLink = image.prop("href")
-                    
-                            var amazonId = nt.text.escapeHtml(amazonLink.match(/^https\:\/\/www\.amazon\.co\.jp\/dp\/(.*)\/$/)[1])
-                            var imageUrl = `https://images.amazon.com/images/P/${amazonId}.09_SL500_.jpg`
+                    listImage.removeClass("p-syuppan-list__image--nosearch")
+                    if(body.find(".p-syuppan-detail__image-link[href^='https://www.amazon.co.jp/dp/'] .c-syuppan-noimage").length){
+                        var image = body.find(".p-syuppan-detail__image-link[href^='https://www.amazon.co.jp/dp/']")
+                        var amazonLink = image.prop("href")
+                
+                        var amazonId = nt.text.escapeHtml(amazonLink.match(/^https\:\/\/www\.amazon\.co\.jp\/dp\/(.*)\/$/)[1])
+                        var imageUrl = `https://images.amazon.com/images/P/${amazonId}.09_SL500_.jpg`
 
-                            listImage.removeClass("p-syuppan-list__image--noimage")
-                            listImage.empty()
-                            listImage.append(`<img src="${imageUrl}" class="lazy" style="display: inline;">`)
-                            listImage.prop("href", url)
-                            listImage.find(".p-syuppan-list__image--searchimage").remove()
-                        }else{
-                            listImage.prop("href", url)
-                            listImage.find(".p-syuppan-list__image--searchimage").remove()
-                        }
+                        listImage.removeClass("p-syuppan-list__image--noimage")
+                        listImage.empty()
+                        listImage.append(`<img src="${imageUrl}" class="lazy" style="display: inline;">`)
+                        listImage.prop("href", url)
+                        listImage.find(".p-syuppan-list__image--searchimage").remove()
+                    }else{
+                        listImage.prop("href", url)
+                        listImage.find(".p-syuppan-list__image--searchimage").remove()
                     }
                 }
             })

@@ -56,25 +56,25 @@ nt.storage.local.get("novelCustomCSS").then((data)=>{
 })
 
 nt.storage.session.changed(function(changes){
-    var css = changes.novelSkinCustomCSS.newValue
+    var css = changes?.novelSkinCustomCSS?.newValue
     var elm = $("#narou-tweaker-style--skin-user")
     if(typeof css === "string" && elm.length){
         elm.text(css)
     }
 
-    var css = changes.novelFontCustomCSS.newValue
+    var css = changes?.novelFontCustomCSS?.newValue
     var elm = $("#narou-tweaker-style--font-user")
     if(typeof css === "string" && elm.length){
         elm.text(css)
     }
 
-    var css = changes.novelAppliedSkinCSS.newValue
+    var css = changes?.novelAppliedSkinCSS?.newValue
     var elm = $("#narou-tweaker-style--skin")
     if(typeof css === "string" && elm.length){
         elm.text(css)
     }
 
-    var css = changes.novelAppliedFontCSS.newValue
+    var css = changes?.novelAppliedFontCSS?.newValue
     var elm = $("#narou-tweaker-style--font")
     if(typeof css === "string" && elm.length){
         elm.text(css)
@@ -82,7 +82,7 @@ nt.storage.session.changed(function(changes){
 })
 
 nt.storage.local.changed("novelCustomCSS", function(changes){
-    const css = changes.novelCustomCSS.newValue
+    const css = changes?.novelCustomCSS?.newValue
     var elm = $("#narou-tweaker-style--user-css")
     if(typeof css === "string" && elm.length){
         elm.text(css)

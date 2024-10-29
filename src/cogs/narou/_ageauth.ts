@@ -61,32 +61,12 @@ function _ageauthNl(){
             name: 'over18',
             value: 'yes'
         }
-        chrome.runtime.sendMessage({action: "cookies", function: "set", data: cookieDetails}, function(response){
-            if(response.result){
-                location.assign(yes18.data('url'));
-            }
+        nt.cookie.set(cookieDetails).then((cookie)=>{
+            location.assign(yes18.data('url'));
         })
     }
 }
 
 function _ageauthEparet(){
-    /*
-    var expire = new Date()
-    expire.setFullYear(expire.getFullYear() + 1)
-
-    const cookieDetails = {
-        url: location.origin,
-        path:'/',
-        domain:'.mitemin.net',
-        expirationDate: expire.getTime(),
-        name: 'over18',
-        value: 'yes'
-    }
-    chrome.runtime.sendMessage({action: "cookies", function: "set", data: cookieDetails}, function(response){
-        if(response.result){
-            location.assign("/index/top/");
-        }
-    })
-    */
     location.assign("/index/top/");
 }

@@ -60,9 +60,12 @@ function setupContents(scroll?: number){
         restoreOptions()
         markFavoriteOptions(data.extFavoriteOptions)
         
-        chrome.storage.local.onChanged.addListener(function(changes){
-            if(changes.extFavoriteOptions){
-                markFavoriteOptions(changes.extFavoriteOptions.newValue)
+        nt.storage.local.changed("extFavoriteOptions", function(changes){
+            const array = changes?.extFavoriteOptions?.newValue
+            if(Array.isArray(array)){
+                markFavoriteOptions(array)
+            }else{
+                markFavoriteOptions([])
             }
         })
 
@@ -75,15 +78,13 @@ function setupContents(scroll?: number){
 
 
 
-chrome.storage.local.onChanged.addListener(function(changes){
-    if(changes.extFavoriteOptions){
-        var outer = $(`.contents-container[name="general"]`)
-        const scroll = $(window).scrollTop()
-        const height = outer.innerHeight()
-        if(height!==undefined){
-            outer.css("height", height)
-            outer.empty()
-            setupContents(scroll)
-        }
+nt.storage.local.changed("extFavoriteOptions", function(changes){
+    var outer = $(`.contents-container[name="general"]`)
+    const scroll = $(window).scrollTop()
+    const height = outer.innerHeight()
+    if(height!==undefined){
+        outer.css("height", height)
+        outer.empty()
+        setupContents(scroll)
     }
 })

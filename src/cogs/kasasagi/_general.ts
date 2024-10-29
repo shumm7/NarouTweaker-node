@@ -1,9 +1,7 @@
 import {getBigGenre, getGenre, getNovelType, getNovelEnd, getNocgenre} from "../../utils/narou"
 import { addQuestionIconBalloon, addExclamationIconBalloon } from "../../utils/ui";
-import { saveJson } from "../../utils/misc";
 import { getNcodeFromURL, Ncode } from "../../utils/ncode";
 import { nt } from "../../utils/narou-tweaker";
-import { fetchNovelApi, fetchRankinApi, NovelApi, RankinApi } from "../../utils/api";
 
 import $ from 'jquery';
 import { Chart } from "chart.js/auto";
@@ -230,7 +228,7 @@ function api(r18?: boolean){
             `)
 
 
-            fetchNovelApi(ncode, r18, function(data){
+            nt.api.novel.fetch(ncode, r18, function(data){
                 if(data){
                     $("#novel_data .loading-api").remove()
 
@@ -272,7 +270,7 @@ function rank(r18?: boolean){
                 <div class='rank_list'></div>
             `)
 
-            fetchRankinApi(ncode, function(data){
+            nt.api.rankin.fetch(ncode, function(data){
                 if(data){
                     $("#novel_rank_data .loading-api").remove()
 
@@ -369,7 +367,7 @@ function _buttonToday(today_total: {[key: string]: number}, yesterday_total: {[k
                     }
                 }
             }
-            saveJson(raw, `oneday-pv_${ncode}_${date}.json`);
+            nt.download.json(raw, `oneday-pv_${ncode}_${date}.json`);
         })
     }
 }
@@ -515,7 +513,7 @@ function _buttonTotal(total_pv: {[key: string]: number}, total_unique: {[key: st
                     }
                 }
             }
-            saveJson(raw, `access-all_${ncode}_${date}.json`);
+            nt.download.json(raw, `access-all_${ncode}_${date}.json`);
         })
     }
 }
@@ -579,7 +577,7 @@ function _graphTotal(week: Array<string>, week_pv: Array<number|null>, graphType
 }
 
 
-function _tableApi(ncode: string, d: NovelApi, r18?:boolean){
+function _tableApi(ncode: string, d: nt.api.novel.data, r18?:boolean){
     $("#novel_detail .novel_info").append("<table class='access-table'><tbody></tbody></table>")
     var table = $("#novel_detail .novel_info table tbody")
 
@@ -700,7 +698,7 @@ function _tableApi(ncode: string, d: NovelApi, r18?:boolean){
     addValue("最終更新日時<br>（システム用）", getDateStr(d.updated_at), d.updated_at)
 }
 
-function _buttonApi(ncode: string, data: NovelApi){
+function _buttonApi(ncode: string, data: nt.api.novel.data){
     $("#novel_detail").append('<div class="ui-button--center"><input class="ui-button" type="submit" value="エクスポート" id="export-api-data"></div>')
     $("#export-api-data").on("click", function(){
         var date = nt.time.getDateString();
@@ -710,12 +708,12 @@ function _buttonApi(ncode: string, data: NovelApi){
             ncode: ncode,
             data: data
         }
-        saveJson(raw, `api-data_${ncode}_${date}.json`);
+        nt.download.json(raw, `api-data_${ncode}_${date}.json`);
     })
 }
 
 
-function _tableRank(ncode: string, d: Array<RankinApi>){
+function _tableRank(ncode: string, d: Array<nt.api.rankin.data>){
     $("#novel_rank .rank_list").append("<table class='data-table' name='d'><tbody></tbody></table>")
     $("#novel_rank .rank_list").append("<table class='data-table' name='w'><tbody></tbody></table>")
     $("#novel_rank .rank_list").append("<table class='data-table' name='m'><tbody></tbody></table>")
@@ -725,7 +723,7 @@ function _tableRank(ncode: string, d: Array<RankinApi>){
     var tableM = $("#novel_rank_data .rank_list table[name='m'] tbody")
     var tableQ = $("#novel_rank_data .rank_list table[name='q'] tbody")
     
-    function addValue(data: RankinApi){
+    function addValue(data: nt.api.rankin.data){
         if(data.rtype!==undefined && data.pt!==undefined && data.rank!==undefined){
         let rank = data.rank
         let point = data.pt
@@ -780,7 +778,7 @@ function _tableRank(ncode: string, d: Array<RankinApi>){
     tableQ.prepend("<tr><th colspan='3'>四半期</th></tr><tr class='header'><th>日付</th><th>順位</th><th>pt.</th></tr>")
 }
 
-function _buttonRank(ncode: string, data: Array<RankinApi>){
+function _buttonRank(ncode: string, data: Array<nt.api.rankin.data>){
     $("#novel_rank").append('<div class="ui-button--center"><input class="ui-button" type="submit" value="エクスポート" id="export-rank-data"></div>')
     $("#export-rank-data").on("click", function(){
         var date = nt.time.getDateString();
@@ -790,6 +788,6 @@ function _buttonRank(ncode: string, data: Array<RankinApi>){
             ncode: ncode,
             data: data
         }
-        saveJson(raw, `rank-data_${ncode}_${date}.json`);
+        nt.download.json(raw, `rank-data_${ncode}_${date}.json`);
     })
 }

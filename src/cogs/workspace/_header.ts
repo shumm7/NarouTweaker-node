@@ -61,10 +61,8 @@ function changeHeaderScrollMode(){
         }
     });
 
-    chrome.storage.local.onChanged.addListener(function(changes){
-        if(changes.workspaceCustomHeaderMode!=undefined || changes.workspaceCustomHeaderScrollHidden!=undefined){
-            changeMode($(elm))
-        }
+    nt.storage.local.changed(["workspaceCustomHeaderMode", "workspaceCustomHeaderScrollHidden"], function(changes){
+        changeMode($(elm))
     })
 }
 
@@ -357,10 +355,8 @@ function headerIcons(){
     resetHeader()
 
     /* Storage Listener */
-    chrome.storage.local.onChanged.addListener(function(changes){
-        if(changes.workspaceCustomHeader!=undefined){
-            resetHeader()
-        }
+    nt.storage.local.changed("workspaceCustomHeader", function(changes){
+        resetHeader()
     })
 }
 
@@ -520,9 +516,7 @@ function addMenuLink(){
     resetMenu()
 
     /* Storage Listener */
-    chrome.storage.local.onChanged.addListener(function(changes){
-        if(changes.workspaceCustomMenu_Left!=undefined || changes.workspaceCustomMenu_Middle!=undefined || changes.workspaceCustomMenu_Right!=undefined){
-            resetMenu()
-        }
+    nt.storage.local.changed(["workspaceCustomMenu_Left", "workspaceCustomMenu_Middle", "workspaceCustomMenu_Right"], function(changes){
+        resetMenu()
     })
 }

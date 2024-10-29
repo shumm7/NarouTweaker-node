@@ -1,5 +1,4 @@
 import { setup } from "../general";
-import { getExtensionVersion } from "../../utils/misc";
 import { nt } from "../../utils/narou-tweaker";
 
 import $ from 'jquery';
@@ -36,7 +35,7 @@ function showPatchnotes(){
                 </div>
             `)
 
-            const currentVersion = getExtensionVersion()
+            const currentVersion = nt.extension.version
             const version = nt.text.escapeHtml(data?.version)
             const date = nt.text.escapeHtml(data?.date ?? "")
             const url = nt.text.escapeHtml(data?.url ?? `https://github.com/shumm7/Narou-Tweaker/releases/tag/${version}`)
@@ -90,7 +89,7 @@ function showPatchnotes(){
             })
             outer.append(box)
 
-            if(getExtensionVersion() == version){
+            if(nt.extension.version == version){
                 $(".extension-version").append(`<a href="${url}">${version}</version>`)
             }
         })
@@ -131,11 +130,12 @@ function debugMode(){
             $(`.contents-wide[name="extDebug"]`).css("display", "none")
         }
     })
-    chrome.storage.local.onChanged.addListener(function(changes){
-        if(changes.extDebug!=undefined){
-            tabMode(changes.extDebug.newValue)
+    nt.storage.local.changed("extDebug", function(changes){
+        const isDebug = changes?.extDebug?.newValue
+        if(typeof isDebug==="boolean" || isDebug===undefined){
+            tabMode(isDebug)
 
-            if(changes.extDebug.newValue){
+            if(isDebug){
                 $(`.contents-wide[name="extDebug"]`).css("display", "")
             }else{
                 $(`.contents-wide[name="extDebug"]`).css("display", "none")

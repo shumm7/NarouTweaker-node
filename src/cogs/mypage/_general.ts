@@ -1,7 +1,6 @@
 import { getNcodeFromURL } from "../../utils/ncode"
 import { isR18 } from "../../utils/narou"
 import { nt } from "../../utils/narou-tweaker"
-import { fetchNovelApi } from "../../utils/api"
 
 import $ from 'jquery';
 
@@ -57,7 +56,7 @@ function novellist(){
                 }
 
                 // API
-                fetchNovelApi(ncode, r18, function(n){
+                nt.api.novel.fetch(ncode, r18, function(n){
                     if(n){
                         const all_hyoka_cnt = n.all_hyoka_cnt ?? 0
                         const all_point = n.all_point ?? 0

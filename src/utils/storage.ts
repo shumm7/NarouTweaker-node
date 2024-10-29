@@ -1,7 +1,6 @@
 import { getOptionFromID, getOptionPageFromID } from "../options/_utils/optionUI_utils"
 import { ImpressionKanrino } from "./data"
 import { CustomIconIDs, novelIconList, workspaceIconList, workspaceMenuIconList } from "./header"
-import { getExtensionVersion } from "./misc"
 import { FontFamiliesV1 } from "./v1_font"
 import { SkinsV1 } from "./v1_skin"
 import { OptionID, OptionUI_Item, OptionUI_ItemID } from "../options/_utils/optionUI_type"
@@ -19,7 +18,7 @@ export namespace __nt_storage__ {
             [key: string]: any
 
             /* Extension */
-            extOptionsVersion: string = getExtensionVersion()
+            extOptionsVersion: string = nt.extension.version
             extAdvancedSettings: boolean = false
             extExperimentalFeatures: boolean = false
             extDebug: boolean = false
@@ -1003,6 +1002,8 @@ export namespace __nt_storage__ {
             yomouRank_AppliedCSS: string | undefined
             workspaceEditorAppliedSkinCSS: string | undefined
             workspaceEditorAppliedFontCSS: string | undefined
+            extOptionSidePanelShow: boolean = true
+            novelOfficialTags: Array<string> | undefined
 
             novelOptionModalSelected: number = 0
 

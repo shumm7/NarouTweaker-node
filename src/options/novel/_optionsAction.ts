@@ -102,10 +102,8 @@ export function novel_customHeaderSortable(){
     }
     
     restoreSortable()
-    chrome.storage.local.onChanged.addListener(function(changes){
-        if(changes.novelCustomHeaderLeft || changes.novelCustomHeaderRight){
-            restoreSortable()
-        }
+    nt.storage.local.changed(["novelCustomHeaderLeft", "novelCustomHeaderRight"], function(changes){
+        restoreSortable()
     })
 }
 
@@ -131,10 +129,8 @@ export function novel_replacePattern(){
     })
 
     /* Storage Listener */
-    chrome.storage.local.onChanged.addListener(function(changes){
-        if(changes.correctionReplacePatterns!=undefined){
-            restoreReplacePattern()
-        }
+    nt.storage.local.changed("correctionReplacePatterns", function(changes){
+        restoreReplacePattern()
     })
 
     restoreReplacePattern()

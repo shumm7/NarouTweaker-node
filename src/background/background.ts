@@ -10,15 +10,16 @@ chrome.runtime.onInstalled.addListener((details) => {
         console.log("Updated: fixing option...")
         fixOption(true, true)
 
-        if(details.previousVersion !== chrome.runtime.getManifest().version){
-            const id = `narou-tweaker--updated-version-${details.previousVersion}-to-${chrome.runtime.getManifest().version}`
+        const version = nt.extension.version
+        if(details.previousVersion !== version){
+            const id = `narou-tweaker--updated-version-${details.previousVersion}-to-${version}`
             nt.storage.local.get("extNotifications").then((data) => {
                 if(data.extNotifications){
                     chrome.notifications.create(id, {
                         iconUrl: "/assets/icons/icon_48.png",
                         type: "basic",
                         title: "Narou Tweakerがアップデートされました",
-                        message: `${details.previousVersion} -> ${chrome.runtime.getManifest().version}`,
+                        message: `${details.previousVersion} -> ${version}`,
                         buttons: [{
                             title: "パッチノート",
                         }]

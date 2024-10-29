@@ -1,4 +1,3 @@
-import { saveJson } from "../../utils/misc"
 import { makeGraph, getValueFromTables, GraphDataset } from "./utils"
 import { getNcodeFromURL } from "../../utils/ncode"
 import { nt } from "../../utils/narou-tweaker"
@@ -92,7 +91,7 @@ function _button(datasets: Array<GraphDataset>, labels: Array<string>){
                 ncode: ncode,
                 data: data
             }
-            saveJson(raw, `month-pv_${ncode}_${date}.json`);
+            nt.download.json(raw, `month-pv_${ncode}_${date}.json`);
         })
     }
 }

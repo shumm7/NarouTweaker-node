@@ -1,4 +1,4 @@
-import { getExtensionVersion } from "../../utils/misc"
+import { nt } from "../../utils/narou-tweaker"
 
 export const OptionUI_CustomElement_general: Record<string,string> = {
     ui_extIntroduction_Image: `
@@ -6,7 +6,7 @@ export const OptionUI_CustomElement_general: Record<string,string> = {
             <img src="/assets/image/wide.png">
             <span class="title">Narou Tweaker</span>
             <div class="subtitle">
-                <span class="version">${getExtensionVersion()}</span>
+                <span class="version">${nt.extension.version}</span>
             </div>
         </div>
     `,

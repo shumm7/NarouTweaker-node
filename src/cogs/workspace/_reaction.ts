@@ -46,10 +46,8 @@ function _impressionRead(){
                         }
                     })
 
-                    chrome.storage.sync.onChanged.addListener(function(changes){
-                        if(changes.workspaceImpressionHidden!=undefined){
-                            restoreHide()
-                        }
+                    nt.storage.sync.changed("workspaceImpressionHidden", function(changes){
+                        restoreHide()
                     })
                 }
 
@@ -170,10 +168,8 @@ function _impressionRead(){
                         })
                     })
                     
-                    chrome.storage.sync.onChanged.addListener(function(changes){
-                        if(changes.workspaceImpressionMarked!=undefined){
-                            restoreRead()
-                        }
+                    nt.storage.sync.changed("workspaceImpressionMarked", function(changes){
+                        restoreRead()
                     })
                 }
             }

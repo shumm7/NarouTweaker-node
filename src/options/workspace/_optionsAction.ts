@@ -89,10 +89,8 @@ export function workspace_customHeaderSortable(){
     }
 
     restoreSortable()
-    chrome.storage.local.onChanged.addListener(function(changes){
-        if(changes.workspaceCustomHeader){
-            restoreSortable()
-        }
+    nt.storage.local.changed("workspaceCustomHeader", function(changes){
+        restoreSortable()
     })
 }
 

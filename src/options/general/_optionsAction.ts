@@ -1,5 +1,4 @@
 import { fixOption, getOptionPageFromID } from "../_utils/optionUI_utils";
-import { saveJson } from "../../utils/misc";
 import { OptionUI_Pages } from "../_utils/optionUI_items";
 import { nt } from "../../utils/narou-tweaker";
 import { OptionUI_Page } from "options/_utils/optionUI_type";
@@ -46,7 +45,7 @@ export function general_popupDefaultPage_Dropdown(){
     })
 
     nt.storage.local.changed("extPopupDefaultPage", function(changes){
-        const page = changes.extPopupDefaultPage.newValue
+        const page = changes?.extPopupDefaultPage?.newValue
         if(typeof page === "string"){
             restoreDropdown(page)
         }
@@ -59,7 +58,7 @@ export function general_removeOptionData(){
     $("#removeOptionData").on("click", function(){
         if(window.confirm('スキンを含む、保存されているデータが全てリセットされます。\nこの操作は元に戻せません。')){
             nt.storage.local.get("extNotifications").then((data) => {
-                chrome.storage.local.clear().then(()=>{
+                nt.storage.local.clear().then(()=>{
                     console.log("Reset all options.")
                     nt.storage.local.set(new nt.storage.local.options().get())
                     console.log("Set all options.")
@@ -106,7 +105,7 @@ export function general_exportOptionData(){
         nt.storage.local.get(null,).then(function(data) {
             var date = nt.time.getDatetimeStringForFilename()
             if(data){
-                saveJson(data.get(), `nt-option-${date}.json`)
+                nt.download.json(data.get(), `nt-option-${date}.json`)
             }
         });
     })

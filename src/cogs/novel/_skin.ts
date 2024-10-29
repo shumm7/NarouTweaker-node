@@ -25,14 +25,8 @@ export function removeDefaultSkinClass(){
 /* Author Skin */
 export function _authorSkin(){
     changeAuthorSkin()
-    chrome.storage.local.onChanged.addListener(function(changes){
-        try{
-            if(changes.novelAuthorCustomSkin!=undefined || changes.novelAuthorCustomSkinWarning!=undefined){
-                changeAuthorSkin()
-            }
-        }catch(e){
-            console.warn(e)
-        }
+    nt.storage.local.changed(["novelAuthorCustomSkin", "novelAuthorCustomSkinWarning"], function(changes){
+        changeAuthorSkin()
     })
 
     function changeAuthorSkin(){
