@@ -4,13 +4,13 @@ import { saveJson } from "../../utils/misc"
 import { getNcodeFromURL } from "../../utils/ncode"
 import { makeGraph, getValueFromTables, GraphDataset } from "./utils"
 import { GraphType } from "../../utils/data"
-import { getLocalOptions } from "../../utils/option"
+import { storage } from "../../utils/option"
 
 import $ from 'jquery';
 
 /* Day Unique */
 export function _dayUnique(){
-    getLocalOptions(null, (option)=>{
+    storage.local.get(null, (option)=>{
         if($(".novelview_h3").length){
             if(option.kasasagiCustomStyle){
                 var m = $(".novelview_h3")

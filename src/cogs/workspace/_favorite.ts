@@ -1,4 +1,4 @@
-import { getLocalOptions } from "../../utils/option"
+import { storage } from "../../utils/option"
 import $ from "jquery"
 
 const path = location.pathname
@@ -9,7 +9,7 @@ export function _bookmark(){
 }
 
 function bookmarkLayout(){
-    getLocalOptions(null, function(data){
+    storage.local.get(null, function(data){
         // ブックマークページのレイアウト調整
         const layout = data.workspaceBookmarkLayout
         if(layout==1){ // 旧デザインライク
@@ -233,7 +233,7 @@ function bookmarkLayout(){
 }
 
 function bookmarkCategoryLayout(){
-    getLocalOptions(null, function(data){
+    storage.local.get(null, function(data){
         // ブックマークページのカテゴリのレイアウト調整
         function resetTags(layout?: number|string){
             if(typeof layout === "string"){

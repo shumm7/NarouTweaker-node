@@ -1,8 +1,8 @@
-import { getLocalOptions, setLocalOptions } from "../../utils/option"
+import { storage } from "../../utils/option"
 import { ReplacePattern } from "../../utils/data"
 import { CustomIconID, CustomIconIDs, getExcludeIcons, novelIconList } from "../../utils/header"
 import { addFontEditButtonEvent, restoreFont } from "./_optionsAction_Font"
-import { addAuthorSkinEvent, addSkinEditButtonEvent, addSkinExportEvent, addSkinImportEvent, restoreSkins } from "./_optionsAction_Skin"
+import { skinEditor } from "./_optionsAction_Skin"
 
 import $ from 'jquery';
 import Sortable from 'sortablejs'
@@ -11,7 +11,7 @@ import Sortable from 'sortablejs'
 export function novel_customHeaderSortable(){
     /* Novel Header */
     function storeNovelHeader(){
-        setLocalOptions(
+        storage.local.set(
             {
                 novelCustomHeaderLeft: getHeaderIconList("left"),
                 novelCustomHeaderRight: getHeaderIconList("right")
@@ -95,7 +95,7 @@ export function novel_customHeaderSortable(){
             })
         }
     
-        getLocalOptions(["novelCustomHeaderLeft", "novelCustomHeaderRight"], function(data){
+        storage.local.get(["novelCustomHeaderLeft", "novelCustomHeaderRight"], function(data){
             restore(data.novelCustomHeaderLeft, "left")
             restore(data.novelCustomHeaderRight, "right")
             restore(getExcludeIcons([data.novelCustomHeaderLeft, data.novelCustomHeaderRight]), "disabled")
@@ -112,23 +112,7 @@ export function novel_customHeaderSortable(){
 
 /* スキン */
 export function novel_skinEditor(){
-    addSkinEditButtonEvent()
-    restoreSkins()
-}
-
-/* スキンのエクスポート */
-export function novel_skinExport(){
-    addSkinExportEvent()
-}
-
-/* スキンのインスポート */
-export function novel_skinImport(){
-    addSkinImportEvent()
-}
-
-/* 作者スキン */
-export function novel_authorSkin(){
-    addAuthorSkinEvent()
+    skinEditor()
 }
 
 /* フォント */
@@ -141,9 +125,9 @@ export function novel_fontEditor(){
 export function novel_replacePattern(){
     /* Add Button */
     $("#correction-replace--pattern-box-addition").on("click", function(){
-        getLocalOptions(["correctionReplacePatterns"], function(data){
+        storage.local.get(["correctionReplacePatterns"], function(data){
             data.correctionReplacePatterns.push(new ReplacePattern)
-            setLocalOptions({correctionReplacePatterns: data.correctionReplacePatterns}, function(){})
+            storage.local.set({correctionReplacePatterns: data.correctionReplacePatterns}, function(){})
         })
     })
 
@@ -157,7 +141,7 @@ export function novel_replacePattern(){
     restoreReplacePattern()
 
     function restoreReplacePattern(){
-        getLocalOptions(["correctionReplacePatterns"], function(data){
+        storage.local.get(["correctionReplacePatterns"], function(data){
             var elementsAmount = $(".correction-replace--pattern-box").length
             var listLength = data.correctionReplacePatterns.length
             if(listLength<elementsAmount){
@@ -209,11 +193,11 @@ export function novel_replacePattern(){
                 if(typeof _v === "string"){
                     const idx: number = Number(_v)
                     if(!isNaN(idx)){
-                        getLocalOptions(["correctionReplacePatterns"], function(data){
+                        storage.local.get(["correctionReplacePatterns"], function(data){
                             var patterns = data.correctionReplacePatterns
                             if(idx>0){
                                 [patterns[idx], patterns[idx-1]] = [patterns[idx-1], patterns[idx]]
-                                setLocalOptions({correctionReplacePatterns: patterns}, function(){})
+                                storage.local.set({correctionReplacePatterns: patterns}, function(){})
     
                             }
                         })
@@ -225,11 +209,11 @@ export function novel_replacePattern(){
                 if(typeof _v === "string"){
                     const idx: number = Number(_v)
                     if(!isNaN(idx)){
-                        getLocalOptions(["correctionReplacePatterns"], function(data){
+                        storage.local.get(["correctionReplacePatterns"], function(data){
                             var patterns = data.correctionReplacePatterns
                             if(idx<patterns.length-1){
                                 [patterns[idx], patterns[idx+1]] = [patterns[idx+1], patterns[idx]]
-                                setLocalOptions({correctionReplacePatterns: patterns}, function(){})
+                                storage.local.set({correctionReplacePatterns: patterns}, function(){})
                             }
                         })
                     }
@@ -241,14 +225,14 @@ export function novel_replacePattern(){
                 if(typeof _v === "string"){
                     const idx: number = Number(_v)
                     if(!isNaN(idx)){
-                        getLocalOptions(["correctionReplacePatterns"], function(data){
+                        storage.local.get(["correctionReplacePatterns"], function(data){
                             var patterns = data.correctionReplacePatterns
                             if(elm.hasClass("enabled")){
                                 patterns[idx].regex = false
                             }else{
                                 patterns[idx].regex = true
                             }
-                            setLocalOptions({correctionReplacePatterns: patterns}, function(){})
+                            storage.local.set({correctionReplacePatterns: patterns}, function(){})
                         })
                     }
                 }
@@ -259,14 +243,14 @@ export function novel_replacePattern(){
                 if(typeof _v === "string"){
                     const idx: number = Number(_v)
                     if(!isNaN(idx)){
-                        getLocalOptions(["correctionReplacePatterns"], function(data){
+                        storage.local.get(["correctionReplacePatterns"], function(data){
                             var patterns = data.correctionReplacePatterns
                             if(elm.hasClass("enabled")){
                                 patterns[idx].active = false
                             }else{
                                 patterns[idx].active = true
                             }
-                            setLocalOptions({correctionReplacePatterns: patterns}, function(){})
+                            storage.local.set({correctionReplacePatterns: patterns}, function(){})
                         })
                     }
                 }
@@ -276,10 +260,10 @@ export function novel_replacePattern(){
                 if(typeof _v === "string"){
                     const idx: number = Number(_v)
                     if(!isNaN(idx)){
-                        getLocalOptions(["correctionReplacePatterns"], function(data){
+                        storage.local.get(["correctionReplacePatterns"], function(data){
                             var patterns = data.correctionReplacePatterns
                             patterns.splice(idx, 1)
-                            setLocalOptions({correctionReplacePatterns: patterns}, function(){})
+                            storage.local.set({correctionReplacePatterns: patterns}, function(){})
                         })
                     }
                 }
@@ -290,11 +274,11 @@ export function novel_replacePattern(){
                     const idx: number = Number(_v)
                     if(!isNaN(idx)){
                         var value = $(this).val()
-                        getLocalOptions(["correctionReplacePatterns"], function(data){
+                        storage.local.get(["correctionReplacePatterns"], function(data){
                             var patterns = data.correctionReplacePatterns
                             if(typeof value === "string"){
                                 patterns[idx].pattern = value
-                                setLocalOptions({correctionReplacePatterns: patterns}, function(){})
+                                storage.local.set({correctionReplacePatterns: patterns}, function(){})
                             }
                         })
                     }
@@ -306,11 +290,11 @@ export function novel_replacePattern(){
                     const idx: number = Number(_v)
                     if(!isNaN(idx)){
                         var value = $(this).val()
-                        getLocalOptions(["correctionReplacePatterns"], function(data){
+                        storage.local.get(["correctionReplacePatterns"], function(data){
                             var patterns = data.correctionReplacePatterns
                             if(typeof value === "string"){
                                 patterns[idx].replacement = value
-                                setLocalOptions("correctionReplacePatterns", patterns, function(){})
+                                storage.local.set("correctionReplacePatterns", patterns, function(){})
                             }
                         })
                     }

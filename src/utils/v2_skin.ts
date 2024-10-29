@@ -1,5 +1,5 @@
 import { ArrayExt } from "./array"
-import { getLocalOptions, getSyncOptions, LocalOptions, setLocalOptions, setSyncOptions, SyncOptions } from "./option"
+import { storage.local.get, storage.sync.get, LocalOptions, storage.local.set, storage.sync.set, SyncOptions } from "./option"
 import { checkSkinVersion } from "./skin"
 import { minifyCss } from "./text"
 import { CSS_String } from "./type"
@@ -204,7 +204,7 @@ class SkinV2Style {
 
 /** 使用可能スキン */
 export interface AvailableSkin {
-    src: SkinV2Src
+    src: "internal"|"local"
     key: number
 }
 
@@ -567,59 +567,59 @@ export function getSkinList(src: SkinV2Src, local?: LocalOptions|SyncOptions, sy
     return []
 }
 
-export function getSkinFromIndex(i: number, local: LocalOptions, sync: SyncOptions): SkinV2|undefined{
+export function getSkinFromIndex(i: number, local: LocalOptions): SkinV2|undefined{
     const l = local.novelSkinsAvailable.at(i)
     if(l!==undefined){
-        return getSkin(l.src, l.key, local, sync)
+        return getSkin(l.src, l.key, local)
     }
 }
 
-export function getSelectedSkin(local: LocalOptions, sync: SyncOptions): SkinV2|undefined{
-    return getSkinFromIndex(local.novelSkinSelected, local, sync)
+export function getSelectedSkin(local: LocalOptions): SkinV2|undefined{
+    return getSkin(local.novelSkinSelected.src, local.novelSkinSelected.key, local)
+}
+
+export function getSelectedSkinIndex(local: LocalOptions): number|undefined {
+    const list = local.novelSkinsAvailable
+    const selected = local.novelSkinSelected
+    for(let i=0; i<list.length; i++){
+        if(list[i].src===selected.src && list[i].key===selected.key){
+            return i
+        }
+    }
+    return undefined
 }
 
 
-export function addSkin(skin: SkinV2, src: "local"|"sync"): void{
+export function addSkin(skin: SkinV2, src: "local"): void{
     if(src==="local"){
-        getLocalOptions(null, (local)=>{
+        storage.local.get(null, (local)=>{
             const key: number = ArrayExt.putIn(local.novelSkins, skin)
-            local.novelSkinsAvailable.push({src: "sync", key: key})
-            setLocalOptions(local.get([`novelSkin_${key}`, "novelSkinsAvailable"]))
-        })
-    }else if(src === "sync"){
-        getSyncOptions(null, (sync)=>{
-        getLocalOptions(null, (local)=>{
-            const key: number = ArrayExt.putIn(sync.novelSkins, skin)
-            local.novelSkinsAvailable.push({src: "sync", key: key})
-            setLocalOptions(local.get(["novelSkinsAvailable"])).then(()=>{
-                setSyncOptions(sync.get(`novelSkin_${key}`))
-            })
-        })
+            local.novelSkinsAvailable.push({src: src, key: key})
+            storage.local.set(local.get([`novelSkin_${key}`, "novelSkinsAvailable"]))
         })
     }
 }
 
 export function removeSkin(i: number){
-    getLocalOptions(null, (local)=>{
+    storage.local.get(null, (local)=>{
         const list = local.novelSkinsAvailable.at(i)
 
-        if(list!==undefined && list.src!=="internal"){
-            if(i===local.novelSkinSelected){
-                local.novelSkinSelected = local.novelSkinSelected - 1
-            }
-            if(local.novelSkinSelected < 0){
-                local.novelSkinSelected = 0
+        const selectedIndex = getSelectedSkinIndex(local)
+        if(list!==undefined && list.src!=="internal" && local.novelSkinsAvailable.length>1){
+            if(selectedIndex!==undefined){
+                if(selectedIndex-1 >= 0 && selectedIndex-1 < local.novelSkinsAvailable.length){
+                    local.novelSkinSelected = local.novelSkinsAvailable[selectedIndex-1]
+                }else if(selectedIndex-1 < 0 && local.novelSkinsAvailable.length > 0){
+                    local.novelSkinSelected = local.novelSkinsAvailable[0]
+                }else{
+                    local.novelSkinSelected = {src: "internal", key: 0}
+                }
             }
 
             if(list.src==="local"){
                 local.novelSkinsAvailable = local.novelSkinsAvailable.filter((v)=>{return v?.src!==list.src || v?.key!==list.key})
                 chrome.storage.local.remove(`novelSkin_${list.key}`, ()=>{
-                    setLocalOptions(local.get(["novelSkinsAvailable", "novelSkinSelected"]))
-                })
-            }else if(list.src === "sync"){
-                local.novelSkinsAvailable = local.novelSkinsAvailable.filter((v)=>{return v?.src!==list.src || v?.key!==list.key})
-                chrome.storage.sync.remove(`novelSkin_${list.key}`, ()=>{
-                    setLocalOptions(local.get(["novelSkinsAvailable", "novelSkinSelected"]))
+                    storage.local.set(local.get(["novelSkinsAvailable", "novelSkinSelected"]))
                 })
             }
         }
@@ -627,72 +627,67 @@ export function removeSkin(i: number){
     })
 }
 
-export function activateSkin(src: SkinV2Src, key: number, selectThis?: boolean){
-    getLocalOptions(null, (local)=>{
+export function activateSkin(src: "internal"|"local", key: number, selectThis?: boolean){
+    storage.local.get(null, (local)=>{
+        const selectedIndex = getSelectedSkinIndex(local)
         if(src === "internal"){
             if(localSkinsV2.at(key)!==undefined){
                 const p = ArrayExt.putIn(local.novelSkinsAvailable, {src: src, key: key})
                 if(selectThis){
-                    local.novelSkinSelected = p
-                }else if(p <= local.novelSkinSelected){
-                    local.novelSkinSelected += 1
+                    local.novelSkinSelected = {src: src, key: key}
+                }else if(selectedIndex !==undefined && p <= selectedIndex && selectedIndex + 1 < local.novelSkinsAvailable.length){
+                    local.novelSkinSelected = local.novelSkinsAvailable[selectedIndex + 1]
                 }
-                setLocalOptions(local.get(["novelSkinsAvailable", "novelSkinSelected"]))
+                storage.local.set(local.get(["novelSkinsAvailable", "novelSkinSelected"]))
             }
         }else if(src === "local"){
             if(local.novelSkins.at(key)!==undefined){
                 const p = ArrayExt.putIn(local.novelSkinsAvailable, {src: src, key: key})
                 if(selectThis){
-                    local.novelSkinSelected = p
-                }else if(p <= local.novelSkinSelected){
-                    local.novelSkinSelected += 1
+                    local.novelSkinSelected = {src: src, key: key}
+                }else if(selectedIndex !==undefined && p <= selectedIndex && selectedIndex + 1 < local.novelSkinsAvailable.length){
+                    local.novelSkinSelected = local.novelSkinsAvailable[selectedIndex + 1]
                 }
-                setLocalOptions(local.get(["novelSkinsAvailable", "novelSkinSelected"]))
+                storage.local.set(local.get(["novelSkinsAvailable", "novelSkinSelected"]))
             }
-        }else if(src === "sync"){
-            getSyncOptions(null, (sync)=> {
-                if(sync.novelSkins.at(key)!==undefined){
-                    const p = ArrayExt.putIn(local.novelSkinsAvailable, {src: src, key: key})
-                    if(selectThis){
-                        local.novelSkinSelected = p
-                    }else if(p <= local.novelSkinSelected){
-                        local.novelSkinSelected += 1
-                    }
-                    setLocalOptions(local.get(["novelSkinsAvailable", "novelSkinSelected"]))
-                }
-            })
         }
     })
 }
 
 export function inactivateSkin(i: number){
-    getLocalOptions(null, (local)=>{
-        const list = local.novelSkinsAvailable.at(i)
-        if(list!==undefined){
-            if(i===local.novelSkinSelected){
-                local.novelSkinSelected = local.novelSkinSelected - 1
-            }
-            if(local.novelSkinSelected < 0){
-                local.novelSkinSelected = 0
+    storage.local.get(null, (local)=>{
+        const selectedIndex = getSelectedSkinIndex(local)
+        if(local.novelSkinsAvailable!==undefined && local.novelSkinsAvailable.length > 1){
+            ArrayExt.removeAt(local.novelSkinsAvailable, i)
+            if(selectedIndex!==undefined){
+                if(selectedIndex-1 >= 0 && selectedIndex-1 < local.novelSkinsAvailable.length){
+                    local.novelSkinSelected = local.novelSkinsAvailable[selectedIndex-1]
+                }else if(selectedIndex-1 < 0 && local.novelSkinsAvailable.length > 0){
+                    local.novelSkinSelected = local.novelSkinsAvailable[0]
+                }else{
+                    local.novelSkinSelected = {src: "internal", key: 0}
+                }
+
             }
 
-            ArrayExt.removeAt(local.novelSkinsAvailable, i)
-            setLocalOptions(local.get(["novelSkinsAvailable", "novelSkinSelected"]))
+            storage.local.set(local.get(["novelSkinsAvailable", "novelSkinSelected"]))
         }
     })
 }
 
 export function swapAvailableSkin(from: number, to: number){
-    getLocalOptions(null, (local)=>{
-        const list = local.novelSkinsAvailable
-        if(list.at(from)!==undefined && list.at(to)!==undefined){
-            ArrayExt.swap(list, from, to)
-            if(from===local.novelSkinSelected){
-                local.novelSkinSelected = to
-            }else if(to===local.novelSkinSelected){
-                local.novelSkinSelected = from
+    storage.local.get(null, (local)=>{
+        const selectedIndex = getSelectedSkinIndex(local)
+        let toData = local.novelSkinsAvailable.at(to)
+        let fromData = local.novelSkinsAvailable.at(from)
+        if(fromData!==undefined && toData!==undefined){
+            if(selectedIndex === from){
+                local.novelSkinSelected = toData
+            }else if(selectedIndex === to){
+                local.novelSkinSelected = fromData
             }
-            setLocalOptions(local.get(["novelSkinsAvailable", "novelSkinSelected"]))
+            ArrayExt.swap(local.novelSkinsAvailable, from, to)
+            storage.local.set(local.get(["novelSkinsAvailable", "novelSkinSelected"]))
         }
     })
 }

@@ -1,4 +1,4 @@
-import { getLocalOptions, getSyncOptions, setSyncOptions } from "../utils/option"
+import { storage } from "../utils/option"
 import { fixOption } from "../options/_utils/optionUI_utils"
 import { actionListener } from "./_action"
 import { messageListener } from "./_process"
@@ -13,7 +13,7 @@ chrome.runtime.onInstalled.addListener((details) => {
 
         if(details.previousVersion !== chrome.runtime.getManifest().version){
             const id = `narou-tweaker--updated-version-${details.previousVersion}-to-${chrome.runtime.getManifest().version}`
-            getLocalOptions("extNotifications", function(data){
+            storage.local.get("extNotifications", function(data){
                 if(data.extNotifications){
                     chrome.notifications.create(id, {
                         iconUrl: "/assets/icons/icon_48.png",
@@ -40,7 +40,7 @@ chrome.runtime.onInstalled.addListener((details) => {
 })
 
 /* Count */
-getSyncOptions(null, function(data){
+storage.sync.get(null, function(data){
     var count = data.extLaunchCount
     if(typeof count === "number"){
         count += 1
@@ -48,7 +48,7 @@ getSyncOptions(null, function(data){
         count = 1
     }
 
-    setSyncOptions({
+    storage.sync.set({
         extLaunchCount: count,
         extLastLaunchTime: new Date().toUTCString()
     })

@@ -1,0 +1,129 @@
+#novel-skins {
+    width: 100%;
+
+    #novel-skins--lists {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 300px;
+        overflow-y: scroll;
+
+        -ms-overflow-style: none; /*edge*/
+        scrollbar-width: none; /*firefox*/
+        ::-webkit-scrollbar {
+            display: none;
+        }
+
+        .novel-skins--list {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            gap: 5px;
+            overflow-y: scroll;
+
+            -ms-overflow-style: none; /*edge*/
+            scrollbar-width: none; /*firefox*/
+            ::-webkit-scrollbar {
+                display: none;
+            }
+
+            .novel-skins--list-item {
+                display: flex;
+                flex-direction: row;
+                background: #eee;
+                max-width: 500px;
+                border-radius: 5px;
+                padding: 5px 10px;
+                align-items: center;
+                cursor: pointer;
+                border: 3px solid transparent;
+            }
+
+            .novel-skins--list-item.selected {
+                color: var(--kasasagi-blue);
+            }
+
+            .novel-skins--list-item.focused {
+                border-color: #ddd;
+            }
+
+            .novel-skins--list-item--preview {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+                width: 40px;
+                height: 40px;
+                border-radius: 5px;
+                margin-right: 8px;
+                overflow-x: hidden;
+                text-wrap: nowrap;
+                white-space: nowrap;
+            }
+
+            .novel-skins--list-item--title {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .novel-skins--list-item--title > * {
+                overflow-x: hidden;
+                text-wrap: nowrap;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+            }
+
+            .novel-skins--list-item--title-storage {
+                font-size: 80%;
+            }
+
+            .novel-skins--list-item--buttons {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                margin-right: 0;
+                margin-left: auto;
+            }
+        }
+
+        #novel-skins--list-available {
+            height: 100%;
+        }
+        #novel-skins--list-unavailable {
+            display: none;
+        }
+    }
+
+    #novel-skins--controll {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin-bottom: 10px;
+        max-width: 500px;
+
+        #novel-skins--controll-buttons {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .novel-skins--controll-button {
+            cursor: pointer;
+        }
+
+        .novel-skins--controll-button:hover {
+            color: var(--kasasagi-blue);
+        }
+
+        .novel-skins--controll-button:disabled {
+            color: #ccc !important;
+            cursor: default;
+        }
+
+        #novel-skins--controll-remove {
+            margin-left: auto;
+        }
+    }
+}

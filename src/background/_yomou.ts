@@ -1,5 +1,5 @@
 import { minifyCss } from "../utils/text"
-import { getLocalOptions, setSessionOptions } from "../utils/option"
+import { storage } from "../utils/option"
 
 export function yomouCssListener(){
     makeRankCSS()
@@ -39,7 +39,7 @@ export function yomouCssListener(){
 
 
 function makeRankCSS(){
-    getLocalOptions(null, (data) => {
+    storage.local.get(null, (data) => {
         var rule = ""
 
         if(data.yomouRank_DevidePointsUnit){
@@ -100,12 +100,12 @@ function makeRankCSS(){
             `
         }
 
-        setSessionOptions({yomouRank_AppliedCSS: minifyCss(rule)})
+        storage.session.set({yomouRank_AppliedCSS: minifyCss(rule)})
     })
 }
 
 function makeRankTopCSS(){
-    getLocalOptions(null, (data) => {
+    storage.local.get(null, (data) => {
         var rule = ""
 
         if(data.yomouRank_DevidePointsUnit){
@@ -184,6 +184,6 @@ function makeRankTopCSS(){
             `
         }
 
-        setSessionOptions({yomouRankTop_AppliedCSS: minifyCss(rule)})
+        storage.session.set({yomouRankTop_AppliedCSS: minifyCss(rule)})
     })
 }

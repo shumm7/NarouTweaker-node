@@ -1,5 +1,5 @@
 
-import { getLocalOptions } from "../../utils/option"
+import { storage } from "../../utils/option"
 import { getUserIdFromURL, isR18 } from "../../utils/narou"
 import { escapeHtml, replaceUrl } from "../../utils/text"
 import { fetchUserApi } from "../../utils/api"
@@ -12,7 +12,7 @@ export function _profile(){
     const r18 = isR18()
 
     if(userid){
-        getLocalOptions(null, (data) => {
+        storage.local.get(null, (data) => {
             /* Disable External Link Warning */
             if (data.mypageDisableExternalURLWarning){
                 var elm = $(".c-side-list .c-side-list__item dl dd a")

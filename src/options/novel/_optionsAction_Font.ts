@@ -1,14 +1,13 @@
-import { getLocalOptions, setLocalOptions } from "../../utils/option";
+import { storage } from "../../utils/option";
 import { check } from "../../utils/misc"
 import { FontFamiliesV1, FontFamilyV1, generateNoDuplicateFontFamilyName, localFont, localFontFamilyV1 } from "../../utils/v1_font";
-import { restoreSkins } from "./_optionsAction_Skin";
 
 import $ from 'jquery';
 
 /* Font Settings */
 /* フォントの表示設定 */
 export function restoreFont() {
-    getLocalOptions(null, (data) => {
+    storage.local.get(null, (data) => {
         const fontList: FontFamiliesV1 = localFontFamilyV1.concat(data.fontFontFamilyList ?? [])
 
         $("#font-family-dropdown").empty()
@@ -58,8 +57,6 @@ export function restoreFont() {
 
         var pWidth = data.fontWidth ?? 1
         $("#page-width-input").val(Number((pWidth * 100).toFixed(1)))
-
-        restoreSkins()
     })
 }
 
@@ -82,7 +79,7 @@ function saveSelectedFont() {
     var fontData = getFontData()
     var selectedFont = parseInt(`${$("#font-family-dropdown").val()}`)
 
-    getLocalOptions(["fontFontFamilyList"], function (data) {
+    storage.local.get(["fontFontFamilyList"], function (data) {
         var fontList: FontFamiliesV1 = data.fontFontFamilyList
         if (fontData.name.trim().length == 0) { fontData.name = "新規フォント" }
         fontData.name = generateNoDuplicateFontFamilyName(localFontFamilyV1.concat(fontList), fontData.name, selectedFont)
@@ -91,7 +88,7 @@ function saveSelectedFont() {
         if (fontList[key] != undefined) {
             if (fontList[key].customizable) {
                 fontList[key] = fontData
-                setLocalOptions({ fontFontFamilyList: fontList }, function () { })
+                storage.local.set({ fontFontFamilyList: fontList }, function () { })
             }
         }
     });
@@ -108,7 +105,7 @@ export function addFontEditButtonEvent() {
       $(".font-button.active").removeClass("active")
       $(this).parent().addClass("active")
   
-      setLocalOptions({fontFontFamily: key}, function(){})
+      storage.local.set({fontFontFamily: key}, function(){})
     })
     */
     $("#font-family-dropdown").change(function () {
@@ -116,17 +113,17 @@ export function addFontEditButtonEvent() {
         $(".font-button.active").removeClass("active")
         $(this).parent().addClass("active")
 
-        setLocalOptions({ fontFontFamily: key }, function () { })
+        storage.local.set({ fontFontFamily: key }, function () { })
     })
     $("#font-family-dropdown").on("change", () => {
-        setLocalOptions({ fontSelectedFontFamily: parseInt(`${$("#font-family-dropdown").val()}`) }, function () { })
+        storage.local.set({ fontSelectedFontFamily: parseInt(`${$("#font-family-dropdown").val()}`) }, function () { })
     })
 
     /* New Button */
     $("#font-family-selection--buttons button[name='new']").on("click", (e) => {
         saveSelectedFont()
 
-        getLocalOptions(["fontFontFamilyList"], function (data) {
+        storage.local.get(["fontFontFamilyList"], function (data) {
             var fontList: FontFamiliesV1 = data.fontFontFamilyList
 
             var defaultFont = Object.assign({}, localFontFamilyV1[0])
@@ -138,7 +135,7 @@ export function addFontEditButtonEvent() {
             defaultFont.css = ""
 
             fontList.push(defaultFont)
-            setLocalOptions({ fontFontFamilyList: fontList, fontSelectedFontFamily: localFontFamilyV1.length + fontList.length - 1 }, function () { })
+            storage.local.set({ fontFontFamilyList: fontList, fontSelectedFontFamily: localFontFamilyV1.length + fontList.length - 1 }, function () { })
         });
     })
 
@@ -152,19 +149,19 @@ export function addFontEditButtonEvent() {
         saveSelectedFont()
         var font = getFontData()
 
-        getLocalOptions(["fontFontFamilyList"], function (data) {
+        storage.local.get(["fontFontFamilyList"], function (data) {
             var fontList: FontFamiliesV1 = data.fontFontFamilyList
             font.customizable = true
             font.name = generateNoDuplicateFontFamilyName(localFontFamilyV1.concat(fontList), font.name + " - コピー", -1)
             fontList.push(font)
 
-            setLocalOptions({ fontFontFamilyList: fontList, fontSelectedFontFamily: localFontFamilyV1.length + fontList.length - 1 }, function () { })
+            storage.local.set({ fontFontFamilyList: fontList, fontSelectedFontFamily: localFontFamilyV1.length + fontList.length - 1 }, function () { })
         });
     })
 
     /* Delete Button */
     $("#font-family-option--buttons button[name='delete']").on("click", (e) => {
-        getLocalOptions(["fontFontFamilyList", "fontSelectedFontFamily"], function (data) {
+        storage.local.get(["fontFontFamilyList", "fontSelectedFontFamily"], function (data) {
             var selectedFont: number = data.fontSelectedFontFamily
             var key = selectedFont - localFontFamilyV1.length
             var fontList: FontFamiliesV1 = data.fontFontFamilyList
@@ -174,7 +171,7 @@ export function addFontEditButtonEvent() {
                 if (selectedFont >= fontList.length + localFontFamilyV1.length - 1) {
                     selectedFont = fontList.length + localFontFamilyV1.length - 1
                 }
-                setLocalOptions({ fontFontFamilyList: fontList, fontSelectedFontFamily: selectedFont }, function () { })
+                storage.local.set({ fontFontFamilyList: fontList, fontSelectedFontFamily: selectedFont }, function () { })
             }
         });
     })
@@ -197,7 +194,7 @@ export function addFontEditButtonEvent() {
             $("#font-size-input").val(value)
         }
 
-        setLocalOptions({ fontFontSize: Number(value) }, function () { });
+        storage.local.set({ fontFontSize: Number(value) }, function () { });
     }
 
     $("#font-size-minus").click(function () {
@@ -240,7 +237,7 @@ export function addFontEditButtonEvent() {
             $("#line-height-input").val(value)
         }
 
-        setLocalOptions({ fontLineHeight: Number(value) }, function () { });
+        storage.local.set({ fontLineHeight: Number(value) }, function () { });
     }
 
     $("#line-height-minus").click(function () {
@@ -279,7 +276,7 @@ export function addFontEditButtonEvent() {
         }
         $("#page-width-input").val(value)
 
-        setLocalOptions({ fontWidth: Number(value) / 100 }, function () { });
+        storage.local.set({ fontWidth: Number(value) / 100 }, function () { });
     }
 
     $("#page-width-minus").click(function () {

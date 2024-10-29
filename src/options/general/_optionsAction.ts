@@ -2,7 +2,7 @@ import { fixOption, getOptionPageFromID } from "../_utils/optionUI_utils";
 import { saveJson } from "../../utils/misc";
 import { OptionUI_Pages } from "../_utils/optionUI_items";
 import { escapeHtml } from "../../utils/text";
-import { getLocalOptions, LocalOptions, setLocalOptions, setSessionOptions, setSyncOptions } from "../../utils/option";
+import { storage } from "../../utils/option";
 import { getDatetimeString, getDatetimeStringForFilename } from "../../utils/time";
 import { OptionUI_Page } from "options/_utils/optionUI_type";
 
@@ -17,12 +17,12 @@ export function general_popupDefaultPage_Dropdown(){
             if(pageId!=="__auto__"){
                 const page: OptionUI_Page|undefined = getOptionPageFromID(pageId)
                 if(page?.popup?.defaultPage && page?.title && page?.id){
-                    setLocalOptions({extPopupDefaultPage: pageId})
+                    storage.local.set({extPopupDefaultPage: pageId})
                 }else{
-                    setLocalOptions({extPopupDefaultPage: "__auto__"})
+                    storage.local.set({extPopupDefaultPage: "__auto__"})
                 }
             }else{
-                setLocalOptions({extPopupDefaultPage: pageId})
+                storage.local.set({extPopupDefaultPage: pageId})
             }
         }
     })
@@ -42,7 +42,7 @@ export function general_popupDefaultPage_Dropdown(){
         elm.val(value)
     }
 
-    getLocalOptions("extPopupDefaultPage", function(data){
+    storage.local.get("extPopupDefaultPage", function(data){
         restoreDropdown(data.extPopupDefaultPage)
     })
 
@@ -58,10 +58,10 @@ export function general_popupDefaultPage_Dropdown(){
 export function general_removeOptionData(){
     $("#removeOptionData").on("click", function(){
         if(window.confirm('スキンを含む、保存されているデータが全てリセットされます。\nこの操作は元に戻せません。')){
-            getLocalOptions("extNotifications", function(data){
+            storage.local.get("extNotifications", function(data){
                 chrome.storage.local.clear(()=>{
                     console.log("Reset all options.")
-                    setLocalOptions(new LocalOptions().get())
+                    storage.local.set(new storage.local.options().get())
                     console.log("Set all options.")
 
                     /* notify */
@@ -85,7 +85,7 @@ export function general_fixOptionData(){
         if(window.confirm('この操作を行うと、異なるバージョンのNarou Tweakerを利用している他のブラウザで不具合が発生する可能性があります。\n最新版に更新した上で実行してください。')){
             fixOption(true, true)
             
-            getLocalOptions("extNotifications", function(data){
+            storage.local.get("extNotifications", function(data){
                 if(data.extNotifications){
                     chrome.notifications.create("", {
                         iconUrl: "/assets/icons/icon_48.png",
@@ -103,7 +103,7 @@ export function general_fixOptionData(){
 export function general_exportOptionData(){
     /* Export Button */
     $("#option-export-json").on("click", (e)=>{
-        getLocalOptions(null, function(data) {
+        storage.local.get(null, function(data) {
             var date = getDatetimeStringForFilename()
             if(data){
                 saveJson(data.get(), `nt-option-${date}.json`)
@@ -112,7 +112,7 @@ export function general_exportOptionData(){
     })
     $("#option-export-text").on("click", (e)=>{
         $("#option-export-output").css("display", "block")
-        getLocalOptions(null, function(data) {
+        storage.local.get(null, function(data) {
             var field = $("#option-export-output--field")
             if(data){
                 field.val(JSON.stringify(data.get(), null, "\t"))
@@ -178,9 +178,9 @@ export function general_importOptionData(){
                 const lines = $("#option-import-input--field").val()
                 if(typeof lines === "string"){
                     var raw = JSON.parse(lines)
-                    var option = new LocalOptions(raw)
+                    var option = new storage.local.options(raw)
                     if(option){
-                        setLocalOptions(option.get(), function(){
+                        storage.local.set(option.get(), function(){
                             var field = $("#option-import-input--field")
                             field.val("")
                             field.trigger("input")
@@ -478,11 +478,11 @@ export function general_insertOptionData(){
                         }
 
                         if(storage=="local"){
-                            setLocalOptions(dict)
+                            storage.local.set(dict)
                         }else if(storage=="sync"){
-                            setSyncOptions(dict)
+                            storage.sync.set(dict)
                         }else if(storage=="session"){
-                            setSessionOptions(dict)
+                            storage.session.set(dict)
                         }else{
                             $("#option-insert--error").text(`不正なストレージが指定されました: ${key}`)
                             return false

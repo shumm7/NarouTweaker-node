@@ -1,4 +1,4 @@
-import { getLocalOptions, LocalOptions, setLocalOptions } from "../../utils/option"
+import { storage } from "../../utils/option"
 import { OptionUI_CustomElement } from "./optionUI_custom"
 import { appendFavoriteOption, getOptionCategory, getOptionChildsFromID, getOptionFromID, getOptionPageFromID, moveFavoriteOption, removeFavoriteOption } from "./optionUI_utils"
 import { OptionHideParammeters, OptionUI_Item, OptionUI_ItemID } from "./optionUI_type"
@@ -66,7 +66,7 @@ export function optionHide(){
             types = types.slice(0, keys.length)
         }
 
-        getLocalOptions(keys, function(data){
+        storage.local.get(keys, function(data){
             var _o: Array<any> = []
             var _v: Array<string> = []
             var _t: Array<string> = []
@@ -205,7 +205,7 @@ function additionalHide(){
         }
 
             
-        getLocalOptions(["extExperimentalFeatures"], function(data){
+        storage.local.get(["extExperimentalFeatures"], function(data){
             change(data.extExperimentalFeatures)
         })
 
@@ -243,7 +243,7 @@ function additionalHide(){
         }
 
             
-        getLocalOptions(["extAdvancedSettings"], function(data){
+        storage.local.get(["extAdvancedSettings"], function(data){
             change(data.extAdvancedSettings)
         })
 
@@ -286,7 +286,7 @@ function additionalHide(){
         }
 
             
-        getLocalOptions(["extDebug"], function(data){
+        storage.local.get(["extDebug"], function(data){
             change(data.extDebug)
         })
 
@@ -863,7 +863,7 @@ export function getOptionElement(option: OptionUI_Item, mode?: optionType){
                     var reset = (option: OptionUI_Item|undefined, ret: Record<string,any>) => {
                         if(option?.value){
                             if(Array.isArray(option.value.related)){
-                                const defaultOption = new LocalOptions().get()
+                                const defaultOption = new storage.local.options().get()
                                 $.each(option.value.related, function(_, key){
                                     if(key in defaultOption){
                                         ret[key] = defaultOption[key]
@@ -882,7 +882,7 @@ export function getOptionElement(option: OptionUI_Item, mode?: optionType){
                     var ret = {}
                     var option = getOptionFromID(id)
                     ret = reset(option, ret)
-                    setLocalOptions(ret, function(){})
+                    storage.local.set(ret, function(){})
                 }
             })
 

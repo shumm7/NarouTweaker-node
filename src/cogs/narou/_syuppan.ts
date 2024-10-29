@@ -1,10 +1,10 @@
-import { getLocalOptions } from "../../utils/option"
+import { storage } from "../../utils/option"
 import { escapeHtml } from "../../utils/text"
 
 import $ from 'jquery';
 
 export function syuppan(){
-    getLocalOptions(null, function(data){
+    storage.local.get(null, function(data){
         if(location.hostname==="syosetu.com" || location.hostname==="nl.syosetu.com"){
             if(location.pathname.match(/^\/syuppan\/view\/bookid\/\d+\/*/)){
                 if(data.narouSyuppanShowBookViewImage){

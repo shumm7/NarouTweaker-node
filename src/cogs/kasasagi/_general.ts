@@ -4,7 +4,7 @@ import { addQuestionIconBalloon, addExclamationIconBalloon } from "../../utils/u
 import { saveJson } from "../../utils/misc";
 import { minuteStringJapanese, getDateString, getYesterday, getDatetimeString, getDateStringJapanese, getDatetimeFromString, getDatetimeStringWithoutMilisecond } from "../../utils/time";
 import { getNcodeFromURL, Ncode } from "../../utils/ncode";
-import { getLocalOptions } from "../../utils/option";
+import { storage } from "../../utils/option";
 import { fetchNovelApi, fetchRankinApi, NovelApi, RankinApi } from "../../utils/api";
 import { GraphType } from "../../utils/data";
 
@@ -13,7 +13,7 @@ import { Chart } from "chart.js/auto";
 
 /* General */
 export function _general(r18?: boolean){
-    getLocalOptions(null, (option)=>{
+    storage.local.get(null, (option)=>{
         var m = $(".novelview_h3#title")
         if(m.length){
             if(option.kasasagiCustomStyle){
@@ -57,7 +57,7 @@ export function _general(r18?: boolean){
 
 
 function today(){
-    getLocalOptions(null, (option)=>{
+    storage.local.get(null, (option)=>{
         var today_pv: Array<number|null> = [];
         var yesterday_pv: Array<number|null> = [];
         var today_pv_sum: Array<number|null> = [];
@@ -161,7 +161,7 @@ function today(){
 }
 
 function total(){
-    getLocalOptions(null, (option)=>{
+    storage.local.get(null, (option)=>{
 
         // Total
         var total_pv: {[key: string]: number} = {}
@@ -209,7 +209,7 @@ function total(){
 }
 
 function api(r18?: boolean){
-    getLocalOptions(null, (option)=>{
+    storage.local.get(null, (option)=>{
         const ncode = getNcodeFromURL()?.ncode()
 
         if (option.kasasagiShowTable_API && ncode!==undefined){
@@ -255,7 +255,7 @@ function api(r18?: boolean){
 function rank(r18?: boolean){
     if(r18){return}
 
-    getLocalOptions(null, (option)=>{
+    storage.local.get(null, (option)=>{
         const ncode = getNcodeFromURL()?.ncode()
         if (option.kasasagiShowTable_Rank && ncode!==undefined){
             var url = "https://api.syosetu.com/rank/rankin/?out=json&libtype=2&ncode=" + ncode
@@ -295,7 +295,7 @@ function rank(r18?: boolean){
 }
 
 function link(r18?: boolean){
-    getLocalOptions(null, (option)=>{
+    storage.local.get(null, (option)=>{
         const ncode = getNcodeFromURL()?.ncode()
 
         if (option.kasasagiShowTable_ExternalLink && ncode!==undefined){

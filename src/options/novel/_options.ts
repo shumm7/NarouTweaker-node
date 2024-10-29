@@ -1,5 +1,5 @@
 import { OptionUI_Item } from "options/_utils/optionUI_type";
-import { novel_authorSkin, novel_customHeaderSortable, novel_fontEditor, novel_replacePattern, novel_skinEditor, novel_skinExport, novel_skinImport } from "./_optionsAction";
+import { novel_customHeaderSortable, novel_fontEditor, novel_replacePattern, novel_skinEditor } from "./_optionsAction";
 
 export const novel_optionsList: Array<OptionUI_Item> = [
     /* 全般 (general) */
@@ -523,7 +523,7 @@ export const novel_optionsList: Array<OptionUI_Item> = [
         },
         ui: {
             type: "custom",
-            name: "wide",
+            name: "default",
             data: "ui_novelSkinSelect",
             action: novel_skinEditor,
         },
@@ -536,36 +536,10 @@ export const novel_optionsList: Array<OptionUI_Item> = [
                 reset: true,
                 favorite: true,
             },
-            related: ["selectedSkin"],
+            related: ["novelSkinSelected"],
         },
     },
-
-    {
-        id: "novelSkin",
-        title: "スキン",
-        description: {
-            text: "小説ページの外観を変更します。",
-            keywords: ["すきん", "レイアウト", "デザイン", "外観", "スキン", "スキン設定", "CSS"],
-        },
-        ui: {
-            type: "custom",
-            name: "wide",
-            data: "ui_novelSkinSelect",
-            action: novel_skinEditor,
-        },
-        location: {
-            page: "novel",
-            category: "style",
-        },
-        value: {
-            buttons: {
-                reset: true,
-                favorite: true,
-            },
-            related: ["selectedSkin"],
-        },
-    },
-
+    /*
     {
         id: "novelSkinExport",
         title: "スキンのエクスポート",
@@ -617,6 +591,7 @@ export const novel_optionsList: Array<OptionUI_Item> = [
             isAdvanced: true,
         },
     },
+    */
 
     {
         id: "novelCustomCSS",
@@ -698,6 +673,7 @@ export const novel_optionsList: Array<OptionUI_Item> = [
         },
     },
 
+    /*
     {
         id: "novelGenerateAuthorCustomSkin",
         title: "作者スキンバナーを作成",
@@ -728,6 +704,7 @@ export const novel_optionsList: Array<OptionUI_Item> = [
             isAdvanced: true,
         },
     },
+    */
 
 
     /* 書体 (font) */

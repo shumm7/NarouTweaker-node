@@ -1,6 +1,6 @@
 
 import { Ncode } from "./ncode"
-import { getSyncOptions, setSyncOptions, SyncOptions } from "./option"
+import { storage.sync.get, storage.sync.set, SyncOptions } from "./option"
 /************************************************************************************* */
 /*                                 設定データ                                           */
 /************************************************************************************* */
@@ -62,7 +62,7 @@ export function pushImpressionReadList(ncode: Ncode | Array<Ncode|string> | stri
         return
     }
 
-    getSyncOptions(["workspaceImpressionMarked"], function (l) {
+    storage.sync.get(["workspaceImpressionMarked"], function (l) {
         list.forEach((n, i)=>{
             const _ncode = n?.ncode()
             if (_ncode !== undefined && kanrino !== undefined) {
@@ -73,7 +73,7 @@ export function pushImpressionReadList(ncode: Ncode | Array<Ncode|string> | stri
                 l.workspaceImpressionMarked[_ncode].push(kanrino[i])
             }
         })
-        setSyncOptions({ workspaceImpressionMarked: l.workspaceImpressionMarked })
+        storage.sync.set({ workspaceImpressionMarked: l.workspaceImpressionMarked })
     })
 }
 
@@ -99,7 +99,7 @@ export function popImpressionReadList(ncode: Ncode | Array<Ncode|string> | strin
         return
     }
 
-    getSyncOptions(["workspaceImpressionMarked"], function (l) {
+    storage.sync.get(["workspaceImpressionMarked"], function (l) {
         list.forEach((n, i)=>{
             const _ncode = n?.ncode()
             if (_ncode !== undefined && kanrino !== undefined) {
@@ -112,7 +112,7 @@ export function popImpressionReadList(ncode: Ncode | Array<Ncode|string> | strin
                 }
             }
         })
-        setSyncOptions({ workspaceImpressionMarked: l.workspaceImpressionMarked })
+        storage.sync.set({ workspaceImpressionMarked: l.workspaceImpressionMarked })
     })
 }
 
@@ -138,7 +138,7 @@ export function pushImpressionHiddenList(ncode: Ncode | Array<Ncode|string> | st
         return
     }
 
-    getSyncOptions(["workspaceImpressionHidden"], function (l) {
+    storage.sync.get(["workspaceImpressionHidden"], function (l) {
         list.forEach((n, i)=>{
             const _ncode = n?.ncode()
             if (_ncode !== undefined && kanrino !== undefined) {
@@ -149,7 +149,7 @@ export function pushImpressionHiddenList(ncode: Ncode | Array<Ncode|string> | st
                 l.workspaceImpressionHidden[_ncode].push(kanrino[i])
             }
         })
-        setSyncOptions({ workspaceImpressionHidden: l.workspaceImpressionHidden })
+        storage.sync.set({ workspaceImpressionHidden: l.workspaceImpressionHidden })
     })
 }
 
@@ -175,7 +175,7 @@ export function popImpressionHiddenList(ncode: Ncode | Array<Ncode|string> | str
         return
     }
 
-    getSyncOptions(["workspaceImpressionHidden"], function (l) {
+    storage.sync.get(["workspaceImpressionHidden"], function (l) {
         list.forEach((n, i)=>{
             const _ncode = n?.ncode()
             if (_ncode !== undefined && kanrino !== undefined) {
@@ -188,6 +188,6 @@ export function popImpressionHiddenList(ncode: Ncode | Array<Ncode|string> | str
                 }
             }
         })
-        setSyncOptions("workspaceImpressionHidden", l.workspaceImpressionHidden, ()=>{})
+        storage.sync.set("workspaceImpressionHidden", l.workspaceImpressionHidden, ()=>{})
     })
 }

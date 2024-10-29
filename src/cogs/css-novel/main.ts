@@ -1,9 +1,9 @@
 import $ from 'jquery';
-import { getLocalOptions, getSessionOptions } from '../../utils/option';
+import { storage.local.get, storage.session.get } from '../../utils/option';
 
 $("body").addClass("narou-tweaker--custom-skin")
 
-getSessionOptions(null, (data)=>{
+storage.session.get(null, (data)=>{
     /* Skin Custom CSS */
     if("novelSkinCustomCSS" in data){
         var l = $(`<style type="text/css" id="narou-tweaker-style--skin-user" class="narou-tweaker-style"></style>`)
@@ -44,7 +44,7 @@ getSessionOptions(null, (data)=>{
     $("html").append(`<style type="text/css" id="narou-tweaker-style--author-css" class="narou-tweaker-style"></style>`)
 })
 
-getLocalOptions("novelCustomCSS", (data)=>{
+storage.local.get("novelCustomCSS", (data)=>{
     /* User CSS */
     if("novelCustomCSS" in data){
         var l = $(`<style type="text/css" id="narou-tweaker-style--user-css" class="narou-tweaker-style"></style>`)

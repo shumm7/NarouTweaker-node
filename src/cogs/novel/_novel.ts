@@ -3,7 +3,7 @@ import { escapeHtml, replaceUrl } from "../../utils/text"
 import { novelTop } from "./_novelTop";
 import { getNcodeFromURL } from "../../utils/ncode";
 import { getDatetimeStringWithoutSecond } from "../../utils/time";
-import { getLocalOptions, getSyncOptions, setSyncOptions } from "../../utils/option";
+import { storage } from "../../utils/option";
 import { fetchNovelApi, NovelApi } from "../../utils/api";
 
 import $ from 'jquery';
@@ -11,7 +11,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 export function _novel(){
-    getLocalOptions(null, (data) => {
+    storage.local.get(null, (data) => {
         try{
             const pageDetail = getPageType()
             $("body").addClass("narou-tweaker--custom-skin")
@@ -181,7 +181,7 @@ function _tategaki(){
 
 function _autoURL(){
     /* Auto Url */
-    getLocalOptions(null, (data) => {
+    storage.local.get(null, (data) => {
         try{
             if(data.novelPrefaceAutoURL){
                 $('.p-novel__text--preface p').each(function (idx, elem) {
@@ -201,7 +201,7 @@ function _autoURL(){
 }
 
 function _cursorHide(){
-    getLocalOptions(null, (data) => {
+    storage.local.get(null, (data) => {
         try{
             if(data.novelCursorHide){
                 var resizeTimer: NodeJS.Timeout|null = null
@@ -265,7 +265,7 @@ function _history(){
                     showHistory = true
                 }
 
-                getSyncOptions(["novelHistoryData"], function(h){
+                storage.sync.get(["novelHistoryData"], function(h){
                     const historyData = h.novelHistoryData
                     if(ncode in historyData){
                         const history = historyData[ncode]
@@ -310,7 +310,7 @@ function _saveHistory(){
         const episode = getEpisode()
 
         if(ncode){
-            getSyncOptions(["novelHistory", "novelHistoryData"], function(data){
+            storage.sync.get(["novelHistory", "novelHistoryData"], function(data){
                 try{
                     
                     var history = data.novelHistory
@@ -333,7 +333,7 @@ function _saveHistory(){
                         novelHistoryData[ncode] = [episode, Date.now(), episode_name]
                     }
 
-                    setSyncOptions({
+                    storage.sync.set({
                         novelHistory: new_history,
                         novelHistoryData: novelHistoryData
                     })
@@ -553,7 +553,7 @@ function novelTopAttention(){
 
 
 export function _setCookie(){
-    getLocalOptions(null, function(data){
+    storage.local.get(null, function(data){
         if(data.novelCustomStyle){
             var expire = new Date()
             expire.setFullYear(expire.getFullYear() + 1)

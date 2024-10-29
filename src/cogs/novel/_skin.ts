@@ -1,4 +1,4 @@
-import { getLocalOptions } from "../../utils/option";
+import { storage } from "../../utils/option";
 import { makeSkinCSS, SkinV1 } from "../../utils/v1_skin";
 import $ from 'jquery';
 
@@ -36,7 +36,7 @@ export function _authorSkin(){
     })
 
     function changeAuthorSkin(){
-        getLocalOptions(["novelAuthorCustomSkin"], (data)=>{
+        storage.local.get(["novelAuthorCustomSkin"], (data)=>{
             if(data.novelAuthorCustomSkin){
                 var banner = $(".novelrankingtag a:has(img[alt='Narou Tweaker 作者スキン'])")
                 if(banner.length){
@@ -52,7 +52,7 @@ export function _authorSkin(){
                                 
                                 // Parse to Tags
                                 var skinData = new SkinV1(JSON.parse(text))
-                                getLocalOptions(["novelCustomStyle", "novelAuthorCustomSkinWarning"], (data)=>{
+                                storage.local.get(["novelCustomStyle", "novelAuthorCustomSkinWarning"], (data)=>{
                                     const style = makeSkinCSS(skinData, data.novelCustomStyle)
                                     $("#narou-tweaker-style--author-css").text(style)
                                     if(data.novelAuthorCustomSkinWarning){

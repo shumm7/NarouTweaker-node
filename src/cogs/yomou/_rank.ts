@@ -3,7 +3,7 @@ import { checkRankPageDetail } from "./utils";
 import { escapeHtml } from "../../utils/text";
 import { getDatetimeFromString, getDatetimeStringWithoutSecond } from "../../utils/time";
 import { getGenreNumber } from "../../utils/narou";
-import { getLocalOptions } from "../../utils/option";
+import { storage } from "../../utils/option";
 import { fetchNovelApi } from "../../utils/api";
 
 import $ from 'jquery';
@@ -13,7 +13,7 @@ export function _rank(){
     const pageDetail = checkRankPageDetail()
 
     if(pageDetail){
-        getLocalOptions(null, function(data){
+        storage.local.get(null, function(data){
             if(pageDetail.site=="yomou"){
                 if(pageDetail.detail=="rank" && pageDetail.type != "top"){
                     $(".p-ranklist-item").each(function(){
@@ -53,7 +53,7 @@ export function _rankTop(){
     const pageDetail = checkRankPageDetail()
 
     if(pageDetail){
-        getLocalOptions(null, function(data){
+        storage.local.get(null, function(data){
             if(pageDetail.site=="yomou"){
                 if(pageDetail.detail=="rank" && pageDetail.type == "top"){
 
@@ -62,7 +62,7 @@ export function _rankTop(){
 
                     chrome.storage.local.onChanged.addListener(function(changes){
                         if(changes.yomouRankTop_ShowDescription!=undefined){
-                            getLocalOptions(null, function(option){
+                            storage.local.get(null, function(option){
                                 if(option.yomouRankTop_ShowDescription){
                                     $(".p-ranktop-item__story").css("display", "")
                                 }else{
@@ -80,7 +80,7 @@ export function _rankTop(){
 }
 
 function showRankTop_NovelDetails(){
-    getLocalOptions(null, function(data){
+    storage.local.get(null, function(data){
         var i = 1
         $(".p-ranktop-item").each(function(){
             var outer = $(this)

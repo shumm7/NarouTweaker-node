@@ -3,7 +3,7 @@ import { getDatetimeString } from "../../utils/time";
 import { saveJson } from "../../utils/misc";
 import { addExclamationIconBalloon } from "../../utils/ui";
 import { getNcodeFromURL } from "../../utils/ncode";
-import { getLocalOptions } from "../../utils/option";
+import { storage } from "../../utils/option";
 import { GraphType } from "../../utils/data";
 
 import $ from 'jquery';
@@ -13,7 +13,7 @@ import 'range-slider-input/dist/style.css';
 
 /* Chapter Unique */
 export function _chapterUnique(){
-    getLocalOptions(null, function(option){
+    storage.local.get(null, function(option){
         var m = $(".novelview_h3")
         if(m.length){
             var match = m.text().match("『(.*)』 エピソード別 アクセス解析")

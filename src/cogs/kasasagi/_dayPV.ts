@@ -1,7 +1,7 @@
 import { getDateString, getDatetimeString } from "../../utils/time"
 import { saveJson } from "../../utils/misc"
 import { getValueFromTables, GraphDataset, makeGraph } from "./utils"
-import { getLocalOptions } from "../../utils/option"
+import { storage } from "../../utils/option"
 import { GraphType } from "../../utils/data"
 import { getNcodeFromURL } from "../../utils/ncode"
 
@@ -9,7 +9,7 @@ import $ from 'jquery';
 
 /* Day PV */
 export function _dayPV(){
-    getLocalOptions(null, (option)=>{
+    storage.local.get(null, (option)=>{
         if($(".novelview_h3").length){
             if(option.kasasagiCustomStyle){
                 var m = $(".novelview_h3")

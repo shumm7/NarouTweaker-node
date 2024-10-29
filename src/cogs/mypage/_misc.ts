@@ -1,9 +1,9 @@
-import { getLocalOptions } from "../../utils/option"
+import { storage } from "../../utils/option"
 
 import $ from 'jquery';
 
 export function _favuser(){
-    getLocalOptions(null, function(data){
+    storage.local.get(null, function(data){
         try{
             $(".p-favuser-list").each(function(){
                 const outer = $(this)

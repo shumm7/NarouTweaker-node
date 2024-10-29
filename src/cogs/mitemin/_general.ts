@@ -1,10 +1,10 @@
-import { getLocalOptions } from "../../utils/option"
+import { storage } from "../../utils/option"
 import { getIcodeFromURL, Icode } from "../../utils/ncode"
 
 import $ from 'jquery';
 
 export function _image(){
-    getLocalOptions(null, function(data){
+    storage.local.get(null, function(data){
         // iコードを取得
         if(data.miteminShowIcodeField){
             var info = $(".image_infomation, .ximage_infomation")

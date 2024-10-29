@@ -1,5 +1,5 @@
 import { CustomIconID, CustomIconIDs, getExcludeIcons, workspaceIconList, workspaceMenuIconList } from "../../utils/header"
-import { getLocalOptions, setLocalOptions } from "../../utils/option";
+import { storage } from "../../utils/option";
 
 import Sortable from 'sortablejs'
 import $ from 'jquery';
@@ -7,7 +7,7 @@ import $ from 'jquery';
 export function workspace_customHeaderSortable(){
     /* Workspace Header */
     function storeWorkspaceHeader(){
-        setLocalOptions("workspaceCustomHeader", getHeaderIconList("active"), ()=>{})
+        storage.local.set("workspaceCustomHeader", getHeaderIconList("active"), ()=>{})
     
         function getHeaderIconList(position: string){
             if(position!="active" && position!="disabled") { return }
@@ -82,7 +82,7 @@ export function workspace_customHeaderSortable(){
                 $(".draggable_area[name='workspace-header']#"+position).append(getWorkspaceHeaderIconElement(icon))
             })
         }
-        getLocalOptions(["workspaceCustomHeader"], function(data){
+        storage.local.get(["workspaceCustomHeader"], function(data){
             restore(data.workspaceCustomHeader, "active")
             restore(getExcludeIcons([data.workspaceCustomHeader], workspaceIconList), "disabled")
         })
@@ -99,7 +99,7 @@ export function workspace_customHeaderSortable(){
 export function workspace_customHeaderMenuSortable(){
     /* Workspace Header Menu */
     function storeWorkspaceHeaderMenu(){
-        setLocalOptions({
+        storage.local.set({
             workspaceCustomMenu_Left: getMenuIconList("left"),
             workspaceCustomMenu_Middle: getMenuIconList("middle"),
             workspaceCustomMenu_Right: getMenuIconList("right"),
@@ -192,7 +192,7 @@ export function workspace_customHeaderMenuSortable(){
                 $(".draggable_area[name='workspace-header-menu']#"+position).append(getWorkspaceHeaderMenuIconElement(icon))
             })
         }
-        getLocalOptions(["workspaceCustomMenu_Left", "workspaceCustomMenu_Middle", "workspaceCustomMenu_Right"], function(data){
+        storage.local.get(["workspaceCustomMenu_Left", "workspaceCustomMenu_Middle", "workspaceCustomMenu_Right"], function(data){
             restore(data.workspaceCustomMenu_Left, "left")
             restore(data.workspaceCustomMenu_Middle, "middle")
             restore(data.workspaceCustomMenu_Right, "right")

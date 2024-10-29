@@ -1,5 +1,5 @@
 import { check } from "../utils/misc"
-import { getLocalOptions, setLocalOptions, setSessionOptions } from "../utils/option";
+import { storage } from "../utils/option";
 import { colorPicker, getOptionElement, optionHide, syntaxHighlight } from "./_utils/utils";
 import { OptionUI_Items, OptionUI_Pages } from "./_utils/optionUI_items";
 import { OptionUI_ItemID, OptionUI_Page, OptionUI_PageID } from "./_utils/optionUI_type";
@@ -117,10 +117,10 @@ function setupDOM(){
         _sidepanelHide(data.extOptionSidePanelShow)
     })
     $("#sidebar-icon--hide").on("click", function(){
-        setSessionOptions("extOptionSidePanelShow", false, function(){})
+        storage.session.set("extOptionSidePanelShow", false, function(){})
     })
     $("#sidebar-open").on("click", function(){
-        setSessionOptions("extOptionSidePanelShow", true, function(){})
+        storage.session.set("extOptionSidePanelShow", true, function(){})
     })
     chrome.storage.session.onChanged.addListener(function(changes){
         if(changes.extOptionSidePanelShow!=undefined){
@@ -382,7 +382,7 @@ function setupContents(){
         }
     }
 
-    getLocalOptions("extFavoriteOptions", function(data){
+    storage.local.get("extFavoriteOptions", function(data){
         markFavoriteOptions(data.extFavoriteOptions)
     })
     chrome.storage.local.onChanged.addListener(function(changes){
@@ -452,7 +452,7 @@ export function restoreOptions(){
         }
     
         if(value[name]!=undefined){
-            setLocalOptions(value);
+            storage.local.set(value);
         }
     });
 
@@ -492,7 +492,7 @@ export function restoreOptions(){
         }
     
         if(value[name]!=undefined){
-            setLocalOptions(value);
+            storage.local.set(value);
         }
     });
 
@@ -514,7 +514,7 @@ function hideOptionButtons(){
         }
     }
 
-    getLocalOptions("extOptionPageButtons", function(data){
+    storage.local.get("extOptionPageButtons", function(data){
         toggle(data.extOptionPageButtons)
     })
     chrome.storage.local.onChanged.addListener(function(changes){
@@ -576,11 +576,11 @@ function urlScheme(){
         chrome.storage.session.get(["extOptionSidePanelShow"], d =>{
             if(p_panel==="1"){
                 if(!d.extOptionSidePanelShow){
-                    setLocalOptions({extOptionSidePanelShow: true}, function(){})
+                    storage.local.set({extOptionSidePanelShow: true}, function(){})
                 }
             }else if(p_panel==="0"){
                 if(d.extOptionSidePanelShow){
-                    setLocalOptions({extOptionSidePanelShow: false}, function(){})
+                    storage.local.set({extOptionSidePanelShow: false}, function(){})
                 }
             }
 
