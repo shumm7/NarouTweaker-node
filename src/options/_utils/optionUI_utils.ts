@@ -1,5 +1,5 @@
 import { OptionUI_Items, OptionUI_Pages } from "./optionUI_items";
-import { storage } from "../../utils/option";
+import { nt } from "../../utils/option";
 import { OptionUI_Category, OptionUI_CategoryID, OptionUI_Item, OptionUI_ItemID, OptionUI_Page, OptionUI_PageID } from "./optionUI_type";
 import { limit } from "../../utils/number";
 
@@ -105,7 +105,7 @@ export function getOptionChildsFromID(id: OptionUI_ItemID): Array<OptionUI_Item>
 
 /* favorite */
 export function appendFavoriteOption(id: OptionUI_ItemID){
-    storage.local.get("extFavoriteOptions", function(data){
+    nt.storage.local.get("extFavoriteOptions").then(function(data){
         var list: Array<OptionUI_ItemID> = data.extFavoriteOptions
 
         var opt: OptionUI_Item|undefined = getOptionFromID(id)
@@ -156,13 +156,13 @@ export function appendFavoriteOption(id: OptionUI_ItemID){
             })
             list.splice(targetIdx, 0, ...objectIds)
             data.set("extFavoriteOptions", list)
-            storage.local.set(data.get("extFavoriteOptions"))
+            nt.storage.local.set(data.get("extFavoriteOptions"))
         }
     })
 }
 
 export function removeFavoriteOption(id: OptionUI_ItemID){
-    storage.local.get("extFavoriteOptions", function(data){
+    nt.storage.local.get("extFavoriteOptions").then(function(data){
         var list: Array<OptionUI_ItemID> = data.extFavoriteOptions
 
         var opt = getOptionFromID(id)
@@ -196,13 +196,13 @@ export function removeFavoriteOption(id: OptionUI_ItemID){
                 }
             }
 
-            storage.local.set({extFavoriteOptions: list})
+            nt.storage.local.set({extFavoriteOptions: list})
         }
     })
 }
 
 export function moveFavoriteOption(id: OptionUI_ItemID, pos: number){
-    storage.local.get("extFavoriteOptions", function(data){
+    nt.storage.local.get("extFavoriteOptions").then(function(data){
         var list: Array<OptionUI_ItemID> = data.extFavoriteOptions
 
         if(!list.includes(id)){
@@ -261,7 +261,7 @@ export function moveFavoriteOption(id: OptionUI_ItemID, pos: number){
             })
             data.set("extFavoriteOptions", list)
 
-            storage.local.set(data.get("extFavoriteOptions"))
+            nt.storage.local.set(data.get("extFavoriteOptions"))
         }
     })
 }
@@ -270,15 +270,15 @@ export function moveFavoriteOption(id: OptionUI_ItemID, pos: number){
 
 /**
  * storageの不要なパラメータをフォーマットする
- * @param {bool} _fixLocal - storage.localをフォーマットする
- * @param {bool} _fixSync - storage.syncをフォーマットする
+ * @param {bool} _fixLocal - nt.storage.localをフォーマットする
+ * @param {bool} _fixSync - nt.storage.syncをフォーマットする
  */
 export function fixOption(_fixLocal: boolean = false, _fixSync: boolean = false){
     if(_fixLocal){
-        storage.local.get(null, (data)=>{
+        nt.storage.local.get(null).then((data)=>{
             console.log(data)
             chrome.storage.local.clear(()=>{
-                storage.local.set(data.get(), function(){
+                nt.storage.local.set(data.get()).then(function(){
                     console.log("Fixed option data (local).")
                 })
             })
@@ -287,9 +287,9 @@ export function fixOption(_fixLocal: boolean = false, _fixSync: boolean = false)
     
     if(_fixSync){
         chrome.storage.sync.get(null, (data)=>{
-            var option = new storage.sync.options(data).get()
+            var option = new nt.storage.sync.options(data).get()
             chrome.storage.sync.clear(()=>{
-                storage.sync.set(option, function(){
+                nt.storage.sync.set(option).then(function(){
                     console.log("Fixed option data (sync).")
                 })
             })

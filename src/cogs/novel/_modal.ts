@@ -3,7 +3,7 @@ import { check, defaultValue } from "../../utils/misc"
 import { escapeHtml } from "../../utils/text";
 import { correction, restoreCorrectionMode } from "./_correction";
 import { generateNoDuplicateSkinName, localSkinsV1, SkinsV1, SkinV1 } from "../../utils/v1_skin";
-import { storage } from "../../utils/option";
+import { nt } from "../../utils/option";
 import { ReplacePattern } from "../../utils/data";
 import { getNcodeFromURL } from "../../utils/ncode";
 import { getDatetimeString } from "../../utils/time";
@@ -37,7 +37,7 @@ export function _optionModal(){
             $("#novel-option--header ul").append("<li class='novel-option--header-tab novel-option-tab-"+index+"'><button type='button'><span class='novel-option--header-tab'>"+title+"</span></button></li>")
             $("#novel-option--contents").append("<div class='novel-option--content novel-option-tab-"+index+"'></div>")
             $(".novel-option--header-tab.novel-option-tab-"+index+" button").on("click", ()=>{
-                storage.session.set("novelOptionModalSelected", index, function(){
+                nt.storage.session.set("novelOptionModalSelected", index).then(function(){
                     $("#novel-option .novel-option--header-tab").removeClass("active")
                     $("#novel-option .novel-option--content").removeClass("active")
                     $("#novel-option .novel-option-tab-" + index).addClass("active")
@@ -69,12 +69,12 @@ export function _optionModal(){
             });
         }
 
-        storage.session.get(["novelOptionModalSelected"], function(data){
+        nt.storage.session.get("novelOptionModalSelected").then(function(data){
             var tab = $("#novel-option .novel-option-tab-"+data.novelOptionModalSelected)
             if(tab.length){
                 tab.addClass("active")
             }else{
-                storage.session.set("novelOptionModalSelected", 0, function(){
+                nt.storage.session.set("novelOptionModalSelected", 0).then(function(){
                     $("#novel-option .novel-option-tab-0").addClass("active")
                 })
             }
@@ -101,7 +101,7 @@ function restoreSkinOptions(skins: SkinsV1, selected: number){
 
 /* フォント設定 */
 function restoreFontOptions(){
-    storage.local.get(null, (data)=>{
+    nt.storage.local.get(null).then((data)=>{
         var fontlist = localFontFamilyV1.concat(data.fontFontFamilyList)
 
         $("#novel-option--font-family #font-family").empty()
@@ -140,7 +140,7 @@ function restoreFontOptions(){
 }
 
 function setOptionContentsDisplay(id: number){
-    storage.local.get(null, (data) => {
+    nt.storage.local.get(null).then((data) => {
         var outer = $(".novel-option--content.novel-option-tab-"+id)
 
         /* Skin */
@@ -162,7 +162,7 @@ function setOptionContentsDisplay(id: number){
             if(typeof v === "string"){
                 var n = Number(v)
                 if(!isNaN(n)){
-                    storage.local.set("selectedSkin", n, ()=>{})
+                    nt.storage.local.set("selectedSkin", n)
                 }
             }
         })
@@ -223,7 +223,7 @@ function setOptionContentsDisplay(id: number){
             $(".novel-option--font-button.active").removeClass("active")
             $(this).parent().addClass("active")
 
-            storage.local.set({fontFontFamily: key}, () => {})
+            nt.storage.local.set({fontFontFamily: key}, () => {})
         })
         */
         $("#novel-option--font-family #font-family").on("change",() => {
@@ -231,14 +231,14 @@ function setOptionContentsDisplay(id: number){
             if(typeof v === "string"){
                 var n = Number(v)
                 if(!isNaN(n)){
-                    storage.local.set({fontSelectedFontFamily: n}, function() {})
+                    nt.storage.local.set({fontSelectedFontFamily: n})
                 }
             }
         })
 
         /* Vertical */
         $("#novel-option--vertical-toggle").on("click", function(){
-            storage.local.set({novelVertical: $(this).prop("checked")})
+            nt.storage.local.set({novelVertical: $(this).prop("checked")})
         })
 
         /* Font Size */
@@ -254,7 +254,7 @@ function setOptionContentsDisplay(id: number){
                 $("#novel-option--font-size-input").val(value)
             }
 
-            storage.local.set({fontFontSize: Number(value)}, () => {})
+            nt.storage.local.set({fontFontSize: Number(value)})
         }
 
         $("#novel-option--font-size-minus").click(function(){
@@ -297,7 +297,7 @@ function setOptionContentsDisplay(id: number){
                 $("#novel-option--line-height-input").val(value)
             }
 
-            storage.local.set({fontLineHeight: Number(value)}, () => {})
+            nt.storage.local.set({fontLineHeight: Number(value)})
         }
 
         $("#novel-option--line-height-minus").click(function(){
@@ -336,7 +336,7 @@ function setOptionContentsDisplay(id: number){
             }
             $("#novel-option--page-width-input").val(value)
 
-            storage.local.set({fontWidth: Number(value)/100}, () => {})
+            nt.storage.local.set({fontWidth: Number(value)/100})
         }
 
         $("#novel-option--page-width-minus").click(function(){
@@ -383,11 +383,11 @@ function setOptionContentsDisplay(id: number){
                 </div>
             </div>
         `)
-        storage.local.get(["novelCustomHeaderMode"], (data)=>{
+        nt.storage.local.get("novelCustomHeaderMode").then((data)=>{
             $("#novelCustomHeaderMode").val(data.novelCustomHeaderMode)
         })
         $("#novelCustomHeaderMode").change(function(){
-            storage.local.set({novelCustomHeaderMode: $("#novelCustomHeaderMode").val()}, ()=>{})
+            nt.storage.local.set({novelCustomHeaderMode: $("#novelCustomHeaderMode").val()})
         })
     })
 
@@ -406,7 +406,7 @@ function setOptionContentsDisplay(id: number){
             restoreFontOptions()
         }
         if(changes.skins!=undefined || changes.selectedSkin!=undefined){
-            storage.local.get(["skins", "selectedSkin"], (data)=>{
+            nt.storage.local.get(["skins", "selectedSkin"]).then((data)=>{
                 restoreSkinOptions(data.skins, data.selectedSkin)
             })
         }
@@ -419,7 +419,7 @@ function setOptionContentsDisplay(id: number){
 
 /* 文章校正 */
 function restoreReplacePattern(){
-    storage.local.get(["correctionReplacePatterns"], function(data){
+    nt.storage.local.get("correctionReplacePatterns").then(function(data){
         var elementsAmount = $(".novel-option--correction-replace--pattern-box").length
         var listLength = data.correctionReplacePatterns.length
         if(listLength<elementsAmount){
@@ -470,11 +470,11 @@ function restoreReplacePattern(){
         $(".novel-option--correction-replace--pattern-box .novel-option--correction-replace--move-front").on("click", function(){ // Up Button
             var idx = Number($(this).parent().parent().attr("data-for"))
             if(!isNaN(idx)){
-                storage.local.get(["correctionReplacePatterns"], function(data){
+                nt.storage.local.get("correctionReplacePatterns").then(function(data){
                     var patterns = data.correctionReplacePatterns
                     if(idx>0){
                         [patterns[idx], patterns[idx-1]] = [patterns[idx-1], patterns[idx]]
-                        storage.local.set({correctionReplacePatterns: patterns}, function(){})
+                        nt.storage.local.set({correctionReplacePatterns: patterns})
     
                     }
                 })
@@ -483,11 +483,11 @@ function restoreReplacePattern(){
         $(".novel-option--correction-replace--pattern-box .novel-option--correction-replace--move-back").on("click", function(){ // Down Button
             var idx = Number($(this).parent().parent().attr("data-for"))
             if(!isNaN(idx)){
-                storage.local.get(["correctionReplacePatterns"], function(data){
+                nt.storage.local.get(["correctionReplacePatterns"]).then(function(data){
                     var patterns = data.correctionReplacePatterns
                     if(idx<patterns.length-1){
                         [patterns[idx], patterns[idx+1]] = [patterns[idx+1], patterns[idx]]
-                        storage.local.set({correctionReplacePatterns: patterns}, function(){})
+                        nt.storage.local.set({correctionReplacePatterns: patterns})
                     }
                 })
             }
@@ -496,14 +496,14 @@ function restoreReplacePattern(){
             var idx = Number($(this).parent().attr("data-for"))
             var elm = $(this)
             if(!isNaN(idx)){
-                storage.local.get(["correctionReplacePatterns"], function(data){
+                nt.storage.local.get(["correctionReplacePatterns"]).then(function(data){
                     var patterns = data.correctionReplacePatterns
                     if(elm.hasClass("enabled")){
                         patterns[idx].regex = false
                     }else{
                         patterns[idx].regex = true
                     }
-                    storage.local.set({correctionReplacePatterns: patterns}, function(){})
+                    nt.storage.local.set({correctionReplacePatterns: patterns})
                 })
             }
         })
@@ -511,24 +511,24 @@ function restoreReplacePattern(){
             var idx = Number($(this).parent().attr("data-for"))
             var elm = $(this)
             if(!isNaN(idx)){
-                storage.local.get(["correctionReplacePatterns"], function(data){
+                nt.storage.local.get(["correctionReplacePatterns"]).then(function(data){
                     var patterns = data.correctionReplacePatterns
                     if(elm.hasClass("enabled")){
                         patterns[idx].active = false
                     }else{
                         patterns[idx].active = true
                     }
-                    storage.local.set({correctionReplacePatterns: patterns}, function(){})
+                    nt.storage.local.set({correctionReplacePatterns: patterns})
                 })
             }
         })
         $(".novel-option--correction-replace--pattern-box .novel-option--correction-replace--remove-button").on("click", function(){ // Trash Button
             var idx = Number($(this).parent().attr("data-for"))
             if(!isNaN(idx)){
-                storage.local.get(["correctionReplacePatterns"], function(data){
+                nt.storage.local.get(["correctionReplacePatterns"]).then(function(data){
                     var patterns = data.correctionReplacePatterns
                     patterns.splice(idx, 1)
-                    storage.local.set({correctionReplacePatterns: patterns}, function(){})
+                    nt.storage.local.set({correctionReplacePatterns: patterns})
                 })
             }
         })
@@ -536,11 +536,11 @@ function restoreReplacePattern(){
             var idx = Number($(this).parent().parent().attr("data-for"))
             var value = $(this).val()
             if(!isNaN(idx)){
-                storage.local.get(["correctionReplacePatterns"], function(data){
+                nt.storage.local.get(["correctionReplacePatterns"]).then(function(data){
                     var patterns = data.correctionReplacePatterns
                     if(patterns.length > idx && typeof value=="string"){
                         patterns[idx].pattern = value
-                        storage.local.set({correctionReplacePatterns: patterns}, function(){})
+                        nt.storage.local.set({correctionReplacePatterns: patterns})
                     }
                 })
             }
@@ -549,11 +549,11 @@ function restoreReplacePattern(){
             var idx = Number($(this).parent().parent().attr("data-for"))
             var value = $(this).val()
             if(!isNaN(idx)){
-                storage.local.get(["correctionReplacePatterns"], function(data){
+                nt.storage.local.get(["correctionReplacePatterns"]).then(function(data){
                     var patterns = data.correctionReplacePatterns
                     if(patterns.length > idx && typeof value=="string"){
                         patterns[idx].replacement = value
-                        storage.local.set({correctionReplacePatterns: patterns}, function(){})
+                        nt.storage.local.set({correctionReplacePatterns: patterns})
                     }
                 })
             }
@@ -652,7 +652,7 @@ function setOptionContentsCorrection(id: number){
         var mode: Record<string,any> = {}
         mode[$(this).prop("name")] = $(this).prop("checked")
 
-        storage.local.set(mode, function(){})
+        nt.storage.local.set(mode)
     })
 
     /* Scroll Replacement Pattern List */
@@ -668,9 +668,9 @@ function setOptionContentsCorrection(id: number){
 
     /* Replacement */
     $("#novel-option--correction-replace--pattern-box-addition").on("click", function(){
-        storage.local.get(["correctionReplacePatterns"], function(data){
+        nt.storage.local.get(["correctionReplacePatterns"]).then(function(data){
             data.correctionReplacePatterns.push(new ReplacePattern())
-            storage.local.set({correctionReplacePatterns: data.correctionReplacePatterns}, function(){})
+            nt.storage.local.set({correctionReplacePatterns: data.correctionReplacePatterns})
         })
     })
 
@@ -736,7 +736,7 @@ function setOptionContentsAuthorSkin(id: number){
     })
 
     function restoreAuthorSkin(){
-        storage.local.get(null, (data) => {
+        nt.storage.local.get(null).then((data) => {
             check("#novel-option--novel-author-skin", data.novelAuthorCustomSkin)
         })
     }
@@ -744,7 +744,7 @@ function setOptionContentsAuthorSkin(id: number){
     /* Event */
     // Click Toggle
     $("#novel-option--novel-author-skin").on("click", function(e){
-        storage.local.set({novelAuthorCustomSkin: $(this).prop("checked")})
+        nt.storage.local.set({novelAuthorCustomSkin: $(this).prop("checked")})
     })
 
     // Import Button
@@ -770,12 +770,12 @@ function setOptionContentsAuthorSkin(id: number){
                             var skin = new SkinV1(l)
         
                             // Import Skin
-                            storage.local.get(["skins"], function(data) {
+                            nt.storage.local.get("skins").then(function(data) {
                                 var skins = data.skins
                                 skin.name = generateNoDuplicateSkinName(localSkinsV1.concat(skins), skin.name, -1)
                                 skins.push(skin)
                                 
-                                storage.local.set({skins: skins}, function(){
+                                nt.storage.local.set({skins: skins}).then(function(){
                                     pushSkinImportInfo(`インポートに成功しました (${skin.name})`, "info")
                                 })
                             })

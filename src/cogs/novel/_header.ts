@@ -1,6 +1,6 @@
 import { getNcodeFromURL } from "../../utils/ncode";
 import { CustomIconID, CustomIconIDs, getExcludeIcons } from "../../utils/header"
-import { storage } from "../../utils/option";
+import { nt } from "../../utils/option";
 import { getEpisode, getPageType, isR18 } from "../../utils/narou";
 import { fetchNovelApi } from "../../utils/api";
 
@@ -9,7 +9,7 @@ import QRCode from 'qrcode'
 
 /* Header */
 export function _header(){
-    storage.local.get(null, (data) => {
+    nt.storage.local.get(null).then((data) => {
         $(".l-scrollheader").after("<div id='novel_header'><ul id='head_nav'></ul></div>")
 
         const customHeaderType: number = Number(data.novelCustomHeaderType)
@@ -497,7 +497,7 @@ export function _header(){
             /* 直近の閲覧履歴 */
             if(pageType!="novel"){
                 $("#novel_header ul").append('<li class="history"></li>')
-                storage.sync.get(["novelHistoryData"], function(sData){
+                nt.storage.sync.get(["novelHistoryData"]).then(function(sData){
                     const history = sData.novelHistoryData[ncode]
                     if(history){
                         const episode = history[0]
@@ -875,11 +875,11 @@ export function _header(){
             /* Storage Listener */
             chrome.storage.local.onChanged.addListener(function(changes){
                 if(changes.novelCustomHeaderLeft!=undefined || changes.novelCustomHeaderRight!=undefined){
-                    storage.local.get(["novelCustomHeaderLeft", "novelCustomHeaderRight"], (data) => {
+                    nt.storage.local.get(["novelCustomHeaderLeft", "novelCustomHeaderRight"]).then((data) => {
                         resetHeader(data.novelCustomHeaderLeft, data.novelCustomHeaderRight)
                     })
                 }else if(changes.novelLegacyHeaderIcon != undefined){
-                    storage.local.get(["novelLegacyHeaderIcon"], (data) => {
+                    nt.storage.local.get(["novelLegacyHeaderIcon"]).then((data) => {
                         if(!data.novelLegacyHeaderIcon){
                             $("body").addClass("narou-tweaker-header--hide-icon")
                         }else{
@@ -887,7 +887,7 @@ export function _header(){
                         }
                     })
                 }else if(changes.novelCustomHeaderShowEnactiveItems){
-                    storage.local.get(["novelCustomHeaderShowEnactiveItems"], (data) => {
+                    nt.storage.local.get(["novelCustomHeaderShowEnactiveItems"]).then((data) => {
                         if(data.novelCustomHeaderShowEnactiveItems){
                             $("body").addClass("narou-tweaker-header--show-inactive-icon")
                         }else{
@@ -903,7 +903,7 @@ export function _header(){
 export function changeHeaderScrollMode(_elm: string){
         
     function changeMode(elm: HTMLElement|JQuery<HTMLElement>){
-        storage.local.get(null, (data) => {
+        nt.storage.local.get(null).then((data) => {
             const header_mode = data.novelCustomHeaderMode
             const hidden_begin = data.novelCustomHeaderScrollHidden
             if(!$(elm).length){return}

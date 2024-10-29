@@ -1,8 +1,8 @@
-import { storage } from "../../utils/option"
+import { nt } from "../../utils/option"
 import $ from 'jquery';
 
 export function novelTop(){
-    storage.local.get(null, (data) => {
+    nt.storage.local.get(null).then((data) => {
         if(data.novelCustomStyle){
             $("body").addClass("narou-tweaker--custom-skin")
         }
@@ -12,7 +12,7 @@ export function novelTop(){
 }
 
 function _showAllExtext(){
-    storage.local.get(null, (data) => {
+    nt.storage.local.get(null).then((data) => {
         try{
             if(data.novelShowAllExtext){
                 var Extext = $("#novel_ex")

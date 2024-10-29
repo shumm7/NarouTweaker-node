@@ -1,7 +1,7 @@
 import { localSkinsV1 } from "../../utils/v1_skin"
 import { localFontFamilyV1, localFont } from "../../utils/v1_font"
 import { check, defaultValue } from "../../utils/misc"
-import { storage } from "../../utils/option"
+import { nt } from "../../utils/option"
 
 import $ from "jquery"
 
@@ -14,9 +14,9 @@ export function setDisplayEvent(){
     $("#nt-display-option--skin #nt-display-option--skin-dropdown").on("change",() => {
         var m = $("#nt-display-option--skin-dropdown").val()
         if(typeof m === "string" && isFinite(Number(m))){
-            storage.local.set({workspaceEditorSelectedSkin: Number(m)}, function() {})
+            nt.storage.local.set({workspaceEditorSelectedSkin: Number(m)})
         }else{
-            storage.local.set({workspaceEditorSelectedSkin: 0}, function() {})
+            nt.storage.local.set({workspaceEditorSelectedSkin: 0})
         }
     })
 
@@ -24,9 +24,9 @@ export function setDisplayEvent(){
     $("#nt-display-option--font-family #font-family").on("change",() => {
         var m = $("#nt-display-option--font-family #font-family").val()
         if(typeof m === "string" && isFinite(Number(m))){
-            storage.local.set({workspaceEditorSelectedFontFamily: Number(m)}, function() {})
+            nt.storage.local.set({workspaceEditorSelectedFontFamily: Number(m)})
         }else{
-            storage.local.set({workspaceEditorSelectedFontFamily: 0}, function() {})
+            nt.storage.local.set({workspaceEditorSelectedFontFamily: 0})
         }
     })
 
@@ -43,7 +43,7 @@ export function setDisplayEvent(){
         }else{
             $("#nt-display-option--font-size-input").val(`${value}`)
         }
-        storage.local.set({workspaceEditorFontSize: value}, () => {})
+        nt.storage.local.set({workspaceEditorFontSize: value})
     }
 
     $("#nt-display-option--font-size-minus").click(function(){
@@ -86,7 +86,7 @@ export function setDisplayEvent(){
             $("#nt-display-option--line-height-input").val(value)
         }
 
-        storage.local.set({workspaceEditorLineHeight: value}, () => {})
+        nt.storage.local.set({workspaceEditorLineHeight: value})
     }
 
     $("#nt-display-option--line-height-minus").click(function(){
@@ -125,7 +125,7 @@ export function setDisplayEvent(){
         }
         $("#nt-display-option--page-width-input").val(value)
 
-        storage.local.set({workspaceEditorWidth: Number(value)/100}, () => {})
+        nt.storage.local.set({workspaceEditorWidth: Number(value)/100})
     }
 
     $("#nt-display-option--page-width-minus").click(function(){
@@ -163,7 +163,7 @@ export function setDisplayEvent(){
 }
 
 function restoreSkinOptions(){
-    storage.local.get(null, (data)=>{
+    nt.storage.local.get().then((data)=>{
         const skins = localSkinsV1.concat(data.skins)
         const selected = data.workspaceEditorSelectedSkin
 
@@ -179,7 +179,7 @@ function restoreSkinOptions(){
 }
 
 function restoreFontOptions(){
-    storage.local.get(null, (data)=>{
+    nt.storage.local.get().then((data)=>{
         var fontlist = localFontFamilyV1.concat(data.fontFontFamilyList)
 
         $("#nt-display-option--font-family #font-family").empty()

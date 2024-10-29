@@ -1,7 +1,7 @@
 import $ from "jquery";
-import { storage } from "../../utils/option";
+import { nt } from "../../utils/option";
 
-storage.local.get(null, (data)=>{
+nt.storage.local.get(null).then((data)=>{
     /* Skin Custom CSS */
     if("workspaceEditorSkinCustomCSS" in data){
         var l = $(`<style type="text/css" id="narou-tweaker-style--editor-skin-user" class="narou-tweaker-style"></style>`)
@@ -21,7 +21,7 @@ storage.local.get(null, (data)=>{
     }
 })
 
-storage.session.get(null, (data)=>{
+nt.storage.session.get(null).then((data)=>{
     /* Skin */
     if("workspaceEditorAppliedSkinCSS" in data){
         var l = $(`<style type="text/css" id="narou-tweaker-style--editor-skin" class="narou-tweaker-style"></style>`)

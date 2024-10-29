@@ -1,7 +1,7 @@
 import { getPageType } from "../../utils/narou";
 import { check } from "../../utils/misc"
 import { escapeHtml } from "../../utils/text";
-import { storage } from "../../utils/option";
+import { nt } from "../../utils/option";
 import { ReplacePatterns, CorrectionNumberMode } from "../../utils/data";
 
 import $ from 'jquery';
@@ -34,7 +34,7 @@ const className = {
 
 export function correction(){
     if($(".p-novel__body").length && getPageType()=="novel"){
-        storage.local.get(null, (data) => {
+        nt.storage.local.get(null).then((data) => {
             resetCorrection()
 
             // 記号
@@ -193,7 +193,7 @@ export function correction(){
 }
 
 export function restoreCorrectionMode(){
-    storage.local.get(null, (data) => {
+    nt.storage.local.get(null).then((data) => {
         check("#novel-option--correction-indent", data.correctionIndent)
         check("#novel-option--correction-normalize-ellipses", data.correctionNormalizeEllipses)
         check("#novel-option--correction-normalize-dash", data.correctionNormalizeDash)

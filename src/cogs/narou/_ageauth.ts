@@ -1,9 +1,9 @@
-import { storage } from "../../utils/option";
+import { nt } from "../../utils/option";
 
 import $ from 'jquery';
 
 export function ageauth(){
-    storage.local.get(null, function(data){
+    nt.storage.local.get(null).then(function(data){
         if(data.narouSkipAgeauth){
             if(location.hostname=="nl.syosetu.com"){
                 if(location.pathname.match(/^\/redirect\/ageauth\/*/)){

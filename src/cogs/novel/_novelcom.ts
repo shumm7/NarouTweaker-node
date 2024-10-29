@@ -1,6 +1,6 @@
 import { Ncode } from "../../utils/ncode"
 import { pushImpressionHiddenList, pushImpressionReadList } from "../../utils/data"
-import { storage } from "../../utils/option"
+import { nt } from "../../utils/option"
 
 import $ from 'jquery';
 
@@ -17,7 +17,7 @@ function _readImpression(){
                 const kanrino: string|undefined = m[2]
                 
                 if(ncode!==undefined && kanrino!==undefined){
-                    storage.local.get(null, function(data){
+                    nt.storage.local.get(null).then(function(data){
                         if(data.workspaceImpressionMarkAsReadWhenReply && data.workspaceImpressionMarkedButton){
                             if($("form #rescomment").length){
                                 

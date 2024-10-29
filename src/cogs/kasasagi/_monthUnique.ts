@@ -3,7 +3,7 @@ import { getDateString, getDatetimeString } from "../../utils/time"
 import { saveJson } from "../../utils/misc"
 import { makeGraph, getValueFromTables, GraphDataset } from "./utils"
 import { getNcodeFromURL } from "../../utils/ncode"
-import { storage } from "../../utils/option"
+import { nt } from "../../utils/option"
 import { GraphType } from "../../utils/data"
 
 import $ from 'jquery';
@@ -13,7 +13,7 @@ var graph: Chart|null
 
 /* Month Unique */
 export function _monthUnique(){
-    storage.local.get(null, (option)=>{
+    nt.storage.local.get(null).then((option)=>{
         if($(".novelview_h3").length){
             if(option.kasasagiCustomStyle){
                 var m = $(".novelview_h3")
@@ -102,7 +102,7 @@ function _button(datasets: Array<GraphDataset>, labels: Array<string>){
     }
 }
 
-function _dropdown(option: storage.local.options, labels: Array<string>){
+function _dropdown(option: nt.storage.local.options, labels: Array<string>){
     $("#access_all").after(`
         ▼見たい年を選んでください<br>
         <div class="dropdown">

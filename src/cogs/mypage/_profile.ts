@@ -1,5 +1,5 @@
 
-import { storage } from "../../utils/option"
+import { nt } from "../../utils/option"
 import { getUserIdFromURL, isR18 } from "../../utils/narou"
 import { escapeHtml, replaceUrl } from "../../utils/text"
 import { fetchUserApi } from "../../utils/api"
@@ -12,7 +12,7 @@ export function _profile(){
     const r18 = isR18()
 
     if(userid){
-        storage.local.get(null, (data) => {
+        nt.storage.local.get(null).then((data) => {
             /* Disable External Link Warning */
             if (data.mypageDisableExternalURLWarning){
                 var elm = $(".c-side-list .c-side-list__item dl dd a")

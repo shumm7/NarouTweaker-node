@@ -1,4 +1,4 @@
-import { storage } from "../../utils/option"
+import { nt } from "../../utils/option"
 import $ from "jquery"
 
 export function _misc(){
@@ -10,7 +10,7 @@ export function _misc(){
 function deleteConfirm(){
 
     if(location.hostname=="syosetu.com" && location.pathname.match(/^\/usernovel\/deleteconfirm\/ncode\/\d+\/*$/)){
-        storage.local.get(null, function(data){
+        nt.storage.local.get(null).then(function(data){
             if(data.workspaceNovelmanageDeleteConfirm){
                 $("#noveldelete").attr("type", "button")
                 $("#noveldelete").prop("disabled", true)
@@ -65,7 +65,7 @@ function deleteConfirm(){
 function deleteConfirmUserblog(){
 
     if(location.hostname=="syosetu.com" && (location.pathname.match(/^\/userblogmanage\/deleteconfirm\/blogkey\/\d+\/*$/) || location.pathname.match(/^\/userxblogmanage\/deleteconfirm\/blogkey\/\d+\/*$/))){
-        storage.local.get(null, function(data){
+        nt.storage.local.get(null).then(function(data){
             if(data.workspaceUserblogmanageDeleteConfirm){
                 $("#blogdelete").attr("type", "button")
                 $("#blogdelete").prop("disabled", true)
@@ -119,7 +119,7 @@ function deleteConfirmUserblog(){
 
 function pointAverage(){
     if(location.hostname=="syosetu.com" && location.pathname.match(/^\/usernovelmanage\/top\/ncode\/\d+\/*$/)){
-        storage.local.get(null, function(data){
+        nt.storage.local.get(null).then(function(data){
             if(data.workspaceNovelmanageShowPointAverage){
                 if($(".p-up-novelinfo__reaction").length){
                     var point = $(".p-up-novelinfo__reaction .js-hyokapointavg")

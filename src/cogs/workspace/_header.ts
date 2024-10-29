@@ -1,4 +1,4 @@
-import { storage } from "../../utils/option"
+import { nt } from "../../utils/option"
 import { isR18 } from "../../utils/narou"
 
 import $ from "jquery"
@@ -20,7 +20,7 @@ function changeHeaderScrollMode(){
     })
 
     function changeMode(elm: HTMLElement|JQuery<HTMLElement>){
-        storage.local.get(null, (data) => {
+        nt.storage.local.get(null).then((data) => {
             const header_mode = data.workspaceCustomHeaderMode
             const hidden_begin = data.workspaceCustomHeaderScrollHidden
             if(!$(elm).length){return}
@@ -344,7 +344,7 @@ function headerIcons(){
     //ヘッダ設定
     function resetHeader(){
         $(".p-up-header-pc__nav .p-up-header-pc__nav-item").addClass("disabled")
-        storage.local.get(null, (data) => {
+        nt.storage.local.get(null).then((data) => {
             $.each(data.workspaceCustomHeader, function(_, key){
                 var elm = $(".p-up-header-pc__nav-item."+key)
                 if(elm.length){
@@ -494,7 +494,7 @@ function addMenuLink(){
     // Setting Menu
     function resetMenu(){
         $(".p-up-header-pc__gmenu .p-up-header-pc__gmenu-column .p-up-header-pc__gmenu-list-items").appendTo(".p-up-header-pc__gmenu .p-up-header-pc__gmenu-column#p-up-header-pc__gmenu-column--hidden")
-        storage.local.get(null, (data) => {
+        nt.storage.local.get(null).then((data) => {
             $.each(data.workspaceCustomMenu_Left, function(_, key){
                 var elm = $(".p-up-header-pc__gmenu .p-up-header-pc__gmenu-column .p-up-header-pc__gmenu-list-items."+key)
                 if(elm.length){

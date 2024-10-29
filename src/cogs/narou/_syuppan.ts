@@ -1,10 +1,10 @@
-import { storage } from "../../utils/option"
+import { nt } from "../../utils/option"
 import { escapeHtml } from "../../utils/text"
 
 import $ from 'jquery';
 
 export function syuppan(){
-    storage.local.get(null, function(data){
+    nt.storage.local.get(null).then(function(data){
         if(location.hostname==="syosetu.com" || location.hostname==="nl.syosetu.com"){
             if(location.pathname.match(/^\/syuppan\/view\/bookid\/\d+\/*/)){
                 if(data.narouSyuppanShowBookViewImage){

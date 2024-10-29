@@ -5,7 +5,7 @@ import { _dayUnique } from "./_dayUnique"
 import { _monthPV } from "./_monthPV"
 import { _monthUnique } from "./_monthUnique"
 import { getNcodeFromURL } from "../../utils/ncode"
-import { storage } from "../../utils/option"
+import { nt } from "../../utils/option"
 
 import $ from 'jquery';
 
@@ -15,7 +15,7 @@ import "w3-css/w3.css";
 import "../../common.css";
 import "./local.css";
 
-storage.local.get(null, (option) => {
+nt.storage.local.get(null,).then((option) => {
     var path = location.pathname;
     const ncode = getNcodeFromURL();
     if(ncode==null){return}

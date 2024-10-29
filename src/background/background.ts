@@ -1,6 +1,5 @@
-import { storage } from "../utils/option"
+import { nt } from "../utils/option"
 import { fixOption } from "../options/_utils/optionUI_utils"
-import { actionListener } from "./_action"
 import { messageListener } from "./_process"
 import { skinListener } from "./_skin"
 import { yomouCssListener } from "./_yomou"
@@ -13,7 +12,7 @@ chrome.runtime.onInstalled.addListener((details) => {
 
         if(details.previousVersion !== chrome.runtime.getManifest().version){
             const id = `narou-tweaker--updated-version-${details.previousVersion}-to-${chrome.runtime.getManifest().version}`
-            storage.local.get("extNotifications", function(data){
+            nt.storage.local.get("extNotifications").then((data) => {
                 if(data.extNotifications){
                     chrome.notifications.create(id, {
                         iconUrl: "/assets/icons/icon_48.png",
@@ -40,23 +39,14 @@ chrome.runtime.onInstalled.addListener((details) => {
 })
 
 /* Count */
-storage.sync.get(null, function(data){
-    var count = data.extLaunchCount
-    if(typeof count === "number"){
-        count += 1
-    }else{
-        count = 1
-    }
+nt.storage.sync.get("extLaunchCount").then((data)=>{
+    var count = data.extLaunchCount + 1
 
-    storage.sync.set({
+    nt.storage.sync.set({
         extLaunchCount: count,
         extLastLaunchTime: new Date().toUTCString()
     })
 })
-
-
-/* Action */
-actionListener()
 
 /* CSS */
 chrome.storage.session.setAccessLevel({accessLevel: "TRUSTED_AND_UNTRUSTED_CONTEXTS"})

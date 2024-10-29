@@ -1,6 +1,6 @@
 import { getNcodeFromURL } from "../../utils/ncode"
 import { isR18 } from "../../utils/narou"
-import { storage } from "../../utils/option"
+import { nt } from "../../utils/option"
 import { fetchNovelApi } from "../../utils/api"
 
 import $ from 'jquery';
@@ -8,7 +8,7 @@ import $ from 'jquery';
 
 export function _general(){
     /* Show User ID */
-    storage.local.get(null, (data) => {
+    nt.storage.local.get(null).then((data) => {
         const m = $(".p-userheader__tab .p-userheader__tab-list-item:nth-child(1) a").attr("href")?.match(`https://${location.hostname}/(.*)/`)
         if (data.mypageShowUserId && m!==undefined && m!==null){
             var userid = m[1].trim()
@@ -19,7 +19,7 @@ export function _general(){
     })
     
     /* Disable External Link Warning */
-    storage.local.get(null, (data) => {
+    nt.storage.local.get(null).then((data) => {
         if (data.mypageDisableExternalURLWarning){
             var span = $(".p-userheader__tooltip .p-userheader__tooltip-item a > span.p-icon--earth")
             if(span.length){
@@ -35,7 +35,7 @@ export function _general(){
 }
 
 function novellist(){
-    storage.local.get(null, function(data){
+    nt.storage.local.get(null).then(function(data){
         $(".c-novel-list__item").each(function(){
             var outer = $(this)
             const ncode = getNcodeFromURL(outer.find(".c-novel-list__title").attr("href"))

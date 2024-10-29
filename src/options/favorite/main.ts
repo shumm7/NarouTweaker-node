@@ -2,7 +2,7 @@ import { OptionUI_ItemID } from "options/_utils/optionUI_type";
 import { getOptionFromID } from "../_utils/optionUI_utils";
 import { getOptionElement, optionHide, syntaxHighlight } from "../_utils/utils";
 import { restoreOptions, setup } from "../general";
-import { storage } from "../../utils/option";
+import { nt } from "../../utils/option";
 
 import $ from 'jquery';
 
@@ -17,7 +17,7 @@ function markFavoriteOptions(list: Array<OptionUI_ItemID>){
 }
 
 function setupContents(scroll?: number){
-    storage.local.get("extFavoriteOptions", function(data){
+    nt.storage.local.get("extFavoriteOptions").then(function(data){
         var list = data.extFavoriteOptions
         if(!Array.isArray(list)){
             list = []

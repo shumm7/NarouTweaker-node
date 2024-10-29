@@ -2,7 +2,7 @@ import { Ncode } from "../../utils/ncode"
 import { convertRubyTags, convertSasieTags, countLines, countManuscriptPaper, countTime, escapeHtml, countCharacters } from "../../utils/text"
 import { minuteStringJapanese, getDateString } from "../../utils/time"
 import { fetchNovelApi } from "../../utils/api"
-import { storage } from "../../utils/option"
+import { nt } from "../../utils/option"
 import { setDisplayEvent } from "./_editorCss"
 import { _toolCovertKakuyomuRubyDot, _toolExportAll, _toolExportEach, _toolIndent, _toolRuby, _toolRubyDot, _toolSasie, _toolSearch } from "./_editorTools"
 
@@ -19,7 +19,7 @@ const formElement = "#usernoveldatamangeForm,#wright_form,#usernoveldatainputFor
 
 export function _editor(){
     const path = location.pathname
-    storage.local.get(null, function(data){
+    nt.storage.local.get(null).then(function(data){
         if(data.workspaceCustomEditor){
             if(
                 path.match(/^\/usernoveldatamanage\/updateinput\/.*$/) ||

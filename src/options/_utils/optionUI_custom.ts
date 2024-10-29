@@ -1,6 +1,6 @@
-import { OptionUI_CustomElement_general } from "options/general/_optionsUI"
-import { OptionUI_CustomElement_novel } from "options/novel/_optionsUI"
-import { OptionUI_CustomElement_workspace } from "options/workspace/_optionsUI"
+import { OptionUI_CustomElement_general } from "../general/_optionsUI"
+import { OptionUI_CustomElement_novel } from "../novel/_optionsUI"
+import { OptionUI_CustomElement_workspace } from "../workspace/_optionsUI"
 
 type OptionUI_Custom = Record<string,string>
 

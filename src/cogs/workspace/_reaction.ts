@@ -1,4 +1,4 @@
-import { storage } from "../../utils/option"
+import { nt } from "../../utils/option"
 import { Ncode } from "../../utils/ncode"
 import { popImpressionHiddenList, popImpressionReadList, pushImpressionHiddenList, pushImpressionReadList } from "../../utils/data"
 
@@ -10,7 +10,7 @@ export function _reaction(){
 
 function _impressionRead(){
     if(location.pathname.match(/^\/usernovelimpression\/passivelist\/*$/)){
-        storage.local.get(null, function(data){
+        nt.storage.local.get(null).then(function(data){
 
             var list = $(".c-up-panel .c-up-panel__list")
             if(list.length){
@@ -104,7 +104,7 @@ function _impressionRead(){
                     `)
 
                     $(".c-up-unmarkread-all").click(function(){
-                        storage.sync.get(null, function(l){
+                        nt.storage.sync.get(null).then(function(l){
                             var readList: [Array<Ncode>, Array<string>] = [[], []]
                             var hideList: [Array<Ncode>, Array<string>] = [[], []]
 
@@ -138,7 +138,7 @@ function _impressionRead(){
                     })
 
                     $(".c-up-markread-all").click(function(){
-                        storage.sync.get(null, function(l){
+                        nt.storage.sync.get(null).then(function(l){
                             var readList: [Array<Ncode>, Array<string>] = [[], []]
                             var hideList: [Array<Ncode>, Array<string>] = [[], []]
 

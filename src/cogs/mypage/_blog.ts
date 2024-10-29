@@ -1,11 +1,11 @@
-import { storage } from "../../utils/option";
+import { nt } from "../../utils/option";
 import { replaceUrl } from "../../utils/text";
 
 import $ from 'jquery';
 
 export function _blog(){
     /* Blog Auto Url */
-    storage.local.get(null, (data) => {
+    nt.storage.local.get(null).then((data) => {
         if(data.mypageBlogAutoURL){
             var header = $('.p-blogview__info')[0].outerHTML;
             $('.p-blogview__info').remove()
@@ -24,7 +24,7 @@ export function _blog(){
     })
 
     /* Blog Comment Auto Url */
-    storage.local.get(null, (data) => {
+    nt.storage.local.get(null).then((data) => {
         if(data.mypageBlogCommentAutoURL){
             $('.p-blogview__comment-main').each(function(_) {
                 var comment = $(this)

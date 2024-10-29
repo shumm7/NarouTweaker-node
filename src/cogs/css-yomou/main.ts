@@ -1,4 +1,4 @@
-import { storage } from "../../utils/option";
+import { nt } from "../../utils/option";
 import { checkRankPageDetail } from "../yomou/utils"
 import $ from 'jquery';
 
@@ -6,7 +6,7 @@ const pageDetail = checkRankPageDetail()
 
 if(pageDetail?.site=="yomou"){
     if(pageDetail.detail=="rank" && pageDetail.type == "top"){
-        storage.session.get(["yomouRankTop_AppliedCSS"], (data)=>{
+        nt.storage.session.get(["yomouRankTop_AppliedCSS"]).then((data)=>{
             /* Styles */
             if("yomouRankTop_AppliedCSS" in data){
                 var l = $(`<style type="text/css" id="narou-tweaker-style--rank-css" class="narou-tweaker-style"></style>`)
@@ -16,7 +16,7 @@ if(pageDetail?.site=="yomou"){
                 $("html").append(`<style type="text/css" id="narou-tweaker-style--rank-css" class="narou-tweaker-style"></style>`)
             }
         })
-        storage.local.get(["yomouRankTop_CustomCSS"], (data)=>{
+        nt.storage.local.get(["yomouRankTop_CustomCSS"]).then((data)=>{
             /* User CSS */
             if("yomouRankTop_CustomCSS" in data){
                 var l = $(`<style type="text/css" id="narou-tweaker-style--rank-user-css" class="narou-tweaker-style"></style>`)
@@ -44,7 +44,7 @@ if(pageDetail?.site=="yomou"){
     }
     
     else if(pageDetail.detail=="rank" && pageDetail.type != "top"){
-        storage.session.get(["yomouRank_AppliedCSS"], (data)=>{
+        nt.storage.session.get(["yomouRank_AppliedCSS"]).then((data)=>{
             /* Styles */
             if("yomouRank_AppliedCSS" in data){
                 var l = $(`<style type="text/css" id="narou-tweaker-style--rank-css" class="narou-tweaker-style"></style>`)
@@ -55,7 +55,7 @@ if(pageDetail?.site=="yomou"){
             }
         })
         
-        storage.local.get(["yomouRank_CustomCSS"], (data)=>{
+        nt.storage.local.get(["yomouRank_CustomCSS"]).then((data)=>{
             /* User CSS */
             if("yomouRank_CustomCSS" in data){
                 var l = $(`<style type="text/css" id="narou-tweaker-style--rank-user-css" class="narou-tweaker-style"></style>`)

@@ -1,7 +1,7 @@
 import { setup } from "../general";
 import { escapeHtml } from "../../utils/text";
 import { getExtensionVersion } from "../../utils/misc";
-import { storage } from "../../utils/option";
+import { nt } from "../../utils/option";
 
 import $ from 'jquery';
 
@@ -123,7 +123,7 @@ function debugMode(){
     }
 
     /* デバッグモードを表示 */
-    storage.local.get(["extDebug"], function(data){
+    nt.storage.local.get(["extDebug"]).then(function(data){
         tabMode(data.extDebug)
 
         if(data.extDebug){

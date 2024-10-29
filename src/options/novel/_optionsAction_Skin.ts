@@ -1,7 +1,7 @@
 import { localFont, localFontFamilyV1 } from "../../utils/v1_font";
 import { defaultValue, getCSSRule, saveJson } from "../../utils/misc";
 import { generateNoDuplicateSkinName, localSkinsV1, SkinsV1, SkinV1 } from "../../utils/v1_skin";
-import { storage } from "../../utils/option";
+import { nt } from "../../utils/option";
 import { AvailableSkin, getSkin, getSkinFromIndex } from "../../utils/v2_skin";
 import { escapeHtml } from "../../utils/text";
 
@@ -36,7 +36,7 @@ export function skinEditor(){
 }
 
 function skinEditor_restoreList(){
-    storage.local.get(null, function(local){
+    nt.storage.local.get(null).then(function(local){
         const list = local.novelSkinsAvailable
         const selected = local.novelSkinSelected
         $("#novel-skins").attr("data-selected-src", selected.src)
@@ -67,7 +67,7 @@ function skinEditor_restoreList(){
                             $(this).addClass("selected")
                             $("#novel-skins").attr("data-selected-src", src)
                             $("#novel-skins").attr("data-selected-key", key)
-                            storage.local.set({"novelSkinSelected": {src: src, key: key}})
+                            nt.storage.local.set({"novelSkinSelected": {src: src, key: key}})
                         }else{
                             $(".novel-skins--list-item").removeClass("focused")
                             $(this).addClass("focused")
@@ -109,5 +109,5 @@ function skinEditor_storeAvailableSkinList(){
         }
     })
 
-    storage.local.set({novelSkinsAvailable: list})
+    nt.storage.local.set({novelSkinsAvailable: list})
 }

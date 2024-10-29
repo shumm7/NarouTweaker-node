@@ -8,12 +8,14 @@ import { SkinsV1 } from "./v1_skin"
 import { OptionID, OptionUI_Item, OptionUI_ItemID } from "../options/_utils/optionUI_type"
 import { Ncode } from "./ncode"
 import { AvailableSkin, maxLocalSkins, SkinV2 } from "./v2_skin"
+import Browser from "webextension-polyfill"
 
-/**
- * 設定データ（storage.local）
- */
-export namespace storage {
+
+export namespace nt.storage {
     export namespace local {
+        /**
+         * 設定データ（storage.local）
+         */
         export class options {
             [key: string]: any
 
@@ -305,7 +307,7 @@ export namespace storage {
              * コンストラクタ
              * @param {undefined|Record<string,any>|Partial<storage.local.options>|storage.local.options} data - 辞書型のデータで初期値を設定する（無効な値は全て除外される）
              */
-            constructor(data?: Record<string, any> | Partial<storage.local.options> | storage.local.options) {
+            constructor(data?: Record<string, any> | Partial<storage.local.options> | nt.storage.local.options) {
                 this.set(data)
             }
 
@@ -326,9 +328,9 @@ export namespace storage {
              * @param {storage.local.options} value
              */
             set(value: Record<string, any>): void
-            set(key?: OptionID | Record<string, any> | storage.local.options | Partial<storage.local.options>, value?: any): void;
-            set(key?: OptionID | Record<string, any> | storage.local.options | Partial<storage.local.options>, value?: any): void {
-                if (key instanceof storage.local.options) {
+            set(key?: OptionID | Record<string, any> | nt.storage.local.options | Partial<storage.local.options>, value?: any): void;
+            set(key?: OptionID | Record<string, any> | nt.storage.local.options | Partial<storage.local.options>, value?: any): void {
+                if (key instanceof nt.storage.local.options) {
                     this.novelSkins = []
                     this.set(key.get())
                 }
@@ -344,7 +346,7 @@ export namespace storage {
                     
                     /** others */
                     else {
-                        var value = storage.local.options._checkValue(key, value)
+                        var value = nt.storage.local.options._checkValue(key, value)
                         if (value !== undefined) {
                             this[key] = value
                         }
@@ -459,11 +461,11 @@ export namespace storage {
             static check(key: Record<string,any>): any;
             static check(key: OptionID|Record<string,any>, value?: any): any{
                 if(typeof key === "string"){
-                    return storage.local.options._checkValue(key, value)
+                    return nt.storage.local.options._checkValue(key, value)
                 }else if(key instanceof Object){
                     var ret: Record<string,any> = {}
                     for (const k of Object.keys(key)) {
-                        const c = storage.local.options._checkValue(k, key[k])
+                        const c = nt.storage.local.options._checkValue(k, key[k])
                         if(c!==undefined){
                             ret[k] = c
                         }
@@ -473,7 +475,7 @@ export namespace storage {
             }
 
             protected static _checkValue = (key: OptionID, value: any): any => {
-                var opt = new storage.local.options()
+                var opt = new nt.storage.local.options()
                 if (typeof opt[key] === typeof value && typeof opt[key] !== "function") {
                     if (key === "extOptionsVersion") {
                         return
@@ -570,64 +572,34 @@ export namespace storage {
 
         
         export function get(
-            keys: string | string[] | Partial<storage.local.options> | null | undefined,
-            callback: (items: storage.local.options) => void
-        ): void;
-        export function get(
-            keys: string | string[] | Partial<storage.local.options> | null | undefined
-        ): Promise<{[key: string]: any}>; 
-        export function get(
-            keys: string | string[] | Partial<storage.local.options> | null | undefined,
-            callback?: (items: storage.local.options) => void
-        ): void | Promise<{[key: string]: any}> {
+            keys?: string | string[] | Partial<storage.local.options> | null
+        ): Promise<nt.storage.local.options> {
             if (keys === undefined) { keys = null }
-            if(callback!==undefined){
-                chrome.storage.local.get(keys, function (data) {
-                    try {
-                        callback(new storage.local.options(data))
-                    } catch (e) {
-                        console.warn(e)
-                    }
-                })
-            }else{
-                return chrome.storage.local.get(keys)
-            }
+            return Browser.storage.local.get(keys).then((data) => {return new nt.storage.local.options(data)})
         }
 
 
-        export function set(key: string, value: any): Promise<{[key: string]: any}>
-        export function set(key: string, value: any, callback: (data?: {[key: string]: any}) => void): void
-        export function set(data?: storage.local.options | Partial<storage.local.options> | Record<string,any> | null): Promise<{[key: string]: any}>
-        export function set(data?: storage.local.options | Partial<storage.local.options> | Record<string,any> | null, callback?: (data?: {[key: string]: any}) => void): void
+        export function set(key: string, value: any): Promise<void>
+        export function set(data?: nt.storage.local.options | Partial<storage.local.options> | Record<string,any> | null): Promise<void>
         export function set(
-            data: storage.local.options | Partial<storage.local.options> | Record<string,any> | null | undefined | string,
-            value?: any,
-            callback?: (data?: {[key: string]: any}) => void
-        ): void | Promise<{[key: string]: any}> {
+            data: nt.storage.local.options | Partial<storage.local.options> | Record<string,any> | null | undefined | string,
+            value?: any
+        ): Promise<void> {
             var v: Record<string,any> = {}
-            if(data instanceof storage.local.options){
+            if(data instanceof nt.storage.local.options){
                 v = data.get()
-                return f(v, value)
+                return Browser.storage.local.set(v)
             }else if(data instanceof Object){
-                v = storage.local.options.check(data)
-                return f(v, value)
+                v = nt.storage.local.options.check(data)
+                return Browser.storage.local.set(v)
             }else if(typeof data === "string"){
-                const c = storage.local.options.check(data, value)
+                const c = nt.storage.local.options.check(data, value)
                 if(c!==undefined){
                     v[data] = c
                 }
-                return f(v, callback)
+                return Browser.storage.local.set(v)
             }else{
-                return f(v, value)
-            }
-
-            function f(v: Record<string,any>, c?: (data?: {[key: string]: any})=>void): void | Promise<{[key: string]: any}>{
-                if(c===undefined){
-                    return chrome.storage.local.set(v).then(()=>{return v})
-                }else{
-                    chrome.storage.local.set(v, ()=>{c(v)})
-                }
-                return
+                return Browser.storage.local.set(v)
             }
         }
     }
@@ -651,7 +623,7 @@ export namespace storage {
              * コンストラクタ
              * @param {undefined|Record<string,any>|storage.sync.options} data - 辞書型のデータで初期値を設定する（無効な値は全て除外される）
              */
-            constructor(data?: Record<string, any> | storage.sync.options) {
+            constructor(data?: Record<string, any> | nt.storage.sync.options) {
                 this.set(data)
             }
 
@@ -670,10 +642,10 @@ export namespace storage {
             * キーに値を設定する
             * @param {storage.sync.options} value
             */
-            set(value: storage.sync.options): void
-            set(key?: OptionID | Record<string, any> | Partial<storage.sync.options> | storage.sync.options, value?: any): void;
-            set(key?: OptionID | Record<string, any> | Partial<storage.sync.options> | storage.sync.options, value?: any): void {
-                if (key instanceof storage.sync.options) {
+            set(value: nt.storage.sync.options): void
+            set(key?: OptionID | Record<string, any> | Partial<storage.sync.options> | nt.storage.sync.options, value?: any): void;
+            set(key?: OptionID | Record<string, any> | Partial<storage.sync.options> | nt.storage.sync.options, value?: any): void {
+                if (key instanceof nt.storage.sync.options) {
                     this.novelSkins = []
                     this.set(key.get())
                 }
@@ -689,7 +661,7 @@ export namespace storage {
                     
                     /** others */
                     else {
-                        var value = storage.sync.options._checkValue(key, value)
+                        var value = nt.storage.sync.options._checkValue(key, value)
                         if (value !== undefined) {
                             this[key] = value
                         }
@@ -786,11 +758,11 @@ export namespace storage {
             static check(key: Record<string,any>): any;
             static check(key: OptionID|Record<string,any>, value?: any): any{
                 if(typeof key === "string"){
-                    return storage.sync.options._checkValue(key, value)
+                    return nt.storage.sync.options._checkValue(key, value)
                 }else if(key instanceof Object){
                     var ret: Record<string,any> = {}
                     for (const k of Object.keys(key)) {
-                        const c = storage.sync.options._checkValue(k, key[k])
+                        const c = nt.storage.sync.options._checkValue(k, key[k])
                         if(c!==undefined){
                             ret[k] = c
                         }
@@ -821,7 +793,7 @@ export namespace storage {
             }
 
             protected static _checkValue = (key: OptionID, value: any): any => {
-                var opt = new storage.local.options()
+                var opt = new nt.storage.local.options()
                 if (typeof opt[key] === typeof value && typeof opt[key] !== "function") {
                     if (key === "novelHistory") {
                         if (Array.isArray(value)) {
@@ -861,64 +833,32 @@ export namespace storage {
             }
         }
         
-        export function get(
-            keys: string | string[] | Partial<storage.sync.options> | null | undefined,
-            callback: (items: storage.sync.options) => void
-        ): void;
-        export function get(
-            keys: string | string[] | Partial<storage.sync.options> | null | undefined
-        ): Promise<{[key: string]: any}>;
-        export function get(
-            keys: string | string[] | Partial<storage.sync.options> | null | undefined,
-            callback?: (items: storage.sync.options) => void
-        ): void | Promise<{[key: string]: any}> {
+        export function get(keys?: string | string[] | Partial<storage.sync.options> | null): Promise<nt.storage.sync.options> {
             if (keys === undefined) { keys = null }
-            if(callback!==undefined){
-                chrome.storage.local.get(keys, function (data) {
-                    try {
-                        callback(new storage.sync.options(data))
-                    } catch (e) {
-                        console.warn(e)
-                    }
-                })
-            }else{
-                return chrome.storage.local.get(keys)
-            }
+            return Browser.storage.sync.get(keys).then((data)=>{return new nt.storage.sync.options(data)})
         }
 
-        export function set(key: string, value: any): Promise<{[key: string]: any}>
-        export function set(key: string, value: any, callback: (data?: {[key: string]: any}) => void): void
-        export function set(data?: storage.sync.options | Partial<storage.sync.options> | Record<string,any> | null): Promise<{[key: string]: any}>
-        export function set(data?: storage.sync.options | Partial<storage.sync.options> | Record<string,any> | null, callback?: (data?: {[key: string]: any}) => void): void
+        export function set(key: string, value: any): Promise<void>;
+        export function set(data?: nt.storage.sync.options | Partial<storage.sync.options> | Record<string,any> | null): Promise<void>;
         export function set(
-            data: storage.sync.options | Partial<storage.sync.options> | Record<string,any> | null | undefined | string,
-            value?: any,
-            callback?: (data?: {[key: string]: any}) => void
-        ): void | Promise<{[key: string]: any}> {
+            data: nt.storage.sync.options | Partial<storage.sync.options> | Record<string,any> | null | undefined | string,
+            value?: any
+        ): Promise<void> {
             var v: Record<string,any> = {}
-            if(data instanceof storage.sync.options){
+            if(data instanceof nt.storage.sync.options){
                 v = data.get()
-                return f(v, value)
+                return Browser.storage.sync.set(v)
             }else if(data instanceof Object){
-                v = storage.sync.options.check(data)
-                return f(v, value)
+                v = nt.storage.sync.options.check(data)
+                return Browser.storage.sync.set(v)
             }else if(typeof data === "string"){
-                const c = storage.sync.options.check(data, value)
+                const c = nt.storage.sync.options.check(data, value)
                 if(c!==undefined){
                     v[data] = c
                 }
-                return f(v, callback)
+                return Browser.storage.sync.set(v)
             }else{
-                return f(v, value)
-            }
-
-            function f(v: Record<string,any>, c?: (data?: {[key: string]: any})=>void): void | Promise<{[key: string]: any}> {
-                if(c===undefined){
-                    return chrome.storage.sync.set(v).then(()=>{return v})
-                }else{
-                    chrome.storage.sync.set(v, ()=>{c(v)})
-                }
-                return
+                return Browser.storage.sync.set(v)
             }
         }
     }
@@ -945,7 +885,7 @@ export namespace storage {
              * コンストラクタ
              * @param {undefined|Record<string,any>|storage.session.options} data - 辞書型のデータで初期値を設定する（無効な値は全て除外される）
              */
-            constructor(data?: Record<string, any> | storage.session.options) {
+            constructor(data?: Record<string, any> | nt.storage.session.options) {
                 this.set(data)
             }
 
@@ -964,14 +904,14 @@ export namespace storage {
             * キーに値を設定する
             * @param {storage.session.options} value
             */
-            set(value: storage.session.options): void
-            set(key?: OptionID | Record<string, any> | Partial<storage.session.options> | storage.session.options, value?: any): void;
-            set(key?: OptionID | Record<string, any> | Partial<storage.session.options> | storage.session.options, value?: any): void {
-                if (key instanceof storage.session.options) {
+            set(value: nt.storage.session.options): void
+            set(key?: OptionID | Record<string, any> | Partial<storage.session.options> | nt.storage.session.options, value?: any): void;
+            set(key?: OptionID | Record<string, any> | Partial<storage.session.options> | nt.storage.session.options, value?: any): void {
+                if (key instanceof nt.storage.session.options) {
                     this.set(key.get())
                 }
                 else if (typeof key === "string") {
-                    var value = storage.session.options._checkValue(key, value)
+                    var value = nt.storage.session.options._checkValue(key, value)
                     if (value !== undefined) {
                         this[key] = value
                     }
@@ -1024,11 +964,11 @@ export namespace storage {
             static check(key: Record<string,any>): any;
             static check(key: OptionID|Record<string,any>, value?: any): any{
                 if(typeof key === "string"){
-                    return storage.session.options._checkValue(key, value)
+                    return nt.storage.session.options._checkValue(key, value)
                 }else if(key instanceof Object){
                     var ret: Record<string,any> = {}
                     for (const k of Object.keys(key)) {
-                        const c = storage.session.options._checkValue(k, key[k])
+                        const c = nt.storage.session.options._checkValue(k, key[k])
                         if(c!==undefined){
                             ret[k] = c
                         }
@@ -1038,7 +978,7 @@ export namespace storage {
             }
 
             protected static _checkValue = (key: OptionID, value: any): any => {
-                var opt = new storage.session.options()
+                var opt = new nt.storage.session.options()
                 if (typeof opt[key] === typeof value && typeof opt[key] !== "function") {
                     return value
                 }
@@ -1050,63 +990,33 @@ export namespace storage {
         }
 
         export function get(
-            keys: string | string[] | Partial<storage.sync.options> | null | undefined,
-            callback: (items: storage.session.options) => void
-        ): void;
-        export function get(
-            keys: string | string[] | Partial<storage.sync.options> | null | undefined
-        ): Promise<{[key: string]: any}>;
-        export function get(
-            keys: string | string[] | Partial<storage.sync.options> | null | undefined,
-            callback?: (items: storage.session.options) => void
-        ): void|Promise<{[key: string]: any}> {
+            keys?: string | string[] | Partial<storage.sync.options> | null,
+        ): Promise<nt.storage.session.options> {
             if (keys === undefined) { keys = null }
-            if(callback!==undefined){
-                chrome.storage.local.get(keys, function (data) {
-                    try {
-                        callback(new storage.session.options(data))
-                    } catch (e) {
-                        console.warn(e)
-                    }
-                })
-            }else{
-                return chrome.storage.local.get(keys)
-            }
+            return Browser.storage.local.get(keys).then((data)=>{return new nt.storage.session.options(data)})
         }
 
-        export function set(key: string, value: any): Promise<{[key: string]: any}>
-        export function set(key: string, value: any, callback: (data?: {[key: string]: any}) => void): void
-        export function set(data?: storage.session.options | Partial<storage.session.options> | Record<string,any> | null): Promise<{[key: string]: any}>
-        export function set(data?: storage.session.options | Partial<storage.session.options> | Record<string,any> | null, callback?: (data?: {[key: string]: any}) => void): void
+        export function set(key: string, value: any): Promise<void>;
+        export function set(data?: nt.storage.session.options | Partial<storage.session.options> | Record<string,any> | null): Promise<void>;
         export function set(
-            data: storage.session.options | Partial<storage.session.options> | Record<string,any> | null | undefined | string,
+            data: nt.storage.session.options | Partial<storage.session.options> | Record<string,any> | null | undefined | string,
             value?: any,
-            callback?: (data?: {[key: string]: any}) => void
-        ): void | Promise<{[key: string]: any}> {
+        ): Promise<void> {
             var v: Record<string,any> = {}
-            if(data instanceof storage.session.options){
+            if(data instanceof nt.storage.session.options){
                 v = data.get()
-                return f(v, value)
+                return Browser.storage.session.set(v)
             }else if(data instanceof Object){
-                v = storage.session.options.check(data)
-                return f(v, value)
+                v = nt.storage.session.options.check(data)
+                return Browser.storage.session.set(v)
             }else if(typeof data === "string"){
-                const c = storage.session.options.check(data, value)
+                const c = nt.storage.session.options.check(data, value)
                 if(c!==undefined){
                     v[data] = c
                 }
-                return f(v, callback)
+                return Browser.storage.session.set(v)
             }else{
-                return f(v, value)
-            }
-
-            function f(v: Record<string,any>, c?: (data?: {[key: string]: any})=>void): void | Promise<{[key: string]: any}> {
-                if(c===undefined){
-                    return chrome.storage.session.set(v).then(() => {return v})
-                }else{
-                    chrome.storage.session.set(v, ()=>{c(v)})
-                }
-                return
+                return Browser.storage.session.set(v)
             }
         }
     }
