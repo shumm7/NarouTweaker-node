@@ -1,7 +1,7 @@
 import { getDateString, getDatetimeString } from "../../utils/time"
 import { saveJson } from "../../utils/misc"
 import { getValueFromTables, GraphDataset, makeGraph } from "./utils"
-import { nt } from "../../utils/option"
+import { nt } from "../../utils/narou-tweaker"
 import { GraphType } from "../../utils/data"
 import { getNcodeFromURL } from "../../utils/ncode"
 

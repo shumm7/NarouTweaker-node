@@ -2,7 +2,7 @@ import { Ncode } from "../../utils/ncode"
 import { convertRubyTags, convertSasieTags, countLines, countManuscriptPaper, countTime, escapeHtml, countCharacters } from "../../utils/text"
 import { minuteStringJapanese, getDateString } from "../../utils/time"
 import { fetchNovelApi } from "../../utils/api"
-import { nt } from "../../utils/option"
+import { nt } from "../../utils/narou-tweaker"
 import { setDisplayEvent } from "./_editorCss"
 import { _toolCovertKakuyomuRubyDot, _toolExportAll, _toolExportEach, _toolIndent, _toolRuby, _toolRubyDot, _toolSasie, _toolSearch } from "./_editorTools"
 

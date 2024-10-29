@@ -1,11 +1,11 @@
 import { minifyCss } from "../utils/text"
-import { nt } from "../utils/option"
+import { nt } from "../utils/narou-tweaker"
 
 export function yomouCssListener(){
     makeRankCSS()
     makeRankTopCSS()
 
-    chrome.storage.local.onChanged.addListener(function(changes){
+    nt.storage.local.changed(function(changes){
         if(
             changes.yomouRank_ShowNovelInfoLink!=undefined ||
             changes.yomouRank_ShowKasasagi!=undefined ||

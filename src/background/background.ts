@@ -1,4 +1,4 @@
-import { nt } from "../utils/option"
+import { nt } from "../utils/narou-tweaker"
 import { fixOption } from "../options/_utils/optionUI_utils"
 import { messageListener } from "./_process"
 import { skinListener } from "./_skin"
@@ -49,7 +49,7 @@ nt.storage.sync.get("extLaunchCount").then((data)=>{
 })
 
 /* CSS */
-chrome.storage.session.setAccessLevel({accessLevel: "TRUSTED_AND_UNTRUSTED_CONTEXTS"})
+nt.storage.session.setAccessLevel({accessLevel: "TRUSTED_AND_UNTRUSTED_CONTEXTS"})
 skinListener()
 yomouCssListener()
 

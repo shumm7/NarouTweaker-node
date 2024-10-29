@@ -3,7 +3,7 @@ import { escapeHtml, replaceUrl } from "../../utils/text"
 import { novelTop } from "./_novelTop";
 import { getNcodeFromURL } from "../../utils/ncode";
 import { getDatetimeStringWithoutSecond } from "../../utils/time";
-import { nt } from "../../utils/option";
+import { nt } from "../../utils/narou-tweaker";
 import { fetchNovelApi, NovelApi } from "../../utils/api";
 
 import $ from 'jquery';

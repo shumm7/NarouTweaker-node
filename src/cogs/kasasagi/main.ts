@@ -5,7 +5,7 @@ import { _dayUnique } from "./_dayUnique"
 import { _monthPV } from "./_monthPV"
 import { _monthUnique } from "./_monthUnique"
 import { getNcodeFromURL } from "../../utils/ncode"
-import { nt } from "../../utils/option"
+import { nt } from "../../utils/narou-tweaker"
 
 import $ from 'jquery';
 

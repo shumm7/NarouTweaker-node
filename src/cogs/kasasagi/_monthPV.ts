@@ -3,7 +3,7 @@ import { saveJson } from "../../utils/misc"
 import { makeGraph, getValueFromTables, GraphDataset } from "./utils"
 import { getNcodeFromURL } from "../../utils/ncode"
 import { GraphType } from "../../utils/data"
-import { nt } from "../../utils/option"
+import { nt } from "../../utils/narou-tweaker"
 
 import $ from 'jquery';
 import { Chart } from "chart.js/auto";

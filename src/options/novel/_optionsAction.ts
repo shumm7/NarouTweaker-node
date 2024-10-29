@@ -1,4 +1,4 @@
-import { nt } from "../../utils/option"
+import { nt } from "../../utils/narou-tweaker"
 import { ReplacePattern } from "../../utils/data"
 import { CustomIconID, CustomIconIDs, getExcludeIcons, novelIconList } from "../../utils/header"
 import { addFontEditButtonEvent, restoreFont } from "./_optionsAction_Font"

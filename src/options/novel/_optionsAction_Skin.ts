@@ -1,7 +1,7 @@
 import { localFont, localFontFamilyV1 } from "../../utils/v1_font";
 import { defaultValue, getCSSRule, saveJson } from "../../utils/misc";
 import { generateNoDuplicateSkinName, localSkinsV1, SkinsV1, SkinV1 } from "../../utils/v1_skin";
-import { nt } from "../../utils/option";
+import { nt } from "../../utils/narou-tweaker";
 import { AvailableSkin, getSkin, getSkinFromIndex } from "../../utils/v2_skin";
 import { escapeHtml } from "../../utils/text";
 

@@ -1,7 +1,7 @@
 import { getPageType } from "../../utils/narou";
 import { check } from "../../utils/misc"
 import { escapeHtml } from "../../utils/text";
-import { nt } from "../../utils/option";
+import { nt } from "../../utils/narou-tweaker";
 import { ReplacePatterns, CorrectionNumberMode } from "../../utils/data";
 
 import $ from 'jquery';

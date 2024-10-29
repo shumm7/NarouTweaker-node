@@ -2,7 +2,7 @@ import { OptionUI_ItemID } from "options/_utils/optionUI_type";
 import { getOptionFromID } from "../_utils/optionUI_utils";
 import { getOptionElement, optionHide, syntaxHighlight } from "../_utils/utils";
 import { restoreOptions, setup } from "../general";
-import { nt } from "../../utils/option";
+import { nt } from "../../utils/narou-tweaker";
 
 import $ from 'jquery';
 

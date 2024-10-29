@@ -1,4 +1,4 @@
-import { nt } from "../../utils/option"
+import { nt } from "../../utils/narou-tweaker"
 import { Ncode } from "../../utils/ncode"
 import { popImpressionHiddenList, popImpressionReadList, pushImpressionHiddenList, pushImpressionReadList } from "../../utils/data"
 

@@ -4,7 +4,7 @@ import { saveJson } from "../../utils/misc"
 import { getNcodeFromURL } from "../../utils/ncode"
 import { makeGraph, getValueFromTables, GraphDataset } from "./utils"
 import { GraphType } from "../../utils/data"
-import { nt } from "../../utils/option"
+import { nt } from "../../utils/narou-tweaker"
 
 import $ from 'jquery';
 

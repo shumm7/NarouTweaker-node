@@ -1,7 +1,7 @@
 import { setup } from "../general";
 import { escapeHtml } from "../../utils/text";
 import { getExtensionVersion } from "../../utils/misc";
-import { nt } from "../../utils/option";
+import { nt } from "../../utils/narou-tweaker";
 
 import $ from 'jquery';
 

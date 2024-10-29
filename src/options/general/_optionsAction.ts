@@ -2,11 +2,12 @@ import { fixOption, getOptionPageFromID } from "../_utils/optionUI_utils";
 import { saveJson } from "../../utils/misc";
 import { OptionUI_Pages } from "../_utils/optionUI_items";
 import { escapeHtml } from "../../utils/text";
-import { nt } from "../../utils/option";
+import { nt } from "../../utils/narou-tweaker";
 import { getDatetimeString, getDatetimeStringForFilename } from "../../utils/time";
 import { OptionUI_Page } from "options/_utils/optionUI_type";
 
 import $ from 'jquery';
+import Browser from "webextension-polyfill";
 
 /* 基本設定 */
 /* デフォルトページ（ポップアップ時） */
@@ -46,9 +47,10 @@ export function general_popupDefaultPage_Dropdown(){
         restoreDropdown(data.extPopupDefaultPage)
     })
 
-    chrome.storage.local.onChanged.addListener(function(changes){
-        if(changes.extPopupDefaultPage){
-            restoreDropdown(changes.extPopupDefaultPage.newValue)
+    nt.storage.local.changed("extPopupDefaultPage", function(changes){
+        const page = changes.extPopupDefaultPage.newValue
+        if(typeof page === "string"){
+            restoreDropdown(page)
         }
     })
 }
@@ -214,7 +216,7 @@ export function general_exportOptionText() {
 
     /* local */
     function changeLocal(){
-        chrome.storage.local.get(null, (data)=>{
+        Browser.storage.local.get(null).then((data)=>{
             try{
                 if(whitelist){
                     const input = $("#exportLocalOptionText_Input_Whitelist")
@@ -256,7 +258,7 @@ export function general_exportOptionText() {
 
     /* sync */
     function changeSync(){
-        chrome.storage.sync.get(null, (data)=>{
+        Browser.storage.sync.get(null).then((data)=>{
             try{
                 if(whitelist){
                     var input = $("#exportSyncOptionText_Input_Whitelist")
@@ -297,7 +299,7 @@ export function general_exportOptionText() {
 
     /* session */
     function changeSession(){
-        chrome.storage.session.get(null, (data)=>{
+        Browser.storage.session.get(null).then((data)=>{
             try{
                 if(whitelist){
                     var input = $("#exportSessionOptionText_Input_Whitelist")
@@ -337,7 +339,7 @@ export function general_exportOptionText() {
     
     try{
         changeLocal()
-        chrome.storage.local.onChanged.addListener(function(changes){
+        nt.storage.local.changed(function(changes){
             changeLocal()
         })
         $("#exportLocalOptionText_Input_Blacklist, #exportLocalOptionText_Input_Whitelist").on("input", function(e){
@@ -345,7 +347,7 @@ export function general_exportOptionText() {
         })
 
         changeSync()
-        chrome.storage.sync.onChanged.addListener(function(changes){
+        nt.storage.sync.changed(function(changes){
             changeSync()
         })
         $("#exportSyncOptionText_Input_Blacklist, #exportSyncOptionText_Input_Black_Whitelist").on("input", function(e){
@@ -353,7 +355,7 @@ export function general_exportOptionText() {
         })
 
         changeSession()
-        chrome.storage.session.onChanged.addListener(function(changes){
+        nt.storage.session.changed(function(changes){
             changeSession()
         })
         $("#exportSessionOptionText_Input_Blacklist, #exportSessionOptionText_Input_Whitelist").on("input", function(e){
@@ -414,17 +416,17 @@ export function general_monitorOptionChanged(){
         $("#option-monitor--clear").on("click", function(e){
             $("#option-monitor--output").val("")
         })
-        chrome.storage.local.onChanged.addListener(function(changes){
+        nt.storage.local.changed(function(changes){
             if($("#option-monitor--option-local").prop('checked')){
                 addText("local", changes)
             }
         })
-        chrome.storage.sync.onChanged.addListener(function(changes){
+        nt.storage.sync.changed(function(changes){
             if($("#option-monitor--option-sync").prop('checked')){
                 addText("sync", changes)
             }
         })
-        chrome.storage.session.onChanged.addListener(function(changes){
+        nt.storage.session.changed(function(changes){
             if($("#option-monitor--option-session").prop('checked')){
                 addText("session", changes)
             }
@@ -454,11 +456,11 @@ export function general_insertOptionData(){
                     if(value.length==0){
                         if(window.confirm('値が指定されていません。指定されたキーの設定データを削除しますが、よろしいですか？')){
                             if(storage=="local"){
-                                chrome.storage.local.remove(key)
+                                nt.storage.local.remove(key)
                             }else if(storage=="sync"){
-                                chrome.storage.sync.remove(key)
+                                nt.storage.sync.remove(key)
                             }else if(storage=="session"){
-                                chrome.storage.session.remove(key)
+                                nt.storage.session.remove(key)
                             }else{
                                 $("#option-insert--error").text(`不正なストレージが指定されました: ${key}`)
                                 return false

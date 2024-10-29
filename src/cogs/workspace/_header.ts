@@ -1,4 +1,4 @@
-import { nt } from "../../utils/option"
+import { nt } from "../../utils/narou-tweaker"
 import { isR18 } from "../../utils/narou"
 
 import $ from "jquery"

@@ -1,4 +1,4 @@
-import { nt } from "../../utils/option";
+import { nt } from "../../utils/narou-tweaker";
 import { check } from "../../utils/misc"
 import { FontFamiliesV1, FontFamilyV1, generateNoDuplicateFontFamilyName, localFont, localFontFamilyV1 } from "../../utils/v1_font";
 

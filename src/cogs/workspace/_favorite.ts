@@ -1,4 +1,4 @@
-import { nt } from "../../utils/option"
+import { nt } from "../../utils/narou-tweaker"
 import $ from "jquery"
 
 const path = location.pathname

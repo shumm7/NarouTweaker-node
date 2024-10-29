@@ -1,5 +1,4 @@
-import { ArrayExt } from "./array"
-import { nt } from "./option"
+import { nt } from "./narou-tweaker"
 import { checkSkinVersion } from "./skin"
 import { minifyCss } from "./text"
 import { CSS_String } from "./type"
@@ -593,7 +592,7 @@ export function getSelectedSkinIndex(local: nt.storage.local.options): number|un
 export function addSkin(skin: SkinV2, src: "local"): void{
     if(src==="local"){
         nt.storage.local.get(null).then((local)=>{
-            const key: number = ArrayExt.putIn(local.novelSkins, skin)
+            const key: number = nt.lib.array.putIn(local.novelSkins, skin)
             local.novelSkinsAvailable.push({src: src, key: key})
             nt.storage.local.set(local.get([`novelSkin_${key}`, "novelSkinsAvailable"]))
         })
@@ -618,7 +617,7 @@ export function removeSkin(i: number){
 
             if(list.src==="local"){
                 local.novelSkinsAvailable = local.novelSkinsAvailable.filter((v)=>{return v?.src!==list.src || v?.key!==list.key})
-                chrome.storage.local.remove(`novelSkin_${list.key}`, ()=>{
+                nt.storage.local.remove(`novelSkin_${list.key}`).then(()=>{
                     nt.storage.local.set(local.get(["novelSkinsAvailable", "novelSkinSelected"]))
                 })
             }
@@ -632,7 +631,7 @@ export function activateSkin(src: "internal"|"local", key: number, selectThis?: 
         const selectedIndex = getSelectedSkinIndex(local)
         if(src === "internal"){
             if(localSkinsV2.at(key)!==undefined){
-                const p = ArrayExt.putIn(local.novelSkinsAvailable, {src: src, key: key})
+                const p = nt.lib.array.putIn(local.novelSkinsAvailable, {src: src, key: key})
                 if(selectThis){
                     local.novelSkinSelected = {src: src, key: key}
                 }else if(selectedIndex !==undefined && p <= selectedIndex && selectedIndex + 1 < local.novelSkinsAvailable.length){
@@ -642,7 +641,7 @@ export function activateSkin(src: "internal"|"local", key: number, selectThis?: 
             }
         }else if(src === "local"){
             if(local.novelSkins.at(key)!==undefined){
-                const p = ArrayExt.putIn(local.novelSkinsAvailable, {src: src, key: key})
+                const p = nt.lib.array.putIn(local.novelSkinsAvailable, {src: src, key: key})
                 if(selectThis){
                     local.novelSkinSelected = {src: src, key: key}
                 }else if(selectedIndex !==undefined && p <= selectedIndex && selectedIndex + 1 < local.novelSkinsAvailable.length){
@@ -658,7 +657,7 @@ export function inactivateSkin(i: number){
     nt.storage.local.get(null).then((local)=>{
         const selectedIndex = getSelectedSkinIndex(local)
         if(local.novelSkinsAvailable!==undefined && local.novelSkinsAvailable.length > 1){
-            ArrayExt.removeAt(local.novelSkinsAvailable, i)
+            nt.lib.array.removeAt(local.novelSkinsAvailable, i)
             if(selectedIndex!==undefined){
                 if(selectedIndex-1 >= 0 && selectedIndex-1 < local.novelSkinsAvailable.length){
                     local.novelSkinSelected = local.novelSkinsAvailable[selectedIndex-1]
@@ -686,7 +685,7 @@ export function swapAvailableSkin(from: number, to: number){
             }else if(selectedIndex === to){
                 local.novelSkinSelected = fromData
             }
-            ArrayExt.swap(local.novelSkinsAvailable, from, to)
+            nt.lib.array.swap(local.novelSkinsAvailable, from, to)
             nt.storage.local.set(local.get(["novelSkinsAvailable", "novelSkinSelected"]))
         }
     })

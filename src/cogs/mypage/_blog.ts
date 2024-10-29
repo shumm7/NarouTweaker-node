@@ -1,4 +1,4 @@
-import { nt } from "../../utils/option";
+import { nt } from "../../utils/narou-tweaker";
 import { replaceUrl } from "../../utils/text";
 
 import $ from 'jquery';

@@ -1,4 +1,4 @@
-import { nt } from "../../utils/option";
+import { nt } from "../../utils/narou-tweaker";
 import { makeSkinCSS, SkinV1 } from "../../utils/v1_skin";
 import $ from 'jquery';
 

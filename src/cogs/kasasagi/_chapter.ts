@@ -3,7 +3,7 @@ import { getDatetimeString } from "../../utils/time";
 import { saveJson } from "../../utils/misc";
 import { addExclamationIconBalloon } from "../../utils/ui";
 import { getNcodeFromURL } from "../../utils/ncode";
-import { nt } from "../../utils/option";
+import { nt } from "../../utils/narou-tweaker";
 import { GraphType } from "../../utils/data";
 
 import $ from 'jquery';

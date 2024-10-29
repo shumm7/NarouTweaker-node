@@ -1,7 +1,7 @@
 import { localSkinsV1 } from "../../utils/v1_skin"
 import { localFontFamilyV1, localFont } from "../../utils/v1_font"
 import { check, defaultValue } from "../../utils/misc"
-import { nt } from "../../utils/option"
+import { nt } from "../../utils/narou-tweaker"
 
 import $ from "jquery"
 

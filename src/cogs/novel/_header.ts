@@ -1,6 +1,6 @@
 import { getNcodeFromURL } from "../../utils/ncode";
 import { CustomIconID, CustomIconIDs, getExcludeIcons } from "../../utils/header"
-import { nt } from "../../utils/option";
+import { nt } from "../../utils/narou-tweaker";
 import { getEpisode, getPageType, isR18 } from "../../utils/narou";
 import { fetchNovelApi } from "../../utils/api";
 

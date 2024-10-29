@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import { nt } from '../../utils/option';
+import { nt } from '../../utils/narou-tweaker';
 
 $("body").addClass("narou-tweaker--custom-skin")
 
@@ -55,34 +55,36 @@ nt.storage.local.get("novelCustomCSS").then((data)=>{
     }
 })
 
-chrome.storage.session.onChanged.addListener(function(changes){
-    if(changes.novelSkinCustomCSS!=undefined){
-        if($("#narou-tweaker-style--skin-user").length){
-            $("#narou-tweaker-style--skin-user").text(changes.novelSkinCustomCSS.newValue)
-        }
-    }
-    if(changes.novelFontCustomCSS!=undefined){
-        if($("#narou-tweaker-style--font-user").length){
-            $("#narou-tweaker-style--font-user").text(changes.novelFontCustomCSS.newValue)
-        }
+nt.storage.session.changed(function(changes){
+    var css = changes.novelSkinCustomCSS.newValue
+    var elm = $("#narou-tweaker-style--skin-user")
+    if(typeof css === "string" && elm.length){
+        elm.text(css)
     }
 
-    if(changes.novelAppliedSkinCSS!=undefined){
-        if($("#narou-tweaker-style--skin").length){
-            $("#narou-tweaker-style--skin").text(changes.novelAppliedSkinCSS.newValue)
-        }
+    var css = changes.novelFontCustomCSS.newValue
+    var elm = $("#narou-tweaker-style--font-user")
+    if(typeof css === "string" && elm.length){
+        elm.text(css)
     }
-    if(changes.novelAppliedFontCSS!=undefined){
-        if($("#narou-tweaker-style--font").length){
-            $("#narou-tweaker-style--font").text(changes.novelAppliedFontCSS.newValue)
-        }
+
+    var css = changes.novelAppliedSkinCSS.newValue
+    var elm = $("#narou-tweaker-style--skin")
+    if(typeof css === "string" && elm.length){
+        elm.text(css)
+    }
+
+    var css = changes.novelAppliedFontCSS.newValue
+    var elm = $("#narou-tweaker-style--font")
+    if(typeof css === "string" && elm.length){
+        elm.text(css)
     }
 })
 
-chrome.storage.local.onChanged.addListener(function(changes){
-    if(changes.novelCustomCSS!=undefined){
-        if($("#narou-tweaker-style--user-css").length){
-            $("#narou-tweaker-style--user-css").text(changes.novelCustomCSS.newValue)
-        }
+nt.storage.local.changed("novelCustomCSS", function(changes){
+    const css = changes.novelCustomCSS.newValue
+    var elm = $("#narou-tweaker-style--user-css")
+    if(typeof css === "string" && elm.length){
+        elm.text(css)
     }
 })

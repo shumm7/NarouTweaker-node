@@ -1,4 +1,4 @@
-import { nt } from "../../utils/option";
+import { nt } from "../../utils/narou-tweaker";
 import { checkRankPageDetail } from "../yomou/utils"
 import $ from 'jquery';
 
@@ -27,18 +27,18 @@ if(pageDetail?.site=="yomou"){
             }
         })
 
-        chrome.storage.session.onChanged.addListener(function(changes){
-            if(changes.yomouRankTop_AppliedCSS!=undefined){
-                if($("#narou-tweaker-style--rank-css").length){
-                    $("#narou-tweaker-style--rank-css").text(changes.yomouRankTop_AppliedCSS.newValue)
-                }
+        nt.storage.session.changed("yomouRankTop_AppliedCSS", function(changes){
+            const css = changes.yomouRankTop_AppliedCSS.newValue
+            var elm = $("#narou-tweaker-style--rank-css")
+            if(typeof css === "string" && elm.length){
+                $("#narou-tweaker-style--rank-css").text(css)
             }
         })
-        chrome.storage.local.onChanged.addListener(function(changes){
-            if(changes.yomouRankTop_CustomCSS!=undefined){
-                if($("#narou-tweaker-style--rank-user-css").length){
-                    $("#narou-tweaker-style--rank-user-css").text(changes.yomouRankTop_CustomCSS.newValue)
-                }
+        nt.storage.local.changed("yomouRankTop_CustomCSS", function(changes){
+            const css = changes.yomouRankTop_CustomCSS.newValue
+            var elm = $("#narou-tweaker-style--rank-user-css")
+            if(typeof css === "string" && elm.length){
+                elm.text(css)
             }
         })
     }

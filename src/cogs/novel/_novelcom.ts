@@ -1,6 +1,6 @@
 import { Ncode } from "../../utils/ncode"
 import { pushImpressionHiddenList, pushImpressionReadList } from "../../utils/data"
-import { nt } from "../../utils/option"
+import { nt } from "../../utils/narou-tweaker"
 
 import $ from 'jquery';
 

@@ -1,6 +1,6 @@
 import { getNcodeFromURL } from "../../utils/ncode"
 import { isR18 } from "../../utils/narou"
-import { nt } from "../../utils/option"
+import { nt } from "../../utils/narou-tweaker"
 import { fetchNovelApi } from "../../utils/api"
 
 import $ from 'jquery';

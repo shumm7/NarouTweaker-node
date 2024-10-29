@@ -1,5 +1,5 @@
 import { CustomIconID, CustomIconIDs, getExcludeIcons, workspaceIconList, workspaceMenuIconList } from "../../utils/header"
-import { nt } from "../../utils/option";
+import { nt } from "../../utils/narou-tweaker";
 
 import Sortable from 'sortablejs'
 import $ from 'jquery';
@@ -201,9 +201,7 @@ export function workspace_customHeaderMenuSortable(){
     }
 
     restoreSortable()
-    chrome.storage.local.onChanged.addListener(function(changes){
-        if(changes.workspaceCustomMenu_Left || changes.workspaceCustomMenu_Middle || changes.workspaceCustomMenu_Right){
-            restoreSortable()
-        }
+    nt.storage.local.changed(["workspaceCustomMenu_Left", "workspaceCustomMenu_Middle", "workspaceCustomMenu_Right"], function(changes){
+        restoreSortable()
     })
 }

@@ -1,5 +1,5 @@
 import $ from "jquery";
-import { nt } from "../../utils/option";
+import { nt } from "../../utils/narou-tweaker";
 
 nt.storage.local.get(null).then((data)=>{
     /* Skin Custom CSS */

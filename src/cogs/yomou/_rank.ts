@@ -3,7 +3,7 @@ import { checkRankPageDetail } from "./utils";
 import { escapeHtml } from "../../utils/text";
 import { getDatetimeFromString, getDatetimeStringWithoutSecond } from "../../utils/time";
 import { getGenreNumber } from "../../utils/narou";
-import { nt } from "../../utils/option";
+import { nt } from "../../utils/narou-tweaker";
 import { fetchNovelApi } from "../../utils/api";
 
 import $ from 'jquery';

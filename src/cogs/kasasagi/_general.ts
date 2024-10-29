@@ -4,7 +4,7 @@ import { addQuestionIconBalloon, addExclamationIconBalloon } from "../../utils/u
 import { saveJson } from "../../utils/misc";
 import { minuteStringJapanese, getDateString, getYesterday, getDatetimeString, getDateStringJapanese, getDatetimeFromString, getDatetimeStringWithoutMilisecond } from "../../utils/time";
 import { getNcodeFromURL, Ncode } from "../../utils/ncode";
-import { nt } from "../../utils/option";
+import { nt } from "../../utils/narou-tweaker";
 import { fetchNovelApi, fetchRankinApi, NovelApi, RankinApi } from "../../utils/api";
 import { GraphType } from "../../utils/data";
 

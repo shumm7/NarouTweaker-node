@@ -1,13 +1,13 @@
 import { FontFamiliesV1, FontFamilyV1, localFont, localFontFamilyV1 } from "../utils/v1_font"
 import { localSkinsV1, makeSkinCSS, SkinsV1, SkinV1 } from "../utils/v1_skin"
 import { CSS_String } from "../utils/type"
-import { nt } from "../utils/option"
+import { nt } from "../utils/narou-tweaker"
 import { minifyCss } from "../utils/text"
 
 export function skinListener(){
     makeSkin()
 
-    chrome.storage.local.onChanged.addListener(function(changes){
+    nt.storage.local.changed(function(changes){
         if(changes.skins!=undefined ||
             changes.selectedSkin!=undefined ||
             changes.fontSelectedFontFamily!=undefined ||
@@ -34,7 +34,7 @@ export function skinListener(){
 }
 
 function makeSkin(){
-    nt.storage.local.get(null).then((data) => {
+    nt.storage.local.get().then((data) => {
         const skin_idx: number = data.selectedSkin
         const skins: SkinsV1 = localSkinsV1.concat(data.skins)
         const skin: SkinV1 = new SkinV1(skins[skin_idx])

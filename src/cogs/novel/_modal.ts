@@ -3,7 +3,7 @@ import { check, defaultValue } from "../../utils/misc"
 import { escapeHtml } from "../../utils/text";
 import { correction, restoreCorrectionMode } from "./_correction";
 import { generateNoDuplicateSkinName, localSkinsV1, SkinsV1, SkinV1 } from "../../utils/v1_skin";
-import { nt } from "../../utils/option";
+import { nt } from "../../utils/narou-tweaker";
 import { ReplacePattern } from "../../utils/data";
 import { getNcodeFromURL } from "../../utils/ncode";
 import { getDatetimeString } from "../../utils/time";

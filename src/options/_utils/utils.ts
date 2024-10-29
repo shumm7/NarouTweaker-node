@@ -1,4 +1,4 @@
-import { nt } from "../../utils/option"
+import { nt } from "../../utils/narou-tweaker"
 import { OptionUI_CustomElement } from "./optionUI_custom"
 import { appendFavoriteOption, getOptionCategory, getOptionChildsFromID, getOptionFromID, getOptionPageFromID, moveFavoriteOption, removeFavoriteOption } from "./optionUI_utils"
 import { OptionHideParammeters, OptionUI_Item, OptionUI_ItemID } from "./optionUI_type"

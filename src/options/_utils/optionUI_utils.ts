@@ -1,7 +1,6 @@
 import { OptionUI_Items, OptionUI_Pages } from "./optionUI_items";
-import { nt } from "../../utils/option";
+import { nt } from "../../utils/narou-tweaker";
 import { OptionUI_Category, OptionUI_CategoryID, OptionUI_Item, OptionUI_ItemID, OptionUI_Page, OptionUI_PageID } from "./optionUI_type";
-import { limit } from "../../utils/number";
 
 import $ from 'jquery';
 
@@ -244,7 +243,7 @@ export function moveFavoriteOption(id: OptionUI_ItemID, pos: number){
         /* リストの要素を移動 */
         var current: number = list.indexOf(id)
         if(current >= 0){
-            var target = limit(current + pos, 0, list.length)
+            var target = nt.lib.math.limit(current + pos, 0, list.length)
             if(target === current){
                 return false
             }
