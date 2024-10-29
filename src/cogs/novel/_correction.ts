@@ -2,7 +2,6 @@ import { getPageType } from "../../utils/narou";
 import { check } from "../../utils/misc"
 import { escapeHtml } from "../../utils/text";
 import { nt } from "../../utils/narou-tweaker";
-import { ReplacePatterns, CorrectionNumberMode } from "../../utils/data";
 
 import $ from 'jquery';
 
@@ -501,13 +500,13 @@ function correctionWaveDash(){
 
 // 数字表記
 interface CorrectionNumberOption{
-    short: CorrectionNumberMode
-    long: CorrectionNumberMode
-    symbol: CorrectionNumberMode
+    short: nt.storage.local.CorrectionNumberMode
+    long: nt.storage.local.CorrectionNumberMode
+    symbol: nt.storage.local.CorrectionNumberMode
 }
 
 function correctionNumber(option: CorrectionNumberOption){
-    function convertNumber(s: string, numConvMode: CorrectionNumberMode, symbolConvMode: CorrectionNumberMode){
+    function convertNumber(s: string, numConvMode: nt.storage.local.CorrectionNumberMode, symbolConvMode: nt.storage.local.CorrectionNumberMode){
         const kanjiNum = "〇一二三四五六七八九"
         const fullNum = "０１２３４５６７８９"
         const halfNum = "0123456789"
@@ -621,7 +620,7 @@ function verticalLayout_SidewayExclamation(min: number){
 
 
 /* Replace Text from Patterns */
-function correctionReplaceFromPatterns(patterns: ReplacePatterns){
+function correctionReplaceFromPatterns(patterns: nt.storage.local.ReplacePatterns){
     $.each(patterns, function(_, pattern){
         $(".p-novel__body p.correction-replaced").each(function(){
             if(pattern.active){

@@ -1,6 +1,6 @@
-import { GraphType } from "../../utils/data";
 import { parseIntWithComma } from "../../utils/text";
 import { Chart } from "chart.js/auto";
+import { nt } from "utils/narou-tweaker";
 
 import $ from 'jquery';
 
@@ -112,7 +112,7 @@ export function getValueFromTables(): AnalyticsDataset{
     }
 }
 
-export function makeGraph(_id: string, _graph_type: GraphType, _graph_name: string, datasets: Array<GraphDataset>, labels: Array<string>, unit: string = ""){
+export function makeGraph(_id: string, _graph_type: nt.storage.local.GraphType, _graph_name: string, datasets: Array<GraphDataset>, labels: Array<string>, unit: string = ""){
     return new Chart(document.getElementById(_id) as HTMLCanvasElement, {
         type: _graph_type,
         data: {

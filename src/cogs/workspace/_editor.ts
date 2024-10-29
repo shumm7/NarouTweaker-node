@@ -1,6 +1,5 @@
 import { Ncode } from "../../utils/ncode"
 import { convertRubyTags, convertSasieTags, countLines, countManuscriptPaper, countTime, escapeHtml, countCharacters } from "../../utils/text"
-import { minuteStringJapanese, getDateString } from "../../utils/time"
 import { fetchNovelApi } from "../../utils/api"
 import { nt } from "../../utils/narou-tweaker"
 import { setDisplayEvent } from "./_editorCss"
@@ -755,7 +754,7 @@ function textCount(){
                 }else if(mode=="3"){ //読了時間（分/数値のみ）
                     number = countTime(text)
                 }else if(mode=="4"){ //読了時間（hh時間mm分）
-                    number = minuteStringJapanese(countTime(text))
+                    number = nt.time.minuteStringJapanese(countTime(text))
                 }else if(mode=="5"){ //原稿用紙換算
                     number = countManuscriptPaper(text)
                 }else{ //空白・改行含む
@@ -973,7 +972,7 @@ function reserveDate(){
             if(value.clear!==undefined){
                 $("input[name='reserve_date']").val("")
             }else if(value.select!==undefined){
-                $("input[name='reserve_date']").val(getDateString(new Date(value.select), "/"))
+                $("input[name='reserve_date']").val(nt.time.getDateString(new Date(value.select), "/"))
             }
             setDateParam()
         }

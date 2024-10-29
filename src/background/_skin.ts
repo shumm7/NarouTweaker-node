@@ -1,6 +1,5 @@
 import { FontFamiliesV1, FontFamilyV1, localFont, localFontFamilyV1 } from "../utils/v1_font"
 import { localSkinsV1, makeSkinCSS, SkinsV1, SkinV1 } from "../utils/v1_skin"
-import { CSS_String } from "../utils/type"
 import { nt } from "../utils/narou-tweaker"
 import { minifyCss } from "../utils/text"
 
@@ -45,7 +44,7 @@ function makeSkin(){
         const selectedFontFamily: number = data.fontSelectedFontFamily
         var fontFamilyList: FontFamiliesV1 = localFontFamilyV1.concat(data.fontFontFamilyList)
         var fontFamily_Current: string
-        var fontCss: CSS_String
+        var fontCss: nt.text.CSS_String
 
         if(fontFamilyList.length<=selectedFontFamily || selectedFontFamily<0){
             fontFamily_Current = localFontFamilyV1[0].font
@@ -183,7 +182,7 @@ function makeEditorSkin(){
         const selectedFontFamily: number = data.workspaceEditorSelectedFontFamily ?? 0
         const fontFamilyList: FontFamiliesV1 = localFontFamilyV1.concat(data.fontFontFamilyList ?? [])
         var fontFamily_Current: string
-        var fontCss: CSS_String
+        var fontCss: nt.text.CSS_String
 
         if(fontFamilyList.length<=selectedFontFamily || selectedFontFamily<0){
             fontFamily_Current = localFontFamilyV1[0].font

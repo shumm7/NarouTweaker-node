@@ -4,9 +4,7 @@ import { escapeHtml } from "../../utils/text";
 import { correction, restoreCorrectionMode } from "./_correction";
 import { generateNoDuplicateSkinName, localSkinsV1, SkinsV1, SkinV1 } from "../../utils/v1_skin";
 import { nt } from "../../utils/narou-tweaker";
-import { ReplacePattern } from "../../utils/data";
 import { getNcodeFromURL } from "../../utils/ncode";
-import { getDatetimeString } from "../../utils/time";
 
 import $ from 'jquery';
 
@@ -669,7 +667,7 @@ function setOptionContentsCorrection(id: number){
     /* Replacement */
     $("#novel-option--correction-replace--pattern-box-addition").on("click", function(){
         nt.storage.local.get(["correctionReplacePatterns"]).then(function(data){
-            data.correctionReplacePatterns.push(new ReplacePattern())
+            data.correctionReplacePatterns.push(new nt.storage.local.ReplacePattern())
             nt.storage.local.set({correctionReplacePatterns: data.correctionReplacePatterns})
         })
     })
@@ -765,8 +763,8 @@ function setOptionContentsAuthorSkin(id: number){
                         var l = JSON.parse(text)
                         const ncode = getNcodeFromURL()?.ncode()
                         if(ncode){
-                            l.name = `インポートされた作者スキン-${ncode.toUpperCase()}-${getDatetimeString()}`
-                            l.description = `${getDatetimeString()} に ${ncode.toUpperCase()} でインポートされた作者スキン`
+                            l.name = `インポートされた作者スキン-${ncode.toUpperCase()}-${nt.time.getDatetimeString()}`
+                            l.description = `${nt.time.getDatetimeString()} に ${ncode.toUpperCase()} でインポートされた作者スキン`
                             var skin = new SkinV1(l)
         
                             // Import Skin

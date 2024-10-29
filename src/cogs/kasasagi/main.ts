@@ -15,7 +15,7 @@ import "w3-css/w3.css";
 import "../../common.css";
 import "./local.css";
 
-nt.storage.local.get(null,).then((option) => {
+nt.storage.local.get(null).then((option) => {
     var path = location.pathname;
     const ncode = getNcodeFromURL();
     if(ncode==null){return}

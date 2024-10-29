@@ -243,7 +243,7 @@ export function moveFavoriteOption(id: OptionUI_ItemID, pos: number){
         /* リストの要素を移動 */
         var current: number = list.indexOf(id)
         if(current >= 0){
-            var target = nt.lib.math.limit(current + pos, 0, list.length)
+            var target = nt.math.limit(current + pos, 0, list.length)
             if(target === current){
                 return false
             }

@@ -1,7 +1,6 @@
 import { nt } from "./narou-tweaker"
 import { checkSkinVersion } from "./skin"
 import { minifyCss } from "./text"
-import { CSS_String } from "./type"
 import { SkinV1 } from "./v1_skin"
 
 export type SkinV2Src = "internal"|"local"|"sync"
@@ -26,10 +25,10 @@ export class SkinV2{
     description: string = ""
     preview: SkinV2Preview = new SkinV2Preview()
     style: Array<SkinV2Style> = []
-    css: CSS_String = ""
+    css: nt.text.CSS_String = ""
 
     constructor(data: SkinV2)
-    constructor(data: {name: string, description: string, preview: SkinV2Preview, style: Array<SkinV2Style>, css: CSS_String})
+    constructor(data: {name: string, description: string, preview: SkinV2Preview, style: Array<SkinV2Style>, css: nt.text.CSS_String})
     constructor(data: Record<string,any>);
     constructor(data: string);
     constructor(data?: any) {
@@ -45,7 +44,7 @@ export class SkinV2{
         }
     }
 
-    set(key: SkinV2|{name: string, description: string, preview: SkinV2Preview, style: Array<SkinV2Style>, css: CSS_String}): void;
+    set(key: SkinV2|{name: string, description: string, preview: SkinV2Preview, style: Array<SkinV2Style>, css: nt.text.CSS_String}): void;
     set(key: SkinV1|Record<string,any>): void;
     set(key: string, value: any): void;
     set(key?: any, value?: any): void{
@@ -592,7 +591,7 @@ export function getSelectedSkinIndex(local: nt.storage.local.options): number|un
 export function addSkin(skin: SkinV2, src: "local"): void{
     if(src==="local"){
         nt.storage.local.get(null).then((local)=>{
-            const key: number = nt.lib.array.putIn(local.novelSkins, skin)
+            const key: number = nt.array.putIn(local.novelSkins, skin)
             local.novelSkinsAvailable.push({src: src, key: key})
             nt.storage.local.set(local.get([`novelSkin_${key}`, "novelSkinsAvailable"]))
         })
@@ -631,7 +630,7 @@ export function activateSkin(src: "internal"|"local", key: number, selectThis?: 
         const selectedIndex = getSelectedSkinIndex(local)
         if(src === "internal"){
             if(localSkinsV2.at(key)!==undefined){
-                const p = nt.lib.array.putIn(local.novelSkinsAvailable, {src: src, key: key})
+                const p = nt.array.putIn(local.novelSkinsAvailable, {src: src, key: key})
                 if(selectThis){
                     local.novelSkinSelected = {src: src, key: key}
                 }else if(selectedIndex !==undefined && p <= selectedIndex && selectedIndex + 1 < local.novelSkinsAvailable.length){
@@ -641,7 +640,7 @@ export function activateSkin(src: "internal"|"local", key: number, selectThis?: 
             }
         }else if(src === "local"){
             if(local.novelSkins.at(key)!==undefined){
-                const p = nt.lib.array.putIn(local.novelSkinsAvailable, {src: src, key: key})
+                const p = nt.array.putIn(local.novelSkinsAvailable, {src: src, key: key})
                 if(selectThis){
                     local.novelSkinSelected = {src: src, key: key}
                 }else if(selectedIndex !==undefined && p <= selectedIndex && selectedIndex + 1 < local.novelSkinsAvailable.length){
@@ -657,7 +656,7 @@ export function inactivateSkin(i: number){
     nt.storage.local.get(null).then((local)=>{
         const selectedIndex = getSelectedSkinIndex(local)
         if(local.novelSkinsAvailable!==undefined && local.novelSkinsAvailable.length > 1){
-            nt.lib.array.removeAt(local.novelSkinsAvailable, i)
+            nt.array.removeAt(local.novelSkinsAvailable, i)
             if(selectedIndex!==undefined){
                 if(selectedIndex-1 >= 0 && selectedIndex-1 < local.novelSkinsAvailable.length){
                     local.novelSkinSelected = local.novelSkinsAvailable[selectedIndex-1]
@@ -685,7 +684,7 @@ export function swapAvailableSkin(from: number, to: number){
             }else if(selectedIndex === to){
                 local.novelSkinSelected = fromData
             }
-            nt.lib.array.swap(local.novelSkinsAvailable, from, to)
+            nt.array.swap(local.novelSkinsAvailable, from, to)
             nt.storage.local.set(local.get(["novelSkinsAvailable", "novelSkinSelected"]))
         }
     })

@@ -1,9 +1,7 @@
 import { addExclamationIconBalloon } from "../../utils/ui"
-import { getDateString, getDatetimeString } from "../../utils/time"
 import { saveJson } from "../../utils/misc"
 import { getNcodeFromURL } from "../../utils/ncode"
 import { makeGraph, getValueFromTables, GraphDataset } from "./utils"
-import { GraphType } from "../../utils/data"
 import { nt } from "../../utils/narou-tweaker"
 
 import $ from 'jquery';
@@ -44,7 +42,7 @@ export function _dayUnique(){
     })
 }
 
-function _graph(datasets: Array<GraphDataset>, labels: Array<string>, graphType: GraphType){
+function _graph(datasets: Array<GraphDataset>, labels: Array<string>, graphType: nt.storage.local.GraphType){
     $("form").after('<canvas class="access-chart" id="day_unique" style="width: 100%; margin-bottom:10px;"></canvas>')
     makeGraph("day_unique", graphType, "日別（ユニーク）", datasets, labels, "人")
 }
@@ -59,7 +57,7 @@ function _button(datasets: Array<GraphDataset>, labels: Array<string>){
     if(ncode){
         $(".access_information").before('<div class="ui-button--center"><input class="ui-button" type="submit" value="エクスポート" id="export-day-unique"></div>')
         $("#export-day-unique").on("click", function(){
-            var date = getDateString();
+            var date = nt.time.getDateString();
             var data: Array<GraphDataExports> = []
             
             $.each(labels, function(idx, date){
@@ -83,7 +81,7 @@ function _button(datasets: Array<GraphDataset>, labels: Array<string>){
 
             var raw = {
                 date: date,
-                generatedTime: getDatetimeString(),
+                generatedTime: nt.time.getDatetimeString(),
                 ncode: ncode,
                 data: data
             }

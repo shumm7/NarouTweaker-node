@@ -1,14 +1,14 @@
 import { getOptionFromID, getOptionPageFromID } from "../options/_utils/optionUI_utils"
-import { ReplacePatterns, ImpressionKanrino, CorrectionNumberMode, GraphType } from "./data"
+import { ImpressionKanrino } from "./data"
 import { CustomIconIDs, novelIconList, workspaceIconList, workspaceMenuIconList } from "./header"
 import { getExtensionVersion } from "./misc"
-import { CSS_String } from "./type"
 import { FontFamiliesV1 } from "./v1_font"
 import { SkinsV1 } from "./v1_skin"
 import { OptionID, OptionUI_Item, OptionUI_ItemID } from "../options/_utils/optionUI_type"
 import { Ncode } from "./ncode"
 import { AvailableSkin, maxLocalSkins, SkinV2 } from "./v2_skin"
 import browser from "webextension-polyfill"
+import { nt } from "./narou-tweaker"
 
 export namespace __nt_storage__ {
     export namespace local {
@@ -36,7 +36,7 @@ export namespace __nt_storage__ {
             /* Novel */
             novelCustomStyle: boolean = true
             novelCustomHeaderType: number | string = "2"
-            novelCustomCSS: CSS_String = ""
+            novelCustomCSS: nt.text.CSS_String = ""
             novelLegacyHeaderIcon: boolean = true
             novelVertical: boolean = false
             novelCustomHeaderScrollHidden: boolean = false
@@ -90,7 +90,7 @@ export namespace __nt_storage__ {
             yomouRank_ShowTags: boolean = true
             yomouRank_DevidePointsUnit: boolean = true
             yomouRank_PointsColor: string = "#ed1a3d"
-            yomouRank_CustomCSS: CSS_String = ""
+            yomouRank_CustomCSS: nt.text.CSS_String = ""
 
             yomouRankTop_ShowDescription: boolean = false
             yomouRankTop_ShowPoints: boolean = false
@@ -100,7 +100,7 @@ export namespace __nt_storage__ {
             yomouRankTop_ShowUpdateDate: boolean = false
             yomouRankTop_ShowKasasagi: boolean = false
             yomouRankTop_ShowRaWi: boolean = false
-            yomouRankTop_CustomCSS: CSS_String = ""
+            yomouRankTop_CustomCSS: nt.text.CSS_String = ""
             //yomouRankTop_DailyShowList: ["101", "102", "201", "202", "301", "302", "303", "304", "305", "306", "307", "401", "402", "403", "404", "9901", "9902", "9903", "9999"],
 
             /* Mypage */
@@ -568,6 +568,34 @@ export namespace __nt_storage__ {
                 }
             }
         }
+
+        /**
+         * 数値の変換モード
+         */
+        export type CorrectionNumberMode = "full" | "half" | "default" | "kanji"
+
+        /**
+         * 置換パターンリスト
+         */
+        export type ReplacePatterns = Array<ReplacePattern>
+
+        /**
+         * 置換パターン
+         * @param {string} pattern - 検索パターン
+         * @param {string} replacement - 置換文字列
+         * @param {boolean} regex - 検索パターンが正規表現かどうか
+         * @param {boolean} active - 有効かどうか
+         */
+        export class ReplacePattern {
+            public pattern: string = ""
+            public replacement: string = ""
+            public regex: boolean = false
+            public active: boolean = true
+        }
+        /**
+         * グラフ種類
+         */
+        export type GraphType = "bar" | "line"
 
         
         export function get(

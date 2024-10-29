@@ -1,5 +1,13 @@
 import $ from 'jquery';
 
+export namespace __nt_text__ {
+    /**
+     * String type containing CSS styles.
+     */
+    export type CSS_String = string
+}
+
+
 /**
  * DOM内にあるURLをハイパーリンクに変換する。
  * @param element - HTML文字列

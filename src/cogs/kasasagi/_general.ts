@@ -2,11 +2,9 @@ import { parseIntWithComma, escapeHtml } from "../../utils/text";
 import {getBigGenre, getGenre, getNovelType, getNovelEnd, getNocgenre} from "../../utils/narou"
 import { addQuestionIconBalloon, addExclamationIconBalloon } from "../../utils/ui";
 import { saveJson } from "../../utils/misc";
-import { minuteStringJapanese, getDateString, getYesterday, getDatetimeString, getDateStringJapanese, getDatetimeFromString, getDatetimeStringWithoutMilisecond } from "../../utils/time";
 import { getNcodeFromURL, Ncode } from "../../utils/ncode";
 import { nt } from "../../utils/narou-tweaker";
 import { fetchNovelApi, fetchRankinApi, NovelApi, RankinApi } from "../../utils/api";
-import { GraphType } from "../../utils/data";
 
 import $ from 'jquery';
 import { Chart } from "chart.js/auto";
@@ -25,8 +23,8 @@ export function _general(r18?: boolean){
                 $(".novelview_h3#title").attr("style", "margin-bottom: 10px;")
                 $(".novelview_h3#title").text(title)
 
-                $("#today_data .caption").text("本日（"+getDateStringJapanese()+"）")
-                $("#yesterday_data .caption").text("昨日（"+getDateStringJapanese(getYesterday())+"）")
+                $("#today_data .caption").text(`本日（${nt.time.getDateStringJapanese()}）`)
+                $("#yesterday_data .caption").text(`昨日（${nt.time.getDateStringJapanese(nt.time.getYesterday())}）`)
 
                 $(".novelview_h3:not(#title)").addClass("subtitle")
                 $("#today_yesterday_data .novelview_h3.subtitle").text("アクセス解析（当日・前日）")
@@ -352,10 +350,10 @@ function _buttonToday(today_total: {[key: string]: number}, yesterday_total: {[k
     if(ncode){
         $("#today_all").append('<div class="ui-button--center"><input class="ui-button" type="submit" value="エクスポート" id="export-general-day"></div>')
         $("#export-general-day").on("click", function(){
-            var date = getDateString();
+            var date = nt.time.getDateString();
             var raw = {
                 date: date,
-                generatedTime: getDatetimeString(),
+                generatedTime: nt.time.getDatetimeString(),
                 ncode: ncode,
                 data: {
                     today: {
@@ -365,7 +363,7 @@ function _buttonToday(today_total: {[key: string]: number}, yesterday_total: {[k
                         sum: today_pv_sum
                     },
                     yesterday: {
-                        date: getDateString(getYesterday()),
+                        date: nt.time.getDateString(nt.time.getYesterday()),
                         highlight: yesterday_total,
                         pv: yesterday_pv,
                         sum: yesterday_pv_sum
@@ -416,7 +414,7 @@ function _tableToday(today_pv_sum: Array<number|null>, yesterday_pv_sum: Array<n
     });
 }
 
-function _graphToday(today_pv: Array<number|null>, yesterday_pv: Array<number|null>, today_pv_sum: Array<number|null>, yesterday_pv_sum: Array<number|null>, graphType: GraphType){
+function _graphToday(today_pv: Array<number|null>, yesterday_pv: Array<number|null>, today_pv_sum: Array<number|null>, yesterday_pv_sum: Array<number|null>, graphType: nt.storage.local.GraphType){
     $("#yesterday_data").after('<canvas class="access-chart" id="general-day" style="width: 100%; margin-top:10px; margin-bottom:10px;"></canvas>')
     var graph = null
 
@@ -468,9 +466,9 @@ function _graphToday(today_pv: Array<number|null>, yesterday_pv: Array<number|nu
                             title: function(p) {
                                 var date
                                 if(p[0].datasetIndex==0 || p[0].datasetIndex==2){
-                                    date = getDateStringJapanese();
+                                    date = nt.time.getDateStringJapanese();
                                 }else if(p[0].datasetIndex==1 || p[0].datasetIndex==3){
-                                    date = getDateStringJapanese(getYesterday());
+                                    date = nt.time.getDateStringJapanese(nt.time.getYesterday());
                                 }
                                 return p[0].dataset.label + " （" + date + " " + p[0].label + "時）";
                             }
@@ -502,10 +500,10 @@ function _buttonTotal(total_pv: {[key: string]: number}, total_unique: {[key: st
     if(ncode){
         $("#access_all").append('<div class="ui-button--center"><input class="ui-button" type="submit" value="エクスポート" id="export-general-total"></div>')
         $("#export-general-total").on("click", function(){
-            var date = getDateString();
+            var date = nt.time.getDateString();
             var raw = {
                 date: date,
-                generatedTime: getDatetimeString(),
+                generatedTime: nt.time.getDatetimeString(),
                 ncode: ncode,
                 data: {
                     highlight: {
@@ -523,7 +521,7 @@ function _buttonTotal(total_pv: {[key: string]: number}, total_unique: {[key: st
     }
 }
 
-function _graphTotal(week: Array<string>, week_pv: Array<number|null>, graphType: GraphType){
+function _graphTotal(week: Array<string>, week_pv: Array<number|null>, graphType: nt.storage.local.GraphType){
     $("#access_all").append('<canvas class="access-chart" id="general-total" style="width: 100%; margin-top:10px; margin-bottom:10px;"></canvas>')
     var graph = null
 
@@ -553,9 +551,9 @@ function _graphTotal(week: Array<string>, week_pv: Array<number|null>, graphType
                             title: function(p) {
                                 var date
                                 if(p[0].datasetIndex==0 || p[0].datasetIndex==2){
-                                    date = getDateStringJapanese();
+                                    date = nt.time.getDateStringJapanese();
                                 }else if(p[0].datasetIndex==1 || p[0].datasetIndex==3){
-                                    date = getDateStringJapanese(getYesterday());
+                                    date = nt.time.getDateStringJapanese(nt.time.getYesterday());
                                 }
                                 return p[0].label + " （PV）";
                             }
@@ -633,7 +631,7 @@ function _tableApi(ncode: string, d: NovelApi, r18?:boolean){
 
     function getDateStr(v: string | undefined): string{
         if(typeof v === "string"){
-            return getDatetimeStringWithoutMilisecond(getDatetimeFromString(v))
+            return nt.time.getDatetimeStringWithoutMilisecond(nt.time.getDatetimeFromString(v))
         }
         return ""
     }
@@ -681,7 +679,7 @@ function _tableApi(ncode: string, d: NovelApi, r18?:boolean){
 
     table.append("<tr class='header'><th>作品統計</th><th>項目</th><th>データ</th></tr>")
     addValue("文字数", numLocale(d.length, "字"), d.length)
-    addValue("読了時間", minuteStringJapanese(d.time ?? ""), d.time)
+    addValue("読了時間", nt.time.minuteStringJapanese(d.time ?? ""), d.time)
     addValue("挿絵数", numLocale(d.sasie_cnt, "個"), d.sasie_cnt)
     addValue("会話率", numLocale(d.kaiwaritu,"%"), d.kaiwaritu)
     addValue("総合ポイント", numLocale(d.global_point, "pt"), d.global_point)
@@ -706,10 +704,10 @@ function _tableApi(ncode: string, d: NovelApi, r18?:boolean){
 function _buttonApi(ncode: string, data: NovelApi){
     $("#novel_detail").append('<div class="ui-button--center"><input class="ui-button" type="submit" value="エクスポート" id="export-api-data"></div>')
     $("#export-api-data").on("click", function(){
-        var date = getDateString();
+        var date = nt.time.getDateString();
         var raw = {
             date: date,
-            generatedTime: getDatetimeString(),
+            generatedTime: nt.time.getDatetimeString(),
             ncode: ncode,
             data: data
         }
@@ -761,7 +759,7 @@ function _tableRank(ncode: string, d: Array<RankinApi>){
         }
 
         const text = `<tr>
-            <td class="date">${getDateString(cDate)}</td>
+            <td class="date">${nt.time.getDateString(cDate)}</td>
             <td class="rank">${rank}</td>
             <td class="point">${point}</td>
         </tr>`
@@ -786,10 +784,10 @@ function _tableRank(ncode: string, d: Array<RankinApi>){
 function _buttonRank(ncode: string, data: Array<RankinApi>){
     $("#novel_rank").append('<div class="ui-button--center"><input class="ui-button" type="submit" value="エクスポート" id="export-rank-data"></div>')
     $("#export-rank-data").on("click", function(){
-        var date = getDateString();
+        var date = nt.time.getDateString();
         var raw = {
             date: date,
-            generatedTime: getDatetimeString(),
+            generatedTime: nt.time.getDatetimeString(),
             ncode: ncode,
             data: data
         }

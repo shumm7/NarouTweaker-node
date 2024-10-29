@@ -1,6 +1,5 @@
-import { CSS_String } from "./type"
-
 import $ from 'jquery';
+import { nt } from './narou-tweaker';
 
 /**
  * フォントセットリスト(v1)
@@ -24,7 +23,7 @@ export class FontFamilyV1 {
     show: boolean = true
     font: string = `NTSymbol, "メイリオ", "Meiryo", 'Hiragino Kaku Gothic ProN', 'ヒラギノ角ゴ ProN W3', sans-serif`
     license: string = ""
-    css: CSS_String = ""
+    css: nt.text.CSS_String = ""
 
     constructor(f?: FontFamilyV1|Object|null){
         if(f instanceof Object){

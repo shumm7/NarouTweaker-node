@@ -1,8 +1,6 @@
-import { getDateString, getDatetimeString } from "../../utils/time"
 import { saveJson } from "../../utils/misc"
 import { getValueFromTables, GraphDataset, makeGraph } from "./utils"
 import { nt } from "../../utils/narou-tweaker"
-import { GraphType } from "../../utils/data"
 import { getNcodeFromURL } from "../../utils/ncode"
 
 import $ from 'jquery';
@@ -39,7 +37,7 @@ export function _dayPV(){
     })
 }
 
-function _graph(datasets: Array<GraphDataset>, labels: Array<string>, graphType: GraphType){
+function _graph(datasets: Array<GraphDataset>, labels: Array<string>, graphType: nt.storage.local.GraphType){
     $("form").after('<canvas class="access-chart" id="day_pv" style="width: 100%; margin-bottom:10px;"></canvas>')
     makeGraph("day_pv", graphType, "日別（PV）", datasets, labels, "")
 }
@@ -54,7 +52,7 @@ function _button(datasets: Array<GraphDataset>, labels: Array<string>){
     if(ncode){
         $(".access_information").before('<div class="ui-button--center"><input class="ui-button" type="submit" value="エクスポート" id="export-day-pv"></div>')
         $("#export-day-pv").on("click", function(){
-            var date = getDateString();
+            var date = nt.time.getDateString();
             var data: Array<GraphDataExports> = []
 
             $.each(labels, function(idx, date){
@@ -78,7 +76,7 @@ function _button(datasets: Array<GraphDataset>, labels: Array<string>){
 
             var raw = {
                 date: date,
-                generatedTime: getDatetimeString(),
+                generatedTime: nt.time.getDatetimeString(),
                 ncode: ncode,
                 data: data
             }

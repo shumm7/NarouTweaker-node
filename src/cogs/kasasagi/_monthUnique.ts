@@ -1,10 +1,8 @@
 import { addExclamationIconBalloon } from "../../utils/ui"
-import { getDateString, getDatetimeString } from "../../utils/time"
 import { saveJson } from "../../utils/misc"
 import { makeGraph, getValueFromTables, GraphDataset } from "./utils"
 import { getNcodeFromURL } from "../../utils/ncode"
 import { nt } from "../../utils/narou-tweaker"
-import { GraphType } from "../../utils/data"
 
 import $ from 'jquery';
 import { Chart } from "chart.js/auto";
@@ -50,7 +48,7 @@ export function _monthUnique(){
     })
 }
 
-function _graph(datasets: Array<GraphDataset>, labels: Array<string>, graphType: GraphType){
+function _graph(datasets: Array<GraphDataset>, labels: Array<string>, graphType: nt.storage.local.GraphType){
     if(graph){graph.destroy()} 
     if(!$("#month_unique").length){
         $("#access_all").after('<canvas class="access-chart" id="month_unique" style="width: 100%; margin-bottom:10px;"></canvas>')
@@ -69,7 +67,7 @@ function _button(datasets: Array<GraphDataset>, labels: Array<string>){
         $(".ui-button--center:has(#export-month-unique)").remove()
         $(".access_information").before('<div class="ui-button--center"><input class="ui-button" type="submit" value="エクスポート" id="export-month-unique"></div>')
         $("#export-month-unique").on("click", function(){
-            var date = getDateString();
+            var date = nt.time.getDateString();
             var data: Array<GraphDataExports> = []
             
             $.each(labels, function(idx, date){
@@ -93,7 +91,7 @@ function _button(datasets: Array<GraphDataset>, labels: Array<string>){
 
             var raw = {
                 date: date,
-                generatedTime: getDatetimeString(),
+                generatedTime: nt.time.getDatetimeString(),
                 ncode: ncode,
                 data: data
             }

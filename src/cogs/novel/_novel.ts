@@ -2,7 +2,6 @@ import { getEpisode, getNovelSearchURL, getNovelTagURL, getPageType, isR18 } fro
 import { escapeHtml, replaceUrl } from "../../utils/text"
 import { novelTop } from "./_novelTop";
 import { getNcodeFromURL } from "../../utils/ncode";
-import { getDatetimeStringWithoutSecond } from "../../utils/time";
 import { nt } from "../../utils/narou-tweaker";
 import { fetchNovelApi, NovelApi } from "../../utils/api";
 
@@ -271,7 +270,7 @@ function _history(){
                         const history = historyData[ncode]
                         if(history){
                             const episode = history[0]
-                            const date = getDatetimeStringWithoutSecond(new Date(history[1]))
+                            const date = nt.time.getDatetimeStringWithoutSecond(new Date(history[1]))
                             if(episode){
                                 outer.append(`
                                     <div class="novelview_history-item" id="novel_history">

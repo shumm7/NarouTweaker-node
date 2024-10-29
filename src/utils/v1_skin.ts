@@ -1,6 +1,5 @@
-import { CSS_String } from "./type"
-
 import $ from 'jquery';
+import { nt } from './narou-tweaker';
 
 /**
  * スキンリスト(v1)
@@ -14,7 +13,7 @@ export type SkinsV1 = Array<SkinV1>
  * @param {boolean} customizable - 編集可能かどうか
  * @param {boolean} show - 表示するかどうか
  * @param {SkinV1_Style} style - スタイルデータのオブジェクト
- * @param {CSS_String} css - カスタムCSS
+ * @param {nt.text.CSS_String} css - カスタムCSS
  */
 export class SkinV1{
     [key: string]: any
@@ -24,7 +23,7 @@ export class SkinV1{
     customizable: boolean =  true
     show: boolean =  true
     style: SkinV1_Style = new SkinV1_Style
-    css: CSS_String = ""
+    css: nt.text.CSS_String = ""
 
     constructor(skin?: SkinV1|Record<string,any>){
         this.set(skin)
@@ -486,9 +485,9 @@ export function generateNoDuplicateSkinName(skins: SkinsV1, name: string, select
  * @param {boolean} novelCustomStyle - novelCustomStyleが有効かどうか
  * @returns {string} - スキン名
 */
-export function makeSkinCSS(skin: SkinV1, novelCustomStyle?: boolean): CSS_String{
+export function makeSkinCSS(skin: SkinV1, novelCustomStyle?: boolean): nt.text.CSS_String{
     const s = skin.style
-    var rule: CSS_String = ""
+    var rule: nt.text.CSS_String = ""
 
     /* Skin */
     rule += `

@@ -1,10 +1,8 @@
 
-import { getDatetimeString } from "../../utils/time";
 import { saveJson } from "../../utils/misc";
 import { addExclamationIconBalloon } from "../../utils/ui";
 import { getNcodeFromURL } from "../../utils/ncode";
 import { nt } from "../../utils/narou-tweaker";
-import { GraphType } from "../../utils/data";
 
 import $ from 'jquery';
 import { Chart } from "chart.js/auto";
@@ -78,7 +76,7 @@ function _button(data: Array<number|null>){
             var date = $("input[name='date']").attr("value")
             var raw = {
                 date: date,
-                generatedTime: getDatetimeString(),
+                generatedTime: nt.time.getDatetimeString(),
                 ncode: ncode,
                 data: {
                     unique: data
@@ -89,7 +87,7 @@ function _button(data: Array<number|null>){
     })
 }
 
-function _graph(data: Array<number|null>, graphType: GraphType){
+function _graph(data: Array<number|null>, graphType: nt.storage.local.GraphType){
     const m = 5
     const tickCounts = (labels: number, step: number) => (Math.ceil(labels / step));
     const aryMax = function (a: number|null, b: number|null) {return Math.max(a ?? 0, b ?? 0);}

@@ -1,8 +1,6 @@
-import { getDateString, getDatetimeString } from "../../utils/time"
 import { saveJson } from "../../utils/misc"
 import { makeGraph, getValueFromTables, GraphDataset } from "./utils"
 import { getNcodeFromURL } from "../../utils/ncode"
-import { GraphType } from "../../utils/data"
 import { nt } from "../../utils/narou-tweaker"
 
 import $ from 'jquery';
@@ -45,7 +43,7 @@ export function _monthPV(){
     })
 }
 
-function _graph(datasets: Array<GraphDataset>, labels: Array<string>, graphType: GraphType){
+function _graph(datasets: Array<GraphDataset>, labels: Array<string>, graphType: nt.storage.local.GraphType){
     if(graph){graph.destroy()} 
     if(!$("#month_pv").length){
         $("#access_all").after('<canvas class="access-chart" id="month_pv" style="width: 100%; margin-bottom:10px;"></canvas>')
@@ -66,7 +64,7 @@ function _button(datasets: Array<GraphDataset>, labels: Array<string>){
                 date: string
             }
 
-            var date = getDateString();
+            var date = nt.time.getDateString();
             var data: Array<GraphDataExports> = []
             
             $.each(labels, function(idx, date){
@@ -90,7 +88,7 @@ function _button(datasets: Array<GraphDataset>, labels: Array<string>){
 
             var raw = {
                 date: date,
-                generatedTime: getDatetimeString(),
+                generatedTime: nt.time.getDatetimeString(),
                 ncode: ncode,
                 data: data
             }

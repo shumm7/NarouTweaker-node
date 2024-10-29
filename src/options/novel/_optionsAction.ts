@@ -1,5 +1,4 @@
 import { nt } from "../../utils/narou-tweaker"
-import { ReplacePattern } from "../../utils/data"
 import { CustomIconID, CustomIconIDs, getExcludeIcons, novelIconList } from "../../utils/header"
 import { addFontEditButtonEvent, restoreFont } from "./_optionsAction_Font"
 import { skinEditor } from "./_optionsAction_Skin"
@@ -126,7 +125,7 @@ export function novel_replacePattern(){
     /* Add Button */
     $("#correction-replace--pattern-box-addition").on("click", function(){
         nt.storage.local.get(["correctionReplacePatterns"]).then(function(data){
-            data.correctionReplacePatterns.push(new ReplacePattern)
+            data.correctionReplacePatterns.push(new nt.storage.local.ReplacePattern)
             nt.storage.local.set({correctionReplacePatterns: data.correctionReplacePatterns})
         })
     })

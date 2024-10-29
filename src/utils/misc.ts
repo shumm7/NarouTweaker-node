@@ -1,5 +1,5 @@
-import { CSS_String } from "./type";
 import $ from 'jquery';
+import { nt } from './narou-tweaker';
 
 /**
  * オブジェクトをJSONファイルで保存
@@ -76,7 +76,7 @@ export function check(elm: any, value: boolean|undefined|null, _default?: boolea
  * @returns CSSルール
  * @deprecated 直接CSSを記述してください。
  */
-export function getCSSRule(key: string, rules: Array<Record<string,string>>): CSS_String{
+export function getCSSRule(key: string, rules: Array<Record<string,string>>): nt.text.CSS_String{
     var style = key + "{"
     rules.forEach(rule => {
         Object.keys(rule).forEach(k => {

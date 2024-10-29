@@ -3,7 +3,6 @@ import { saveJson } from "../../utils/misc";
 import { OptionUI_Pages } from "../_utils/optionUI_items";
 import { escapeHtml } from "../../utils/text";
 import { nt } from "../../utils/narou-tweaker";
-import { getDatetimeString, getDatetimeStringForFilename } from "../../utils/time";
 import { OptionUI_Page } from "options/_utils/optionUI_type";
 
 import $ from 'jquery';
@@ -106,7 +105,7 @@ export function general_exportOptionData(){
     /* Export Button */
     $("#option-export-json").on("click", (e)=>{
         nt.storage.local.get(null,).then(function(data) {
-            var date = getDatetimeStringForFilename()
+            var date = nt.time.getDatetimeStringForFilename()
             if(data){
                 saveJson(data.get(), `nt-option-${date}.json`)
             }
@@ -398,9 +397,9 @@ export function general_monitorOptionChanged(){
 
             var keys = Object.keys(changes)
             if(keys.length>1){
-                var addLine = `# [${storageName}] ${getDatetimeString()} @ ${keys.length} values changed\n`
+                var addLine = `# [${storageName}] ${nt.time.getDatetimeString()} @ ${keys.length} values changed\n`
             }else{
-                var addLine = `# [${storageName}] ${getDatetimeString()} @ ${keys.length} value changed\n`
+                var addLine = `# [${storageName}] ${nt.time.getDatetimeString()} @ ${keys.length} value changed\n`
             }
             $.each(keys, function(_, key){
                 try{
