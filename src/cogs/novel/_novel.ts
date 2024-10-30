@@ -1,6 +1,5 @@
 import { getEpisode, getNovelSearchURL, getNovelTagURL, getPageType, isR18 } from "../../utils/narou";
 import { novelTop } from "./_novelTop";
-import { getNcodeFromURL } from "../../utils/ncode";
 import { nt } from "../../utils/narou-tweaker";
 
 import $ from 'jquery';
@@ -59,7 +58,7 @@ export function _novel(){
 
 function _novelPage(){
     try{
-        const ncode = getNcodeFromURL()
+        const ncode = nt.api.ncode.getFromURL()
         const episode = getEpisode()
         var title
         var chapter: string|undefined = undefined
@@ -227,7 +226,7 @@ function _cursorHide(){
 
 function _history(){
     try{
-        var n = getNcodeFromURL()
+        var n = nt.api.ncode.getFromURL()
         if(n===undefined){
             return
         }
@@ -299,7 +298,7 @@ function _history(){
 
 function _saveHistory(){
     try{
-        var n = getNcodeFromURL()
+        var n = nt.api.ncode.getFromURL()
         if(n===undefined){
             return
         }
@@ -348,7 +347,7 @@ function _authorLink(){
     try{
         const atom = $("link[href^='https://api.syosetu.com/writernovel/'][title='Atom']")
         const r18 = isR18()
-        var n = getNcodeFromURL()
+        var n = nt.api.ncode.getFromURL()
         if(n===undefined){
             return
         }
@@ -455,7 +454,7 @@ function novelTopAttention(){
             attention = $(".c-announce.c-announce__attention")
         }
 
-        const ncode = getNcodeFromURL()
+        const ncode = nt.api.ncode.getFromURL()
         const r18 = isR18()
 
         nt.api.novel.fetch(ncode, r18, function(data){

@@ -1,5 +1,4 @@
 import { addExclamationIconBalloon } from "../../utils/ui"
-import { getNcodeFromURL } from "../../utils/ncode"
 import { makeGraph, getValueFromTables, GraphDataset } from "./utils"
 import { nt } from "../../utils/narou-tweaker"
 
@@ -51,7 +50,7 @@ function _button(datasets: Array<GraphDataset>, labels: Array<string>){
         unique: {[key: string]: number|null},
         date: string
     }
-    const ncode = getNcodeFromURL()?.ncode()
+    const ncode = nt.api.ncode.getFromURL()?.ncode()
 
     if(ncode){
         $(".access_information").before('<div class="ui-button--center"><input class="ui-button" type="submit" value="エクスポート" id="export-day-unique"></div>')

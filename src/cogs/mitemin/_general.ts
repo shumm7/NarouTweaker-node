@@ -1,5 +1,4 @@
 import { nt } from "../../utils/narou-tweaker"
-import { getIcodeFromURL, Icode } from "../../utils/ncode"
 
 import $ from 'jquery';
 
@@ -9,7 +8,7 @@ export function _image(){
         if(data.miteminShowIcodeField){
             var info = $(".image_infomation, .ximage_infomation")
             if(info.length){
-                var img = getIcodeFromURL()
+                var img = nt.api.icode.getFromURL()
                 const icode = img?.icode()
                 const userid = img?.userid()
                 if(icode && userid)

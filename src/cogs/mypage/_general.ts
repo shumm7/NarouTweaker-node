@@ -1,4 +1,3 @@
-import { getNcodeFromURL } from "../../utils/ncode"
 import { isR18 } from "../../utils/narou"
 import { nt } from "../../utils/narou-tweaker"
 
@@ -37,7 +36,7 @@ function novellist(){
     nt.storage.local.get(null).then(function(data){
         $(".c-novel-list__item").each(function(){
             var outer = $(this)
-            const ncode = getNcodeFromURL(outer.find(".c-novel-list__title").attr("href"))
+            const ncode = nt.api.ncode.getFromURL(outer.find(".c-novel-list__title").attr("href"))
             const r18 = isR18()
             
             if(ncode){

@@ -1,5 +1,4 @@
 import { makeGraph, getValueFromTables, GraphDataset } from "./utils"
-import { getNcodeFromURL } from "../../utils/ncode"
 import { nt } from "../../utils/narou-tweaker"
 
 import $ from 'jquery';
@@ -52,7 +51,7 @@ function _graph(datasets: Array<GraphDataset>, labels: Array<string>, graphType:
 
 
 function _button(datasets: Array<GraphDataset>, labels: Array<string>){
-    const ncode = getNcodeFromURL()
+    const ncode = nt.api.ncode.getFromURL()
     if(ncode){
         
         $(".ui-button--center:has(#export-month-pv)").remove()

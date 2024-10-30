@@ -1,4 +1,3 @@
-import { getNcodeFromURL } from "../../utils/ncode";
 import { CustomIconID, CustomIconIDs, getExcludeIcons } from "../../utils/header"
 import { nt } from "../../utils/narou-tweaker";
 import { getEpisode, getPageType, isR18 } from "../../utils/narou";
@@ -16,7 +15,7 @@ export function _header(){
             return
         }
 
-        var n = getNcodeFromURL()
+        var n = nt.api.ncode.getFromURL()
         if(n===undefined){
             return
         }

@@ -2,7 +2,6 @@ import { localFont, localFontFamilyV1 } from "../../utils/v1_font";
 import { check, defaultValue } from "../../utils/misc"
 import { correction, restoreCorrectionMode } from "./_correction";
 import { nt } from "../../utils/narou-tweaker";
-import { getNcodeFromURL } from "../../utils/ncode";
 
 import $ from 'jquery';
 
@@ -756,7 +755,7 @@ function setOptionContentsAuthorSkin(id: number){
                         
                         // Parse to Tags
                         var l = JSON.parse(text)
-                        const ncode = getNcodeFromURL()?.ncode()
+                        const ncode = nt.api.ncode.getFromURL()?.ncode()
                         if(ncode){
                             l.name = `インポートされた作者スキン-${ncode.toUpperCase()}-${nt.time.getDatetimeString()}`
                             l.description = `${nt.time.getDatetimeString()} に ${ncode.toUpperCase()} でインポートされた作者スキン`

@@ -1,4 +1,3 @@
-import { getNcodeFromURL } from "../../utils/ncode";
 import { checkRankPageDetail } from "./utils";
 import { getGenreNumber } from "../../utils/narou";
 import { nt } from "../../utils/narou-tweaker";
@@ -15,7 +14,7 @@ export function _rank(){
                 if(pageDetail.detail=="rank" && pageDetail.type != "top"){
                     $(".p-ranklist-item").each(function(){
                         var url = $(this).find(".p-ranklist-item__title a").prop("href")
-                        const ncode = getNcodeFromURL(url)?.ncode()
+                        const ncode = nt.api.ncode.getFromURL(url)?.ncode()
                         
                         if(ncode){
                             // ポイントの単位と数値を別々のspanで囲む
@@ -112,7 +111,7 @@ function showRankTop_NovelDetails(){
             
             outer.find(".p-ranktop-item__item").each(function(){
                 var elem = $(this)
-                const ncode = getNcodeFromURL(elem.find(".p-ranktop-item__title a").prop("href"))
+                const ncode = nt.api.ncode.getFromURL(elem.find(".p-ranktop-item__title a").prop("href"))
                 const collapsedHeight = 70
                 const marginHeight = 16
 

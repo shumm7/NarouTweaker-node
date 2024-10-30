@@ -1,4 +1,3 @@
-import { Ncode } from "../../utils/ncode"
 import { nt } from "../../utils/narou-tweaker"
 import { setDisplayEvent } from "./_editorCss"
 import { _toolCovertKakuyomuRubyDot, _toolExportAll, _toolExportEach, _toolIndent, _toolRuby, _toolRubyDot, _toolSasie, _toolSearch } from "./_editorTools"
@@ -37,7 +36,7 @@ function changeEditorPageLikePreview(){
     var container = $(".l-container")
     const header = $(".l-breadcrumb .c-up-breadcrumb__item:last").text()
     const curmbs = $(".l-breadcrumb .c-up-breadcrumb__item:has(a):last a").attr("href")
-    const ncode = new Ncode($(".js-novel_backup_info").attr("data-ncode"))
+    const ncode = new nt.api.ncode($(".js-novel_backup_info").attr("data-ncode"))
     const userid = $(".js-novel_backup_info").attr("data-userid")
 
     $(".l-header").remove()

@@ -1,6 +1,5 @@
 import {getBigGenre, getGenre, getNovelType, getNovelEnd, getNocgenre} from "../../utils/narou"
 import { addQuestionIconBalloon, addExclamationIconBalloon } from "../../utils/ui";
-import { getNcodeFromURL, Ncode } from "../../utils/ncode";
 import { nt } from "../../utils/narou-tweaker";
 
 import $ from 'jquery';
@@ -205,7 +204,7 @@ function total(){
 
 function api(r18?: boolean){
     nt.storage.local.get(null).then((option)=>{
-        const ncode = getNcodeFromURL()?.ncode()
+        const ncode = nt.api.ncode.getFromURL()?.ncode()
 
         if (option.kasasagiShowTable_API && ncode!==undefined){
             // API URL
@@ -251,7 +250,7 @@ function rank(r18?: boolean){
     if(r18){return}
 
     nt.storage.local.get(null).then((option)=>{
-        const ncode = getNcodeFromURL()?.ncode()
+        const ncode = nt.api.ncode.getFromURL()?.ncode()
         if (option.kasasagiShowTable_Rank && ncode!==undefined){
             var url = "https://api.syosetu.com/rank/rankin/?out=json&libtype=2&ncode=" + ncode
             if(r18){
@@ -291,7 +290,7 @@ function rank(r18?: boolean){
 
 function link(r18?: boolean){
     nt.storage.local.get(null).then((option)=>{
-        const ncode = getNcodeFromURL()?.ncode()
+        const ncode = nt.api.ncode.getFromURL()?.ncode()
 
         if (option.kasasagiShowTable_ExternalLink && ncode!==undefined){
             const title = $("#title").text()
@@ -343,7 +342,7 @@ function link(r18?: boolean){
 }
 
 function _buttonToday(today_total: {[key: string]: number}, yesterday_total: {[key: string]: number}, today_pv: Array<number|null>, yesterday_pv: Array<number|null>, today_pv_sum: Array<number|null>, yesterday_pv_sum: Array<number|null>){
-    const ncode = getNcodeFromURL()?.ncode()
+    const ncode = nt.api.ncode.getFromURL()?.ncode()
     if(ncode){
         $("#today_all").append('<div class="ui-button--center"><input class="ui-button" type="submit" value="エクスポート" id="export-general-day"></div>')
         $("#export-general-day").on("click", function(){
@@ -493,7 +492,7 @@ function _graphToday(today_pv: Array<number|null>, yesterday_pv: Array<number|nu
 
 
 function _buttonTotal(total_pv: {[key: string]: number}, total_unique: {[key: string]: number}, week: Array<string>, week_pv: Array<number|null>){
-    const ncode = getNcodeFromURL()?.ncode()
+    const ncode = nt.api.ncode.getFromURL()?.ncode()
     if(ncode){
         $("#access_all").append('<div class="ui-button--center"><input class="ui-button" type="submit" value="エクスポート" id="export-general-total"></div>')
         $("#export-general-total").on("click", function(){
@@ -611,7 +610,7 @@ function _tableApi(ncode: string, d: nt.api.novel.data, r18?:boolean){
     }
     function getNcodeStr(ncode?: string){
         if(ncode!==undefined){
-            var n = new Ncode(ncode).ncode()
+            var n = new nt.api.ncode(ncode).ncode()
             if(n){
                 return n
             }

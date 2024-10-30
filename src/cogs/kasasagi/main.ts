@@ -4,7 +4,6 @@ import { _dayPV } from "./_dayPV"
 import { _dayUnique } from "./_dayUnique"
 import { _monthPV } from "./_monthPV"
 import { _monthUnique } from "./_monthUnique"
-import { getNcodeFromURL } from "../../utils/ncode"
 import { nt } from "../../utils/narou-tweaker"
 
 import $ from 'jquery';
@@ -17,7 +16,7 @@ import "./local.css";
 
 nt.storage.local.get(null).then((option) => {
     var path = location.pathname;
-    const ncode = getNcodeFromURL();
+    const ncode = nt.api.ncode.getFromURL();
     if(ncode==null){return}
 
     var r18 = false

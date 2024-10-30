@@ -1,5 +1,4 @@
 import { nt } from "../../utils/narou-tweaker"
-import { Ncode } from "../../utils/ncode"
 import { popImpressionHiddenList, popImpressionReadList, pushImpressionHiddenList, pushImpressionReadList } from "../../utils/data"
 
 import $ from "jquery"
@@ -25,7 +24,7 @@ function _impressionRead(){
                             const url = new URL(href)
                             var m = url.pathname.match(/^\/impressionres\/input\/ncode\/(\d*).*\/kanrino\/(\d*)\/*/)
                             if(m){
-                                const ncode = new Ncode(m[1])
+                                const ncode = new nt.api.ncode(m[1])
                                 const kanrino = m[2]
 
                                 if(ncode && kanrino){
@@ -61,7 +60,7 @@ function _impressionRead(){
                             const url = new URL(href)
                             var m = url.pathname.match(/^\/impressionres\/input\/ncode\/(\d*).*\/kanrino\/(\d*)\/*/)
                             if(m){
-                                const ncode = new Ncode(m[1])
+                                const ncode = new nt.api.ncode(m[1])
                                 const kanrino = m[2]
     
                                 if(ncode && kanrino){
@@ -103,8 +102,8 @@ function _impressionRead(){
 
                     $(".c-up-unmarkread-all").click(function(){
                         nt.storage.sync.get(null).then(function(l){
-                            var readList: [Array<Ncode>, Array<string>] = [[], []]
-                            var hideList: [Array<Ncode>, Array<string>] = [[], []]
+                            var readList: [Array<nt.api.ncode>, Array<string>] = [[], []]
+                            var hideList: [Array<nt.api.ncode>, Array<string>] = [[], []]
 
                             $(".c-up-panel__list-item").each(function(){
                                 var href = $(this).find(".c-button--primary").attr("href")
@@ -112,7 +111,7 @@ function _impressionRead(){
                                     const url = new URL(href)
                                     var m = url.pathname.match(/^\/impressionres\/input\/ncode\/(\d*).*\/kanrino\/(\d*)\/*/)
                                     if(m){
-                                        const ncode = new Ncode(m[1])
+                                        const ncode = new nt.api.ncode(m[1])
                                         const kanrino = m[2]
         
         
@@ -137,8 +136,8 @@ function _impressionRead(){
 
                     $(".c-up-markread-all").click(function(){
                         nt.storage.sync.get(null).then(function(l){
-                            var readList: [Array<Ncode>, Array<string>] = [[], []]
-                            var hideList: [Array<Ncode>, Array<string>] = [[], []]
+                            var readList: [Array<nt.api.ncode>, Array<string>] = [[], []]
+                            var hideList: [Array<nt.api.ncode>, Array<string>] = [[], []]
 
                             $(".c-up-panel__list-item").each(function(){
                                 var href = $(this).find(".c-button--primary").attr("href")
@@ -146,7 +145,7 @@ function _impressionRead(){
                                     const url = new URL(href)
                                     var m = url.pathname.match(/^\/impressionres\/input\/ncode\/(\d*).*\/kanrino\/(\d*)\/*/)
                                     if(m){
-                                        const ncode = new Ncode(m[1])
+                                        const ncode = new nt.api.ncode(m[1])
                                         const kanrino = m[2]
         
                                         if(!$(this).hasClass("c-up-reaction--read")){
@@ -187,7 +186,7 @@ function _impressionRead(){
                     const url = new URL(href)
                     var m = url.pathname.match(/^\/impressionres\/input\/ncode\/(\d*).*\/kanrino\/(\d*)\/*/)
                     if(m){
-                        const ncode = new Ncode(m[1]).ncode()
+                        const ncode = new nt.api.ncode(m[1]).ncode()
                         const kanrino = m[2]
     
                         if(ncode && ncode in readList){
@@ -212,7 +211,7 @@ function _impressionRead(){
                     const url = new URL(href)
                     var m = url.pathname.match(/^\/impressionres\/input\/ncode\/(\d*).*\/kanrino\/(\d*)\/*/)
                     if(m){
-                        const ncode = new Ncode(m[1]).ncode()
+                        const ncode = new nt.api.ncode(m[1]).ncode()
                         const kanrino = m[2]
 
                         if(ncode && ncode in hideList){

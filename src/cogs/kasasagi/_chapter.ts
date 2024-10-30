@@ -1,6 +1,5 @@
 
 import { addExclamationIconBalloon } from "../../utils/ui";
-import { getNcodeFromURL } from "../../utils/ncode";
 import { nt } from "../../utils/narou-tweaker";
 
 import $ from 'jquery';
@@ -70,7 +69,7 @@ export function _chapterUnique(){
 function _button(data: Array<number|null>){
     $("#chapter_graph").after('<div class="ui-button--center"><input class="ui-button" type="submit" value="エクスポート" id="export-chapter-unique"></div>')
     $("#export-chapter-unique").on("click", function(){
-        const ncode = getNcodeFromURL()?.ncode()
+        const ncode = nt.api.ncode.getFromURL()?.ncode()
         if(ncode){
             var date = $("input[name='date']").attr("value")
             var raw = {

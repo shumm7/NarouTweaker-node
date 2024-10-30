@@ -1,6 +1,5 @@
 import { addExclamationIconBalloon } from "../../utils/ui"
 import { makeGraph, getValueFromTables, GraphDataset } from "./utils"
-import { getNcodeFromURL } from "../../utils/ncode"
 import { nt } from "../../utils/narou-tweaker"
 
 import $ from 'jquery';
@@ -61,7 +60,7 @@ function _button(datasets: Array<GraphDataset>, labels: Array<string>){
         date: string
     }
 
-    const ncode = getNcodeFromURL()?.ncode()
+    const ncode = nt.api.ncode.getFromURL()?.ncode()
     if(ncode){
         $(".ui-button--center:has(#export-month-unique)").remove()
         $(".access_information").before('<div class="ui-button--center"><input class="ui-button" type="submit" value="エクスポート" id="export-month-unique"></div>')

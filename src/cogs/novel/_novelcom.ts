@@ -1,4 +1,3 @@
-import { Ncode } from "../../utils/ncode"
 import { pushImpressionHiddenList, pushImpressionReadList } from "../../utils/data"
 import { nt } from "../../utils/narou-tweaker"
 
@@ -13,7 +12,7 @@ function _readImpression(){
         if(location.pathname.match(/^\/impressionres\/confirm\/ncode\/\d+.*\/kanrino\/\d+\/*/)){
             var m = location.pathname.match(/^\/impressionres\/confirm\/ncode\/(\d+).*\/kanrino\/(\d+)\/*/)
             if(m!==null){
-                const ncode: string|undefined = new Ncode(m[1]).ncode()
+                const ncode: string|undefined = new nt.api.ncode(m[1]).ncode()
                 const kanrino: string|undefined = m[2]
                 
                 if(ncode!==undefined && kanrino!==undefined){

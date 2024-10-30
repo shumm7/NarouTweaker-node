@@ -1,6 +1,5 @@
 import { getValueFromTables, GraphDataset, makeGraph } from "./utils"
 import { nt } from "../../utils/narou-tweaker"
-import { getNcodeFromURL } from "../../utils/ncode"
 
 import $ from 'jquery';
 
@@ -47,7 +46,7 @@ function _button(datasets: Array<GraphDataset>, labels: Array<string>){
         date: string
     }
 
-    const ncode = getNcodeFromURL()?.ncode()
+    const ncode = nt.api.ncode.getFromURL()?.ncode()
     if(ncode){
         $(".access_information").before('<div class="ui-button--center"><input class="ui-button" type="submit" value="エクスポート" id="export-day-pv"></div>')
         $("#export-day-pv").on("click", function(){

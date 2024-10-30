@@ -3,12 +3,12 @@ import { ImpressionKanrino } from "../data"
 import { CustomIconIDs, novelIconList, workspaceIconList, workspaceMenuIconList } from "../header"
 import { FontFamiliesV1 } from "../v1_font"
 import { OptionID, OptionUI_Item, OptionUI_ItemID } from "../../options/_utils/optionUI_type"
-import { Ncode } from "../ncode"
 
 import { __nt_text__ } from "./text"
 import { __nt_extension__ } from "./process"
 import { __nt_skin_v1__ } from "./skin/v1_skin"
 import { __nt_skin_v2__ } from "./skin/v2_skin"
+import { __nt_api__ } from "./api"
 
 import browser from "webextension-polyfill"
 
@@ -880,7 +880,7 @@ export namespace __nt_storage__ {
                         if (Array.isArray(value)) {
                             var list: string[] = []
                             for (const history of value) {
-                                const ncode = new Ncode(history).ncode()
+                                const ncode = new __nt_api__.ncode(history).ncode()
                                 if (ncode !== undefined) {
                                     list.push(ncode)
                                 }
@@ -892,7 +892,7 @@ export namespace __nt_storage__ {
                         if (value instanceof Object) {
                             var ret: Record<string, [number, number, string]> = {}
                             for (const n of Object.keys(value)) {
-                                const ncode = new Ncode(n).ncode()
+                                const ncode = new __nt_api__.ncode(n).ncode()
                                 if (ncode !== undefined && Array.isArray(value[ncode])) {
                                     if (value[ncode].length == 3) {
                                         if (

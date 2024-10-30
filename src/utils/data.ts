@@ -1,21 +1,20 @@
 
-import { Ncode } from "./ncode"
 import { nt } from "./narou-tweaker"
 /************************************************************************************* */
 /*                                 感想の既読情報                                       */
 /************************************************************************************* */
 export type ImpressionKanrino = Record<string,Array<string>>
 
-export function pushImpressionReadList(ncode: Ncode | Array<Ncode|string> | string, kanrino: string | Array<string>) {
-    var list: Array<Ncode> = []
+export function pushImpressionReadList(ncode: nt.api.ncode | Array<nt.api.ncode|string> | string, kanrino: string | Array<string>) {
+    var list: Array<nt.api.ncode> = []
     if(typeof ncode === "string"){
-        list = [new Ncode(ncode)]
-    }else if (ncode instanceof Ncode) {
+        list = [new nt.api.ncode(ncode)]
+    }else if (ncode instanceof nt.api.ncode) {
         list = [ncode]
     }else if (Array.isArray(ncode)){
         for(const n of ncode){
             if(typeof n === "string"){
-                list.push(new Ncode(n))
+                list.push(new nt.api.ncode(n))
             }else{
                 list.push(n)
             }
@@ -43,16 +42,16 @@ export function pushImpressionReadList(ncode: Ncode | Array<Ncode|string> | stri
     })
 }
 
-export function popImpressionReadList(ncode: Ncode | Array<Ncode|string> | string, kanrino: string | Array<string>) {
-    var list: Array<Ncode> = []
+export function popImpressionReadList(ncode: nt.api.ncode | Array<nt.api.ncode|string> | string, kanrino: string | Array<string>) {
+    var list: Array<nt.api.ncode> = []
     if(typeof ncode === "string"){
-        list = [new Ncode(ncode)]
-    }else if (ncode instanceof Ncode) {
+        list = [new nt.api.ncode(ncode)]
+    }else if (ncode instanceof nt.api.ncode) {
         list = [ncode]
     }else if (Array.isArray(ncode)){
         for(const n of ncode){
             if(typeof n === "string"){
-                list.push(new Ncode(n))
+                list.push(new nt.api.ncode(n))
             }else{
                 list.push(n)
             }
@@ -82,16 +81,16 @@ export function popImpressionReadList(ncode: Ncode | Array<Ncode|string> | strin
     })
 }
 
-export function pushImpressionHiddenList(ncode: Ncode | Array<Ncode|string> | string, kanrino: string | Array<string>) {
-    var list: Array<Ncode> = []
+export function pushImpressionHiddenList(ncode: nt.api.ncode | Array<nt.api.ncode|string> | string, kanrino: string | Array<string>) {
+    var list: Array<nt.api.ncode> = []
     if(typeof ncode === "string"){
-        list = [new Ncode(ncode)]
-    }else if (ncode instanceof Ncode) {
+        list = [new nt.api.ncode(ncode)]
+    }else if (ncode instanceof nt.api.ncode) {
         list = [ncode]
     }else if (Array.isArray(ncode)){
         for(const n of ncode){
             if(typeof n === "string"){
-                list.push(new Ncode(n))
+                list.push(new nt.api.ncode(n))
             }else{
                 list.push(n)
             }
@@ -119,16 +118,16 @@ export function pushImpressionHiddenList(ncode: Ncode | Array<Ncode|string> | st
     })
 }
 
-export function popImpressionHiddenList(ncode: Ncode | Array<Ncode|string> | string, kanrino: string | Array<string>) {
-    var list: Array<Ncode> = []
+export function popImpressionHiddenList(ncode: nt.api.ncode | Array<nt.api.ncode|string> | string, kanrino: string | Array<string>) {
+    var list: Array<nt.api.ncode> = []
     if(typeof ncode === "string"){
-        list = [new Ncode(ncode)]
-    }else if (ncode instanceof Ncode) {
+        list = [new nt.api.ncode(ncode)]
+    }else if (ncode instanceof nt.api.ncode) {
         list = [ncode]
     }else if (Array.isArray(ncode)){
         for(const n of ncode){
             if(typeof n === "string"){
-                list.push(new Ncode(n))
+                list.push(new nt.api.ncode(n))
             }else{
                 list.push(n)
             }
