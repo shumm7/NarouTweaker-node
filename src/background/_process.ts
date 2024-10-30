@@ -1,4 +1,4 @@
-import { nt } from "utils/narou-tweaker"
+import { nt } from "../utils/narou-tweaker"
 import browser from "webextension-polyfill"
 
 /* Message */

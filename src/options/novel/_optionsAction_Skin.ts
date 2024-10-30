@@ -1,5 +1,4 @@
 import { nt } from "../../utils/narou-tweaker";
-import { AvailableSkin, getSkin, getSkinFromIndex } from "../../utils/v2_skin";
 
 import $ from 'jquery';
 import Sortable from 'sortablejs'
@@ -39,7 +38,7 @@ function skinEditor_restoreList(){
         outer.empty()
 
         for(let i = 0; i<list.length; i++){
-            var skin = getSkin(list[i].src, list[i].key, local)
+            var skin = nt.skin.v2.getSkin(list[i].src, list[i].key, local)
             if(skin!==undefined){
                 var skinElm = $(`
                     <div class="novel-skins--list-item" data-src="${list[i].src}" data-key="${list[i].key}">
@@ -92,7 +91,7 @@ function skinEditor_restoreList(){
 }
 
 function skinEditor_storeAvailableSkinList(){
-    var list: Array<AvailableSkin> = []
+    var list: Array<nt.skin.v2.AvailableSkin> = []
     $("#novel-skins--list-available .novel-skins--list-item").each(function(){
         const src = $(this).attr("data-src")
         const key = Number($(this).attr("data-key"))

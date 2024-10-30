@@ -1,5 +1,4 @@
 import { nt } from "../../utils/narou-tweaker";
-import { makeSkinCSS, SkinV1 } from "../../utils/v1_skin";
 import $ from 'jquery';
 
 /* Skin */
@@ -45,9 +44,9 @@ export function _authorSkin(){
                                 var text = p.text()
                                 
                                 // Parse to Tags
-                                var skinData = new SkinV1(JSON.parse(text))
+                                var skinData = new nt.skin.v1.Skin(JSON.parse(text))
                                 nt.storage.local.get(["novelCustomStyle", "novelAuthorCustomSkinWarning"]).then((data)=>{
-                                    const style = makeSkinCSS(skinData, data.novelCustomStyle)
+                                    const style = nt.skin.v1.makeSkinCSS(skinData, data.novelCustomStyle)
                                     $("#narou-tweaker-style--author-css").text(style)
                                     if(data.novelAuthorCustomSkinWarning){
                                         userSkinActive(true)

@@ -1,10 +1,11 @@
-import { nt } from "./narou-tweaker"
-import { Ncode } from "./ncode"
+import { __nt_runtime__ } from "./process"
+import { __nt_text__ } from "./text"
+import { Ncode } from "../ncode"
 
 
 function strOrUndefined(v: any): string|undefined{
     if(typeof v === "string"){
-        return nt.text.escapeHtml(v)
+        return __nt_text__.escapeHtml(v)
     }
 }
 function numOrUndefined(v: any): number|undefined{
@@ -15,7 +16,7 @@ function numOrUndefined(v: any): number|undefined{
 
 function strOrNullOrUndefined(v: any): string|null|undefined{
     if(typeof v === "string"){
-        return nt.text.escapeHtml(v)
+        return __nt_text__.escapeHtml(v)
     }else if(v === null){
         return v
     }
@@ -87,7 +88,7 @@ export namespace __nt_api__ {
                 return
             }
             
-            nt.runtime.action({action: "fetch", format: "json", data: {url: url, options: {'method': 'GET'}}}).then(function(response){
+            __nt_runtime__.action({action: "fetch", format: "json", data: {url: url, options: {'method': 'GET'}}}).then(function(response){
                 if(response?.success && response?.action=="fetch" && response?.result[0]?.allcount === 1){
                     const n = response.result[1]
 
@@ -160,7 +161,7 @@ export namespace __nt_api__ {
             const _ncode = new Ncode(ncode).ncode()
             if(_ncode!==undefined){
                 const url = "https://api.syosetu.com/rank/rankin/?out=json&libtype=2&ncode=" + _ncode
-                nt.runtime.action({action: "fetch", format: "json", data: {url: url, options: {'method': 'GET'}}}).then(function(response){
+                __nt_runtime__.action({action: "fetch", format: "json", data: {url: url, options: {'method': 'GET'}}}).then(function(response){
                     var ret: Array<__nt_api__.rankin.data> = []
                     if(response?.success && response?.action=="fetch"){
                         if(Array.isArray(response.result)){
@@ -206,7 +207,7 @@ export namespace __nt_api__ {
         export function fetch(userid: number|string, callback: (data: __nt_api__.user.data|undefined) => void): void{
             const url = `https://api.syosetu.com/userapi/api/?out=json&libtype=2&userid=${userid}`
             
-            nt.runtime.action({action: "fetch", format: "json", data: {url: url, options: {'method': 'GET'}}}).then(function(response){
+            __nt_runtime__.action({action: "fetch", format: "json", data: {url: url, options: {'method': 'GET'}}}).then(function(response){
                 if(response?.success && response?.action=="fetch" && response?.result[0]?.allcount === 1){
                     const n = response.result[1]
 

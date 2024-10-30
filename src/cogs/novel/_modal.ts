@@ -1,7 +1,6 @@
 import { localFont, localFontFamilyV1 } from "../../utils/v1_font";
 import { check, defaultValue } from "../../utils/misc"
 import { correction, restoreCorrectionMode } from "./_correction";
-import { generateNoDuplicateSkinName, localSkinsV1, SkinsV1, SkinV1 } from "../../utils/v1_skin";
 import { nt } from "../../utils/narou-tweaker";
 import { getNcodeFromURL } from "../../utils/ncode";
 
@@ -83,8 +82,8 @@ export function _optionModal(){
 }
 
 /* スキン設定のドロップダウンを設定 */
-function restoreSkinOptions(skins: SkinsV1, selected: number){
-    skins = localSkinsV1.concat(skins)
+function restoreSkinOptions(skins: nt.skin.v1.Skins, selected: number){
+    skins = nt.skin.v1.localSkins.concat(skins)
 
     $("#novel-option--skin #skin").empty()
     $.each(skins, function(i, skin){
@@ -761,12 +760,12 @@ function setOptionContentsAuthorSkin(id: number){
                         if(ncode){
                             l.name = `インポートされた作者スキン-${ncode.toUpperCase()}-${nt.time.getDatetimeString()}`
                             l.description = `${nt.time.getDatetimeString()} に ${ncode.toUpperCase()} でインポートされた作者スキン`
-                            var skin = new SkinV1(l)
+                            var skin = new nt.skin.v1.Skin(l)
         
                             // Import Skin
                             nt.storage.local.get("skins").then(function(data) {
                                 var skins = data.skins
-                                skin.name = generateNoDuplicateSkinName(localSkinsV1.concat(skins), skin.name, -1)
+                                skin.name = nt.skin.v1.generateNoDuplicateSkinName(nt.skin.v1.localSkins.concat(skins), skin.name, -1)
                                 skins.push(skin)
                                 
                                 nt.storage.local.set({skins: skins}).then(function(){

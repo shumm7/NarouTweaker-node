@@ -1,4 +1,29 @@
-import browser, { cookies } from "webextension-polyfill"
+import browser from "webextension-polyfill"
+
+
+export class __nt_extension__ {
+    /**
+     * 拡張機能のmanifest.json
+     * @returns Manifest
+    */
+    static get manifest(): browser.Manifest.WebExtensionManifest{
+        return browser.runtime.getManifest()
+    }
+    /**
+     * 拡張機能のバージョンを取得
+     * @returns バージョン
+    */
+    static get version(): string{
+        return browser.runtime.getManifest().version
+    }
+    /**
+     * 拡張機能の作者名を取得
+     * @returns 作者名
+    */
+    static get author(): string{
+        return browser.i18n.getMessage("extAuthor")
+    }
+}
 
 export namespace __nt_runtime__ {
     export class SentMessage {

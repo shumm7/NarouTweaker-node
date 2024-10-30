@@ -1,13 +1,18 @@
-import { getOptionFromID, getOptionPageFromID } from "../options/_utils/optionUI_utils"
-import { ImpressionKanrino } from "./data"
-import { CustomIconIDs, novelIconList, workspaceIconList, workspaceMenuIconList } from "./header"
-import { FontFamiliesV1 } from "./v1_font"
-import { SkinsV1 } from "./v1_skin"
-import { OptionID, OptionUI_Item, OptionUI_ItemID } from "../options/_utils/optionUI_type"
-import { Ncode } from "./ncode"
-import { AvailableSkin, maxLocalSkins, SkinV2 } from "./v2_skin"
+import { getOptionFromID, getOptionPageFromID } from "../../options/_utils/optionUI_utils"
+import { ImpressionKanrino } from "../data"
+import { CustomIconIDs, novelIconList, workspaceIconList, workspaceMenuIconList } from "../header"
+import { FontFamiliesV1 } from "../v1_font"
+import { OptionID, OptionUI_Item, OptionUI_ItemID } from "../../options/_utils/optionUI_type"
+import { Ncode } from "../ncode"
+
+import { __nt_text__ } from "./text"
+import { __nt_extension__ } from "./process"
+import { __nt_skin_v1__ } from "./skin/v1_skin"
+import { __nt_skin_v2__ } from "./skin/v2_skin"
+
 import browser from "webextension-polyfill"
-import { nt } from "./narou-tweaker"
+
+
 
 export namespace __nt_storage__ {
     export namespace local {
@@ -18,7 +23,7 @@ export namespace __nt_storage__ {
             [key: string]: any
 
             /* Extension */
-            extOptionsVersion: string = nt.extension.version
+            extOptionsVersion: string = __nt_extension__.version
             extAdvancedSettings: boolean = false
             extExperimentalFeatures: boolean = false
             extDebug: boolean = false
@@ -35,7 +40,7 @@ export namespace __nt_storage__ {
             /* Novel */
             novelCustomStyle: boolean = true
             novelCustomHeaderType: number | string = "2"
-            novelCustomCSS: nt.text.CSS_String = ""
+            novelCustomCSS: __nt_text__.CSS_String = ""
             novelLegacyHeaderIcon: boolean = true
             novelVertical: boolean = false
             novelCustomHeaderScrollHidden: boolean = false
@@ -89,7 +94,7 @@ export namespace __nt_storage__ {
             yomouRank_ShowTags: boolean = true
             yomouRank_DevidePointsUnit: boolean = true
             yomouRank_PointsColor: string = "#ed1a3d"
-            yomouRank_CustomCSS: nt.text.CSS_String = ""
+            yomouRank_CustomCSS: __nt_text__.CSS_String = ""
 
             yomouRankTop_ShowDescription: boolean = false
             yomouRankTop_ShowPoints: boolean = false
@@ -99,7 +104,7 @@ export namespace __nt_storage__ {
             yomouRankTop_ShowUpdateDate: boolean = false
             yomouRankTop_ShowKasasagi: boolean = false
             yomouRankTop_ShowRaWi: boolean = false
-            yomouRankTop_CustomCSS: nt.text.CSS_String = ""
+            yomouRankTop_CustomCSS: __nt_text__.CSS_String = ""
             //yomouRankTop_DailyShowList: ["101", "102", "201", "202", "301", "302", "303", "304", "305", "306", "307", "401", "402", "403", "404", "9901", "9902", "9903", "9999"],
 
             /* Mypage */
@@ -150,20 +155,20 @@ export namespace __nt_storage__ {
             miteminShowIcodeField: boolean = true
 
             /* Skin */
-            skins: SkinsV1 = []
+            skins: __nt_skin_v1__.Skins = []
             selectedSkin: number = 0
             novelAuthorCustomSkin: boolean = true
             novelAuthorCustomSkinWarning: boolean = true
 
             /* v2 Skin */
-            novelSkinsAvailable: Array<AvailableSkin> = [
+            novelSkinsAvailable: Array<__nt_skin_v2__.AvailableSkin> = [
                 {src: "internal", key: 0},
                 {src: "internal", key: 1},
                 {src: "local", key: 0},
             ]
-            novelSkinSelected: AvailableSkin = {src: "internal", key: 0}
-            novelSkins: Array<SkinV2> = [
-                new SkinV2({
+            novelSkinSelected: __nt_skin_v2__.AvailableSkin = {src: "internal", key: 0}
+            novelSkins: Array<__nt_skin_v2__.Skin> = [
+                new __nt_skin_v2__.Skin({
                     name: "スキン",
                     description: "サンプル",
                     version: 2,
@@ -337,8 +342,8 @@ export namespace __nt_storage__ {
                     const m = key.match(/^novelSkin_(\d)+$/)
                     if(m!==null){
                         const idx = Number(m[1])
-                        if(isFinite(idx) && idx < maxLocalSkins && idx >= 0 && value instanceof Object){
-                            this.novelSkins[idx] = new SkinV2(value)
+                        if(isFinite(idx) && idx < __nt_skin_v2__.maxLocalSkins && idx >= 0 && value instanceof Object){
+                            this.novelSkins[idx] = new __nt_skin_v2__.Skin(value)
                         }
                     }
                     
@@ -413,7 +418,7 @@ export namespace __nt_storage__ {
                         if(key === "novelSkins"){
                             for(let idx = 0; idx<this.novelSkins.length; idx++){
                                 const value = this.novelSkins.at(idx)
-                                if( value instanceof SkinV2 ){
+                                if( value instanceof __nt_skin_v2__.Skin ){
                                     ret[`novelSkin_${idx}`] = value
                                     continue
                                 }
@@ -546,7 +551,7 @@ export namespace __nt_storage__ {
                         return
                     } else if("novelSkinsAvailable" === key){
                         if(Array.isArray(value)){
-                            var p: Array<AvailableSkin> = []
+                            var p: Array<__nt_skin_v2__.AvailableSkin> = []
                             for(let i = 0; i<value.length; i++){
                                 const src = value[i]?.src
                                 const key = value[i]?.key
@@ -693,7 +698,7 @@ export namespace __nt_storage__ {
             novelHistoryData: Record<string, [number, number, string]> = {}
             workspaceImpressionMarked: ImpressionKanrino = {}
             workspaceImpressionHidden: ImpressionKanrino = {}
-            novelSkins: Array<SkinV2> = []
+            novelSkins: Array<__nt_skin_v2__.Skin> = []
 
             /**
              * コンストラクタ
@@ -730,8 +735,8 @@ export namespace __nt_storage__ {
                     const m = key.match(/^novelSkin_(\d)+$/)
                     if(m!==null){
                         const idx = Number(m[1])
-                        if(isFinite(idx) && idx < maxLocalSkins && idx >= 0 && value instanceof Object){
-                            this.novelSkins[idx] = new SkinV2(value)
+                        if(isFinite(idx) && idx < __nt_skin_v2__.maxLocalSkins && idx >= 0 && value instanceof Object){
+                            this.novelSkins[idx] = new __nt_skin_v2__.Skin(value)
                         }
                     }
                     
@@ -805,7 +810,7 @@ export namespace __nt_storage__ {
                         if(key === "novelSkins"){
                             for(let idx = 0; idx<this.novelSkins.length; idx++){
                                 const value = this.novelSkins.at(idx)
-                                if( value instanceof SkinV2 ){
+                                if( value instanceof __nt_skin_v2__.Skin ){
                                     ret[`novelSkin_${idx}`] = value
                                     continue
                                 }

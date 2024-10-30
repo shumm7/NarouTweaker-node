@@ -1,5 +1,4 @@
 import { FontFamiliesV1, FontFamilyV1, localFont, localFontFamilyV1 } from "../utils/v1_font"
-import { localSkinsV1, makeSkinCSS, SkinsV1, SkinV1 } from "../utils/v1_skin"
 import { nt } from "../utils/narou-tweaker"
 
 export function skinListener(){
@@ -34,8 +33,8 @@ export function skinListener(){
 function makeSkin(){
     nt.storage.local.get().then((data) => {
         const skin_idx: number = data.selectedSkin
-        const skins: SkinsV1 = localSkinsV1.concat(data.skins)
-        const skin: SkinV1 = new SkinV1(skins[skin_idx])
+        const skins: nt.skin.v1.Skins = nt.skin.v1.localSkins.concat(data.skins)
+        const skin: nt.skin.v1.Skin = new nt.skin.v1.Skin(skins[skin_idx])
 
         var rule = ""
 
@@ -111,7 +110,7 @@ function makeSkin(){
         `
 
         nt.storage.session.set({
-            novelAppliedSkinCSS: nt.text.minifyCss(makeSkinCSS(skin, data.novelCustomStyle)),
+            novelAppliedSkinCSS: nt.text.minifyCss(nt.skin.v1.makeSkinCSS(skin, data.novelCustomStyle)),
             novelAppliedFontCSS: nt.text.minifyCss(rule),
             novelSkinCustomCSS: nt.text.minifyCss(skin.css),
             novelFontCustomCSS: nt.text.minifyCss(fontCss)
@@ -122,7 +121,7 @@ function makeSkin(){
 function makeEditorSkin(){
     nt.storage.local.get(null).then((data) => {
         let skin_idx: number = data.workspaceEditorSelectedSkin
-        const skins: SkinsV1 = localSkinsV1.concat(data.skins)
+        const skins: nt.skin.v1.Skins = nt.skin.v1.localSkins.concat(data.skins)
         if(skins.length<skin_idx || skin_idx<0){
             skin_idx = 0
             nt.storage.local.set({workspaceEditorSelectedSkin: skin_idx})

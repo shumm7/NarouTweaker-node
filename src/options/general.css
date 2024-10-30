@@ -201,7 +201,7 @@ input[type="number"] {
     caret-color: #000;
     color: transparent;
     font-family: "BizinGothicDiscord", monospace;
-    line-height: 100%;
+    line-height: inherit;
     font-size: 100%;
     white-space: pre-wrap;
     word-break: break-all;
@@ -222,6 +222,7 @@ input[type="number"] {
     pointer-events: none;
     overflow-y: auto;
     font-family: "BizinGothicDiscord", monospace;
+    line-height: inherit;
     
 }
 .syntax-highlight-wrap pre::-webkit-scrollbar {

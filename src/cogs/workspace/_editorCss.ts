@@ -1,4 +1,3 @@
-import { localSkinsV1 } from "../../utils/v1_skin"
 import { localFontFamilyV1, localFont } from "../../utils/v1_font"
 import { check, defaultValue } from "../../utils/misc"
 import { nt } from "../../utils/narou-tweaker"
@@ -164,7 +163,7 @@ export function setDisplayEvent(){
 
 function restoreSkinOptions(){
     nt.storage.local.get().then((data)=>{
-        const skins = localSkinsV1.concat(data.skins)
+        const skins = nt.skin.v1.localSkins.concat(data.skins)
         const selected = data.workspaceEditorSelectedSkin
 
         $("#nt-display-option--skin #nt-display-option--skin-dropdown").empty()
