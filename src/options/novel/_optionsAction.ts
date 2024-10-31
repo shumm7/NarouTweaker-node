@@ -1,5 +1,4 @@
 import { nt } from "../../utils/narou-tweaker"
-import { CustomIconID, CustomIconIDs, getExcludeIcons, novelIconList } from "../../utils/header"
 import { addFontEditButtonEvent, restoreFont } from "./_optionsAction_Font"
 import { skinEditor } from "./_optionsAction_Skin"
 
@@ -20,7 +19,7 @@ export function novel_customHeaderSortable(){
         function getHeaderIconList(position: "right" | "left" | "disabled"){
             if(position!="right" && position!="left" && position!="disabled") { return }
         
-            var list: CustomIconIDs = []
+            var list: Array<nt.header.iconId> = []
             $(".draggable_area[name='novel-header']#"+position+" .icon-element").each((_, icon)=>{
                 const id = $(icon).attr("id")
                 if(id!==undefined){
@@ -74,8 +73,8 @@ export function novel_customHeaderSortable(){
     }
 
     /* Novel Header */
-    function getNovelHeaderIconElement(id: CustomIconID){
-        let icon = novelIconList[id]
+    function getNovelHeaderIconElement(id: nt.header.iconId){
+        let icon = nt.header.novelIconList[id]
         var text = icon.text
 
         return `
@@ -86,10 +85,10 @@ export function novel_customHeaderSortable(){
     }
 
     function restoreSortable(){
-        function restore(data: CustomIconIDs, position: string){
+        function restore(data: Array<nt.header.iconId>, position: string){
             $(".draggable_area[name='novel-header']#"+position).empty()
             $.each(data, (_, icon)=>{
-                if(icon in novelIconList)
+                if(icon in nt.header.novelIconList)
                 $(".draggable_area[name='novel-header']#"+position).append(getNovelHeaderIconElement(icon))
             })
         }
@@ -97,7 +96,7 @@ export function novel_customHeaderSortable(){
         nt.storage.local.get(["novelCustomHeaderLeft", "novelCustomHeaderRight"]).then(function(data){
             restore(data.novelCustomHeaderLeft, "left")
             restore(data.novelCustomHeaderRight, "right")
-            restore(getExcludeIcons([data.novelCustomHeaderLeft, data.novelCustomHeaderRight]), "disabled")
+            restore(nt.header.getExcludeIcons([data.novelCustomHeaderLeft, data.novelCustomHeaderRight]), "disabled")
         })
     }
     

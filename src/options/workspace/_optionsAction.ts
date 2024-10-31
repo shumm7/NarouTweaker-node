@@ -1,4 +1,3 @@
-import { CustomIconID, CustomIconIDs, getExcludeIcons, workspaceIconList, workspaceMenuIconList } from "../../utils/header"
 import { nt } from "../../utils/narou-tweaker";
 
 import Sortable from 'sortablejs'
@@ -12,7 +11,7 @@ export function workspace_customHeaderSortable(){
         function getHeaderIconList(position: string){
             if(position!="active" && position!="disabled") { return }
         
-            var list: CustomIconIDs = []
+            var list: Array<nt.header.iconId> = []
             $(".draggable_area[name='workspace-header']#"+position+" .icon-element").each((_, icon)=>{
                 const id = $(icon).attr("id")
                 if(id!==undefined){
@@ -58,8 +57,8 @@ export function workspace_customHeaderSortable(){
 
 
     /* Workspace Header */
-    function getWorkspaceHeaderIconElement(id: CustomIconID){
-        let icon = workspaceIconList[id]
+    function getWorkspaceHeaderIconElement(id: nt.header.iconId){
+        let icon = nt.header.workspaceIconList[id]
         var c = ""
         if("isDropdown" in icon){
             if(icon.isDropdown){
@@ -76,7 +75,7 @@ export function workspace_customHeaderSortable(){
     }
 
     function restoreSortable(){
-        function restore(data: CustomIconIDs, position: string){
+        function restore(data: Array<nt.header.iconId>, position: string){
             $(".draggable_area[name='workspace-header']#"+position).empty()
             $.each(data, (_, icon)=>{
                 $(".draggable_area[name='workspace-header']#"+position).append(getWorkspaceHeaderIconElement(icon))
@@ -84,7 +83,7 @@ export function workspace_customHeaderSortable(){
         }
         nt.storage.local.get(["workspaceCustomHeader"]).then(function(data){
             restore(data.workspaceCustomHeader, "active")
-            restore(getExcludeIcons([data.workspaceCustomHeader], workspaceIconList), "disabled")
+            restore(nt.header.getExcludeIcons([data.workspaceCustomHeader], nt.header.workspaceIconList), "disabled")
         })
     }
 
@@ -106,9 +105,9 @@ export function workspace_customHeaderMenuSortable(){
         function getMenuIconList(position: "left" | "middle" | "right" | "disabled"){
             if(position!="left" && position!="middle" && position!="right" && position!="disabled") { return }
         
-            var list: CustomIconIDs = []
+            var list: Array<nt.header.iconId> = []
             $(".draggable_area[name='workspace-header-menu']#"+position+" .icon-element").each((_, icon)=>{
-                const id = $(icon).attr("id")
+                const id: nt.header.iconId|undefined = $(icon).attr("id")
                 if(id!==undefined){
                     list.push(id)
                 }
@@ -173,8 +172,8 @@ export function workspace_customHeaderMenuSortable(){
     }
 
     /* Workspace Header Menu */
-    function getWorkspaceHeaderMenuIconElement(id: CustomIconID){
-        let icon = workspaceMenuIconList[id]
+    function getWorkspaceHeaderMenuIconElement(id: nt.header.iconId){
+        let icon = nt.header.workspaceMenuIconList[id]
 
         return `
         <div id="${id}" class="icon-element" draggable="true">
@@ -184,7 +183,7 @@ export function workspace_customHeaderMenuSortable(){
     }
 
     function restoreSortable(){
-        function restore(data: CustomIconIDs, position: string){
+        function restore(data: Array<nt.header.iconId>, position: string){
             $(".draggable_area[name='workspace-header-menu']#"+position).empty()
             $.each(data, (_, icon)=>{
                 $(".draggable_area[name='workspace-header-menu']#"+position).append(getWorkspaceHeaderMenuIconElement(icon))
@@ -194,7 +193,7 @@ export function workspace_customHeaderMenuSortable(){
             restore(data.workspaceCustomMenu_Left, "left")
             restore(data.workspaceCustomMenu_Middle, "middle")
             restore(data.workspaceCustomMenu_Right, "right")
-            restore(getExcludeIcons([data.workspaceCustomMenu_Left, data.workspaceCustomMenu_Middle, data.workspaceCustomMenu_Right], workspaceMenuIconList), "disabled")
+            restore(nt.header.getExcludeIcons([data.workspaceCustomMenu_Left, data.workspaceCustomMenu_Middle, data.workspaceCustomMenu_Right], nt.header.workspaceMenuIconList), "disabled")
         })
     }
 

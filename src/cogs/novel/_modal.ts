@@ -1,5 +1,4 @@
-import { localFont, localFontFamilyV1 } from "../../utils/v1_font";
-import { check, defaultValue } from "../../utils/misc"
+import { check } from "../../utils/misc"
 import { correction, restoreCorrectionMode } from "./_correction";
 import { nt } from "../../utils/narou-tweaker";
 
@@ -91,13 +90,13 @@ function restoreSkinOptions(skins: nt.skin.v1.Skins, selected: number){
         }
     })
     $("#skin").val(String(selected))
-    $("#novel-option--skin-description").text(defaultValue(skins[selected], {}).description)
+    $("#novel-option--skin-description").text((skins[selected] ?? new nt.skin.v1.Skin())?.description)
 }
 
 /* フォント設定 */
 function restoreFontOptions(){
     nt.storage.local.get(null).then((data)=>{
-        var fontlist = localFontFamilyV1.concat(data.fontFontFamilyList)
+        var fontlist = nt.font.v1.localFontFamily.concat(data.fontFontFamilyList)
 
         $("#novel-option--font-family #font-family").empty()
         $.each(fontlist, function(i, font){
@@ -238,10 +237,10 @@ function setOptionContentsDisplay(id: number){
 
         /* Font Size */
         function setFontSizeValue(value: number){
-            if(localFont["font-size"] + value < 50){
-                value = 50 - localFont["font-size"]
-            }else if(localFont["font-size"] + value > 300){
-                value = 300 - localFont["font-size"]
+            if(nt.font.v1.localFont["font-size"] + value < 50){
+                value = 50 - nt.font.v1.localFont["font-size"]
+            }else if(nt.font.v1.localFont["font-size"] + value > 300){
+                value = 300 - nt.font.v1.localFont["font-size"]
             }
             if(value>0){
                 $("#novel-option--font-size-input").val("+" + value)
@@ -281,10 +280,10 @@ function setOptionContentsDisplay(id: number){
 
         /* Line Height */
         function setLineHeightValue(value: number){
-            if(localFont["line-height"] + value < 50){
-                value = 50 - localFont["line-height"]
-            }else if(localFont["line-height"] + value > 300){
-                value = 300 - localFont["line-height"]
+            if(nt.font.v1.localFont["line-height"] + value < 50){
+                value = 50 - nt.font.v1.localFont["line-height"]
+            }else if(nt.font.v1.localFont["line-height"] + value > 300){
+                value = 300 - nt.font.v1.localFont["line-height"]
             }
             if(value>0){
                 $("#novel-option--line-height-input").val("+" + value)

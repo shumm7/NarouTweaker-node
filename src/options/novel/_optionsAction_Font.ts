@@ -1,6 +1,5 @@
 import { nt } from "../../utils/narou-tweaker";
 import { check } from "../../utils/misc"
-import { FontFamiliesV1, FontFamilyV1, generateNoDuplicateFontFamilyName, localFont, localFontFamilyV1 } from "../../utils/v1_font";
 
 import $ from 'jquery';
 
@@ -8,7 +7,7 @@ import $ from 'jquery';
 /* フォントの表示設定 */
 export function restoreFont() {
     nt.storage.local.get(null).then((data) => {
-        const fontList: FontFamiliesV1 = localFontFamilyV1.concat(data.fontFontFamilyList ?? [])
+        const fontList: nt.font.v1.FontFamilies = nt.font.v1.localFontFamily.concat(data.fontFontFamilyList ?? [])
 
         $("#font-family-dropdown").empty()
         $.each(fontList, function (i, font) {
@@ -19,7 +18,7 @@ export function restoreFont() {
             }
         })
         const index: number = data.fontSelectedFontFamily ?? 0
-        const selectedFont: FontFamilyV1 = fontList[index]
+        const selectedFont: nt.font.v1.FontFamily = fontList[index]
         $("#font-family-dropdown").val(String(index))
         $("#font-family-dropdown").css("font-family", selectedFont.font)
         $("#font-family-option--editting").text((index + 1) + ": " + selectedFont.name)
@@ -62,7 +61,7 @@ export function restoreFont() {
 
 /* フィールドからフォントの設定を取得し、Objectを返す */
 function getFontData() {
-    return new FontFamilyV1({
+    return new nt.font.v1.FontFamily({
         name: $("#font-name").val(),
         description: $("#font-description").val(),
         show: true,
@@ -80,11 +79,11 @@ function saveSelectedFont() {
     var selectedFont = parseInt(`${$("#font-family-dropdown").val()}`)
 
     nt.storage.local.get(["fontFontFamilyList"]).then(function (data) {
-        var fontList: FontFamiliesV1 = data.fontFontFamilyList
+        var fontList: nt.font.v1.FontFamilies = data.fontFontFamilyList
         if (fontData.name.trim().length == 0) { fontData.name = "新規フォント" }
-        fontData.name = generateNoDuplicateFontFamilyName(localFontFamilyV1.concat(fontList), fontData.name, selectedFont)
+        fontData.name = nt.font.v1.noDuplicateName(nt.font.v1.localFontFamily.concat(fontList), fontData.name, selectedFont)
 
-        var key = selectedFont - localFontFamilyV1.length
+        var key = selectedFont - nt.font.v1.localFontFamily.length
         if (fontList[key] != undefined) {
             if (fontList[key].customizable) {
                 fontList[key] = fontData
@@ -124,18 +123,18 @@ export function addFontEditButtonEvent() {
         saveSelectedFont()
 
         nt.storage.local.get(["fontFontFamilyList"]).then(function (data) {
-            var fontList: FontFamiliesV1 = data.fontFontFamilyList
+            var fontList: nt.font.v1.FontFamilies = data.fontFontFamilyList
 
-            var defaultFont = Object.assign({}, localFontFamilyV1[0])
+            var defaultFont = Object.assign({}, nt.font.v1.localFontFamily[0])
 
             defaultFont.customizable = true
-            defaultFont.name = generateNoDuplicateFontFamilyName(localFontFamilyV1.concat(fontList), "新規フォント", -1)
+            defaultFont.name = nt.font.v1.noDuplicateName(nt.font.v1.localFontFamily.concat(fontList), "新規フォント", -1)
             defaultFont.description = ""
             defaultFont.license = ""
             defaultFont.css = ""
 
             fontList.push(defaultFont)
-            nt.storage.local.set({ fontFontFamilyList: fontList, fontSelectedFontFamily: localFontFamilyV1.length + fontList.length - 1 })
+            nt.storage.local.set({ fontFontFamilyList: fontList, fontSelectedFontFamily: nt.font.v1.localFontFamily.length + fontList.length - 1 })
         });
     })
 
@@ -150,12 +149,12 @@ export function addFontEditButtonEvent() {
         var font = getFontData()
 
         nt.storage.local.get(["fontFontFamilyList"]).then(function (data) {
-            var fontList: FontFamiliesV1 = data.fontFontFamilyList
+            var fontList: nt.font.v1.FontFamilies = data.fontFontFamilyList
             font.customizable = true
-            font.name = generateNoDuplicateFontFamilyName(localFontFamilyV1.concat(fontList), font.name + " - コピー", -1)
+            font.name = nt.font.v1.noDuplicateName(nt.font.v1.localFontFamily.concat(fontList), font.name + " - コピー", -1)
             fontList.push(font)
 
-            nt.storage.local.set({ fontFontFamilyList: fontList, fontSelectedFontFamily: localFontFamilyV1.length + fontList.length - 1 })
+            nt.storage.local.set({ fontFontFamilyList: fontList, fontSelectedFontFamily: nt.font.v1.localFontFamily.length + fontList.length - 1 })
         });
     })
 
@@ -163,13 +162,13 @@ export function addFontEditButtonEvent() {
     $("#font-family-option--buttons button[name='delete']").on("click", (e) => {
         nt.storage.local.get(["fontFontFamilyList", "fontSelectedFontFamily"]).then(function (data) {
             var selectedFont: number = data.fontSelectedFontFamily
-            var key = selectedFont - localFontFamilyV1.length
-            var fontList: FontFamiliesV1 = data.fontFontFamilyList
+            var key = selectedFont - nt.font.v1.localFontFamily.length
+            var fontList: nt.font.v1.FontFamilies = data.fontFontFamilyList
 
             if (fontList[key].customizable == true) {
                 fontList.splice(key, 1)
-                if (selectedFont >= fontList.length + localFontFamilyV1.length - 1) {
-                    selectedFont = fontList.length + localFontFamilyV1.length - 1
+                if (selectedFont >= fontList.length + nt.font.v1.localFontFamily.length - 1) {
+                    selectedFont = fontList.length + nt.font.v1.localFontFamily.length - 1
                 }
                 nt.storage.local.set({ fontFontFamilyList: fontList, fontSelectedFontFamily: selectedFont })
             }
@@ -183,10 +182,10 @@ export function addFontEditButtonEvent() {
 
     /* Font Size */
     function setFontSizeValue(value: number) {
-        if (localFont["font-size"] + value < 50) {
-            value = 50 - localFont["font-size"]
-        } else if (localFont["font-size"] + value > 300) {
-            value = 300 - localFont["font-size"]
+        if (nt.font.v1.localFont["font-size"] + value < 50) {
+            value = 50 - nt.font.v1.localFont["font-size"]
+        } else if (nt.font.v1.localFont["font-size"] + value > 300) {
+            value = 300 - nt.font.v1.localFont["font-size"]
         }
         if (value > 0) {
              $("#font-size-input").val("+" + value)
@@ -226,10 +225,10 @@ export function addFontEditButtonEvent() {
 
     /* Line Height */
     function setLineHeightValue(value: number) {
-        if (localFont["line-height"] + value < 50) {
-            value = 50 - localFont["line-height"]
-        } else if (localFont["line-height"] + value > 300) {
-            value = 300 - localFont["line-height"]
+        if (nt.font.v1.localFont["line-height"] + value < 50) {
+            value = 50 - nt.font.v1.localFont["line-height"]
+        } else if (nt.font.v1.localFont["line-height"] + value > 300) {
+            value = 300 - nt.font.v1.localFont["line-height"]
         }
         if (value > 0) {
             $("#line-height-input").val("+" + value)

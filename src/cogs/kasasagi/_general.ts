@@ -1,4 +1,3 @@
-import {getBigGenre, getGenre, getNovelType, getNovelEnd, getNocgenre} from "../../utils/narou"
 import { addQuestionIconBalloon, addExclamationIconBalloon } from "../../utils/ui";
 import { nt } from "../../utils/narou-tweaker";
 
@@ -227,7 +226,7 @@ function api(r18?: boolean){
             `)
 
 
-            nt.api.novel.fetch(ncode, r18, function(data){
+            nt.api.novel.fetch(ncode, r18).then(function(data){
                 if(data){
                     $("#novel_data .loading-api").remove()
 
@@ -269,7 +268,7 @@ function rank(r18?: boolean){
                 <div class='rank_list'></div>
             `)
 
-            nt.api.rankin.fetch(ncode, function(data){
+            nt.api.rankin.fetch(ncode).then(function(data){
                 if(data){
                     $("#novel_rank_data .loading-api").remove()
 
@@ -647,14 +646,14 @@ function _tableApi(ncode: string, d: nt.api.novel.data, r18?:boolean){
         addValue("作者", d.writer ?? "")
     }
     if(!r18){
-        addValue("大ジャンル", getBigGenre(d.biggenre), d.biggenre)
-        addValue("ジャンル", getGenre(d.genre), d.genre)
+        addValue("大ジャンル", nt.api.novel.bigGenre(d.biggenre), d.biggenre)
+        addValue("ジャンル", nt.api.novel.genre(d.genre), d.genre)
     }
-    addValue("種類", getNovelType(d.novel_type), d.novel_type)
+    addValue("種類", nt.api.novel.novelType(d.novel_type), d.novel_type)
     if(r18){
-        addValue("掲載サイト", getNocgenre(d.nocgenre), d.nocgenre)
+        addValue("掲載サイト", nt.api.novel.nocgenre(d.nocgenre), d.nocgenre)
     }
-    addValue("連載状態", getNovelEnd(d.end), d.end)
+    addValue("連載状態", nt.api.novel.novelEnd(d.end), d.end)
     addValue("初回掲載日", getDateStr(d.general_firstup), d.general_firstup)
     addValue("最終掲載日", getDateStr(d.general_lastup), d.general_lastup)
     addValue("最終更新日", getDateStr(d.novelupdated_at), d.novelupdated_at)

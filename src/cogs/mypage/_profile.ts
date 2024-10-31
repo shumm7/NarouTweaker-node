@@ -1,13 +1,12 @@
 
 import { nt } from "../../utils/narou-tweaker"
-import { getUserIdFromURL, isR18 } from "../../utils/narou"
 
 import $ from 'jquery';
 
 export function _profile(){
     $(".l-main .c-panel").attr("id", "introduction")
-    const userid = getUserIdFromURL()
-    const r18 = isR18()
+    const userid = nt.api.user.getFromURL()
+    const r18 = nt.api.isR18()
 
     if(userid){
         nt.storage.local.get(null).then((data) => {
@@ -23,7 +22,7 @@ export function _profile(){
 
             /* User Detail */
             if(data.mypageProfileStatics && !r18){
-                nt.api.user.fetch(userid, function(d){
+                nt.api.user.fetch(userid).then(function(d){
                     if(d){
                         $(".c-panel__headline").attr("id", "user-detail-header")
                         $(".c-side-list").attr("id", "user-detail")

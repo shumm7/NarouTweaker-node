@@ -1,4 +1,3 @@
-import { pushImpressionHiddenList, pushImpressionReadList } from "../../utils/data"
 import { nt } from "../../utils/narou-tweaker"
 
 import $ from 'jquery';
@@ -21,9 +20,9 @@ function _readImpression(){
                             if($("form #rescomment").length){
                                 
                                 $(document).on('submit','form:has(#rescomment)', function(){
-                                    pushImpressionReadList(ncode, kanrino)
+                                    nt.workspace.impression.pushReadList(ncode, kanrino)
                                     if(data.workspaceImpressionHideButton && data.workspaceImpressionHideWhenMarked){
-                                        pushImpressionHiddenList(ncode, kanrino)
+                                        nt.workspace.impression.pushHiddenList(ncode, kanrino)
                                     }
                                 })
                             }

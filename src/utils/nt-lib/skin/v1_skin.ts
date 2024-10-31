@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import { __nt_text__ } from '../text';
+import { __nt_text__ } from '../utils';
 
 export namespace __nt_skin_v1__ {
     /**

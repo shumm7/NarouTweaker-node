@@ -1,14 +1,14 @@
 import { getOptionFromID, getOptionPageFromID } from "../../options/_utils/optionUI_utils"
-import { ImpressionKanrino } from "../data"
-import { CustomIconIDs, novelIconList, workspaceIconList, workspaceMenuIconList } from "../header"
-import { FontFamiliesV1 } from "../v1_font"
 import { OptionID, OptionUI_Item, OptionUI_ItemID } from "../../options/_utils/optionUI_type"
 
-import { __nt_text__ } from "./text"
+import { __nt_text__ } from "./utils"
 import { __nt_extension__ } from "./process"
 import { __nt_skin_v1__ } from "./skin/v1_skin"
 import { __nt_skin_v2__ } from "./skin/v2_skin"
 import { __nt_api__ } from "./api"
+import { __nt_font_v1__ } from "./skin/v1_font"
+import { __nt_workspace__ } from "./workspace"
+import { __nt_header__ } from "./header"
 
 import browser from "webextension-polyfill"
 
@@ -45,8 +45,8 @@ export namespace __nt_storage__ {
             novelVertical: boolean = false
             novelCustomHeaderScrollHidden: boolean = false
             novelCustomHeaderMode: string = "scroll"
-            novelCustomHeaderLeft: CustomIconIDs = ["home", "info", "impression", "review", "pdf", "favepisode", "favlist_add", "booklist"]
-            novelCustomHeaderRight: CustomIconIDs = ["option"]
+            novelCustomHeaderLeft: Array<__nt_header__.iconId> = ["home", "info", "impression", "review", "pdf", "favepisode", "favlist_add", "booklist"]
+            novelCustomHeaderRight: Array<__nt_header__.iconId> = ["option"]
             novelCustomHeaderShowEnactiveItems: boolean = false
             novelCustomHeaderSocialShowsBrandName: boolean = false
             novelCustomHeaderQRCodeCurrentLocation: boolean = true
@@ -61,12 +61,12 @@ export namespace __nt_storage__ {
             novelAttentionBanner: boolean = false
 
             /* Workspace */
-            workspaceCustomHeader: CustomIconIDs = ["user", "message", "home", "menu"]
+            workspaceCustomHeader: Array<__nt_header__.iconId> = ["user", "message", "home", "menu"]
             workspaceCustomHeaderScrollHidden: boolean = false
             workspaceCustomHeaderMode: string = "absolute"
-            workspaceCustomMenu_Left: CustomIconIDs = ["favorite", "edit", "blog"]
-            workspaceCustomMenu_Middle: CustomIconIDs = ["reaction", "block-mute", "x-home"]
-            workspaceCustomMenu_Right: CustomIconIDs = ["find", "support"]
+            workspaceCustomMenu_Left: Array<__nt_header__.iconId> = ["favorite", "edit", "blog"]
+            workspaceCustomMenu_Middle: Array<__nt_header__.iconId> = ["reaction", "block-mute", "x-home"]
+            workspaceCustomMenu_Right: Array<__nt_header__.iconId> = ["find", "support"]
             workspaceHeaderAdditionalMenu: boolean = false
             workspaceBookmarkLayout: number | string = "0"
             workspaceBookmarkReplaceEpisode: boolean = false
@@ -183,7 +183,7 @@ export namespace __nt_storage__ {
 
             /* Font */
             fontSelectedFontFamily: number = 0
-            fontFontFamilyList: FontFamiliesV1 = []
+            fontFontFamilyList: __nt_font_v1__.FontFamilies = []
             fontFontSize: number = 0
             fontLineHeight: number = 0
             fontTextRendering: string = "optimizeLegibility"
@@ -498,9 +498,9 @@ export namespace __nt_storage__ {
                     } else if (["novelCustomHeaderLeft", "novelCustomHeaderRight"].includes(key)) {
                         if (!Array.isArray(value)) { return }
 
-                        var list: CustomIconIDs = []
+                        var list: Array<__nt_header__.iconId> = []
                         value.forEach(function (id) {
-                            if (id in novelIconList) {
+                            if (id in __nt_header__.novelIconList) {
                                 list.push(id)
                             }
                         })
@@ -508,9 +508,9 @@ export namespace __nt_storage__ {
                     } else if ("workspaceCustomHeader" === key) {
                         if (!Array.isArray(value)) { return }
 
-                        var list: CustomIconIDs = []
+                        var list: Array<__nt_header__.iconId> = []
                         value.forEach(function (id) {
-                            if (id in workspaceIconList) {
+                            if (id in __nt_header__.workspaceIconList) {
                                 list.push(id)
                             }
                         })
@@ -519,9 +519,9 @@ export namespace __nt_storage__ {
                     } else if (["workspaceCustomMenu_Left", "workspaceCustomMenu_Middle", "workspaceCustomMenu_Right"].includes(key)) {
                         if (!Array.isArray(value)) { return }
 
-                        var list: CustomIconIDs = []
+                        var list: Array<__nt_header__.iconId> = []
                         value.forEach(function (id) {
-                            if (id in workspaceMenuIconList) {
+                            if (id in __nt_header__.workspaceMenuIconList) {
                                 list.push(id)
                             }
                         })
@@ -696,10 +696,10 @@ export namespace __nt_storage__ {
             extLastLaunchTime: string = ""
             novelHistory: Array<string> = []
             novelHistoryData: Record<string, [number, number, string]> = {}
-            workspaceImpressionMarked: ImpressionKanrino = {}
-            workspaceImpressionHidden: ImpressionKanrino = {}
+            workspaceImpressionMarked: __nt_workspace__.impression.kanrino = {}
+            workspaceImpressionHidden: __nt_workspace__.impression.kanrino = {}
             novelSkins: Array<__nt_skin_v2__.Skin> = []
-
+            
             /**
              * コンストラクタ
              * @param {undefined|Record<string,any>|__nt_storage__.sync.options} data - 辞書型のデータで初期値を設定する（無効な値は全て除外される）

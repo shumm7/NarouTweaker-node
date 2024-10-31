@@ -1,4 +1,123 @@
-import $ from 'jquery';
+import $ from "jquery";
+
+export namespace __nt_time__ {
+    export const INVALID_DATE = new Date('invalid date');
+
+    /**
+     * 日本語の日付の文字列を取得する（yyyy年MM月dd日）
+     * @param {Date} date - Dateオブジェクト（未指定の場合は現在時刻）
+     * @returns {string} - 日付の文字列
+    */
+    export function getDateStringJapanese(date:Date=new Date()): string{
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1);
+        const day = String(date.getDate());
+        return `${year}年${month}月${day}日`;
+    }
+
+    /**
+     * 日付の文字列を取得する（yyyy-MM-dd）
+     * @param {Date} date - Dateオブジェクト（未指定の場合は現在時刻）
+     * @param {string} divider - 用いる記号（未指定の場合はハイフン「-」）
+     * @returns {string} - 日付の文字列
+    */
+    export function getDateString(date:Date=new Date(), divider:string = "-"): string{
+        if(date===null){return ""}
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}${divider}${month}${divider}${day}`;
+    }
+
+    /**
+     * 日時の文字列からDateオブジェクトを取得
+     * @param {string} str - 日時の文字列
+     * @returns {Date} - Dateオブジェクト
+    */
+    export function getDatetimeFromString(str:string): Date{
+        return new Date(str)
+    }
+
+    /**
+     * 日時の文字列を取得する（yyyy/MM/dd HH:mm:ss.SSS）
+     * @param {Date} date - Dateオブジェクト（未指定の場合は現在時刻）
+     * @returns {string} - 日時の文字列
+    */
+    export function getDatetimeString(date:Date=new Date()): string{
+        if(date===null || date===undefined){return ""}
+        return date.getFullYear() + '/' + ('0' + (date.getMonth() + 1)).slice(-2) + '/' +('0' + date.getDate()).slice(-2) + ' ' +  ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2) + ':' + ('0' + date.getSeconds()).slice(-2) + '.' + ('00' + date.getMilliseconds()).slice(-3);
+    }
+
+    /**
+     * ファイル名向けの日時の文字列を取得する（yyyy.MM.dd-HH.mm.ss）
+     * @param {Date} date - Dateオブジェクト（未指定の場合は現在時刻）
+     * @returns {string} - 日時の文字列
+    */
+    export function getDatetimeStringForFilename(date:Date=new Date()): string{
+        if(date===null || date===undefined){return ""}
+        return date.getFullYear() + '.' + ('0' + (date.getMonth() + 1)).slice(-2) + '.' +('0' + date.getDate()).slice(-2) + '-' +  ('0' + date.getHours()).slice(-2) + '.' + ('0' + date.getMinutes()).slice(-2) + '.' + ('0' + date.getSeconds()).slice(-2);
+
+    }
+
+    /**
+     * ミリ秒表示のない日時の文字列を取得する（yyyy/MM/dd HH:mm:ss）
+     * @param {Date} date - Dateオブジェクト（未指定の場合は現在時刻）
+     * @returns {string} - 日時の文字列
+    */
+    export function getDatetimeStringWithoutMilisecond(date:Date=new Date()): string{
+        if(date===null || date===undefined){return ""}
+        return date.getFullYear() + '/' + ('0' + (date.getMonth() + 1)).slice(-2) + '/' +('0' + date.getDate()).slice(-2) + ' ' +  ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2) + ':' + ('0' + date.getSeconds()).slice(-2);
+    }
+
+    /**
+     * 秒表示のない日時の文字列を取得する（yyyy/MM/dd HH:mm）
+     * @param {Date} date - Dateオブジェクト（未指定の場合は現在時刻）
+     * @returns {string} - 日時の文字列
+    */
+    export function getDatetimeStringWithoutSecond(date:Date=new Date()): string{
+        if(date===null || date===undefined){return ""}
+        return date.getFullYear() + '/' + ('0' + (date.getMonth() + 1)).slice(-2) + '/' +('0' + date.getDate()).slice(-2) + ' ' +  ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2);
+    }
+
+    /**
+     * 指定したDateオブジェクトの前日を表すDateオブジェクトを取得
+     * @param {Date} today - 当日のDateオブジェクト（未指定の場合は現在時刻）
+     * @returns {Date} - 前日のDateオブジェクト
+    */
+    export function getYesterday(today: Date = new Date()): Date{
+        var yesterday = today
+        yesterday.setDate(today.getDate() - 1)
+        return yesterday
+    }
+
+    /**
+     * 分を「dd日hh時間mm分」に変換
+     * @param {number} minute - 分
+     * @returns {string} - 文字列（dd日hh時間mm分）
+    */
+    export function minuteStringJapanese(minute: number|string): string{
+        if(typeof minute === "string"){
+            minute = parseFloat(minute)
+        }else if(typeof minute === "number"){
+            if(isNaN(minute) || minute<0){
+                return ``
+            }
+        }
+
+        var hour = Math.floor(minute / 60)
+        minute -= (hour * 60)
+        var day = Math.floor(hour / 24)
+        hour -= (day * 24)
+
+        if(hour==0){
+            return `${minute}分`
+        }else if(day==0 && hour > 0){
+            return `${hour}時間${minute}分`
+        }else{
+            return `${day.toLocaleString()}日${hour}時間${minute}分`
+        }
+    }
+}
 
 export namespace __nt_text__ {
     /**
@@ -362,5 +481,123 @@ export namespace __nt_text__ {
         }
 
         return calculate(strA, strB)
+    }
+}
+
+export namespace __nt_math__ {
+    /**
+     * 数値を上限・下限で制限する
+     * @param {number} n - 対象の数値
+     * @param {number|null|undefined} min - 下限の数値
+     * @param {number|null|undefined} max - 上限の数値
+     * @returns {number} 制限後の数値
+     */
+    export function limit(n: number, min?: number|null, max?: number|null): number{
+        if(isNaN(n)){return n}
+
+        if(typeof min === "number" && !isNaN(min)){
+            if(typeof max === "number" && !isNaN(max)){
+                if(min <= max){
+                    if(n < min){
+                        return min
+                    }
+                    if(n > max){
+                        return max
+                    }
+                }
+            }else{
+                if(n < min){
+                    return min
+                }
+            }
+        }else{
+            if(typeof max === "number"){
+                if(n > max){
+                    return max
+                }
+            }
+        }
+        return n
+    }
+}
+
+export namespace __nt_array__ {
+    /**
+     * 配列のなかで一番前にある`undefined`を`item`で置き換えます。  
+     * `undefined`が存在しなかった場合は、最後尾に`item`を追加します。  
+     * @param array 操作対象の配列
+     * @param item 挿入する要素
+     * @returns `item`を挿入した位置
+     */
+    export function putin<T>(array: Array<T>, item: T): number{
+        for(let i=0; i<array.length; i++){
+            if(array[i]===undefined){
+                array[i] = item
+                return i
+            }
+        }
+        return array.push(item)
+    }
+
+    /**
+     * 指定した配列を長さ0の空配列にします。  
+     * @param array 操作対象の配列
+     */
+    export function empty<T>(array: Array<T>): void{
+        for(let i=0; i<array.length; i++){
+            array.pop()
+        }
+    }
+    
+    /**
+     * 既存の配列のシャローコピーを返します。  
+     * @param array コピー元の配列（この配列は変更されません）
+     * @returns コピーされた配列
+     */
+    export function clone<T>(array: Array<T>): Array<T>{
+        return array.concat()
+    }
+    
+    /**
+     * `fromIndex`と`toIndex`で指定された位置にある要素を入れ替えます。  
+     * @param array 操作対象の配列
+     * @param fromIndex 要素のインデックス
+     * @param toIndex 要素のインデックス
+     */
+    export function swap<T>(array: Array<T>, fromIndex: number, toIndex: number){
+        var from: T = array[fromIndex]
+        var to: T = array[toIndex]
+        array[fromIndex] = to
+        array[toIndex] = from
+    }
+
+    export function move<T>(array: Array<T>, index: number, moveTo: number){
+        if((index < array.length && index >= 0) && (moveTo < array.length && moveTo>=0)){
+            var data = array[index]
+            array.splice(index, 1)
+            array.splice(moveTo, 0, data)
+        }
+    }
+
+    /**
+     * 指定したインデックスの要素を削除し、前に詰めます。  
+     * @param array 操作対象の配列
+     * @param index 削除対象のインデックス
+     */
+    export function removeAt<T>(array: Array<T>, index: number){
+        array.splice(index, 1)
+    }
+
+    /**
+     * 指定した要素と一致する要素を配列から削除し、前に詰めます。  
+     * @param array 操作対象の配列
+     * @param item 検索対象の要素
+     */
+    export function remove<T>(array: Array<T>, item: T){
+        for(let i=0; i<array.length; i++){
+            if(array[i] === item){
+                array.splice(i, 1)
+            }
+        }
     }
 }

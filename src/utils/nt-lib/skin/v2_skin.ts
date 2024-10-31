@@ -1,8 +1,7 @@
 import { __nt_skin_v1__ } from "./v1_skin"
 import { __nt_skin__ } from "../skin"
-import { __nt_text__ } from "../text"
+import { __nt_text__, __nt_array__ } from "../utils"
 import { __nt_storage__ } from "../storage"
-import { __nt_array__ } from "../array"
 
 export namespace __nt_skin_v2__ {
 
@@ -16,22 +15,22 @@ export namespace __nt_skin_v2__ {
      * @param {string} description - 説明文
      * @param {boolean} customizable - 編集可能かどうか
      * @param {boolean} show - 表示するかどうか
-     * @param {SkinStyle} style - スタイルデータのオブジェクト
+     * @param {Skin_Style} style - スタイルデータのオブジェクト
      * @param {CSS_String} css - カスタムCSS
      */
-    export class Skin{
+    export class Skin {
         [key: string]: any
         private readonly keys: string[] = ["name", "description", "preview", "style", "css", "version"]
         readonly version: number = 2
 
         name: string = "新規スキン"
         description: string = ""
-        preview: SkinPreview = new SkinPreview()
-        style: Array<SkinStyle> = []
+        preview: Skin_Preview = new Skin_Preview()
+        style: Array<Skin_Style> = []
         css: __nt_text__.CSS_String = ""
 
         constructor(data: Skin)
-        constructor(data: {name: string, description: string, preview: SkinPreview, style: Array<SkinStyle>, css: __nt_text__.CSS_String})
+        constructor(data: {name: string, description: string, preview: Skin_Preview, style: Array<Skin_Style>, css: __nt_text__.CSS_String})
         constructor(data: Record<string,any>);
         constructor(data: string);
         constructor(data?: any) {
@@ -47,7 +46,7 @@ export namespace __nt_skin_v2__ {
             }
         }
 
-        set(key: Skin|{name: string, description: string, preview: SkinPreview, style: Array<SkinStyle>, css: __nt_text__.CSS_String}): void;
+        set(key: Skin|{name: string, description: string, preview: Skin_Preview, style: Array<Skin_Style>, css: __nt_text__.CSS_String}): void;
         set(key: __nt_skin_v1__.Skin|Record<string,any>): void;
         set(key: string, value: any): void;
         set(key?: any, value?: any): void{
@@ -88,12 +87,12 @@ export namespace __nt_skin_v2__ {
                     this.css = value
                 }
                 else if("preview" === key){
-                    this.preview = new SkinPreview(value)
+                    this.preview = new Skin_Preview(value)
                 }
                 else if("style" === key && Array.isArray(value)){
-                    var ret: SkinStyle[] = []
+                    var ret: Skin_Style[] = []
                     for(var style of value){
-                        ret.push(new SkinStyle(style))
+                        ret.push(new Skin_Style(style))
                     }
                     this.style = ret
                 }
@@ -125,18 +124,18 @@ export namespace __nt_skin_v2__ {
         }
     }
 
-    class SkinPreview {
+    class Skin_Preview {
         [key: string]: any
 
         text: string = "#444"
         background: string = "#fff"
 
         constructor(data: {text?: string, background?: string});
-        constructor(data: SkinPreview);
+        constructor(data: Skin_Preview);
         constructor(data: Record<string,any>);
         constructor(data?: any);
         constructor(data?: any) {
-            if(data instanceof SkinPreview){
+            if(data instanceof Skin_Preview){
                 this.text = data.text
                 this.background = data.background
             }else if(data!==null && typeof data === "object"){
@@ -161,7 +160,7 @@ export namespace __nt_skin_v2__ {
         }
     }
 
-    class SkinStyle {
+    class Skin_Style {
         [key: string]: any
 
         key?: string
@@ -169,11 +168,11 @@ export namespace __nt_skin_v2__ {
         type?: "c"|"v"
 
         constructor(data: {key?: string, value?: string, type?: "c"|"v"|"col"|"var"|"color"|"variable"});
-        constructor(data: SkinStyle);
+        constructor(data: Skin_Style);
         constructor(data: Record<string,any>);
         constructor(data?: any);
         constructor(data?: any) {
-            if(data instanceof SkinPreview){
+            if(data instanceof Skin_Preview){
                 this.key = data.key
                 this.value = data.value
                 this.type = data.type
@@ -212,7 +211,7 @@ export namespace __nt_skin_v2__ {
     }
 
 
-    export const localSkins: Array<Skin> = [
+    export const internalSkins: Array<Skin> = [
         new Skin({
             name: "標準設定〔小説家になろう〕",
             description: "サイトのデフォルト",
@@ -389,7 +388,7 @@ export namespace __nt_skin_v2__ {
         
             /* .js-customlayout */
             style.forEach(function(_s){
-                const s = new SkinStyle(_s)
+                const s = new Skin_Style(_s)
                 if(s){
                     if(typeof s.value ==="string" && typeof s.key ==="string"){
                         if(s.type=="v"){
@@ -537,13 +536,41 @@ export namespace __nt_skin_v2__ {
     }
 
     /* ツール */
+    /**
+     * キーとストレージを指定して、スキンデータを取得。
+     * @param src 対象のストレージ
+     * @param key キー
+     * @returns スキンデータ（存在しない場合は`undefined`）
+     */
     export function getSkin(src: "internal", key: number): Skin|undefined
+    /**
+     * キーとストレージを指定して、スキンデータを取得。
+     * @param src 対象のストレージ
+     * @param key キー
+     * @param local localストレージ
+     * @returns スキンデータ（存在しない場合は`undefined`）
+     */
     export function getSkin(src: "local", key: number, local?: __nt_storage__.local.options): Skin|undefined
+    /**
+     * キーとストレージを指定して、スキンデータを取得。
+     * @param src 対象のストレージ
+     * @param key キー
+     * @param sync syncストレージ
+     * @returns スキンデータ（存在しない場合は`undefined`）
+     */
     export function getSkin(src: "sync", key: number, sync?: __nt_storage__.sync.options): Skin|undefined
+    /**
+     * キーとストレージを指定して、スキンデータを取得。
+     * @param src 対象のストレージ
+     * @param key キー
+     * @param local localストレージ
+     * @param sync syncストレージ
+     * @returns スキンデータ（存在しない場合は`undefined`）
+     */
     export function getSkin(src: SkinSrc, key: number, local?: __nt_storage__.local.options|__nt_storage__.sync.options, sync?: __nt_storage__.sync.options): Skin|undefined;
     export function getSkin(src: SkinSrc, key: number, local?: __nt_storage__.local.options|__nt_storage__.sync.options, sync?: __nt_storage__.sync.options): Skin|undefined{
         if(src === "internal"){
-            return localSkins.at(key)
+            return internalSkins.at(key)
         }else if(src === "local" && local instanceof __nt_storage__.local.options){
             return local.novelSkins.at(key)
         }else if(src === "sync" && local instanceof __nt_storage__.sync.options){
@@ -553,13 +580,35 @@ export namespace __nt_skin_v2__ {
         }
     }
 
+    /**
+     * 標準搭載のスキンデータをすべて取得。
+     * @param src 対象のストレージ
+     * @returns スキンデータの配列
+     */
     export function getSkinList(src: "internal"): Array<Skin>
+    /**
+     * localストレージに含まれるスキンデータをすべて取得。
+     * @param src 対象のストレージ
+     * @returns スキンデータの配列
+     */
     export function getSkinList(src: "local", local?: __nt_storage__.local.options): Array<Skin>
+    /**
+     * syncストレージに含まれるスキンデータをすべて取得。
+     * @param src 対象のストレージ
+     * @returns スキンデータの配列
+     */
     export function getSkinList(src: "sync", sync?: __nt_storage__.sync.options): Array<Skin>
+    /**
+     * 特定のストレージに含まれるスキンデータをすべて取得。
+     * @param src 対象のストレージ
+     * @param local localストレージ
+     * @param sync syncストレージ
+     * @returns スキンデータの配列
+     */
     export function getSkinList(src: SkinSrc, local?: __nt_storage__.local.options|__nt_storage__.sync.options, sync?: __nt_storage__.sync.options): Array<Skin>;
     export function getSkinList(src: SkinSrc, local?: __nt_storage__.local.options|__nt_storage__.sync.options, sync?: __nt_storage__.sync.options): Array<Skin>{
         if(src === "internal"){
-            return localSkins
+            return internalSkins
         }else if(src === "local" && local instanceof __nt_storage__.local.options){
             return local.novelSkins
         }else if(src === "sync" && local instanceof __nt_storage__.sync.options){
@@ -570,6 +619,12 @@ export namespace __nt_skin_v2__ {
         return []
     }
 
+    /**
+     * 「使用可能なスキンリスト」からインデックスを指定して、スキンを取得。
+     * @param i インデックス
+     * @param local localストレージ
+     * @returns スキンデータ（存在しない場合は`undefined`）
+     */
     export function getSkinFromIndex(i: number, local: __nt_storage__.local.options): Skin|undefined{
         const l = local.novelSkinsAvailable.at(i)
         if(l!==undefined){
@@ -577,112 +632,228 @@ export namespace __nt_skin_v2__ {
         }
     }
 
+    /**
+     * 適用中のスキンを取得。
+     * @param local localストレージ
+     * @returns スキンデータ（存在しない場合は`undefined`）
+     */
     export function getSelectedSkin(local: __nt_storage__.local.options): Skin|undefined{
         return getSkin(local.novelSkinSelected.src, local.novelSkinSelected.key, local)
     }
 
-    export function getSelectedSkinIndex(local: __nt_storage__.local.options): number|undefined {
+    /**
+     * 「使用可能なスキンリスト」でのインデックスを取得。
+     * @param src 対象のストレージ
+     * @param key キー
+     * @param local localストレージ
+     * @returns インデックス（取得できなかった場合は`undefined`）
+     */
+    export function getSkinIndex(src: SkinSrc, key: number, local: __nt_storage__.local.options): number|undefined {
         const list = local.novelSkinsAvailable
-        const selected = local.novelSkinSelected
         for(let i=0; i<list.length; i++){
-            if(list[i].src===selected.src && list[i].key===selected.key){
+            if(list[i].src===src && list[i].key===key){
                 return i
             }
         }
         return undefined
     }
 
+    /**
+     * 適用中のスキンの「使用可能なスキンリスト」でのインデックスを取得。
+     * @param local localストレージ
+     * @returns インデックス（取得できなかった場合は`undefined`）
+     */
+    export function getSelectedSkinIndex(local: __nt_storage__.local.options): number|undefined {
+        const selected = local.novelSkinSelected
+        return getSkinIndex(selected.src, selected.key, local)
+    }
 
-    export function addSkin(skin: Skin, src: "local"): void{
+    /**
+     * 新規スキンを保存する
+     * @param skin スキンデータ
+     * @param src 対象のストレージ
+     * @param addAvailableList 「使用可能なスキンリスト」に追加するかどうか
+     */
+    export function addSkin(skin: Skin, src: "local", addAvailableList?: boolean): Promise<number|undefined>;
+    /**
+     * 新規スキンを保存する
+     * @param skin スキンデータ
+     * @param src 対象のストレージ
+     */
+    export function addSkin(skin: Skin, src: "sync"): Promise<number|undefined>;
+    export function addSkin(skin: Skin, src: "local"|"sync", addAvailableList: boolean = false): Promise<number|undefined>{
         if(src==="local"){
-            __nt_storage__.local.get(null).then((local)=>{
-                const key: number = __nt_array__.putIn(local.novelSkins, skin)
-                local.novelSkinsAvailable.push({src: src, key: key})
-                __nt_storage__.local.set(local.get([`novelSkin_${key}`, "novelSkinsAvailable"]))
+            return __nt_storage__.local.get(null).then((local)=>{
+                const key: number = __nt_array__.putin(local.novelSkins, skin)
+                if(addAvailableList){
+                    local.novelSkinsAvailable.push({src: src, key: key})
+                    return __nt_storage__.local.set(local.get([`novelSkin_${key}`, "novelSkinsAvailable"])).then(()=>{
+                        return key
+                    }).catch((e)=>{
+                        return undefined
+                    })
+                }else{
+                    return __nt_storage__.local.set(local.get([`novelSkin_${key}`])).then(()=>{
+                        return key
+                    }).catch((e)=>{
+                        return undefined
+                    })
+                }
             })
+        }else if(src==="sync"){
+            return __nt_storage__.sync.get(null).then((sync)=>{
+                const key: number = __nt_array__.putin(sync.novelSkins, skin)
+                return __nt_storage__.sync.set(sync.get([`novelSkin_${key}`])).then(()=>{
+                    return key
+                }).catch((e)=>{
+                    return undefined
+                })
+            })
+        }
+
+        return new Promise(()=>{})
+    }
+
+    /**
+     * スキンを削除する。
+     * @param src 対象のストレージ
+     * @param key キー
+     */
+    export function removeSkin(src: number|SkinSrc, key?: number): Promise<void>{
+        if(typeof src==="number"){
+            const i = src
+            return __nt_storage__.local.get(null).then((local)=>{
+                const availableSkin = local.novelSkinsAvailable.at(i)
+                if(availableSkin!==undefined){
+                    return removeSkin(availableSkin.src, availableSkin.key)
+                }
+            })
+
+        }else if(typeof src==="string" && typeof key==="number"){
+            if(src==="local"){
+                return __nt_storage__.local.get(null).then((local)=>{
+                    const skin = local.novelSkins.at(key)
+                    if(skin!==undefined){
+                        const i = getSkinIndex("local", key, local)
+                        var result = false
+                        if(i!==undefined){
+                            result = _inactivateSkin(i, local)
+                        }
+
+                        __nt_array__.removeAt(local.novelSkins, key)
+                        if(result){
+                            return __nt_storage__.local.remove(`novelSkin_${key}`).then(()=>{
+                                return __nt_storage__.local.set(local.get(["novelSkinsAvailable", "novelSkinSelected"]))
+                            })
+                        }else{
+                            return __nt_storage__.local.remove(`novelSkin_${key}`)
+                        }
+                    }
+                })
+            }else if(src==="sync"){
+                return __nt_storage__.sync.get(null).then((sync)=>{
+                    const skin = sync.novelSkins.at(key)
+                    if(skin!==undefined){
+                        return __nt_storage__.sync.remove(`novelSkin_${key}`)
+                    }
+                })
+
+            }else if(src==="internal"){
+                return inactivateSkin(src, key)
+            }
+        }
+
+        return new Promise(()=>{})
+    }
+
+    /**
+     * 「使用可能なスキンリスト」にスキンを追加（有効化）
+     * @param src 対象のストレージ
+     * @param key キー
+     * @param selectThis スキンを有効化した時に、そのスキンを選択するかどうか
+     */
+    export function activateSkin(src: "internal"|"local", key: number, selectThis: boolean = true): Promise<void>{
+        return __nt_storage__.local.get(null).then((local)=>{
+            if(src === "internal"){
+                activate(internalSkins.at(key), selectThis, local)
+                return __nt_storage__.local.set(local.get(["novelSkinsAvailable", "novelSkinSelected"]))
+            }else if(src === "local"){
+                activate(local.novelSkins.at(key), selectThis, local)
+                return __nt_storage__.local.set(local.get(["novelSkinsAvailable", "novelSkinSelected"]))
+            }
+        })
+
+        function activate(skin: Skin|undefined, selectThis: boolean, local: __nt_storage__.local.options){
+            const selectedIndex = getSelectedSkinIndex(local)
+            if(skin!==undefined){
+                const p = __nt_array__.putin(local.novelSkinsAvailable, {src: src, key: key})
+                if(selectThis){
+                    local.novelSkinSelected = {src: src, key: key}
+                }else if(selectedIndex !==undefined && p <= selectedIndex && selectedIndex + 1 < local.novelSkinsAvailable.length){
+                    local.novelSkinSelected = local.novelSkinsAvailable[selectedIndex + 1]
+                }
+            }
         }
     }
 
-    export function removeSkin(i: number){
-        __nt_storage__.local.get(null).then((local)=>{
-            const list = local.novelSkinsAvailable.at(i)
-
-            const selectedIndex = getSelectedSkinIndex(local)
-            if(list!==undefined && list.src!=="internal" && local.novelSkinsAvailable.length>1){
-                if(selectedIndex!==undefined){
-                    if(selectedIndex-1 >= 0 && selectedIndex-1 < local.novelSkinsAvailable.length){
-                        local.novelSkinSelected = local.novelSkinsAvailable[selectedIndex-1]
-                    }else if(selectedIndex-1 < 0 && local.novelSkinsAvailable.length > 0){
-                        local.novelSkinSelected = local.novelSkinsAvailable[0]
-                    }else{
-                        local.novelSkinSelected = {src: "internal", key: 0}
+    /**
+     * 「使用可能なスキンリスト」からスキンを削除（無効化）
+     * @param i インデックス
+     */
+    export function inactivateSkin(i: number): Promise<void>;
+    /**
+     * 「使用可能なスキンリスト」からスキンを削除（無効化）
+     * @param src 対象のストレージ
+     * @param key キー
+     */
+    export function inactivateSkin(src: "internal"|"local", key: number): Promise<void>;
+    export function inactivateSkin(src: number|"internal"|"local", key?:number): Promise<void>{
+        return __nt_storage__.local.get(null).then((local)=>{
+            if(typeof src === "number"){
+                if(_inactivateSkin(src, local)){
+                    return __nt_storage__.local.set(local.get(["novelSkinsAvailable", "novelSkinSelected"]))
+                }
+                
+            }else if(typeof src==="string" && typeof key==="number"){
+                const i = getSkinIndex(src, key, local)
+                if(i!==undefined){
+                    if(_inactivateSkin(i, local)){
+                        return __nt_storage__.local.set(local.get(["novelSkinsAvailable", "novelSkinSelected"]))
                     }
                 }
-
-                if(list.src==="local"){
-                    local.novelSkinsAvailable = local.novelSkinsAvailable.filter((v)=>{return v?.src!==list.src || v?.key!==list.key})
-                    __nt_storage__.local.remove(`novelSkin_${list.key}`).then(()=>{
-                        __nt_storage__.local.set(local.get(["novelSkinsAvailable", "novelSkinSelected"]))
-                    })
-                }
             }
-
+            return
         })
     }
 
-    export function activateSkin(src: "internal"|"local", key: number, selectThis?: boolean){
-        __nt_storage__.local.get(null).then((local)=>{
-            const selectedIndex = getSelectedSkinIndex(local)
-            if(src === "internal"){
-                if(localSkins.at(key)!==undefined){
-                    const p = __nt_array__.putIn(local.novelSkinsAvailable, {src: src, key: key})
-                    if(selectThis){
-                        local.novelSkinSelected = {src: src, key: key}
-                    }else if(selectedIndex !==undefined && p <= selectedIndex && selectedIndex + 1 < local.novelSkinsAvailable.length){
-                        local.novelSkinSelected = local.novelSkinsAvailable[selectedIndex + 1]
-                    }
-                    __nt_storage__.local.set(local.get(["novelSkinsAvailable", "novelSkinSelected"]))
-                }
-            }else if(src === "local"){
-                if(local.novelSkins.at(key)!==undefined){
-                    const p = __nt_array__.putIn(local.novelSkinsAvailable, {src: src, key: key})
-                    if(selectThis){
-                        local.novelSkinSelected = {src: src, key: key}
-                    }else if(selectedIndex !==undefined && p <= selectedIndex && selectedIndex + 1 < local.novelSkinsAvailable.length){
-                        local.novelSkinSelected = local.novelSkinsAvailable[selectedIndex + 1]
-                    }
-                    __nt_storage__.local.set(local.get(["novelSkinsAvailable", "novelSkinSelected"]))
+    function _inactivateSkin(i: number, local: __nt_storage__.local.options): boolean{
+        const selectedIndex = getSelectedSkinIndex(local)
+        if(local.novelSkinsAvailable!==undefined && local.novelSkinsAvailable.length > 1 && local.novelSkinsAvailable.at(i)!==undefined){
+            __nt_array__.removeAt(local.novelSkinsAvailable, i)
+            if(selectedIndex!==undefined){
+                if(selectedIndex-1 >= 0 && selectedIndex-1 < local.novelSkinsAvailable.length){
+                    local.novelSkinSelected = local.novelSkinsAvailable[selectedIndex-1]
+                }else if(selectedIndex-1 < 0 && local.novelSkinsAvailable.length > 0){
+                    local.novelSkinSelected = local.novelSkinsAvailable[0]
+                }else{
+                    local.novelSkinSelected = {src: "internal", key: 0}
                 }
             }
-        })
+            return true
+        }
+        return false
     }
 
-    export function inactivateSkin(i: number){
-        __nt_storage__.local.get(null).then((local)=>{
+    /**
+     * 「使用可能なスキンリスト」のデータを入れ替える
+     * @param from 移動元のインデックス
+     * @param to 移動先のインデックス
+     */
+    export function swapAvailableSkin(from: number, to: number): Promise<void>{
+        return __nt_storage__.local.get(null).then((local)=>{
             const selectedIndex = getSelectedSkinIndex(local)
-            if(local.novelSkinsAvailable!==undefined && local.novelSkinsAvailable.length > 1){
-                __nt_array__.removeAt(local.novelSkinsAvailable, i)
-                if(selectedIndex!==undefined){
-                    if(selectedIndex-1 >= 0 && selectedIndex-1 < local.novelSkinsAvailable.length){
-                        local.novelSkinSelected = local.novelSkinsAvailable[selectedIndex-1]
-                    }else if(selectedIndex-1 < 0 && local.novelSkinsAvailable.length > 0){
-                        local.novelSkinSelected = local.novelSkinsAvailable[0]
-                    }else{
-                        local.novelSkinSelected = {src: "internal", key: 0}
-                    }
-
-                }
-
-                __nt_storage__.local.set(local.get(["novelSkinsAvailable", "novelSkinSelected"]))
-            }
-        })
-    }
-
-    export function swapAvailableSkin(from: number, to: number){
-        __nt_storage__.local.get(null).then((local)=>{
-            const selectedIndex = getSelectedSkinIndex(local)
-            let toData = local.novelSkinsAvailable.at(to)
             let fromData = local.novelSkinsAvailable.at(from)
+            let toData = local.novelSkinsAvailable.at(to)
             if(fromData!==undefined && toData!==undefined){
                 if(selectedIndex === from){
                     local.novelSkinSelected = toData
@@ -690,7 +861,78 @@ export namespace __nt_skin_v2__ {
                     local.novelSkinSelected = fromData
                 }
                 __nt_array__.swap(local.novelSkinsAvailable, from, to)
-                __nt_storage__.local.set(local.get(["novelSkinsAvailable", "novelSkinSelected"]))
+                return __nt_storage__.local.set(local.get(["novelSkinsAvailable", "novelSkinSelected"]))
+            }
+        })
+    }
+
+    /**
+     * 「使用可能なスキンリスト」のデータを移動する
+     * @param i 移動元のインデックス
+     * @param moveCount 移動量を表す正の整数（正の場合はリストの後ろへ、負の場合はリストの前へ）
+     */
+    export function moveAvailableSkin(i: number, moveCount: number): Promise<void>{
+        return __nt_storage__.local.get(null).then((local)=>{
+            const to = i + moveCount
+
+            if(local.novelSkinsAvailable.at(i)!==undefined && local.novelSkinsAvailable.at(to)!==undefined){
+                __nt_array__.move(local.novelSkinsAvailable, i, to)
+                return __nt_storage__.local.set(local.get(["novelSkinsAvailable"]))
+            }
+        })
+    }
+
+
+    /**
+     * 既存のスキンをsyncストレージへ追加する
+     * @param i 「使用可能なスキンリスト」のインデックス
+     */
+    export function uploadSkin(i: number): Promise<number|undefined>;
+    /**
+     * 既存のスキンをsyncストレージへ追加する
+     * @param src 対象のストレージ
+     * @param key キー
+     */
+    export function uploadSkin(src: "internal"|"local", key:number): Promise<number|undefined>;
+    export function uploadSkin(src: number|"internal"|"local", key?:number): Promise<number|undefined>{
+        if(typeof src==="string" && typeof key==="number"){
+            if(src==="internal"){
+                const skin =  __nt_skin_v2__.internalSkins.at(key)
+                if(skin!==undefined){
+                    return addSkin(skin, "sync")
+                }
+
+            }else if(src==="local"){
+                return __nt_storage__.local.get(null).then((local)=>{
+                    const skin = local.novelSkins.at(key)
+                    if(skin!==undefined){
+                        return addSkin(skin, "sync")
+                    }
+                })
+            }
+
+        }else if(typeof src==="number"){
+            const i = src
+            return __nt_storage__.local.get(null).then((local)=>{
+                const skin = getSkinFromIndex(i, local)
+                if(skin!==undefined){
+                    return addSkin(skin, "sync")
+                }
+            })
+        }
+        return new Promise(()=>{return undefined})
+    }
+
+    /**
+     * syncストレージのスキンをlocalストレージに保存する
+     * @param key キー
+     * @param addAvailableList 追加したスキンを選択するかどうか
+     */
+    export function downloadSkin(key: number, addAvailableList?: boolean): Promise<number|undefined>{
+        return __nt_storage__.sync.get(null).then((sync)=>{
+            const skin = sync.novelSkins.at(key)
+            if(skin!==undefined){
+                return addSkin(skin, "local", addAvailableList)
             }
         })
     }

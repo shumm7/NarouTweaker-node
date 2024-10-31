@@ -1,6 +1,4 @@
-import { CustomIconID, CustomIconIDs, getExcludeIcons } from "../../utils/header"
 import { nt } from "../../utils/narou-tweaker";
-import { getEpisode, getPageType, isR18 } from "../../utils/narou";
 
 import $ from 'jquery';
 import QRCode from 'qrcode'
@@ -22,10 +20,10 @@ export function _header(){
         const ncode = n.ncode()
         const index = n.index()
         if(ncode!==undefined){
-            const episode: number = getEpisode()
-            const pageType: string|undefined = getPageType()
+            const episode: number = nt.api.episode()
+            const pageType: string|undefined = nt.api.pageType()
             const atom: string = $("link[href^='https://api.syosetu.com/writernovel/'][title='Atom']").prop("href")
-            const r18: boolean|undefined = isR18()
+            const r18: boolean|undefined = nt.api.isR18()
             var elm: JQuery<HTMLElement>
 
             let userid: string|undefined
@@ -326,7 +324,7 @@ export function _header(){
             
             if(r18){
                 var url = "https://api.syosetu.com/novel18api/api/?out=json&libtype=2&ncode=" + ncode
-                nt.api.novel.fetch(ncode, r18, function(data){
+                nt.api.novel.fetch(ncode, r18).then(function(data){
                     if(data){
                         var l = $(".narou")
                         if(data.nocgenre==1){
@@ -793,17 +791,17 @@ export function _header(){
             })
             
             /* Set Position */
-            function resetHeader(left: CustomIconIDs, right: CustomIconIDs){
+            function resetHeader(left: Array<nt.header.iconId>, right: Array<nt.header.iconId>){
                 $("#novel_header ul li.disabled").removeClass("disabled")
                 $("#novel_header_right ul li.disabled").removeClass("disabled")
                 $(".box_menu_novelview_after ul.menu_novelview_after li.disabled").removeClass("disabled")
-                $.each(getExcludeIcons([right, left]), (_, cls)=>{
+                $.each(nt.header.getExcludeIcons([right, left]), (_, cls)=>{
                     var elm = $(`#novel_header ul li.${cls}, #novel_header_right ul li.${cls}, .box_menu_novelview_after ul.menu_novelview_after li.${cls}`)
                     if(elm.length){
                         elm.addClass("disabled")
                     }
                 })
-                $.each(right, (_, cls: CustomIconID)=>{
+                $.each(right, (_, cls: nt.header.iconId)=>{
                     var elm = $(`#novel_header ul li.${cls}, #novel_header_right ul li.${cls}, .box_menu_novelview_after ul.menu_novelview_after li.${cls}`)
                     if(elm.length){
                         var ext = "#novel_header_right ul"
@@ -814,7 +812,7 @@ export function _header(){
                         }
                     }
                 })
-                $.each(left, (_, cls: CustomIconID)=>{
+                $.each(left, (_, cls: nt.header.iconId)=>{
                     var elm = $(`#novel_header ul li.${cls}, #novel_header_right ul li.${cls}, .box_menu_novelview_after ul.menu_novelview_after li.${cls}`)
                     if(elm.length){
                         var ext = "#novel_header ul"

@@ -1,15 +1,14 @@
-import { getEpisode, getNovelSearchURL, getNovelTagURL, getPageType, isR18 } from "../../utils/narou";
 import { novelTop } from "./_novelTop";
-import { nt } from "../../utils/narou-tweaker";
 
 import $ from 'jquery';
+import { nt } from "../../utils/narou-tweaker";
 import { gsap } from 'gsap';
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 export function _novel(){
     nt.storage.local.get(null).then((data) => {
         try{
-            const pageDetail = getPageType()
+            const pageDetail = nt.api.pageType()
             $("body").addClass("narou-tweaker--custom-skin")
             if(data.novelCustomStyle){
                 $("body").addClass("narou-tweaker--custom-style")
@@ -30,7 +29,7 @@ export function _novel(){
                 }
                 _autoURL()
                 _saveHistory()
-                if(data.novelAttentionBanner && getEpisode()==0){
+                if(data.novelAttentionBanner && nt.api.episode()==0){
                     novelTopAttention()
                 }
             }else if(pageDetail=="top"){
@@ -59,7 +58,7 @@ export function _novel(){
 function _novelPage(){
     try{
         const ncode = nt.api.ncode.getFromURL()
-        const episode = getEpisode()
+        const episode = nt.api.episode()
         var title
         var chapter: string|undefined = undefined
         
@@ -303,7 +302,7 @@ function _saveHistory(){
             return
         }
         const ncode = n.ncode()
-        const episode = getEpisode()
+        const episode = nt.api.episode()
 
         if(ncode){
             nt.storage.sync.get(["novelHistory", "novelHistoryData"]).then(function(data){
@@ -346,14 +345,14 @@ function _saveHistory(){
 function _authorLink(){
     try{
         const atom = $("link[href^='https://api.syosetu.com/writernovel/'][title='Atom']")
-        const r18 = isR18()
+        const r18 = nt.api.isR18()
         var n = nt.api.ncode.getFromURL()
         if(n===undefined){
             return
         }
         const ncode = n.ncode()
-        const pageDetail = getPageType()
-        const episode = getEpisode()
+        const pageDetail = nt.api.pageType()
+        const episode = nt.api.episode()
         let userid: string|undefined
         if(atom.length){
             if(location.hostname == "ncode.syosetu.com"){
@@ -455,9 +454,9 @@ function novelTopAttention(){
         }
 
         const ncode = nt.api.ncode.getFromURL()
-        const r18 = isR18()
+        const r18 = nt.api.isR18()
 
-        nt.api.novel.fetch(ncode, r18, function(data){
+        nt.api.novel.fetch(ncode, r18).then(function(data){
             try{
                 if(data){
                     let tags = (data.keyword ?? "").split(/\s/)
@@ -493,35 +492,35 @@ function novelTopAttention(){
 
                     function setTags(data: nt.api.novel.data, officialTagList?: Array<string>){
                         if(r18){
-                            attention.append(`<span class="nt-novel-attention-label nt-novel-attention-label--rating-r18"><a href="${getNovelSearchURL(site)}">R18</a></span>`)
+                            attention.append(`<span class="nt-novel-attention-label nt-novel-attention-label--rating-r18"><a href="${nt.api.search.novelSearchURL(site)}">R18</a></span>`)
                         }
                         if(tags.includes("R15")){
-                            attention.append(`<span class="nt-novel-attention-label nt-novel-attention-label--rating-r15"><a href="${getNovelSearchURL(site, {isr15: 1})}">R15</a></span>`)
+                            attention.append(`<span class="nt-novel-attention-label nt-novel-attention-label--rating-r15"><a href="${nt.api.search.novelSearchURL(site, {isr15: 1})}">R15</a></span>`)
                             removeItem("R15")
                         }
                         
                         if(tags.includes("二次創作")){
-                            attention.append(`<span class="nt-novel-attention-label"><a href="${getNovelTagURL("二次創作", site)}"><i class="fa-solid fa-code-merge"></i>二次創作</a></span>`)
+                            attention.append(`<span class="nt-novel-attention-label"><a href="${nt.api.search.novelTagURL("二次創作", site)}"><i class="fa-solid fa-code-merge"></i>二次創作</a></span>`)
                             removeItem("二次創作")
                         }
                         if(data.iszankoku){
-                            attention.append(`<span class="nt-novel-attention-label"><a href="${getNovelSearchURL(site, {iszankoku: 1})}"><i class="fa-solid fa-gun"></i>残酷な描写あり</a></span>`)
+                            attention.append(`<span class="nt-novel-attention-label"><a href="${nt.api.search.novelSearchURL(site, {iszankoku: 1})}"><i class="fa-solid fa-gun"></i>残酷な描写あり</a></span>`)
                             removeItem("残酷な描写あり")
                         }
                         if(data.isbl){
-                            attention.append(`<span class="nt-novel-attention-label"><a href="${getNovelSearchURL(site, {isbl: 1})}"><i class="fa-solid fa-mars-double"></i>ボーイズラブ</a></span>`)
+                            attention.append(`<span class="nt-novel-attention-label"><a href="${nt.api.search.novelSearchURL(site, {isbl: 1})}"><i class="fa-solid fa-mars-double"></i>ボーイズラブ</a></span>`)
                             removeItem("ボーイズラブ")
                         }
                         if(data.isgl){
-                            attention.append(`<span class="nt-novel-attention-label"><a href="${getNovelSearchURL(site, {isgl: 1})}?isgl=1"><i class="fa-solid fa-venus-double"></i>ガールズラブ</a></span>`)
+                            attention.append(`<span class="nt-novel-attention-label"><a href="${nt.api.search.novelSearchURL(site, {isgl: 1})}?isgl=1"><i class="fa-solid fa-venus-double"></i>ガールズラブ</a></span>`)
                             removeItem("ガールズラブ")
                         }
                         if(data.istensei){
-                            attention.append(`<span class="nt-novel-attention-label"><a href="${getNovelSearchURL(site, {istensei: 1})}"><i class="fa-solid fa-earth-americas"></i>異世界転生</a></span>`)
+                            attention.append(`<span class="nt-novel-attention-label"><a href="${nt.api.search.novelSearchURL(site, {istensei: 1})}"><i class="fa-solid fa-earth-americas"></i>異世界転生</a></span>`)
                             removeItem("異世界転生")
                         }
                         if(data.istenni){
-                            attention.append(`<span class="nt-novel-attention-label"><a href="${getNovelSearchURL(site, {istenni: 1})}"><i class="fa-solid fa-earth-americas"></i>異世界転移</a></span>`)
+                            attention.append(`<span class="nt-novel-attention-label"><a href="${nt.api.search.novelSearchURL(site, {istenni: 1})}"><i class="fa-solid fa-earth-americas"></i>異世界転移</a></span>`)
                             removeItem("異世界転移")
                         }
 

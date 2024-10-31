@@ -1,4 +1,3 @@
-import { isR18 } from "../../utils/narou"
 import { nt } from "../../utils/narou-tweaker"
 
 import $ from 'jquery';
@@ -37,7 +36,7 @@ function novellist(){
         $(".c-novel-list__item").each(function(){
             var outer = $(this)
             const ncode = nt.api.ncode.getFromURL(outer.find(".c-novel-list__title").attr("href"))
-            const r18 = isR18()
+            const r18 = nt.api.isR18()
             
             if(ncode){
                 // KASASAGI
@@ -55,7 +54,7 @@ function novellist(){
                 }
 
                 // API
-                nt.api.novel.fetch(ncode, r18, function(n){
+                nt.api.novel.fetch(ncode, r18).then(function(n){
                     if(n){
                         const all_hyoka_cnt = n.all_hyoka_cnt ?? 0
                         const all_point = n.all_point ?? 0

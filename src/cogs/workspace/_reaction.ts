@@ -1,6 +1,4 @@
 import { nt } from "../../utils/narou-tweaker"
-import { popImpressionHiddenList, popImpressionReadList, pushImpressionHiddenList, pushImpressionReadList } from "../../utils/data"
-
 import $ from "jquery"
 
 export function _reaction(){
@@ -32,10 +30,10 @@ function _impressionRead(){
                                     var show_button = $(`<div class="c-up-markshow"><span class="p-icon p-icon--angle-down" aria-hidden="true"></span>表示</div>`)
     
                                     hide_button.on("click", function(){
-                                        pushImpressionHiddenList(ncode, kanrino)
+                                        nt.workspace.impression.pushHiddenList(ncode, kanrino)
                                     })
                                     show_button.on("click", function(){
-                                        popImpressionHiddenList(ncode, kanrino)
+                                        nt.workspace.impression.popHiddenList(ncode, kanrino)
                                     })
                                     $(this).find(".c-up-reaction-item__menu").before(hide_button)
                                     $(this).find(".c-up-reaction-item__menu").before(show_button)
@@ -68,15 +66,15 @@ function _impressionRead(){
                                     var unread_button = $(`<div class="c-up-unmarkread"><span class="p-icon p-icon--times" aria-hidden="true"></span>未読にする</div>`)
         
                                     read_button.on("click", function(){
-                                        pushImpressionReadList(ncode, kanrino)
+                                        nt.workspace.impression.pushReadList(ncode, kanrino)
                                         if(data.workspaceImpressionHideButton && data.workspaceImpressionHideWhenMarked){
-                                            pushImpressionHiddenList(ncode, kanrino)
+                                            nt.workspace.impression.pushHiddenList(ncode, kanrino)
                                         }
                                     })
                                     unread_button.on("click", function(){
-                                        popImpressionReadList(ncode, kanrino)
+                                        nt.workspace.impression.popReadList(ncode, kanrino)
                                         if(data.workspaceImpressionHideButton && data.workspaceImpressionHideWhenMarked){
-                                            popImpressionHiddenList(ncode, kanrino)
+                                            nt.workspace.impression.popHiddenList(ncode, kanrino)
                                         }
                                     })
                                     $(this).find(".c-up-reaction-item__menu").before(read_button)
@@ -129,8 +127,8 @@ function _impressionRead(){
                                     }
                                 }
                             })
-                            popImpressionReadList(readList[0], readList[1])
-                            popImpressionHiddenList(hideList[0], hideList[1])
+                            nt.workspace.impression.popReadList(readList[0], readList[1])
+                            nt.workspace.impression.popHiddenList(hideList[0], hideList[1])
                         })
                     })
 
@@ -162,8 +160,8 @@ function _impressionRead(){
                                     }
                                 }
                             })
-                            pushImpressionReadList(readList[0], readList[1])
-                            pushImpressionHiddenList(hideList[0], hideList[1])
+                            nt.workspace.impression.pushReadList(readList[0], readList[1])
+                            nt.workspace.impression.pushHiddenList(hideList[0], hideList[1])
                         })
                     })
                     

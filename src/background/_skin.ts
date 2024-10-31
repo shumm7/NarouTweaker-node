@@ -1,4 +1,3 @@
-import { FontFamiliesV1, FontFamilyV1, localFont, localFontFamilyV1 } from "../utils/v1_font"
 import { nt } from "../utils/narou-tweaker"
 
 export function skinListener(){
@@ -40,22 +39,22 @@ function makeSkin(){
 
         /* Font */
         const selectedFontFamily: number = data.fontSelectedFontFamily
-        var fontFamilyList: FontFamiliesV1 = localFontFamilyV1.concat(data.fontFontFamilyList)
+        var fontFamilyList: nt.font.v1.FontFamilies = nt.font.v1.localFontFamily.concat(data.fontFontFamilyList)
         var fontFamily_Current: string
         var fontCss: nt.text.CSS_String
 
         if(fontFamilyList.length<=selectedFontFamily || selectedFontFamily<0){
-            fontFamily_Current = localFontFamilyV1[0].font
+            fontFamily_Current = nt.font.v1.localFontFamily[0].font
             fontCss = ""
         }else{
             fontFamily_Current = fontFamilyList[selectedFontFamily].font
             fontCss = fontFamilyList[selectedFontFamily].css
         }
 
-        const fontSize = data.fontFontSize + localFont["font-size"]
-        const lineHeight = data.fontLineHeight + localFont["line-height"]
+        const fontSize = data.fontFontSize + nt.font.v1.localFont["font-size"]
+        const lineHeight = data.fontLineHeight + nt.font.v1.localFont["line-height"]
         const textRendering = data.fontTextRendering
-        const width = localFont["width"] * data.fontWidth
+        const width = nt.font.v1.localFont["width"] * data.fontWidth
         const outerWidth = width + 130
         const widthRatio = data.fontWidth
         const verticalVh = 20 * (1 - widthRatio) + 5
@@ -178,22 +177,22 @@ function makeEditorSkin(){
         `
 
         const selectedFontFamily: number = data.workspaceEditorSelectedFontFamily ?? 0
-        const fontFamilyList: FontFamiliesV1 = localFontFamilyV1.concat(data.fontFontFamilyList ?? [])
+        const fontFamilyList: nt.font.v1.FontFamilies = nt.font.v1.localFontFamily.concat(data.fontFontFamilyList ?? [])
         var fontFamily_Current: string
         var fontCss: nt.text.CSS_String
 
         if(fontFamilyList.length<=selectedFontFamily || selectedFontFamily<0){
-            fontFamily_Current = localFontFamilyV1[0].font
+            fontFamily_Current = nt.font.v1.localFontFamily[0].font
             fontCss = ""
         }else{
             fontFamily_Current = fontFamilyList[selectedFontFamily].font
             fontCss = fontFamilyList[selectedFontFamily].css
         }
 
-        const fontSize = data.workspaceEditorFontSize + localFont["font-size"]
-        const lineHeight = data.workspaceEditorLineHeight + localFont["line-height"]
+        const fontSize = data.workspaceEditorFontSize + nt.font.v1.localFont["font-size"]
+        const lineHeight = data.workspaceEditorLineHeight + nt.font.v1.localFont["line-height"]
         const textRendering = data.workspaceEditorTextRendering
-        const width = localFont["width"] * data.workspaceEditorWidth
+        const width = nt.font.v1.localFont["width"] * data.workspaceEditorWidth
         const widthRatio = data.workspaceEditorWidth
         let font_rule = ""
 

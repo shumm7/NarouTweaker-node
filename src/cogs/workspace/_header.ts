@@ -1,5 +1,4 @@
 import { nt } from "../../utils/narou-tweaker"
-import { isR18 } from "../../utils/narou"
 
 import $ from "jquery"
 
@@ -140,7 +139,7 @@ function headerIcons(){
     let r18: boolean|undefined
     if(g.length){
         var href = g.prop("href").trim()
-        r18 = isR18(href)
+        r18 = nt.api.isR18(href)
     }
     if(r18){
         elm = $(`

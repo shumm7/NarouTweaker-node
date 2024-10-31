@@ -1,4 +1,3 @@
-import { getPageType } from "../../utils/narou";
 import { check } from "../../utils/misc"
 import { nt } from "../../utils/narou-tweaker";
 
@@ -31,7 +30,7 @@ const className = {
 }
 
 export function correction(){
-    if($(".p-novel__body").length && getPageType()=="novel"){
+    if($(".p-novel__body").length && nt.api.pageType()=="novel"){
         nt.storage.local.get(null).then((data) => {
             resetCorrection()
 

@@ -1,5 +1,4 @@
 import { checkRankPageDetail } from "./utils";
-import { getGenreNumber } from "../../utils/narou";
 import { nt } from "../../utils/narou-tweaker";
 
 import $ from 'jquery';
@@ -98,7 +97,7 @@ function showRankTop_NovelDetails(){
                 rankType = "daily"
                 const genre = header.match(/^\[日間\](.*)ランキング/)
                 if(genre){
-                    rankGenre = getGenreNumber(genre[1])
+                    rankGenre = nt.api.novel.genreNumber(genre[1])
                 }
             }
 
@@ -116,7 +115,7 @@ function showRankTop_NovelDetails(){
                 const marginHeight = 16
 
                 if(ncode){
-                    nt.api.novel.fetch(ncode, false, function(n){
+                    nt.api.novel.fetch(ncode).then(function(n){
                         if(n){
                             // あらすじを表示
                             const j = i

@@ -636,7 +636,7 @@ function changeEditorPageLikePreview(){
     }*/
 
     const localString = (v: number|undefined, def: string = ""): string => {if(v===undefined){return def}else{return v.toLocaleString()}}
-    nt.api.novel.fetch(ncode, false, function(data){
+    nt.api.novel.fetch(ncode, false).then(function(data){
         const box = $("#nt-panel--tab-content--info")
         if(data!=undefined && box.length>0){
             box.find("#novel-title").text(data.title ?? "")

@@ -1,5 +1,4 @@
-import { localFontFamilyV1, localFont } from "../../utils/v1_font"
-import { check, defaultValue } from "../../utils/misc"
+import { check } from "../../utils/misc"
 import { nt } from "../../utils/narou-tweaker"
 
 import $ from "jquery"
@@ -31,10 +30,10 @@ export function setDisplayEvent(){
 
     /* Font Size */
     function setFontSizeValue(value: number){
-        if(localFont["font-size"] + value < 50){
-            value = 50 - localFont["font-size"]
-        }else if(localFont["font-size"] + value > 300){
-            value = 300 - localFont["font-size"]
+        if(nt.font.v1.localFont["font-size"] + value < 50){
+            value = 50 - nt.font.v1.localFont["font-size"]
+        }else if(nt.font.v1.localFont["font-size"] + value > 300){
+            value = 300 - nt.font.v1.localFont["font-size"]
         }
         var valStr: string
         if(value>0){
@@ -74,10 +73,10 @@ export function setDisplayEvent(){
 
     /* Line Height */
     function setLineHeightValue(value: number){
-        if(localFont["line-height"] + value < 50){
-            value = 50 - localFont["line-height"]
-        }else if(localFont["line-height"] + value > 300){
-            value = 300 - localFont["line-height"]
+        if(nt.font.v1.localFont["line-height"] + value < 50){
+            value = 50 - nt.font.v1.localFont["line-height"]
+        }else if(nt.font.v1.localFont["line-height"] + value > 300){
+            value = 300 - nt.font.v1.localFont["line-height"]
         }
         if(value>0){
             $("#nt-display-option--line-height-input").val("+" + value)
@@ -173,13 +172,13 @@ function restoreSkinOptions(){
             }
         })
         $("#nt-display-option--skin-dropdown").val(String(selected))
-        $("#nt-display-option--skin-description").text(defaultValue(skins[selected], {}).description)
+        $("#nt-display-option--skin-description").text((skins[selected] ?? {})?.description)
     })
 }
 
 function restoreFontOptions(){
     nt.storage.local.get().then((data)=>{
-        var fontlist = localFontFamilyV1.concat(data.fontFontFamilyList)
+        var fontlist = nt.font.v1.localFontFamily.concat(data.fontFontFamilyList)
 
         $("#nt-display-option--font-family #font-family").empty()
         $.each(fontlist, function(i, font){
@@ -191,9 +190,9 @@ function restoreFontOptions(){
         })
         const selected = data.workspaceEditorSelectedFontFamily
         $("#nt-display-option--font-family #font-family").val(String(selected))
-        $("#nt-display-option--font-family-description").text(defaultValue(fontlist[selected], {}).description)
-        $("#nt-display-option--font-family #font-family").css("font-family", defaultValue(fontlist[selected], {}).font)
-        $("#nt-display-option--font-family-sample").css("font-family", defaultValue(fontlist[selected], {}).font)
+        $("#nt-display-option--font-family-description").text((fontlist[selected] ?? new nt.font.v1.FontFamily())?.description)
+        $("#nt-display-option--font-family #font-family").css("font-family", (fontlist[selected] ?? new nt.font.v1.FontFamily()).font)
+        $("#nt-display-option--font-family-sample").css("font-family", (fontlist[selected] ?? new nt.font.v1.FontFamily())?.font)
 
         var fSize = data.workspaceEditorFontSize
         if(fSize>0) {

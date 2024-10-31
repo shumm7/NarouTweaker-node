@@ -2,17 +2,6 @@ import $ from 'jquery';
 import { nt } from './narou-tweaker';
 
 /**
- * value が undefined だった場合は、defを出力します
- * @deprecated "value ?? def" 記法を使用してください
- */
-export function defaultValue(value: any, def: any){
-    if(value==undefined){
-        return def
-    }
-    return value
-}
-
-/**
  * 指定したオブジェクトをチェックします
  * @param elm 
  * @param value 
