@@ -24,7 +24,7 @@ export function check(elm: any, value: boolean|undefined|null, _default?: boolea
  * @param key キー
  * @param rules CSSパラメータを記述した辞書のリスト
  * @returns CSSルール
- * @deprecated 直接CSSを記述してください。
+ * @deprecated
  */
 export function getCSSRule(key: string, rules: Array<Record<string,string>>): nt.text.CSS_String{
     var style = key + "{"
