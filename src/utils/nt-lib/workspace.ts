@@ -6,7 +6,7 @@ export namespace __nt_workspace__ {
     export namespace impression {
         export type kanrino = Record<string,Array<string>>
 
-        export function pushReadList(ncode: __nt_api__.ncode | Array<__nt_api__.ncode|string> | string, kanrino: string | Array<string>) {
+        export async function pushReadList(ncode: __nt_api__.ncode | Array<__nt_api__.ncode|string> | string, kanrino: string | Array<string>) {
             var list: Array<__nt_api__.ncode> = []
             if(typeof ncode === "string"){
                 list = [new __nt_api__.ncode(ncode)]
@@ -28,22 +28,21 @@ export namespace __nt_workspace__ {
                 return
             }
 
-            __nt_storage__.sync.get(["workspaceImpressionMarked"]).then(function (l) {
-                list.forEach((n, i)=>{
-                    const _ncode = n?.ncode()
-                    if (_ncode !== undefined && kanrino !== undefined) {
-                        if (l.workspaceImpressionMarked == undefined) { l.workspaceImpressionMarked = {} }
-                        if (!(_ncode in l.workspaceImpressionMarked)) {
-                            l.workspaceImpressionMarked[_ncode] = []
-                        }
-                        l.workspaceImpressionMarked[_ncode].push(kanrino[i])
+            let local = await __nt_storage__.sync.get(["workspaceImpressionMarked"])
+            list.forEach((n, i)=>{
+                const _ncode = n?.ncode()
+                if (_ncode !== undefined && kanrino !== undefined) {
+                    if (local.workspaceImpressionMarked == undefined) { local.workspaceImpressionMarked = {} }
+                    if (!(_ncode in local.workspaceImpressionMarked)) {
+                        local.workspaceImpressionMarked[_ncode] = []
                     }
-                })
-                __nt_storage__.sync.set({ workspaceImpressionMarked: l.workspaceImpressionMarked })
+                    local.workspaceImpressionMarked[_ncode].push(kanrino[i])
+                }
             })
+            await __nt_storage__.sync.set({ workspaceImpressionMarked: local.workspaceImpressionMarked })
         }
 
-        export function popReadList(ncode: __nt_api__.ncode | Array<__nt_api__.ncode|string> | string, kanrino: string | Array<string>) {
+        export async function popReadList(ncode: __nt_api__.ncode | Array<__nt_api__.ncode|string> | string, kanrino: string | Array<string>) {
             var list: Array<__nt_api__.ncode> = []
             if(typeof ncode === "string"){
                 list = [new __nt_api__.ncode(ncode)]
@@ -65,24 +64,23 @@ export namespace __nt_workspace__ {
                 return
             }
 
-            __nt_storage__.sync.get(["workspaceImpressionMarked"]).then(function (l) {
-                list.forEach((n, i)=>{
-                    const _ncode = n?.ncode()
-                    if (_ncode !== undefined && kanrino !== undefined) {
-                        if (l.workspaceImpressionMarked == undefined) { l.workspaceImpressionMarked = {} }
-                        if (_ncode in l.workspaceImpressionMarked) {
-                            l.workspaceImpressionMarked[_ncode] = l.workspaceImpressionMarked[_ncode].filter(d => d != kanrino[i])
-                            if (l.workspaceImpressionMarked[_ncode].length === 0) [
-                                delete l.workspaceImpressionMarked[_ncode]
-                            ]
-                        }
+            let local = await __nt_storage__.sync.get(["workspaceImpressionMarked"])
+            list.forEach((n, i)=>{
+                const _ncode = n?.ncode()
+                if (_ncode !== undefined && kanrino !== undefined) {
+                    if (local.workspaceImpressionMarked == undefined) { local.workspaceImpressionMarked = {} }
+                    if (_ncode in local.workspaceImpressionMarked) {
+                        local.workspaceImpressionMarked[_ncode] = local.workspaceImpressionMarked[_ncode].filter(d => d != kanrino[i])
+                        if (local.workspaceImpressionMarked[_ncode].length === 0) [
+                            delete local.workspaceImpressionMarked[_ncode]
+                        ]
                     }
-                })
-                __nt_storage__.sync.set({ workspaceImpressionMarked: l.workspaceImpressionMarked })
+                }
             })
+            await __nt_storage__.sync.set({ workspaceImpressionMarked: local.workspaceImpressionMarked })
         }
 
-        export function pushHiddenList(ncode: __nt_api__.ncode | Array<__nt_api__.ncode|string> | string, kanrino: string | Array<string>) {
+        export async function pushHiddenList(ncode: __nt_api__.ncode | Array<__nt_api__.ncode|string> | string, kanrino: string | Array<string>) {
             var list: Array<__nt_api__.ncode> = []
             if(typeof ncode === "string"){
                 list = [new __nt_api__.ncode(ncode)]
@@ -104,22 +102,21 @@ export namespace __nt_workspace__ {
                 return
             }
 
-            __nt_storage__.sync.get(["workspaceImpressionHidden"]).then(function (l) {
-                list.forEach((n, i)=>{
-                    const _ncode = n?.ncode()
-                    if (_ncode !== undefined && kanrino !== undefined) {
-                        if (l.workspaceImpressionHidden == undefined) { l.workspaceImpressionHidden = {} }
-                        if (!(_ncode in l.workspaceImpressionHidden)) {
-                            l.workspaceImpressionHidden[_ncode] = []
-                        }
-                        l.workspaceImpressionHidden[_ncode].push(kanrino[i])
+            let local = await __nt_storage__.sync.get(["workspaceImpressionHidden"])
+            list.forEach((n, i)=>{
+                const _ncode = n?.ncode()
+                if (_ncode !== undefined && kanrino !== undefined) {
+                    if (local.workspaceImpressionHidden == undefined) { local.workspaceImpressionHidden = {} }
+                    if (!(_ncode in local.workspaceImpressionHidden)) {
+                        local.workspaceImpressionHidden[_ncode] = []
                     }
-                })
-                __nt_storage__.sync.set({ workspaceImpressionHidden: l.workspaceImpressionHidden })
+                    local.workspaceImpressionHidden[_ncode].push(kanrino[i])
+                }
             })
+            await __nt_storage__.sync.set({ workspaceImpressionHidden: local.workspaceImpressionHidden })
         }
 
-        export function popHiddenList(ncode: __nt_api__.ncode | Array<__nt_api__.ncode|string> | string, kanrino: string | Array<string>) {
+        export async function popHiddenList(ncode: __nt_api__.ncode | Array<__nt_api__.ncode|string> | string, kanrino: string | Array<string>) {
             var list: Array<__nt_api__.ncode> = []
             if(typeof ncode === "string"){
                 list = [new __nt_api__.ncode(ncode)]
@@ -141,21 +138,20 @@ export namespace __nt_workspace__ {
                 return
             }
 
-            __nt_storage__.sync.get(["workspaceImpressionHidden"]).then(function (l) {
-                list.forEach((n, i)=>{
-                    const _ncode = n?.ncode()
-                    if (_ncode !== undefined && kanrino !== undefined) {
-                        if (l.workspaceImpressionHidden == undefined) { l.workspaceImpressionHidden = {} }
-                        if (_ncode in l.workspaceImpressionHidden) {
-                            l.workspaceImpressionHidden[_ncode] = l.workspaceImpressionHidden[_ncode].filter(d => d != kanrino[i])
-                            if (l.workspaceImpressionHidden[_ncode].length === 0) [
-                                delete l.workspaceImpressionHidden[_ncode]
-                            ]
-                        }
+            let local = await __nt_storage__.sync.get(["workspaceImpressionHidden"])
+            list.forEach((n, i)=>{
+                const _ncode = n?.ncode()
+                if (_ncode !== undefined && kanrino !== undefined) {
+                    if (local.workspaceImpressionHidden == undefined) { local.workspaceImpressionHidden = {} }
+                    if (_ncode in local.workspaceImpressionHidden) {
+                        local.workspaceImpressionHidden[_ncode] = local.workspaceImpressionHidden[_ncode].filter(d => d != kanrino[i])
+                        if (local.workspaceImpressionHidden[_ncode].length === 0) [
+                            delete local.workspaceImpressionHidden[_ncode]
+                        ]
                     }
-                })
-                __nt_storage__.sync.set("workspaceImpressionHidden", l.workspaceImpressionHidden)
+                }
             })
+            await __nt_storage__.sync.set("workspaceImpressionHidden", local.workspaceImpressionHidden)
         }
     }
 }

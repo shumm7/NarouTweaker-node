@@ -14,6 +14,149 @@ import browser from "webextension-polyfill"
 
 
 
+function _checkLocalValue(key: OptionID, value: any): any {
+    var opt = new __nt_storage__.local.options()
+    if (typeof opt[key] === typeof value && typeof opt[key] !== "function") {
+        if (key === "extOptionsVersion") {
+            return
+        } else if (["kasasagiGraphType_GeneralDay", "kasasagiGraphType_GeneralTotal", "kasasagiGraphType_ChapterUnique", "kasasagiGraphType_DayPV", "kasasagiGraphType_DayUnique", "kasasagiGraphType_MonthPV", "kasasagiGraphType_MonthUnique"].includes(key)) {
+            if (!["bar", "line"].includes(value)) {
+                return
+            }
+        } else if (["novelCustomHeaderMode", "workspaceCustomHeaderMode"].includes(key)) {
+            if (!["absolute", "fixed", "scroll"].includes(value)) {
+                return
+            }
+        }
+        else if (key === "correctionNumberShort" || key === "correctionNumberLong" || key === "correctionNumberSymbol") {
+            if (!["default", "half", "full", "kanji"].includes(value)) {
+                return
+            }
+        } else if (["novelCustomHeaderLeft", "novelCustomHeaderRight"].includes(key)) {
+            if (!Array.isArray(value)) { return }
+
+            var list: Array<__nt_header__.iconId> = []
+            value.forEach(function (id) {
+                if (id in __nt_header__.novelIconList) {
+                    list.push(id)
+                }
+            })
+            return list
+        } else if ("workspaceCustomHeader" === key) {
+            if (!Array.isArray(value)) { return }
+
+            var list: Array<__nt_header__.iconId> = []
+            value.forEach(function (id) {
+                if (id in __nt_header__.workspaceIconList) {
+                    list.push(id)
+                }
+            })
+            return list
+
+        } else if (["workspaceCustomMenu_Left", "workspaceCustomMenu_Middle", "workspaceCustomMenu_Right"].includes(key)) {
+            if (!Array.isArray(value)) { return }
+
+            var list: Array<__nt_header__.iconId> = []
+            value.forEach(function (id) {
+                if (id in __nt_header__.workspaceMenuIconList) {
+                    list.push(id)
+                }
+            })
+            return list
+        } else if ("extFavoriteOptions" === key) {
+            if (Array.isArray(value)) {
+                var list: Array<OptionUI_ItemID> = []
+                value.forEach(function (option) {
+                    var optionData: OptionUI_Item | undefined = getOptionFromID(option)
+                    if (optionData?.value?.buttons?.favorite) {
+                        list.push(optionData.id)
+                    }
+                })
+                var listNoDuplicate = list.filter((e, i) => {
+                    return list.indexOf(e) == i;
+                })
+                return listNoDuplicate
+            }
+            return
+        } else if ("extPopupDefaultPage" === key) {
+            if (value !== "__auto__") {
+                var page = getOptionPageFromID(value)
+                if ((page?.popup?.defaultPage && page?.title && page?.id)) {
+                    return value
+                }
+            }
+            return
+        } else if("novelSkinsAvailable" === key){
+            if(Array.isArray(value)){
+                var p: Array<__nt_skin_v2__.AvailableSkin> = []
+                for(let i = 0; i<value.length; i++){
+                    const src = value[i]?.src
+                    const key = value[i]?.key
+                    if((src==="internal" || src==="local") && typeof key === "number" && isFinite(key)){
+                        p.push(value[i])
+                    }
+                }
+                return p
+            }
+        } else if("novelSkinSelected" === key){
+            const src = value?.src
+            const key = value?.key
+            if((src==="internal" || src==="local") && typeof key === "number" && isFinite(key)){
+                return {src: src, key: key}
+            }
+        }
+        return value
+    }
+}
+
+function _checkSyncValue(key: OptionID, value: any): any {
+    var opt = new __nt_storage__.local.options()
+    if (typeof opt[key] === typeof value && typeof opt[key] !== "function") {
+        if (key === "novelHistory") {
+            if (Array.isArray(value)) {
+                var list: string[] = []
+                for (const history of value) {
+                    const ncode = new __nt_api__.ncode(history).ncode()
+                    if (ncode !== undefined) {
+                        list.push(ncode)
+                    }
+                    return list
+                }
+            }
+        }
+        else if (key === "novelHistoryData") {
+            if (value instanceof Object) {
+                var ret: Record<string, [number, number, string]> = {}
+                for (const n of Object.keys(value)) {
+                    const ncode = new __nt_api__.ncode(n).ncode()
+                    if (ncode !== undefined && Array.isArray(value[ncode])) {
+                        if (value[ncode].length == 3) {
+                            if (
+                                typeof value[ncode][0] === "number" &&
+                                typeof value[ncode][1] === "number" &&
+                                typeof value[ncode][2] === "string"
+                            ) {
+                                ret[ncode] = [value[ncode][0], value[ncode][1], value[ncode][2]]
+                            }
+                        }
+                    }
+                }
+                return ret
+            }
+            return
+        }
+        return value
+    }
+}
+
+function _checkSessionValue(key: OptionID, value: any): any {
+    var opt = new __nt_storage__.session.options()
+    if (typeof opt[key] === typeof value && typeof opt[key] !== "function") {
+        return value
+    }
+}
+
+
 export namespace __nt_storage__ {
     export namespace local {
         /**
@@ -319,18 +462,12 @@ export namespace __nt_storage__ {
              * @param {OptionID} key - キー
              * @param {any} value - 設定する値
              */
-            set(key: OptionID, value: any): void
-
+            set(key: OptionID, value: any): void;
             /**
              * キーに値を設定する
-             * @param {Record<string,any>|Partial<__nt_storage__.local.options>} value - 設定するキーと値の辞書
+             * @param {Record<string, any>|Partial<__nt_storage__.local.options>|__nt_storage__.local.options} value - 設定するキーと値の辞書
              */
-            set(value: Record<string, any>|Partial<__nt_storage__.local.options>): void
-            /**
-             * キーに値を設定する
-             * @param {__nt_storage__.local.options} value
-             */
-            set(value: Record<string, any>): void
+            set(value: Record<string, any>|Partial<__nt_storage__.local.options>|__nt_storage__.local.options): void;
             set(key?: OptionID | Record<string, any> | __nt_storage__.local.options | Partial<__nt_storage__.local.options>, value?: any): void;
             set(key?: OptionID | Record<string, any> | __nt_storage__.local.options | Partial<__nt_storage__.local.options>, value?: any): void {
                 if (key instanceof __nt_storage__.local.options) {
@@ -349,7 +486,7 @@ export namespace __nt_storage__ {
                     
                     /** others */
                     else {
-                        var value = __nt_storage__.local.options._checkValue(key, value)
+                        var value = _checkLocalValue(key, value)
                         if (value !== undefined) {
                             this[key] = value
                         }
@@ -364,16 +501,12 @@ export namespace __nt_storage__ {
 
             /**
              * キーと値を辞書型で取得する
-             * @returns すべてのデータを含む辞書型
-             */
-            get(): Record<string, any>
-            /**
-             * キーと値を辞書型で取得する
              * @param {OptionID|Array<OptionID>} parameters - キーの文字列、またはそのリスト
-             * @returns 指定したデータを含む辞書型
+             * @returns 指定したデータを含む辞書型（`parameters`を指定しない場合はすべて）
              */
-            get(parameters: OptionID | Array<OptionID>): Record<string, any>
-
+            get(parameters?: null|undefined): Record<string, any>;
+            get(parameters: OptionID | Array<OptionID>): Record<string, any>;
+            get(parameters?: null | OptionID | Array<OptionID>): Partial<__nt_storage__.local.options>;
             get(parameters?: null | OptionID | Array<OptionID>): Partial<__nt_storage__.local.options> {
                 var ret: Partial<__nt_storage__.local.options> = {}
                 if (parameters !== undefined && parameters !== null) { // export each
@@ -443,6 +576,14 @@ export namespace __nt_storage__ {
                 this.set(updatedData)
             }
 
+            /**
+             * 設定データをlocalストレージに保存する（`parameters`を指定しない場合はすべて）
+             * @param parameters キーの文字列、またはそのリスト
+             */
+            setToStorage(parameters?: null|OptionID|Array<OptionID>): Promise<void>{
+                return __nt_storage__.local.set(this.get(parameters))
+            }
+
             protected toJSON = () => {
                 return this.get()
             }
@@ -460,115 +601,20 @@ export namespace __nt_storage__ {
                 return obj
             }
 
-            static check(key: OptionID, value: any): any;
-            static check(key: Record<string,any>): any;
-            static check(key: OptionID|Record<string,any>, value?: any): any{
+            static check<T>(key: OptionID, value: T): T|void;
+            static check<T>(key: Record<string,T>): Record<string,T|undefined>;
+            static check<T>(key: OptionID|Record<string,T>, value?: T): T|void|Record<string,T|undefined>{
                 if(typeof key === "string"){
-                    return __nt_storage__.local.options._checkValue(key, value)
+                    return _checkLocalValue(key, value)
                 }else if(key instanceof Object){
                     var ret: Record<string,any> = {}
                     for (const k of Object.keys(key)) {
-                        const c = __nt_storage__.local.options._checkValue(k, key[k])
+                        const c = _checkLocalValue(k, key[k])
                         if(c!==undefined){
                             ret[k] = c
                         }
                     }
                     return ret
-                }
-            }
-
-            protected static _checkValue = (key: OptionID, value: any): any => {
-                var opt = new __nt_storage__.local.options()
-                if (typeof opt[key] === typeof value && typeof opt[key] !== "function") {
-                    if (key === "extOptionsVersion") {
-                        return
-                    } else if (["kasasagiGraphType_GeneralDay", "kasasagiGraphType_GeneralTotal", "kasasagiGraphType_ChapterUnique", "kasasagiGraphType_DayPV", "kasasagiGraphType_DayUnique", "kasasagiGraphType_MonthPV", "kasasagiGraphType_MonthUnique"].includes(key)) {
-                        if (!["bar", "line"].includes(value)) {
-                            return
-                        }
-                    } else if (["novelCustomHeaderMode", "workspaceCustomHeaderMode"].includes(key)) {
-                        if (!["absolute", "fixed", "scroll"].includes(value)) {
-                            return
-                        }
-                    }
-                    else if (key === "correctionNumberShort" || key === "correctionNumberLong" || key === "correctionNumberSymbol") {
-                        if (!["default", "half", "full", "kanji"].includes(value)) {
-                            return
-                        }
-                    } else if (["novelCustomHeaderLeft", "novelCustomHeaderRight"].includes(key)) {
-                        if (!Array.isArray(value)) { return }
-
-                        var list: Array<__nt_header__.iconId> = []
-                        value.forEach(function (id) {
-                            if (id in __nt_header__.novelIconList) {
-                                list.push(id)
-                            }
-                        })
-                        return list
-                    } else if ("workspaceCustomHeader" === key) {
-                        if (!Array.isArray(value)) { return }
-
-                        var list: Array<__nt_header__.iconId> = []
-                        value.forEach(function (id) {
-                            if (id in __nt_header__.workspaceIconList) {
-                                list.push(id)
-                            }
-                        })
-                        return list
-
-                    } else if (["workspaceCustomMenu_Left", "workspaceCustomMenu_Middle", "workspaceCustomMenu_Right"].includes(key)) {
-                        if (!Array.isArray(value)) { return }
-
-                        var list: Array<__nt_header__.iconId> = []
-                        value.forEach(function (id) {
-                            if (id in __nt_header__.workspaceMenuIconList) {
-                                list.push(id)
-                            }
-                        })
-                        return list
-                    } else if ("extFavoriteOptions" === key) {
-                        if (Array.isArray(value)) {
-                            var list: Array<OptionUI_ItemID> = []
-                            value.forEach(function (option) {
-                                var optionData: OptionUI_Item | undefined = getOptionFromID(option)
-                                if (optionData?.value?.buttons?.favorite) {
-                                    list.push(optionData.id)
-                                }
-                            })
-                            var listNoDuplicate = list.filter((e, i) => {
-                                return list.indexOf(e) == i;
-                            })
-                            return listNoDuplicate
-                        }
-                        return
-                    } else if ("extPopupDefaultPage" === key) {
-                        if (value !== "__auto__") {
-                            var page = getOptionPageFromID(value)
-                            if ((page?.popup?.defaultPage && page?.title && page?.id)) {
-                                return value
-                            }
-                        }
-                        return
-                    } else if("novelSkinsAvailable" === key){
-                        if(Array.isArray(value)){
-                            var p: Array<__nt_skin_v2__.AvailableSkin> = []
-                            for(let i = 0; i<value.length; i++){
-                                const src = value[i]?.src
-                                const key = value[i]?.key
-                                if((src==="internal" || src==="local") && typeof key === "number" && isFinite(key)){
-                                    p.push(value[i])
-                                }
-                            }
-                            return p
-                        }
-                    } else if("novelSkinSelected" === key){
-                        const src = value?.src
-                        const key = value?.key
-                        if((src==="internal" || src==="local") && typeof key === "number" && isFinite(key)){
-                            return {src: src, key: key}
-                        }
-                    }
-                    return value
                 }
             }
         }
@@ -718,12 +764,7 @@ export namespace __nt_storage__ {
             * キーに値を設定する
             * @param {Record<string,any>|Partial<__nt_storage__.sync.options>} value - 設定するキーと値の辞書
             */
-            set(value: Record<string, any>|Partial<__nt_storage__.sync.options>): void
-            /**
-            * キーに値を設定する
-            * @param {__nt_storage__.sync.options} value
-            */
-            set(value: __nt_storage__.sync.options): void
+            set(value: Record<string, any>|Partial<__nt_storage__.sync.options>|__nt_storage__.sync.options): void;
             set(key?: OptionID | Record<string, any> | Partial<__nt_storage__.sync.options> | __nt_storage__.sync.options, value?: any): void;
             set(key?: OptionID | Record<string, any> | Partial<__nt_storage__.sync.options> | __nt_storage__.sync.options, value?: any): void {
                 if (key instanceof __nt_storage__.sync.options) {
@@ -742,7 +783,7 @@ export namespace __nt_storage__ {
                     
                     /** others */
                     else {
-                        var value = __nt_storage__.sync.options._checkValue(key, value)
+                        var value = _checkSyncValue(key, value)
                         if (value !== undefined) {
                             this[key] = value
                         }
@@ -757,15 +798,12 @@ export namespace __nt_storage__ {
 
             /**
              * キーと値を辞書型で取得する
-             * @returns すべてのデータを含む辞書型
-             */
-            get(): Record<string, any>
-            /**
-             * キーと値を辞書型で取得する
              * @param {OptionID|Array<OptionID>} parameters - キーの文字列、またはそのリスト
-             * @returns 指定したデータを含む辞書型
+             * @returns 指定したデータを含む辞書型（`parameters`を指定しない場合はすべて）
              */
-            get(parameters: OptionID | Array<OptionID>): Record<string, any>
+            get(parameters?: null): Record<string, any>;
+            get(parameters: OptionID | Array<OptionID>): Record<string, any>;
+            get(parameters?: null | OptionID | Array<OptionID>): Record<string, any>;
             get(parameters?: null | OptionID | Array<OptionID>): Record<string, any> {
                 var ret: Record<string, any> = {}
                 if (parameters !== undefined && parameters !== null) {
@@ -835,15 +873,23 @@ export namespace __nt_storage__ {
                 this.set(updatedData)
             }
 
-            static check(key: OptionID, value: any): any;
-            static check(key: Record<string,any>): any;
-            static check(key: OptionID|Record<string,any>, value?: any): any{
+            /**
+             * 設定データをsyncストレージに保存する（`parameters`を指定しない場合はすべて）
+             * @param parameters キーの文字列、またはそのリスト
+             */
+            setToStorage(parameters?: null|OptionID|Array<OptionID>): Promise<void>{
+                return __nt_storage__.sync.set(this.get(parameters))
+            }
+
+            static check<T>(key: OptionID, value: T): T|void;
+            static check<T>(key: Record<string,T>): Record<string,T|undefined>;
+            static check<T>(key: OptionID|Record<string,T>, value?: T): T|void|Record<string,T|undefined>{
                 if(typeof key === "string"){
-                    return __nt_storage__.sync.options._checkValue(key, value)
+                    return _checkSyncValue(key, value)
                 }else if(key instanceof Object){
                     var ret: Record<string,any> = {}
                     for (const k of Object.keys(key)) {
-                        const c = __nt_storage__.sync.options._checkValue(k, key[k])
+                        const c = _checkSyncValue(k, key[k])
                         if(c!==undefined){
                             ret[k] = c
                         }
@@ -871,46 +917,6 @@ export namespace __nt_storage__ {
                     }
                 }
                 return obj
-            }
-
-            protected static _checkValue = (key: OptionID, value: any): any => {
-                var opt = new __nt_storage__.local.options()
-                if (typeof opt[key] === typeof value && typeof opt[key] !== "function") {
-                    if (key === "novelHistory") {
-                        if (Array.isArray(value)) {
-                            var list: string[] = []
-                            for (const history of value) {
-                                const ncode = new __nt_api__.ncode(history).ncode()
-                                if (ncode !== undefined) {
-                                    list.push(ncode)
-                                }
-                                return list
-                            }
-                        }
-                    }
-                    else if (key === "novelHistoryData") {
-                        if (value instanceof Object) {
-                            var ret: Record<string, [number, number, string]> = {}
-                            for (const n of Object.keys(value)) {
-                                const ncode = new __nt_api__.ncode(n).ncode()
-                                if (ncode !== undefined && Array.isArray(value[ncode])) {
-                                    if (value[ncode].length == 3) {
-                                        if (
-                                            typeof value[ncode][0] === "number" &&
-                                            typeof value[ncode][1] === "number" &&
-                                            typeof value[ncode][2] === "string"
-                                        ) {
-                                            ret[ncode] = [value[ncode][0], value[ncode][1], value[ncode][2]]
-                                        }
-                                    }
-                                }
-                            }
-                            return ret
-                        }
-                        return
-                    }
-                    return value
-                }
             }
         }
         
@@ -1030,19 +1036,14 @@ export namespace __nt_storage__ {
             * キーに値を設定する
             * @param {Record<string,any>|Partial<__nt_storage__.session.options>} value - 設定するキーと値の辞書
             */
-            set(value: Record<string, any>|Partial<__nt_storage__.session.options>): void
-            /**
-            * キーに値を設定する
-            * @param {__nt_storage__.session.options} value
-            */
-            set(value: __nt_storage__.session.options): void
+            set(value: Record<string, any>|Partial<__nt_storage__.session.options>|__nt_storage__.session.options): void;
             set(key?: OptionID | Record<string, any> | Partial<__nt_storage__.session.options> | __nt_storage__.session.options, value?: any): void;
             set(key?: OptionID | Record<string, any> | Partial<__nt_storage__.session.options> | __nt_storage__.session.options, value?: any): void {
                 if (key instanceof __nt_storage__.session.options) {
                     this.set(key.get())
                 }
                 else if (typeof key === "string") {
-                    var value = __nt_storage__.session.options._checkValue(key, value)
+                    var value = _checkSessionValue(key, value)
                     if (value !== undefined) {
                         this[key] = value
                     }
@@ -1055,15 +1056,12 @@ export namespace __nt_storage__ {
 
             /**
              * キーと値を辞書型で取得する
-             * @returns すべてのデータを含む辞書型
-             */
-            get(): Record<string, any>
-            /**
-             * キーと値を辞書型で取得する
              * @param {OptionID|Array<OptionID>} parameters - キーの文字列、またはそのリスト
-             * @returns 指定したデータを含む辞書型
+             * @returns 指定したデータを含む辞書型（`parameters`を指定しない場合はすべて）
              */
+            get(parameters?: null): Record<string, any>
             get(parameters: OptionID | Array<OptionID>): Record<string, any>
+            get(parameters?: null | OptionID | Array<OptionID>): Record<string, any>
             get(parameters?: null | OptionID | Array<OptionID>): Record<string, any> {
                 var ret: Record<string, any> = {}
                 if (parameters !== undefined && parameters !== null) {
@@ -1091,15 +1089,15 @@ export namespace __nt_storage__ {
                 }
             }
 
-            static check(key: OptionID, value: any): any;
-            static check(key: Record<string,any>): any;
-            static check(key: OptionID|Record<string,any>, value?: any): any{
+            static check<T>(key: OptionID, value: any): T|void;
+            static check<T>(key: Record<string,T>): Record<string,T|undefined>;
+            static check<T>(key: OptionID|Record<string,T>, value?: T): T|void|Record<string,T|undefined>{
                 if(typeof key === "string"){
-                    return __nt_storage__.session.options._checkValue(key, value)
+                    return _checkSessionValue(key, value)
                 }else if(key instanceof Object){
                     var ret: Record<string,any> = {}
                     for (const k of Object.keys(key)) {
-                        const c = __nt_storage__.session.options._checkValue(k, key[k])
+                        const c = _checkSessionValue(k, key[k])
                         if(c!==undefined){
                             ret[k] = c
                         }
@@ -1108,11 +1106,12 @@ export namespace __nt_storage__ {
                 }
             }
 
-            protected static _checkValue = (key: OptionID, value: any): any => {
-                var opt = new __nt_storage__.session.options()
-                if (typeof opt[key] === typeof value && typeof opt[key] !== "function") {
-                    return value
-                }
+            /**
+             * 設定データをsessionストレージに保存する（`parameters`を指定しない場合はすべて）
+             * @param parameters キーの文字列、またはそのリスト
+             */
+            setToStorage(parameters?: null|OptionID|Array<OptionID>): Promise<void>{
+                return __nt_storage__.session.set(this.get(parameters))
             }
 
             protected toJSON = () => {

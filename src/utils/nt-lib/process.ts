@@ -62,7 +62,7 @@ export namespace __nt_runtime__ {
         }
     }
     
-    export function action(data: {
+    export async function action(data: {
         action: "fetch",
         format: "json"|"text",
         data: {
@@ -71,7 +71,7 @@ export namespace __nt_runtime__ {
         },
         id?: string
     }): Promise<ReceiveMessage>;
-    export function action(data: {
+    export async function action(data: {
         action: "downloads",
         data: {
             body?: string;
@@ -84,22 +84,25 @@ export namespace __nt_runtime__ {
         },
         id?: string
     }): Promise<ReceiveMessage>;
-    export function action(data: {
+    export async function action(data: {
         action: "cookies",
         format: "set",
         data: browser.Cookies.SetDetailsType,
         id?: string
     }): Promise<ReceiveMessage>;
-    export function action(data: {
+    export async function action(data: {
         action: "cookies",
         format: "get",
         data: browser.Cookies.GetDetailsType,
         id?: string
     }): Promise<ReceiveMessage>;
-    export function action(data: SentMessage): Promise<ReceiveMessage> {
-        return browser.runtime.sendMessage(data).then((ret)=>{
+    export async function action(data: SentMessage): Promise<ReceiveMessage|void> {
+        try{
+            const ret = browser.runtime.sendMessage(data)
             return new ReceiveMessage(ret)
-        })
+        }catch(e){
+            return
+        }
     }
 }
 
@@ -109,17 +112,13 @@ export namespace __nt_download__ {
      * @param data - オブジェクト
      * @param filename - ファイル名
     */
-    export function json(data:any, filename: string): Promise<number|null>{
+    export async function json(data:any, filename: string): Promise<number|null>{
         var url = 'data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 3))))
-        return __nt_runtime__.action({action: "downloads", data: {url: url, filename: filename}}).then((data)=>{
-            if(data?.success){
-                return data.result
-            }else{
-                return null
-            }
-        }).catch((e) => {
-            return null
-        })
+        const ret = await __nt_runtime__.action({action: "downloads", data: {url: url, filename: filename}}).catch()
+        if(ret?.success){
+            return ret?.result
+        }
+        return null
     }
 
     /**
@@ -127,42 +126,28 @@ export namespace __nt_download__ {
      * @param data - テキスト
      * @param filename - ファイル名
     */
-    export function text(data: string, filename: string): Promise<number|null>{
+    export async function text(data: string, filename: string): Promise<number|null>{
         var url = 'data:text/plain;base64,' + btoa(unescape(encodeURIComponent(data)))
-        return __nt_runtime__.action({action: "downloads", data: {url: url, filename: filename}}).then((data)=>{
-            if(data?.success){
-                return data.result
-            }else{
-                return null
-            }
-        }).catch((e) => {
-            return null
-        })
+        const ret = await __nt_runtime__.action({action: "downloads", data: {url: url, filename: filename}}).catch()
+        if(ret?.success){
+            return ret.result
+        }
+        return null
     }
 }
 
 export namespace __nt_cookie__ {
-    export function set(data: browser.Cookies.SetDetailsType): Promise<browser.Cookies.Cookie|undefined>{
-        return __nt_runtime__.action({action: "cookies", format: "set", data: data}).then(function(response){
-            if(response?.success){
-                return response?.result
-            }else{
-                return undefined
-            }
-        }).catch((e)=>{
-            return undefined
-        })
+    export async function set(data: browser.Cookies.SetDetailsType): Promise<browser.Cookies.Cookie|void>{
+        const response = await __nt_runtime__.action({action: "cookies", format: "set", data: data}).catch()
+        if(response?.success){
+            return response?.result
+        }
     }
 
-    export function get(data: browser.Cookies.GetDetailsType): Promise<browser.Cookies.Cookie|undefined>{
-        return __nt_runtime__.action({action: "cookies", format: "get", data: data}).then(function(response){
-            if(response?.success){
-                return response?.result
-            }else{
-                return undefined
-            }
-        }).catch((e)=>{
-            return undefined
-        })
+    export async function get(data: browser.Cookies.GetDetailsType): Promise<browser.Cookies.Cookie|void>{
+        const response = await __nt_runtime__.action({action: "cookies", format: "get", data: data}).catch()
+        if(response?.success){
+            return response?.result
+        }
     }
 }

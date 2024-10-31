@@ -228,7 +228,7 @@ export namespace __nt_api__ {
          * @param callback 
          * @returns 
          */
-        export function fetch(_ncode: ncode|string|undefined, isR18: boolean = false): Promise<__nt_api__.novel.data|undefined>{
+        export async function fetch(_ncode?: ncode|string, isR18: boolean = false): Promise<__nt_api__.novel.data|void>{
             const n = new ncode(_ncode).ncode()
             
             if(n){
@@ -239,60 +239,55 @@ export namespace __nt_api__ {
                     url = `https://api.syosetu.com/novelapi/api/?out=json&libtype=2&opt=weekly&ncode=${n}`
                 }
             
-                return __nt_runtime__.action({action: "fetch", format: "json", data: {url: url, options: {'method': 'GET'}}}).then(function(response){
-                    if(response?.success && response?.action=="fetch" && response?.result[0]?.allcount === 1){
-                        const n = response.result[1]
+                const response = await __nt_runtime__.action({action: "fetch", format: "json", data: {url: url, options: {'method': 'GET'}}}).catch()
+                if(response?.success && response?.action=="fetch" && response?.result[0]?.allcount === 1){
+                    const n = response.result[1]
 
-                        var api: __nt_api__.novel.data = {
-                            title: strOrUndefined(n?.title),
-                            ncode: strOrUndefined(n?.ncode),
-                            userid: numOrUndefined(n?.userid),
-                            writer: strOrUndefined(n?.writer),
-                            story: strOrUndefined(n?.story),
-                            nocgenre: numOrUndefined(n?.nocgenre),
-                            biggenre: numOrUndefined(n?.biggenre),
-                            genre: numOrUndefined(n?.genre),
-                            gensaku: strOrUndefined(n?.gensaku),
-                            keyword: strOrUndefined(n?.keyword),
-                            general_firstup: strOrUndefined(n?.general_firstup),
-                            general_lastup: strOrUndefined(n?.general_lastup),
-                            novel_type: numOrUndefined(n?.novel_type),
-                            end: numOrUndefined(n?.end),
-                            general_all_no: numOrUndefined(n?.general_all_no),
-                            length: numOrUndefined(n?.length),
-                            time: numOrUndefined(n?.time),
-                            isstop: numOrUndefined(n?.isstop),
-                            isr15: numOrUndefined(n?.isr15),
-                            isbl: numOrUndefined(n?.isbl),
-                            isgl: numOrUndefined(n?.isgl), 
-                            iszankoku: numOrUndefined(n?.iszankoku), 
-                            istensei: numOrUndefined(n?.istensei), 
-                            istenni: numOrUndefined(n?.istenni), 
-                            global_point: numOrUndefined(n?.global_point),
-                            daily_point: numOrUndefined(n?.daily_point),
-                            weekly_point: numOrUndefined(n?.weekly_point),
-                            monthly_point: numOrUndefined(n?.monthly_point),
-                            quarter_point: numOrUndefined(n?.quarter_point),
-                            yearly_point: numOrUndefined(n?.yearly_point),
-                            fav_novel_cnt: numOrUndefined(n?.fav_novel_cnt),
-                            impression_cnt: numOrUndefined(n?.impression_cnt),
-                            review_cnt: numOrUndefined(n?.review_cnt),
-                            all_point: numOrUndefined(n?.all_point),
-                            all_hyoka_cnt: numOrUndefined(n?.all_hyoka_cnt),
-                            sasie_cnt: numOrUndefined(n?.sasie_cnt),
-                            kaiwaritu: numOrUndefined(n?.kaiwaritu),
-                            novelupdated_at: strOrUndefined(n?.novelupdated_at),
-                            updated_at: strOrUndefined(n?.updated_at),
-                            weekly_unique: numOrUndefined(n?.weekly_unique)
-                        }
-                        return api
+                    var api: __nt_api__.novel.data = {
+                        title: strOrUndefined(n?.title),
+                        ncode: strOrUndefined(n?.ncode),
+                        userid: numOrUndefined(n?.userid),
+                        writer: strOrUndefined(n?.writer),
+                        story: strOrUndefined(n?.story),
+                        nocgenre: numOrUndefined(n?.nocgenre),
+                        biggenre: numOrUndefined(n?.biggenre),
+                        genre: numOrUndefined(n?.genre),
+                        gensaku: strOrUndefined(n?.gensaku),
+                        keyword: strOrUndefined(n?.keyword),
+                        general_firstup: strOrUndefined(n?.general_firstup),
+                        general_lastup: strOrUndefined(n?.general_lastup),
+                        novel_type: numOrUndefined(n?.novel_type),
+                        end: numOrUndefined(n?.end),
+                        general_all_no: numOrUndefined(n?.general_all_no),
+                        length: numOrUndefined(n?.length),
+                        time: numOrUndefined(n?.time),
+                        isstop: numOrUndefined(n?.isstop),
+                        isr15: numOrUndefined(n?.isr15),
+                        isbl: numOrUndefined(n?.isbl),
+                        isgl: numOrUndefined(n?.isgl), 
+                        iszankoku: numOrUndefined(n?.iszankoku), 
+                        istensei: numOrUndefined(n?.istensei), 
+                        istenni: numOrUndefined(n?.istenni), 
+                        global_point: numOrUndefined(n?.global_point),
+                        daily_point: numOrUndefined(n?.daily_point),
+                        weekly_point: numOrUndefined(n?.weekly_point),
+                        monthly_point: numOrUndefined(n?.monthly_point),
+                        quarter_point: numOrUndefined(n?.quarter_point),
+                        yearly_point: numOrUndefined(n?.yearly_point),
+                        fav_novel_cnt: numOrUndefined(n?.fav_novel_cnt),
+                        impression_cnt: numOrUndefined(n?.impression_cnt),
+                        review_cnt: numOrUndefined(n?.review_cnt),
+                        all_point: numOrUndefined(n?.all_point),
+                        all_hyoka_cnt: numOrUndefined(n?.all_hyoka_cnt),
+                        sasie_cnt: numOrUndefined(n?.sasie_cnt),
+                        kaiwaritu: numOrUndefined(n?.kaiwaritu),
+                        novelupdated_at: strOrUndefined(n?.novelupdated_at),
+                        updated_at: strOrUndefined(n?.updated_at),
+                        weekly_unique: numOrUndefined(n?.weekly_unique)
                     }
-                    return undefined
-                }).catch((e)=>{
-                    return undefined
-                })
+                    return api
+                }
             }
-            return new Promise(()=>{return undefined})
         }
 
         /**
@@ -556,7 +551,6 @@ export namespace __nt_api__ {
             }
         }
     }
-
     
     export namespace rankin {
         /************************************************************************************* */
@@ -575,34 +569,29 @@ export namespace __nt_api__ {
          * @param _ncode Nコード
          * @returns 
          */
-        export function fetch(_ncode: ncode|string): Promise<Array<__nt_api__.rankin.data>> {
+        export async function fetch(_ncode?: ncode|string): Promise<Array<__nt_api__.rankin.data>> {
             const n = new ncode(_ncode).ncode()
             if(n!==undefined){
                 const url = "https://api.syosetu.com/rank/rankin/?out=json&libtype=2&ncode=" + n
 
-                return __nt_runtime__.action({action: "fetch", format: "json", data: {url: url, options: {'method': 'GET'}}}).then(function(response){
-                    var ret: Array<__nt_api__.rankin.data> = []
-                    if(response?.success && response?.action=="fetch"){
-                        if(Array.isArray(response.result)){
-                            for(const n of response.result){
-                                var rankin: __nt_api__.rankin.data = {
-                                    pt: numOrUndefined(n?.pt),
-                                    rank: numOrUndefined(n?.rank),
-                                    rtype: strOrUndefined(n?.rtype)
-                                }
-                                ret.push(rankin)
+                const response = await __nt_runtime__.action({action: "fetch", format: "json", data: {url: url, options: {'method': 'GET'}}}).catch()
+                var ret: Array<__nt_api__.rankin.data> = []
+                if(response?.success && response?.action=="fetch"){
+                    if(Array.isArray(response.result)){
+                        for(const n of response.result){
+                            var rankin: __nt_api__.rankin.data = {
+                                pt: numOrUndefined(n?.pt),
+                                rank: numOrUndefined(n?.rank),
+                                rtype: strOrUndefined(n?.rtype)
                             }
+                            ret.push(rankin)
                         }
                     }
-                    return ret
-                }).catch((e)=>{
-                    return []
-                })
+                }
             }
-            return new Promise(()=>{return []})
+            return []
         }
     }
-
 
     export namespace user {
         /************************************************************************************* */
@@ -626,29 +615,25 @@ export namespace __nt_api__ {
          * @param userid ユーザID
          * @returns 
          */
-        export function fetch(userid: number|string): Promise<__nt_api__.user.data|undefined>{
+        export async function fetch(userid: number|string): Promise<__nt_api__.user.data|void>{
             const url = `https://api.syosetu.com/userapi/api/?out=json&libtype=2&userid=${userid}`
             
-            return __nt_runtime__.action({action: "fetch", format: "json", data: {url: url, options: {'method': 'GET'}}}).then(function(response){
-                if(response?.success && response?.action=="fetch" && response?.result[0]?.allcount === 1){
-                    const n = response.result[1]
+            const response = await __nt_runtime__.action({action: "fetch", format: "json", data: {url: url, options: {'method': 'GET'}}})
+            if(response?.success && response?.action=="fetch" && response?.result[0]?.allcount === 1){
+                const n = response.result[1]
 
-                    var api: __nt_api__.user.data = {
-                        userid: numOrUndefined(n?.userid),
-                        name: strOrUndefined(n?.name),
-                        yomikata: strOrUndefined(n?.yomikata),
-                        name1st: strOrNullOrUndefined(n?.name1st),
-                        novel_cnt: numOrUndefined(n?.novel_cnt),
-                        review_cnt: numOrUndefined(n?.review_cnt),
-                        novel_length: numOrUndefined(n?.novel_length),
-                        sum_global_point: numOrUndefined(n?.sum_global_point),
-                    }
-                    return api
+                var api: __nt_api__.user.data = {
+                    userid: numOrUndefined(n?.userid),
+                    name: strOrUndefined(n?.name),
+                    yomikata: strOrUndefined(n?.yomikata),
+                    name1st: strOrNullOrUndefined(n?.name1st),
+                    novel_cnt: numOrUndefined(n?.novel_cnt),
+                    review_cnt: numOrUndefined(n?.review_cnt),
+                    novel_length: numOrUndefined(n?.novel_length),
+                    sum_global_point: numOrUndefined(n?.sum_global_point),
                 }
-                return undefined
-            }).catch((e)=>{
-                return undefined
-            })
+                return api
+            }
         }
 
         /**
@@ -759,6 +744,145 @@ export namespace __nt_api__ {
             })
 
             return url
+        }
+    }
+
+    export namespace episodes {
+        export interface data {
+            novel: __nt_api__.novel.data
+            episodes: Array<episode>
+            chapters: Array<chapter>
+        }
+
+        export interface episode {
+            episode: number
+            subtitle: string
+            date: string
+            updateDate?: string
+            chapterTitle?: string
+            chapter: number
+        }
+
+        export interface chapter {
+            title: string
+            chapter: number
+            firstEpisode: number
+        }
+
+        export async function fetch(_ncode?: ncode|string, isR18: boolean = false): Promise<data|void>{
+            const parentClass = "p-eplist"
+            const episodeClass = "p-eplist__sublist"
+            const chapterClass = "p-eplist__chapter-title"
+            const episodeSubtitleClass = "p-eplist__subtitle"
+            const episodeUpdateClass = "p-eplist__update"
+            const episodeFavepClass = "p-eplist__favep"
+
+            const novelData = await __nt_api__.novel.fetch(_ncode, isR18)
+            const general_all_no = novelData?.general_all_no
+            const novel_type = novelData?.novel_type
+            const ncode = new __nt_api__.ncode(novelData?.ncode).ncode()
+
+            if(novelData!==undefined && general_all_no!==undefined && novel_type===1 && ncode!==undefined){
+
+                var fetches: Array<Promise<Array<episode>>> = []
+                for(var i=1; i<=Math.ceil(general_all_no/100); i++){
+                    let url
+                    if(isR18){
+                        url = `https://ncode.syosetu.com/${ncode}/?p=${i}`
+                    }else{
+                        url = `https://novel18.syosetu.com/${ncode}/?p=${i}`
+                    }
+                    fetches.push(fetchEach(url))
+                }
+                if(fetches.length > 0){
+                    let chapters: Array<chapter> = []
+                    let chapter: number = 0
+                    let response = (await Promise.all(fetches)).flat(1)
+                    for(let i=0; i<response.length; i++){
+                        response[i].episode = i + 1
+                        const chapterTitle = response[i].chapterTitle
+                        if(chapterTitle!==undefined){
+                            chapter++
+                            chapters.push({
+                                title: chapterTitle,
+                                chapter: chapter,
+                                firstEpisode: i + 1
+                            })
+                        }
+                        response[i].chapter = chapter
+                    }
+                    return {
+                        novel: novelData,
+                        episodes: response,
+                        chapters: chapters
+                    }
+                }
+
+            }
+
+            if(novelData!==undefined){
+                return {
+                    novel: novelData,
+                    episodes: [],
+                    chapters: []
+                }
+            }
+
+            async function fetchEach(url: string): Promise<Array<episode>>{
+                try{
+                    let ret: Array<episode> = []
+                    const response = await __nt_runtime__.action({action: "fetch", format: "text", data: {url: url, options: {'method': 'GET'}}})
+                    if(response?.success){
+                        const html = response.result
+                        if(typeof html !== "string"){return []}
+
+                        var elm = $($.parseHTML(html)).find(`.${parentClass}`)
+                        if(!elm.length){return []}
+
+                        var episodeData: episode = {
+                            episode: 0,
+                            subtitle: "",
+                            date: "",
+                            chapter: 0
+                        }
+                        elm.find(`.${chapterClass}, .${episodeClass}`).each(function(){
+                            var ep = $(this)
+                            if(ep.hasClass(chapterClass)){
+                                // chapter title
+                                episodeData.chapterTitle = ep.text()
+                            }else if(ep.hasClass(episodeClass)){
+                                // subtitle
+                                episodeData.subtitle = ep.find(`.${episodeSubtitleClass}`).text()
+
+                                // date / updateDate
+                                var dateElm = ep.find(`.${episodeUpdateClass}`)
+                                dateElm.find(`.${episodeFavepClass}`).remove()
+                                var update = dateElm.find(`*[title$="改稿"]`)
+                                if(update.length){
+                                    var updateDate = update.attr("title") ?? ""
+                                    var m = updateDate.match(/^(.*) 改稿$/)
+                                    if(m!==null){
+                                        episodeData.updateDate = m[1]
+                                    }
+                                    update.remove()
+                                }
+                                episodeData.date = dateElm.text()
+
+                                // push
+                                ret.push(episodeData)
+                                episodeData = {
+                                    episode: 0,
+                                    subtitle: "",
+                                    date: "",
+                                    chapter: 0
+                                }
+                            }
+                        })
+                    }
+                    return ret
+                }catch(e){}
+                return []
+            }
         }
     }
 
