@@ -67,6 +67,7 @@ function novellist(){
                         const length = n.length ?? 0
                         const time = n.time ?? 0
                         const keyword = n.keyword ?? ""
+                        const weekly__unique = n.weekly_unique ?? 0
                         
                         if(data.mypageNovellistShowReaction){
                             var point_average = Math.round((all_point / 2) / all_hyoka_cnt * 10) / 10
@@ -78,6 +79,7 @@ function novellist(){
                                 <div class="c-novel-list__reaction">
                                     <div class="c-novel-list__novel-info c-novel-list__novel-info__points">
                                         <div class="c-novel-list__novel-info__daily-point">日間ポイント：${daily_point.toLocaleString()} pt</div>
+                                        <div class="c-novel-list__novel-info__weekly-unique">週間ユニーク：${weekly__unique.toLocaleString()} 人</div>
                                         <div class="c-novel-list__novel-info__hyoka-avg"></div>
                                     </div>
                                     <div class="c-novel-list__novel-info c-novel-list__novel-info__impressions">
@@ -91,7 +93,7 @@ function novellist(){
 
                             var hyoka = elm.find(".c-novel-list__novel-info__hyoka-avg")
                             hyoka.append(`
-                                評価：<span style="margin-right: 3px;">${point_average}</span>
+                                総合評価：<span style="margin-right: 3px;">${point_average}</span>
                                 <span class="c-up-point-star p-up-novelinfo__point-star js-novelpoint_notactive" title="gorgeous"></span>
                             `)
                             var stars = hyoka.find(".c-up-point-star")
