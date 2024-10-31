@@ -698,6 +698,7 @@ export namespace __nt_storage__ {
             if((keys===null || keys===undefined) && callback!==undefined){
                 return browser.storage.local.onChanged.addListener((changes)=>{
                     if(callback!==undefined){
+                        console.log(changes)
                         return callback(changes)
                     }
                 })
@@ -705,6 +706,7 @@ export namespace __nt_storage__ {
                 callback = keys
                 return browser.storage.local.onChanged.addListener((changes)=>{
                     if(callback!==undefined){
+                        console.log(changes)
                         return callback(changes)
                     }
                 })
@@ -722,6 +724,7 @@ export namespace __nt_storage__ {
                         }
                     }
                     if(callback!==undefined && c > 0){
+                        console.log(changes)
                         return callback(ret)
                     }
                 })

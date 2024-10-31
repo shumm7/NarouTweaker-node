@@ -4,6 +4,7 @@ import { _favuser } from "./_misc";
 import { _profile } from "./_profile";
 
 import "./local.css"
+import $ from "jquery";
 
 if($(".p-userheader__tab").length){
     const path = location.pathname;

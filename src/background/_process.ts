@@ -18,9 +18,10 @@ export function messageListener(){
                         format: message.format,
                         success: true, 
                         result: data,
-                    } as nt.runtime.ReceiveMessage)
+                    })
                 })
                 .catch((e) => {
+                    console.warn(e)
                     sendResponse({
                         action: message.action,
                         id: message.id,
@@ -28,9 +29,9 @@ export function messageListener(){
                         format: message.format,
                         success: false,
                         result: e,
-                    } as nt.runtime.ReceiveMessage)
+                    })
                 })
-                
+                return true
             }else if(message.format == "text"){
                 fetch(message.data.url, message.data.options)
                 .then(response => response.text())
@@ -42,9 +43,10 @@ export function messageListener(){
                         format: message.format,
                         success: true,
                         result: data,
-                    } as nt.runtime.ReceiveMessage)
+                    })
                 })
                 .catch((e) => {
+                    console.warn(e)
                     sendResponse({
                         action: message.action,
                         id: message.id,
@@ -52,9 +54,10 @@ export function messageListener(){
                         format: message.format,
                         success: false,
                         result: e,
-                    } as nt.runtime.ReceiveMessage)
+                    })
                 })
             }
+            return true
         }else if(message.action == "downloads"){
             browser.downloads.download({
                 url: message.data.url,
@@ -72,8 +75,9 @@ export function messageListener(){
                     format: message.format,
                     success: true,
                     result: downloadId,
-                } as nt.runtime.ReceiveMessage);
+                });
             }).catch((e) => {
+                console.warn(e)
                 sendResponse({
                     action: message.action,
                     id: message.id,
@@ -81,8 +85,9 @@ export function messageListener(){
                     format: message.format,
                     success: false,
                     result: e,
-                } as nt.runtime.ReceiveMessage);
+                });
             })
+            return true
         }else if(message.action == "cookies"){
             if(message.format == "set"){
                 browser.cookies.set(message.data).then(function(cookie){
@@ -93,8 +98,9 @@ export function messageListener(){
                         format: message.format,
                         result: cookie,
                         success: true
-                    } as nt.runtime.ReceiveMessage);
+                    });
                 }).catch((e) => {
+                    console.warn(e)
                     sendResponse({
                         action: message.action,
                         id: message.id,
@@ -102,8 +108,9 @@ export function messageListener(){
                         message: message.data,
                         success: false,
                         result: e,
-                    } as nt.runtime.ReceiveMessage);
+                    });
                 })
+                return true
             }else if(message.format == "get"){
                 browser.cookies.get(message.data).then(function(cookie){
                     sendResponse({
@@ -113,8 +120,9 @@ export function messageListener(){
                         format: message.format,
                         result: cookie,
                         success: true
-                    } as nt.runtime.ReceiveMessage);
+                    });
                 }).catch((e) => {
+                    console.warn(e)
                     sendResponse({
                         action: message.action,
                         id: message.id,
@@ -122,12 +130,13 @@ export function messageListener(){
                         message: message.data,
                         success: false,
                         result: e,
-                    } as nt.runtime.ReceiveMessage);
+                    });
                 })
+                return true
             }
+        }else{
+            sendResponse({action: message.action, result: "invalid parameters", format: message.format, success: false, id: message.id, data: message.data})
+            return true
         }
-        
-        sendResponse({action: message.action, result: undefined, format: message.format, success: false, id: message.id, data: message.data} as nt.runtime.ReceiveMessage)
-        return undefined
     })
 }

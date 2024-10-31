@@ -832,7 +832,7 @@ export namespace __nt_api__ {
                 try{
                     let ret: Array<episode> = []
                     const response = await __nt_runtime__.action({action: "fetch", format: "text", data: {url: url, options: {'method': 'GET'}}})
-                    if(response?.success){
+                    if(response?.success && response?.action==="fetch"){
                         const html = response.result
                         if(typeof html !== "string"){return []}
 
@@ -849,10 +849,10 @@ export namespace __nt_api__ {
                             var ep = $(this)
                             if(ep.hasClass(chapterClass)){
                                 // chapter title
-                                episodeData.chapterTitle = ep.text()
+                                episodeData.chapterTitle = __nt_text__.escapeHtml(ep.text())
                             }else if(ep.hasClass(episodeClass)){
                                 // subtitle
-                                episodeData.subtitle = ep.find(`.${episodeSubtitleClass}`).text()
+                                episodeData.subtitle = __nt_text__.escapeHtml(ep.find(`.${episodeSubtitleClass}`).text())
 
                                 // date / updateDate
                                 var dateElm = ep.find(`.${episodeUpdateClass}`)
@@ -862,11 +862,11 @@ export namespace __nt_api__ {
                                     var updateDate = update.attr("title") ?? ""
                                     var m = updateDate.match(/^(.*) 改稿$/)
                                     if(m!==null){
-                                        episodeData.updateDate = m[1]
+                                        episodeData.updateDate = __nt_text__.escapeHtml(m[1])
                                     }
                                     update.remove()
                                 }
-                                episodeData.date = dateElm.text()
+                                episodeData.date = __nt_text__.escapeHtml(dateElm.text())
 
                                 // push
                                 ret.push(episodeData)
@@ -884,6 +884,118 @@ export namespace __nt_api__ {
                 return []
             }
         }
+    }
+
+    export namespace booklist {
+        export interface data {
+            title: string
+            author?: string
+            url?: string,
+            bookid?: string
+            user?: string
+            userid?: string
+            publisher?: string
+            label?: string
+            date?: string
+            image?: string
+        }
+
+        export const maxFetchCount = 10
+
+        export async function fetch(userid: number|string, isR18: boolean = false, fetchCount: number = maxFetchCount): Promise<Array<data>>{
+            const fetchUrl: string = isR18 ? `https://nl.syosetu.com/syuppan/list/?noc=on&mnlt=on&mid=on&word=${userid}` : `https://syosetu.com/syuppan/list/?word=${userid}`
+
+            var ret: Array<data> = []
+            const response = await __nt_runtime__.action({action: "fetch", format: "text", data: {url: fetchUrl, options: {'method': 'GET'}}}).catch()
+            if(response?.success && response?.action==="fetch"){
+                var body = $($.parseHTML(response.result))
+                body.find(".p-syuppan-list").each((idx, _elm)=>{
+                    if(fetchCount<=idx){
+                        return false;
+                    }
+
+                    // header
+                    var elm = $(_elm)
+                    const title = elm.find(".p-syuppan-list__head .p-syuppan-list__title").text()
+                    const author = elm.find(".p-syuppan-list__head .p-syuppan-list__writer").text()
+                    const url = elm.find(".p-syuppan-list__head a.p-syuppan-list__title").prop("href")
+                    let bookid: string|undefined
+                    if(typeof url==="string"){
+                        try{
+                            var l = new URL(url)
+                            var m = l.pathname.match(/^\/syuppan\/view\/bookid\/(\d+)\/*/)
+                            if(m!==null){
+                                bookid = m[1]
+                            }
+                        }catch(e){}
+                    }
+
+                    // spec
+                    let publisher: string|undefined
+                    let label: string|undefined
+                    let date: string|undefined
+                    let user: string|undefined
+                    let userid: string|undefined
+                    elm.find(".p-syuppan-list__spec-item").each((_, _elm)=>{
+                        var spec = $(_elm)
+                        var text = spec.find("span.c-label").text().trim()
+                        if(text=="ユーザ"){
+                            spec.find("span.c-label").remove()
+                            user = spec.text().trim()
+                            var href = spec.find("a").prop("href")
+                            if(typeof href === "string"){
+                                userid = __nt_api__.user.getFromURL(href)
+                            }
+                        }else if(text=="出版社"){
+                            spec.find("span.c-label").remove()
+                            publisher = spec.text().trim()
+                        }
+                        else if(text=="レーベル"){
+                            spec.find("span.c-label").remove()
+                            label = spec.text().trim()
+                        }
+                        else if(text=="発売日"){
+                            spec.find("span.c-label").remove()
+                            date = spec.text().trim()
+                        }
+                    })
+
+                    // image
+                    let image: string|undefined
+                    /*
+                    var imageElm = elm.find(".p-syuppan-list__image-link img")
+                    if(imageElm.length){
+                        var src = imageElm.attr("src")
+                        if(typeof src === "string"){
+                            image = src
+                        }
+                    }
+                    */
+
+
+                    // push
+                    ret.push({
+                        title: __nt_text__.escapeHtml(title),
+                        author: strOrUndefined(author),
+                        url: strOrUndefined(url),
+                        bookid: strOrUndefined(bookid),
+                        user: strOrUndefined(user),
+                        userid: strOrUndefined(userid),
+                        publisher: strOrUndefined(publisher),
+                        label: strOrUndefined(label),
+                        date: strOrUndefined(date),
+                        image: strOrUndefined(image)
+                    })
+                })
+            }
+
+            return ret
+        }
+
+        /*
+        export async function getAlternateBookImage(bookid: string|number): Promise<string|void> {
+
+        }*/
     }
 
     /**

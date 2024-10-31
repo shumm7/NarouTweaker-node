@@ -98,9 +98,10 @@ export namespace __nt_runtime__ {
     }): Promise<ReceiveMessage>;
     export async function action(data: SentMessage): Promise<ReceiveMessage|void> {
         try{
-            const ret = browser.runtime.sendMessage(data)
+            const ret = await browser.runtime.sendMessage(data)
             return new ReceiveMessage(ret)
         }catch(e){
+            console.warn(e)
             return
         }
     }
