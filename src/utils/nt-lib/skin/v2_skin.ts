@@ -62,7 +62,7 @@ export namespace __nt_skin_v2__ {
             }else if(key instanceof __nt_skin_v1__.Skin){
                 this.set(convertSkinV1toV2(key))
             }else if(key!==null && typeof key === "object"){
-                const v = __nt_skin__.checkSkinVersion(key)
+                const v = __nt_skin__.checkVersion(key)
                 if(v === 2){
                     for(var k of this.keys){
                         if(k in key){

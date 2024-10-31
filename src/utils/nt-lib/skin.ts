@@ -4,7 +4,7 @@ import { __nt_font_v1__ } from "./skin/v1_font";
 
 
 export namespace __nt_skin__ {
-    export function checkSkinVersion(skin: __nt_skin_v1__.Skin|__nt_skin_v2__.Skin|Record<string,any>){
+    export function checkVersion(skin: __nt_skin_v1__.Skin|__nt_skin_v2__.Skin|Record<string,any>){
         try{
             if(skin instanceof __nt_skin_v1__.Skin){
                 return 1
