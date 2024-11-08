@@ -1,6 +1,55 @@
 import { resolve } from 'node:path';
 import { defineConfig } from 'vite';
 import { crx, defineManifest } from '@crxjs/vite-plugin'
+import react from '@vitejs/plugin-react';
+
+export default defineConfig(({ mode }) => {
+    console.log(mode)
+    return {
+        root: "src",
+        plugins: [
+            react(),
+            crx({ manifest: manifest }),
+        ],
+        experimental: {
+            renderBuiltUrl(filename, { hostType }) {
+                if (hostType === "css") {
+                    return `chrome-extension://__MSG_@@extension_id__/${filename}`;
+                }
+            },
+        },
+        build: {
+            outDir: '../dist/src/',
+            emptyOutDir: true,
+            rollupOptions: {
+                input: {
+                    "options/favorite/main": resolve(__dirname, 'src/options/favorite/index.html'),
+                    "options/general/main": resolve(__dirname, 'src/options/general/index.html'),
+                    "options/kasasagi/main": resolve(__dirname, 'src/options/kasasagi/index.html'),
+                    "options/mitemin/main": resolve(__dirname, 'src/options/mitemin/index.html'),
+                    "options/mypage/main": resolve(__dirname, 'src/options/mypage/index.html'),
+                    "options/narou/main": resolve(__dirname, 'src/options/narou/index.html'),
+                    "options/novel/main": resolve(__dirname, 'src/options/novel/index.html'),
+                    "options/popup/main": resolve(__dirname, 'src/options/popup/index.html'),
+                    "options/search/main": resolve(__dirname, 'src/options/search/index.html'),
+                    "options/workspace/main": resolve(__dirname, 'src/options/workspace/index.html'),
+                    "options/youmou/main": resolve(__dirname, 'src/options/yomou/index.html'),
+                },
+                output: {
+                    entryFileNames: '[name].js',
+                    inlineDynamicImports: false
+                }
+            },
+        },
+        server: {
+            port: 5173,
+            strictPort: true,
+            hmr: {
+                port: 5173,
+            },
+        },
+    };
+});
 
 const manifest = defineManifest({
     manifest_version: 3,
@@ -161,36 +210,4 @@ const manifest = defineManifest({
         },
     ],
 
-});
-
-export default defineConfig((opt) => {
-    return {
-        root: "src",
-        plugins: [
-            crx({ manifest: manifest })
-        ],
-        build: {
-            outDir: '../dist/src/',
-            emptyOutDir: true,
-            rollupOptions: {
-                input: {
-                    "options/favorite/main": resolve(__dirname, 'src/options/favorite/index.html'),
-                    "options/general/main": resolve(__dirname, 'src/options/general/index.html'),
-                    "options/kasasagi/main": resolve(__dirname, 'src/options/kasasagi/index.html'),
-                    "options/mitemin/main": resolve(__dirname, 'src/options/mitemin/index.html'),
-                    "options/mypage/main": resolve(__dirname, 'src/options/mypage/index.html'),
-                    "options/narou/main": resolve(__dirname, 'src/options/narou/index.html'),
-                    "options/novel/main": resolve(__dirname, 'src/options/novel/index.html'),
-                    "options/popup/main": resolve(__dirname, 'src/options/popup/index.html'),
-                    "options/search/main": resolve(__dirname, 'src/options/search/index.html'),
-                    "options/workspace/main": resolve(__dirname, 'src/options/workspace/index.html'),
-                    "options/youmou/main": resolve(__dirname, 'src/options/yomou/index.html'),
-                },
-                output: {
-                    entryFileNames: '[name].js',
-                    inlineDynamicImports: false
-                }
-            },
-        },
-    };
 });

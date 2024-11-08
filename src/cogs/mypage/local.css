@@ -1,7 +1,7 @@
 @charset "UTF-8"; @font-face {
     font-family: hinaicon;
-    src: url(/view/lib/hinaicon/hinaicon.eot?18a45292c0d2dd);
-    src: url(/view/lib/hinaicon/hinaicon.eot?18a45292c0d2dd#iefix) format("eot"),url(/view/lib/hinaicon/hinaicon.woff?18a45292c0d2dd) format("woff"),url(/view/lib/hinaicon/hinaicon.ttf?18a45292c0d2dd) format("truetype"),url(/view/lib/hinaicon/hinaicon.svg?18a45292c0d2dd#hinaicon) format("svg");
+    src: url(https://static.syosetu.com/view/lib/hinaicon/hinaicon.eot?18a45292c0d2dd);
+    src: url(https://static.syosetu.com/view/lib/hinaicon/hinaicon.eot?18a45292c0d2dd#iefix) format("eot"),url(https://static.syosetu.com/view/lib/hinaicon/hinaicon.woff?18a45292c0d2dd) format("woff"),url(https://static.syosetu.com/view/lib/hinaicon/hinaicon.ttf?18a45292c0d2dd) format("truetype"),url(https://static.syosetu.com/view/lib/hinaicon/hinaicon.svg?18a45292c0d2dd#hinaicon) format("svg");
     font-weight: 400;
     font-style: normal
 }
