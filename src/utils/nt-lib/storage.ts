@@ -1,5 +1,5 @@
-import { getOptionFromID, getOptionPageFromID } from "../../options/_utils/optionUI_utils"
-import { OptionID, OptionUI_Item, OptionUI_ItemID } from "../../options/_utils/optionUI_type"
+import { getOptionFromID, getOptionPageFromID } from "../../options/utils/optionUI_utils"
+import { OptionID, OptionUI_Item, OptionUI_ItemID } from "../../options/utils/optionUI_type"
 
 import { __nt_text__ } from "./utils"
 import { __nt_extension__ } from "./process"

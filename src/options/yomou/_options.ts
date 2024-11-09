@@ -1,4 +1,4 @@
-import { OptionUI_Item } from "options/_utils/optionUI_type";
+import { OptionUI_Item } from "../utils/optionUI_type";
 
 export const yomou_optionsList: Array<OptionUI_Item> = [
     /* ランキング (rank) */
@@ -62,7 +62,6 @@ export const yomou_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "yomou",
             category: "rank",
-            hasParent: true,
             parent: "parent_yomouRank_data",
         },
         value: {
@@ -88,7 +87,6 @@ export const yomou_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "yomou",
             category: "rank",
-            hasParent: true,
             parent: "parent_yomouRank_data",
         },
         value: {
@@ -114,7 +112,6 @@ export const yomou_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "yomou",
             category: "rank",
-            hasParent: true,
             parent: "parent_yomouRank_data",
         },
         value: {
@@ -140,7 +137,6 @@ export const yomou_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "yomou",
             category: "rank",
-            hasParent: true,
             parent: "parent_yomouRank_data",
         },
         value: {
@@ -166,7 +162,6 @@ export const yomou_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "yomou",
             category: "rank",
-            hasParent: true,
             parent: "parent_yomouRank_data",
         },
         value: {
@@ -192,7 +187,6 @@ export const yomou_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "yomou",
             category: "rank",
-            hasParent: true,
             parent: "parent_yomouRank_point",
         },
         value: {
@@ -219,7 +213,6 @@ export const yomou_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "yomou",
             category: "rank",
-            hasParent: true,
             parent: "parent_yomouRank_point",
         },
         value: {
@@ -293,7 +286,6 @@ export const yomou_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "yomou",
             category: "ranktop",
-            hasParent: true,
             parent: "parent_yomouRankTop_data"
         },
         value: {
@@ -319,7 +311,6 @@ export const yomou_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "yomou",
             category: "ranktop",
-            hasParent: true,
             parent: "parent_yomouRankTop_data"
         },
         value: {
@@ -345,7 +336,6 @@ export const yomou_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "yomou",
             category: "ranktop",
-            hasParent: true,
             parent: "parent_yomouRankTop_data"
         },
         value: {
@@ -371,7 +361,6 @@ export const yomou_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "yomou",
             category: "ranktop",
-            hasParent: true,
             parent: "parent_yomouRankTop_data"
         },
         value: {
@@ -397,7 +386,6 @@ export const yomou_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "yomou",
             category: "ranktop",
-            hasParent: true,
             parent: "parent_yomouRankTop_data"
         },
         value: {
@@ -423,7 +411,6 @@ export const yomou_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "yomou",
             category: "ranktop",
-            hasParent: true,
             parent: "parent_yomouRankTop_data"
         },
         value: {
@@ -449,7 +436,6 @@ export const yomou_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "yomou",
             category: "ranktop",
-            hasParent: true,
             parent: "parent_yomouRankTop_data"
         },
         value: {
@@ -475,7 +461,6 @@ export const yomou_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "yomou",
             category: "ranktop",
-            hasParent: true,
             parent: "parent_yomouRankTop_data"
         },
         value: {

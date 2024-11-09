@@ -378,6 +378,7 @@ input[type=file] {
     white-space: nowrap;
     font-size: 16px;
     z-index: 1;
+    transition: all .2s ease-in-out;
 }
 #sidebar.hide {
     width: 0px;
@@ -446,7 +447,7 @@ input[type=file] {
 .sidebar-icon:hover {
     color: var(--narou-tweaker--option--color-sidebar-text-hover);
 }
-#sidebar-icon--hide {
+.sidebar-icon--hide {
     font-size: 110%;
     margin: 0 15px;
 }
@@ -540,11 +541,8 @@ input[type=file] {
     padding-left: 30px;
     color: var(--narou-tweaker--option--color-header-text);
 }
-.header-menu-target {
-    display: none;
-}
-.header-menu-target.selected {
-    display: block;
+.header-menu-hidden {
+    display: none !important;
 }
 #header-title--heading{
     font-weight: bold;

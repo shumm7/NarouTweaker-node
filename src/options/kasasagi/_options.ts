@@ -1,4 +1,4 @@
-import { OptionUI_Item } from "options/_utils/optionUI_type";
+import { OptionUI_Item } from "options/utils/optionUI_type";
 
 export const kasasagi_optionsList: Array<OptionUI_Item> = [
     /* 全般 (general) */
@@ -86,7 +86,6 @@ export const kasasagi_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "kasasagi",
             category: "pageview",
-            hasParent: true,
             parent: "parent_kasasagiGeneralDay",
         },
         value: {
@@ -116,7 +115,6 @@ export const kasasagi_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "kasasagi",
             category: "pageview",
-            hasParent: true,
             parent: "parent_kasasagiGeneralDay",
         },
         value: {
@@ -169,7 +167,6 @@ export const kasasagi_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "kasasagi",
             category: "pageview",
-            hasParent: true,
             parent: "parent_kasasagiGeneralTotal",
         },
         value: {
@@ -199,7 +196,6 @@ export const kasasagi_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "kasasagi",
             category: "pageview",
-            hasParent: true,
             parent: "parent_kasasagiGeneralTotal",
         },
         value: {
@@ -252,7 +248,6 @@ export const kasasagi_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "kasasagi",
             category: "pageview",
-            hasParent: true,
             parent: "parent_kasasagiGeneralAPI",
         },
         value: {
@@ -278,7 +273,6 @@ export const kasasagi_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "kasasagi",
             category: "pageview",
-            hasParent: true,
             parent: "parent_kasasagiGeneralAPI",
         },
         value: {
@@ -304,7 +298,6 @@ export const kasasagi_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "kasasagi",
             category: "pageview",
-            hasParent: true,
             parent: "parent_kasasagiGeneralAPI",
         },
         value: {
@@ -435,7 +428,6 @@ export const kasasagi_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "kasasagi",
             category: "day",
-            hasParent: true,
             parent: "parent_kasasagiDayPV"
         },
         value: {
@@ -465,7 +457,6 @@ export const kasasagi_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "kasasagi",
             category: "day",
-            hasParent: true,
             parent: "parent_kasasagiDayPV"
         },
         value: {
@@ -518,7 +509,6 @@ export const kasasagi_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "kasasagi",
             category: "day",
-            hasParent: true,
             parent: "parent_kasasagiDayUnique"
         },
         value: {
@@ -548,7 +538,6 @@ export const kasasagi_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "kasasagi",
             category: "day",
-            hasParent: true,
             parent: "parent_kasasagiDayUnique"
         },
         value: {
@@ -602,7 +591,6 @@ export const kasasagi_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "kasasagi",
             category: "month",
-            hasParent: true,
             parent: "parent_kasasagiMonthPV"
         },
         value: {
@@ -632,7 +620,6 @@ export const kasasagi_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "kasasagi",
             category: "month",
-            hasParent: true,
             parent: "parent_kasasagiMonthPV"
         },
         value: {
@@ -685,7 +672,6 @@ export const kasasagi_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "kasasagi",
             category: "month",
-            hasParent: true,
             parent: "parent_kasasagiMonthUnique"
         },
         value: {
@@ -715,7 +701,6 @@ export const kasasagi_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "kasasagi",
             category: "month",
-            hasParent: true,
             parent: "parent_kasasagiMonthUnique"
         },
         value: {

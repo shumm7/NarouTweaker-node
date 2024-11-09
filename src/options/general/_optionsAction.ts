@@ -1,7 +1,7 @@
-import { fixOption, getOptionPageFromID } from "../_utils/optionUI_utils";
-import { OptionUI_Pages } from "../_utils/optionUI_items";
+import { fixOption, getOptionPageFromID } from "../utils/optionUI_utils";
+import { OptionUI_Pages } from "../utils/optionUI_items";
 import { nt } from "../../utils/narou-tweaker";
-import { OptionUI_Page } from "options/_utils/optionUI_type";
+import { OptionUI_Page } from "options/utils/optionUI_type";
 
 import $ from 'jquery';
 import Browser from "webextension-polyfill";

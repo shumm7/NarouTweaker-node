@@ -1,7 +1,7 @@
 import browser from "webextension-polyfill"
 
 import { __nt_storage__ } from "./nt-lib/storage";
-import { __nt_time__, __nt_text__, __nt_math__, __nt_array__ } from "./nt-lib/utils";
+import { __nt_time__, __nt_text__, __nt_math__, __nt_array__, __nt_url__ } from "./nt-lib/utils";
 import { __nt_api__ } from "./nt-lib/api";
 import { __nt_skin__, __nt_font__ } from "./nt-lib/skin";
 import { __nt_download__, __nt_runtime__, __nt_cookie__, __nt_extension__ } from "./nt-lib/process";
@@ -24,4 +24,5 @@ export namespace nt {
     export import font = __nt_font__
     export import workspace = __nt_workspace__
     export import header = __nt_header__
+    export import url = __nt_url__
 }

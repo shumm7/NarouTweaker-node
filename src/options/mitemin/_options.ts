@@ -1,4 +1,4 @@
-import { OptionUI_Item } from "options/_utils/optionUI_type";
+import { OptionUI_Item } from "options/utils/optionUI_type";
 
 export const mitemin_optionsList: Array<OptionUI_Item> = [
     /* 全般 (general) */

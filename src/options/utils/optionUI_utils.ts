@@ -59,12 +59,8 @@ export function getOptionFromID(id: OptionUI_ItemID): OptionUI_Item|undefined{
 }
 
 export function getOptionParentID(option?: OptionUI_Item): OptionUI_ItemID|undefined{
-    if(option instanceof OptionUI_Item){
-        if(option.location){
-            if(option.location.hasParent){
-                return option.location.parent
-            }
-        }
+    if(option !== undefined){
+        return option.location.parent
     }
     return
 }
@@ -92,7 +88,7 @@ export function getOptionChildsFromID(id: OptionUI_ItemID): Array<OptionUI_Item>
     if(parent){
         $.each(OptionUI_Items, function(_, v){
             if(v.location){
-                if(v.location.hasParent && v.location.parent === id){
+                if(v.location.parent === id){
                     ret.push(v)
                 }
             }

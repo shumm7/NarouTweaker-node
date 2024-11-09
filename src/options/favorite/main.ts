@@ -1,6 +1,6 @@
-import { OptionUI_ItemID } from "options/_utils/optionUI_type";
-import { getOptionFromID } from "../_utils/optionUI_utils";
-import { getOptionElement, optionHide, syntaxHighlight } from "../_utils/utils";
+import { OptionUI_ItemID } from "options/utils/optionUI_type";
+import { getOptionFromID } from "../utils/optionUI_utils";
+import { getOptionElement, optionHide, syntaxHighlight } from "../utils/utils";
 import { restoreOptions, setup } from "../general";
 import { nt } from "../../utils/narou-tweaker";
 
@@ -27,13 +27,12 @@ function setupContents(scroll?: number){
             if(option){
                 if(option.location){
                     if(!option.location.hide){
-                        const hasParent = option.location.hasParent
                         const parent = option.location.parent
 
                         var elm = getOptionElement(option, "favorite")
 
                         /* Placement */
-                        if(hasParent){
+                        if(parent){
                             $(`.contents-container[name="general"] .contents-wide[name="${parent}"] .contents-wide-column`).append(elm)
                         }else{
                             $(`.contents-container[name="general"]`).append(elm)

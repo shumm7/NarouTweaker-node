@@ -1,5 +1,5 @@
 import { nt } from "../utils/narou-tweaker"
-import { fixOption } from "../options/_utils/optionUI_utils"
+import { fixOption } from "../options/utils/optionUI_utils"
 import { messageListener } from "./_process"
 import { skinListener } from "./_skin"
 import { yomouCssListener } from "./_yomou"

@@ -1,4 +1,4 @@
-import { OptionUI_Item } from "options/_utils/optionUI_type";
+import { OptionUI_Item } from "../utils/optionUI_type";
 import { novel_customHeaderSortable, novel_fontEditor, novel_replacePattern, novel_skinEditor } from "./_optionsAction";
 
 export const novel_optionsList: Array<OptionUI_Item> = [
@@ -195,7 +195,6 @@ export const novel_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "novel",
             category: "general",
-            hasParent: true,
             parent: "parent_novelCustomHeaderOption"
         },
         value: {
@@ -228,7 +227,6 @@ export const novel_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "novel",
             category: "general",
-            hasParent: true,
             parent: "parent_novelCustomHeaderOption"
         },
         value: {
@@ -261,7 +259,6 @@ export const novel_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "novel",
             category: "general",
-            hasParent: true,
             parent: "parent_novelCustomHeaderOption"
         },
         value: {
@@ -293,7 +290,6 @@ export const novel_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "novel",
             category: "general",
-            hasParent: true,
             parent: "parent_novelCustomHeaderOption"
         },
         value: {
@@ -988,7 +984,6 @@ export const novel_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "novel",
             category: "correction",
-            hasParent: true,
             parent: "parent_correctionGrammer"
         },
         value: {
@@ -1015,7 +1010,6 @@ export const novel_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "novel",
             category: "correction",
-            hasParent: true,
             parent: "parent_correctionSymbol"
         },
         value: {
@@ -1042,7 +1036,6 @@ export const novel_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "novel",
             category: "correction",
-            hasParent: true,
             parent: "parent_correctionSymbol"
         },
         value: {
@@ -1069,7 +1062,6 @@ export const novel_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "novel",
             category: "correction",
-            hasParent: true,
             parent: "parent_correctionSymbol"
         },
         value: {
@@ -1096,7 +1088,6 @@ export const novel_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "novel",
             category: "correction",
-            hasParent: true,
             parent: "parent_correctionSymbol"
         },
         value: {
@@ -1123,7 +1114,6 @@ export const novel_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "novel",
             category: "correction",
-            hasParent: true,
             parent: "parent_correctionSymbol"
         },
         value: {
@@ -1150,7 +1140,6 @@ export const novel_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "novel",
             category: "correction",
-            hasParent: true,
             parent: "parent_correctionSymbol"
         },
         value: {
@@ -1177,7 +1166,6 @@ export const novel_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "novel",
             category: "correction",
-            hasParent: true,
             parent: "parent_correctionSymbol"
         },
         value: {
@@ -1204,7 +1192,6 @@ export const novel_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "novel",
             category: "correction",
-            hasParent: true,
             parent: "parent_correctionSymbol"
         },
         value: {
@@ -1231,7 +1218,6 @@ export const novel_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "novel",
             category: "correction",
-            hasParent: true,
             parent: "parent_correctionSymbol"
         },
         value: {
@@ -1258,7 +1244,6 @@ export const novel_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "novel",
             category: "correction",
-            hasParent: true,
             parent: "parent_correctionLocalize"
         },
         value: {
@@ -1291,7 +1276,6 @@ export const novel_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "novel",
             category: "correction",
-            hasParent: true,
             parent: "parent_correctionLocalize"
         },
         value: {
@@ -1329,7 +1313,6 @@ export const novel_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "novel",
             category: "correction",
-            hasParent: true,
             parent: "parent_correctionLocalize"
         },
         value: {
@@ -1367,7 +1350,6 @@ export const novel_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "novel",
             category: "correction",
-            hasParent: true,
             parent: "parent_correctionLocalize"
         },
         value: {
@@ -1405,7 +1387,6 @@ export const novel_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "novel",
             category: "correction",
-            hasParent: true,
             parent: "parent_correctionVertical",
         },
         value: {
@@ -1443,7 +1424,6 @@ export const novel_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "novel",
             category: "correction",
-            hasParent: true,
             parent: "parent_correctionVertical",
         },
         value: {
@@ -1476,7 +1456,6 @@ export const novel_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "novel",
             category: "correction",
-            hasParent: true,
             parent: "parent_correctionVertical",
         },
         value: {
@@ -1521,7 +1500,6 @@ export const novel_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "novel",
             category: "correction",
-            hasParent: true,
             parent: "parent_correctionVertical",
         },
         value: {
@@ -1559,7 +1537,6 @@ export const novel_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "novel",
             category: "correction",
-            hasParent: true,
             parent: "parent_correctionVertical",
         },
         value: {
@@ -1597,7 +1574,6 @@ export const novel_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "novel",
             category: "correction",
-            hasParent: true,
             parent: "parent_correctionVertical",
         },
         value: {
@@ -1629,7 +1605,6 @@ export const novel_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "novel",
             category: "correction",
-            hasParent: true,
             parent: "parent_correctionMisc"
         },
         value: {
@@ -1655,7 +1630,6 @@ export const novel_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "novel",
             category: "correction",
-            hasParent: true,
             parent: "parent_correctionMisc"
         },
         value: {

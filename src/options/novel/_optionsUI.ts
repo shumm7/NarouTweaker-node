@@ -1,4 +1,4 @@
-import { OptionHideParammeters } from "../_utils/optionUI_type"
+import { OptionHideParammeters } from "../utils/optionUI_type"
 const oh = OptionHideParammeters
 
 export const OptionUI_CustomElement_novel: Record<string,string> = {

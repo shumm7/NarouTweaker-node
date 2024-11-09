@@ -93,12 +93,12 @@ export class OptionUI_Category {
 /**
  * オプションページのアイテム
  */
-export class OptionUI_Item {
-    id: OptionUI_ItemID = ""
+export interface OptionUI_Item {
+    id: OptionUI_ItemID
     title?: string
     description?: OptionUI_Descriptions
+    location: OptionUI_Item_Location
     ui?: OptionUI_Item_UI
-    location?: OptionUI_Item_Location
     value?: OptionUI_Item_Value
     class?: any
     style?: any
@@ -115,15 +115,14 @@ class OptionUI_Item_UI {
     style?: any
     class?: any
 }
-class OptionUI_Item_Location {
-    page: OptionUI_PageID = ""
-    category: OptionUI_CategoryID = ""
-    hasParent?: boolean
+interface OptionUI_Item_Location {
+    page: OptionUI_PageID
+    category: OptionUI_CategoryID
     hide?: boolean
-    parent?: OptionUI_ItemID
     noindex?: boolean
+    parent?: string
 }
-class OptionUI_Item_Value {
+interface OptionUI_Item_Value {
     related?: Array<OptionID>|OptionID
     buttons?: OptionUI_Item_Value_Buttons
     isAdvanced?: boolean
@@ -131,7 +130,7 @@ class OptionUI_Item_Value {
     isExperimental?: boolean
     requirement?: OptionUI_Item_Value_Requirement
 }
-class OptionUI_Item_Value_Buttons {
+interface OptionUI_Item_Value_Buttons {
     reset?: boolean
     favorite?: boolean
 }

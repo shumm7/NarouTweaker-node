@@ -1,7 +1,7 @@
-import { OptionUI_Category, OptionUI_Item } from "../_utils/optionUI_type";
-import { getOptionElement, optionHide, syntaxHighlight } from "../_utils/utils";
+import { OptionUI_Category, OptionUI_Item } from "../utils/optionUI_type";
+import { getOptionElement, optionHide, syntaxHighlight } from "../utils/utils";
 import { restoreOptions, setup } from "../general";
-import { OptionUI_Items, OptionUI_Pages } from "../_utils/optionUI_items";
+import { OptionUI_Items, OptionUI_Pages } from "../utils/optionUI_items";
 import { nt } from "../../utils/narou-tweaker";
 
 import $ from 'jquery';
@@ -19,10 +19,10 @@ $("#search-box").on("input", function(){
     search(searchWords)
 })
 
-class OptionUI_SearchResult extends OptionUI_Item {
+interface OptionUI_SearchResult extends OptionUI_Item {
     score?: number
 }
-class OptionUI_CategorySearchResult extends OptionUI_Category {
+interface OptionUI_CategorySearchResult extends OptionUI_Category {
     score?: number
 }
 

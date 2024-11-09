@@ -601,3 +601,205 @@ export namespace __nt_array__ {
         }
     }
 }
+
+export namespace __nt_url__ {
+    export class search {
+        static set(url: URL|Location|string, params: Record<string, string>): URL|void;
+        static set(url: URL|Location|string, value: string, key: string): URL|void;
+        static set(_url: URL|Location|string, params: Record<string, string>|string, value?: string): URL|void{
+            let url:URL
+            if(typeof _url === "string"){
+                try{
+                    url = new URL(_url)
+                }catch(e){
+                    return
+                }
+            }else if(_url instanceof URL){
+                url = _url
+            }else if(_url instanceof Location){
+                url = new URL(_url.toString())
+            }else{
+                url = new URL(location.toString())
+            }
+
+            var p: Record<string, string> = {}
+            if(typeof params==="string"){
+                if(typeof value!=="string"){return}
+                p[params] = value
+            }else{
+                p = params
+            }
+
+            var urlParams = new URLSearchParams(url.search)
+            for(const [key, value] of Object.entries(p)){
+                urlParams.set(key, value)
+            }
+            url.search = urlParams.toString()
+            return url
+        }
+
+        static push(url: URL|Location|string, params: Record<string, string>): URL|void;
+        static push(url: URL|Location|string, key: string, value: string): URL|void;
+        static push(_url: URL|Location|string, params: Record<string, string>|string, value?: string): URL|void{
+            let url:URL
+            if(typeof _url === "string"){
+                try{
+                    url = new URL(_url)
+                }catch(e){
+                    return
+                }
+            }else if(_url instanceof URL){
+                url = _url
+            }else if(_url instanceof Location){
+                url = new URL(_url.toString())
+            }else{
+                url = new URL(location.toString())
+            }
+
+            var p: Record<string, string> = {}
+            if(typeof params==="string"){
+                if(typeof value!=="string"){return}
+                p[params] = value
+            }else{
+                p = params
+            }
+
+            var urlParams = new URLSearchParams(url.search)
+            for(const [key, value] of Object.entries(p)){
+                urlParams.append(key, value)
+            }
+            url.search = urlParams.toString()
+            return url
+        }
+
+        static remove(url: URL|Location|string, key: string, value: string): URL|void;
+        static remove(url: URL|Location|string, params: string|Record<string,string|undefined>): URL|void;
+        static remove(url: URL|Location|string, params: Array<string|Record<string,string|undefined>>): URL|void;
+        static remove(_url: URL|Location|string, params: string|Record<string,string|undefined>|Array<string|Record<string,string|undefined>>, value?: string): URL|void{
+            function remove(search: URLSearchParams, param: string|Record<string,string|undefined>){
+                if(typeof param==="string"){
+                    urlParams.delete(param)
+                }else{
+                    
+                }
+            }
+
+            let url:URL
+            if(typeof _url === "string"){
+                try{
+                    url = new URL(_url)
+                }catch(e){
+                    return
+                }
+            }else if(_url instanceof URL){
+                url = _url
+            }else if(_url instanceof Location){
+                url = new URL(_url.toString())
+            }else{
+                url = new URL(location.toString())
+            }
+            
+            var urlParams = new URLSearchParams(url.search)
+            if(Array.isArray(params)){
+                for(let i=0; i<params.length; i++){
+                    remove(urlParams, params[i])
+                }
+            }else{
+                if(typeof params==="string"){
+                    if(typeof value==="string"){
+                        var p: Record<string,string> = {}
+                        p[params] = value
+                        remove(urlParams, p)
+                    }else{
+                        remove(urlParams, params)
+                    }
+                }else{
+                    remove(urlParams, params)
+                }
+            }
+            url.search = urlParams.toString()
+            return url
+        }
+
+        static get(url: URL|Location|string, key: null|undefined): Record<string,Array<string>>|void;
+        static get(url: URL|Location|string, key?: string|Array<string>): Record<string,Array<string>>|void;
+        static get(_url: URL|Location|string, key?: string|Array<string>|null): Record<string,Array<string>>|void{
+            let url:URL
+            if(typeof _url === "string"){
+                try{
+                    url = new URL(_url)
+                }catch(e){
+                    return
+                }
+            }else if(_url instanceof URL){
+                url = _url
+            }else if(_url instanceof Location){
+                url = new URL(_url.toString())
+            }else{
+                url = new URL(location.toString())
+            }
+
+            var whitelist: Array<string>
+            if(key===undefined || key===null){
+                whitelist = []
+            }else if(typeof key === "string"){
+                whitelist = [key]
+            }else{
+                whitelist = key
+            }
+
+            var ret: Record<string,Array<string>> = {}
+            var urlParams = new URLSearchParams(url.search)
+            for (const key of urlParams.keys()) {
+                if(whitelist.includes(key)){
+                    ret[key] = urlParams.getAll(key)
+                }
+            }
+
+            return ret
+        }
+
+        static value(url: URL|Location|string, key: string): string[]|void;
+        static value(_url: URL|Location|string, key: string): string[]|void {
+            let url:URL
+            if(typeof _url === "string"){
+                try{
+                    url = new URL(_url)
+                }catch(e){
+                    return
+                }
+            }else if(_url instanceof URL){
+                url = _url
+            }else if(_url instanceof Location){
+                url = new URL(_url.toString())
+            }else{
+                url = new URL(location.toString())
+            }
+
+            var urlParams = new URLSearchParams(url.search)
+            return urlParams.getAll(key)
+        }
+
+
+        static has(url: URL|Location|string, key: string, value?: string): boolean|void;
+        static has(_url: URL|Location|string, key: string, value?: string): boolean|void {
+            let url:URL
+            if(typeof _url === "string"){
+                try{
+                    url = new URL(_url)
+                }catch(e){
+                    return
+                }
+            }else if(_url instanceof URL){
+                url = _url
+            }else if(_url instanceof Location){
+                url = new URL(_url.toString())
+            }else{
+                url = new URL(location.toString())
+            }
+
+            var urlParams = new URLSearchParams(url.search)
+            return urlParams.has(key, value)
+        }
+    }
+}

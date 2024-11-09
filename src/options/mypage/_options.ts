@@ -1,4 +1,4 @@
-import { OptionUI_Item } from "options/_utils/optionUI_type";
+import { OptionUI_Item } from "../utils/optionUI_type";
 
 export const mypage_optionsList: Array<OptionUI_Item> = [
     /* 全般 (general) */
@@ -84,7 +84,6 @@ export const mypage_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "mypage",
             category: "general",
-            hasParent: true,
             parent: "mypageNovellistData"
         },
         value: {
@@ -110,7 +109,6 @@ export const mypage_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "mypage",
             category: "general",
-            hasParent: true,
             parent: "mypageNovellistData"
         },
         value: {
@@ -136,7 +134,6 @@ export const mypage_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "mypage",
             category: "general",
-            hasParent: true,
             parent: "mypageNovellistData"
         },
         value: {
@@ -162,7 +159,6 @@ export const mypage_optionsList: Array<OptionUI_Item> = [
         location: {
             page: "mypage",
             category: "general",
-            hasParent: true,
             parent: "mypageNovellistData"
         },
         value: {

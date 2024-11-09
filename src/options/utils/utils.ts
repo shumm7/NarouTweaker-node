@@ -381,13 +381,12 @@ export function getOptionElement(option: OptionUI_Item, mode?: optionType){
     const isExperimental = option.value?.isExperimental
     const isAdvanced = option.value?.isAdvanced
     const isDebug = option.value?.isDebug
-    const hasParent = option.location?.hasParent
     const parent = option.location?.parent
 
     var elm
     
     /* Outer */
-    if(hasParent && mode!=="search"){
+    if(parent && mode!=="search"){
         elm = $(`<div class="contents-option" name="${id}"></div>`)
     }else{
         elm = $(`<div class="contents-wide" name="${id}"><div class="contents-option"></div></div>`)
@@ -686,7 +685,7 @@ export function getOptionElement(option: OptionUI_Item, mode?: optionType){
                 `
                 */
 
-                if(hasParent && parent){
+                if(parent){
                     const parentData = getOptionFromID(parent)
                     if(parentData){
                         crumbs = `
@@ -780,7 +779,7 @@ export function getOptionElement(option: OptionUI_Item, mode?: optionType){
 
             if(mode==="favorite"){
                 /* arrows */
-                if(!hasParent){
+                if(!parent){
                     var buttonIconElm_Up = $(`
                         <div class="contents-item--button-icon contents-item--button-favorite--prev">
                             <i class="fa-solid fa-arrow-up"></i>

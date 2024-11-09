@@ -1,9 +1,9 @@
 import { check } from "../utils/misc"
 import { nt } from "../utils/narou-tweaker";
-import { colorPicker, getOptionElement, optionHide, syntaxHighlight } from "./_utils/utils";
-import { OptionUI_Items, OptionUI_Pages } from "./_utils/optionUI_items";
-import { OptionUI_ItemID, OptionUI_Page, OptionUI_PageID } from "./_utils/optionUI_type";
-import { getOptionFromID, getOptionPageFromID } from "./_utils/optionUI_utils";
+import { colorPicker, getOptionElement, optionHide, syntaxHighlight } from "./utils/utils";
+import { OptionUI_Items, OptionUI_Pages } from "./utils/optionUI_items";
+import { OptionUI_ItemID, OptionUI_Page, OptionUI_PageID } from "./utils/optionUI_type";
+import { getOptionFromID, getOptionPageFromID } from "./utils/optionUI_utils";
 
 import $ from 'jquery';
 
@@ -343,13 +343,12 @@ function setupContents(){
             if(option.location.page === currentPage){
                 if(!option.location.hide){
                     const category = option.location.category
-                    const hasParent = option.location.hasParent
                     const parent = option.location.parent
 
                     var elm = getOptionElement(option)
 
                     /* Placement */
-                    if(hasParent){
+                    if(parent){
                         $(`.contents-container[name="${category}"] .contents-wide[name="${parent}"] .contents-wide-column`).append(elm)
                     }else{
                         $(`.contents-container[name="${category}"]`).append(elm)
