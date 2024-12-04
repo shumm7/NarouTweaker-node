@@ -1,6 +1,6 @@
 import { OptionUI_Item } from "../../../utils/optionUI_type";
 import { getOptionCategory, getOptionFromID, getOptionPageFromID } from "../../../utils/optionUI_utils";
-import Link from "./Link";
+import Link from "./common/Link";
 
 export default function OptionContentItem_Head(props: React.ComponentPropsWithoutRef<"div"> & { option: OptionUI_Item }) {
     const option = props.option
@@ -11,8 +11,11 @@ export default function OptionContentItem_Head(props: React.ComponentPropsWithou
     const id = option.id
     const parent = option.location?.parent
 
+    const p: Partial<typeof props> = props
+    delete p.option
+
     return (
-        <div className="contents-option-head" {...props}>
+        <div className="contents-option-head" {...p}>
             <OptionContentItem_HeadTitle />
             <OptionContentItem_HeadDescription />
         </div>

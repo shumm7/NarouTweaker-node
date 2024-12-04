@@ -1,5 +1,5 @@
-import { getOptionFromID, getOptionPageFromID } from "../../options/utils/optionUI_utils"
-import { OptionID, OptionUI_Item, OptionUI_ItemID } from "../../options/utils/optionUI_type"
+import { getOptionFromID, getOptionPageFromID } from "../../options/sample/app/lib/utils"
+import { OptionID, OptionUI_Item, OptionUI_ItemID } from "../../options/sample/app/lib/type"
 
 import { __nt_text__ } from "./utils"
 import { __nt_extension__ } from "./process"
@@ -68,7 +68,7 @@ function _checkLocalValue(key: OptionID, value: any): any {
                 var list: Array<OptionUI_ItemID> = []
                 value.forEach(function (option) {
                     var optionData: OptionUI_Item | undefined = getOptionFromID(option)
-                    if (optionData?.value?.buttons?.favorite) {
+                    if (optionData!==undefined && !optionData.ui?.hideButtons?.includes("favorite") && !optionData.ui?.hideButtons?.includes("all")) {
                         list.push(optionData.id)
                     }
                 })
@@ -81,28 +81,31 @@ function _checkLocalValue(key: OptionID, value: any): any {
         } else if ("extPopupDefaultPage" === key) {
             if (value !== "__auto__") {
                 var page = getOptionPageFromID(value)
-                if ((page?.popup?.defaultPage && page?.title && page?.id)) {
+                if (page?.popup && (page?.type==="page" || page?.type===undefined) && page?.title) {
                     return value
+                }else{
+                    return
                 }
+            }else{
+                return value
             }
-            return
-        } else if("novelSkinsAvailable" === key){
-            if(Array.isArray(value)){
+        } else if ("novelSkinsAvailable" === key) {
+            if (Array.isArray(value)) {
                 var p: Array<__nt_skin_v2__.AvailableSkin> = []
-                for(let i = 0; i<value.length; i++){
+                for (let i = 0; i < value.length; i++) {
                     const src = value[i]?.src
                     const key = value[i]?.key
-                    if((src==="internal" || src==="local") && typeof key === "number" && isFinite(key)){
+                    if ((src === "internal" || src === "local") && typeof key === "number" && isFinite(key)) {
                         p.push(value[i])
                     }
                 }
                 return p
             }
-        } else if("novelSkinSelected" === key){
+        } else if ("novelSkinSelected" === key) {
             const src = value?.src
             const key = value?.key
-            if((src==="internal" || src==="local") && typeof key === "number" && isFinite(key)){
-                return {src: src, key: key}
+            if ((src === "internal" || src === "local") && typeof key === "number" && isFinite(key)) {
+                return { src: src, key: key }
             }
         }
         return value
@@ -172,7 +175,7 @@ export namespace __nt_storage__ {
             extDebug: boolean = false
             extFavoriteOptions: Array<string> = []
             extPopupDefaultPage: string = "__auto__"
-            extOptionPageButtons: boolean = true
+            extOptionPageButtons: boolean = true //deprecated
             extNotifications: boolean = true
 
             /* Narou */
@@ -182,7 +185,7 @@ export namespace __nt_storage__ {
 
             /* Novel */
             novelCustomStyle: boolean = true
-            novelCustomHeaderType: number | string = "2"
+            novelCustomHeaderType: number | string = 2
             novelCustomCSS: __nt_text__.CSS_String = ""
             novelLegacyHeaderIcon: boolean = true
             novelVertical: boolean = false
@@ -211,9 +214,9 @@ export namespace __nt_storage__ {
             workspaceCustomMenu_Middle: Array<__nt_header__.iconId> = ["reaction", "block-mute", "x-home"]
             workspaceCustomMenu_Right: Array<__nt_header__.iconId> = ["find", "support"]
             workspaceHeaderAdditionalMenu: boolean = false
-            workspaceBookmarkLayout: number | string = "0"
+            workspaceBookmarkLayout: number = 0
             workspaceBookmarkReplaceEpisode: boolean = false
-            workspaceBookmarkCategoryLayout: number | string = "2"
+            workspaceBookmarkCategoryLayout: number | string = 2
             workspaceImpressionMarkedButton: boolean = true
             workspaceImpressionMarkAsReadWhenReply: boolean = true
             workspaceImpressionHideButton: boolean = true
@@ -305,11 +308,11 @@ export namespace __nt_storage__ {
 
             /* v2 Skin */
             novelSkinsAvailable: Array<__nt_skin_v2__.AvailableSkin> = [
-                {src: "internal", key: 0},
-                {src: "internal", key: 1},
-                {src: "local", key: 0},
+                { src: "internal", key: 0 },
+                { src: "internal", key: 1 },
+                { src: "local", key: 0 },
             ]
-            novelSkinSelected: __nt_skin_v2__.AvailableSkin = {src: "internal", key: 0}
+            novelSkinSelected: __nt_skin_v2__.AvailableSkin = { src: "internal", key: 0 }
             novelSkins: Array<__nt_skin_v2__.Skin> = [
                 new __nt_skin_v2__.Skin({
                     name: "スキン",
@@ -467,7 +470,7 @@ export namespace __nt_storage__ {
              * キーに値を設定する
              * @param {Record<string, any>|Partial<__nt_storage__.local.options>|__nt_storage__.local.options} value - 設定するキーと値の辞書
              */
-            set(value: Record<string, any>|Partial<__nt_storage__.local.options>|__nt_storage__.local.options): void;
+            set(value: Record<string, any> | Partial<__nt_storage__.local.options> | __nt_storage__.local.options): void;
             set(key?: OptionID | Record<string, any> | __nt_storage__.local.options | Partial<__nt_storage__.local.options>, value?: any): void;
             set(key?: OptionID | Record<string, any> | __nt_storage__.local.options | Partial<__nt_storage__.local.options>, value?: any): void {
                 if (key instanceof __nt_storage__.local.options) {
@@ -477,13 +480,13 @@ export namespace __nt_storage__ {
                 else if (typeof key === "string") {
                     /** novelSkin_X */
                     const m = key.match(/^novelSkin_(\d)+$/)
-                    if(m!==null){
+                    if (m !== null) {
                         const idx = Number(m[1])
-                        if(isFinite(idx) && idx < __nt_skin_v2__.maxLocalSkins && idx >= 0 && value instanceof Object){
+                        if (isFinite(idx) && idx < __nt_skin_v2__.maxLocalSkins && idx >= 0 && value instanceof Object) {
                             this.novelSkins[idx] = new __nt_skin_v2__.Skin(value)
                         }
                     }
-                    
+
                     /** others */
                     else {
                         var value = _checkLocalValue(key, value)
@@ -504,7 +507,7 @@ export namespace __nt_storage__ {
              * @param {OptionID|Array<OptionID>} parameters - キーの文字列、またはそのリスト
              * @returns 指定したデータを含む辞書型（`parameters`を指定しない場合はすべて）
              */
-            get(parameters?: null|undefined): Record<string, any>;
+            get(parameters?: null | undefined): Record<string, any>;
             get(parameters: OptionID | Array<OptionID>): Record<string, any>;
             get(parameters?: null | OptionID | Array<OptionID>): Partial<__nt_storage__.local.options>;
             get(parameters?: null | OptionID | Array<OptionID>): Partial<__nt_storage__.local.options> {
@@ -520,17 +523,17 @@ export namespace __nt_storage__ {
                     for (const key of params) {
                         /** novelSkin_X */
                         const m = key.match(/^novelSkin_(\d)+$/)
-                        if(m!==null){
+                        if (m !== null) {
                             const skinIdx = Number(m[1])
                             const value = this.novelSkins.at(skinIdx)
-                            if( isFinite(skinIdx) && value!==undefined ){
+                            if (isFinite(skinIdx) && value !== undefined) {
                                 ret[`novelSkin_${skinIdx}`] = value
                                 continue
                             }
-                        }else if(key==="novelSkins"){
-                            for(let i = 0; i<this.novelSkins.length; i++){
+                        } else if (key === "novelSkins") {
+                            for (let i = 0; i < this.novelSkins.length; i++) {
                                 const value = this.novelSkins.at(i)
-                                if(value!==undefined ){
+                                if (value !== undefined) {
                                     ret[`novelSkin_${i}`] = value
                                 }
                             }
@@ -548,10 +551,10 @@ export namespace __nt_storage__ {
                 } else { // export all
                     for (const [key, value] of Object.entries(this)) {
                         /** novelSkin_X */
-                        if(key === "novelSkins"){
-                            for(let idx = 0; idx<this.novelSkins.length; idx++){
+                        if (key === "novelSkins") {
+                            for (let idx = 0; idx < this.novelSkins.length; idx++) {
                                 const value = this.novelSkins.at(idx)
-                                if( value instanceof __nt_skin_v2__.Skin ){
+                                if (value instanceof __nt_skin_v2__.Skin) {
                                     ret[`novelSkin_${idx}`] = value
                                     continue
                                 }
@@ -580,7 +583,7 @@ export namespace __nt_storage__ {
              * 設定データをlocalストレージに保存する（`parameters`を指定しない場合はすべて）
              * @param parameters キーの文字列、またはそのリスト
              */
-            setToStorage(parameters?: null|OptionID|Array<OptionID>): Promise<void>{
+            setToStorage(parameters?: null | OptionID | Array<OptionID>): Promise<void> {
                 return __nt_storage__.local.set(this.get(parameters))
             }
 
@@ -601,16 +604,16 @@ export namespace __nt_storage__ {
                 return obj
             }
 
-            static check<T>(key: OptionID, value: T): T|void;
-            static check<T>(key: Record<string,T>): Record<string,T|undefined>;
-            static check<T>(key: OptionID|Record<string,T>, value?: T): T|void|Record<string,T|undefined>{
-                if(typeof key === "string"){
+            static check<T>(key: OptionID, value: T): T | void;
+            static check<T>(key: Record<string, T>): Record<string, T | undefined>;
+            static check<T>(key: OptionID | Record<string, T>, value?: T): T | void | Record<string, T | undefined> {
+                if (typeof key === "string") {
                     return _checkLocalValue(key, value)
-                }else if(key instanceof Object){
-                    var ret: Record<string,any> = {}
+                } else if (key instanceof Object) {
+                    var ret: Record<string, any> = {}
                     for (const k of Object.keys(key)) {
                         const c = _checkLocalValue(k, key[k])
-                        if(c!==undefined){
+                        if (c !== undefined) {
                             ret[k] = c
                         }
                     }
@@ -647,84 +650,81 @@ export namespace __nt_storage__ {
          */
         export type GraphType = "bar" | "line"
 
-        
-        export function get(
+
+        export async function get(
             keys?: string | string[] | Partial<__nt_storage__.local.options> | null
         ): Promise<__nt_storage__.local.options> {
-            if (keys === undefined) { keys = null }
-            return browser.storage.local.get(keys).then((data) => {return new __nt_storage__.local.options(data)})
+            const data = await chrome.storage.local.get(keys === undefined ? null : keys)
+            return new __nt_storage__.local.options(data)
         }
 
 
         export function set(key: string, value: any): Promise<void>
-        export function set(data?: __nt_storage__.local.options | Partial<__nt_storage__.local.options> | Record<string,any> | null): Promise<void>
+        export function set(data?: __nt_storage__.local.options | Partial<__nt_storage__.local.options> | Record<string, any> | null): Promise<void>
         export function set(
-            data: __nt_storage__.local.options | Partial<__nt_storage__.local.options> | Record<string,any> | null | undefined | string,
+            data: __nt_storage__.local.options | Partial<__nt_storage__.local.options> | Record<string, any> | null | undefined | string,
             value?: any
         ): Promise<void> {
-            var v: Record<string,any> = {}
-            if(data instanceof __nt_storage__.local.options){
+            var v: Record<string, any> = {}
+            if (data instanceof __nt_storage__.local.options) {
                 v = data.get()
                 return browser.storage.local.set(v)
-            }else if(data instanceof Object){
+            } else if (data instanceof Object) {
                 v = __nt_storage__.local.options.check(data)
                 return browser.storage.local.set(v)
-            }else if(typeof data === "string"){
+            } else if (typeof data === "string") {
                 const c = __nt_storage__.local.options.check(data, value)
-                if(c!==undefined){
+                if (c !== undefined) {
                     v[data] = c
                 }
                 return browser.storage.local.set(v)
-            }else{
+            } else {
                 return browser.storage.local.set(v)
             }
         }
 
-        export function clear(): Promise<void>{
+        export function clear(): Promise<void> {
             return browser.storage.local.clear()
         }
 
-        export function remove(keys?: string|string[]|null): Promise<void> {
-            if(keys!==null && keys!==undefined){
+        export function remove(keys?: string | string[] | null): Promise<void> {
+            if (keys !== null && keys !== undefined) {
                 return browser.storage.local.remove(keys)
             }
-            return new Promise(()=>{})
+            return new Promise(() => { })
         }
 
 
-        export function changed(keys: {(changes: browser.Storage.StorageAreaOnChangedChangesType): void}): void;
-        export function changed(keys: string|string[]|null|undefined, callback: {(changes: browser.Storage.StorageAreaOnChangedChangesType): void}): void;
-        export function changed(keys?: string|string[]|null|{(changes: browser.Storage.StorageAreaOnChangedChangesType): void}, callback?: {(changes: browser.Storage.StorageAreaOnChangedChangesType): void}): void {
-            if((keys===null || keys===undefined) && callback!==undefined){
-                return browser.storage.local.onChanged.addListener((changes)=>{
-                    if(callback!==undefined){
-                        console.log(changes)
+        export function changed(keys: { (changes: browser.Storage.StorageAreaOnChangedChangesType): void }): void;
+        export function changed(keys: string | string[] | null | undefined, callback: { (changes: browser.Storage.StorageAreaOnChangedChangesType): void }): void;
+        export function changed(keys?: string | string[] | null | { (changes: browser.Storage.StorageAreaOnChangedChangesType): void }, callback?: { (changes: browser.Storage.StorageAreaOnChangedChangesType): void }): void {
+            if ((keys === null || keys === undefined) && callback !== undefined) {
+                return browser.storage.local.onChanged.addListener((changes) => {
+                    if (callback !== undefined) {
                         return callback(changes)
                     }
                 })
-            }else if(typeof keys === "function"){
+            } else if (typeof keys === "function") {
                 callback = keys
-                return browser.storage.local.onChanged.addListener((changes)=>{
-                    if(callback!==undefined){
-                        console.log(changes)
-                        return callback(changes)
+                return browser.storage.local.onChanged.addListener((changes) => {
+                    if (callback !== undefined) {
+                        callback(changes)
                     }
                 })
-            }else if(callback!==undefined){
-                if(typeof keys === "string"){
+            } else if (callback !== undefined) {
+                if (typeof keys === "string") {
                     keys = [keys]
                 }
-                return browser.storage.local.onChanged.addListener((changes)=>{
+                return browser.storage.local.onChanged.addListener((changes) => {
                     var ret: browser.Storage.StorageAreaOnChangedChangesType = {}
                     var c = 0
-                    if(Array.isArray(keys)){
-                        for(const key of keys){
+                    if (Array.isArray(keys)) {
+                        for (const key of keys) {
                             ret[key] = changes[key]
-                            c ++ 
+                            c++
                         }
                     }
-                    if(callback!==undefined && c > 0){
-                        console.log(changes)
+                    if (callback !== undefined && c > 0) {
                         return callback(ret)
                     }
                 })
@@ -748,7 +748,7 @@ export namespace __nt_storage__ {
             workspaceImpressionMarked: __nt_workspace__.impression.kanrino = {}
             workspaceImpressionHidden: __nt_workspace__.impression.kanrino = {}
             novelSkins: Array<__nt_skin_v2__.Skin> = []
-            
+
             /**
              * コンストラクタ
              * @param {undefined|Record<string,any>|__nt_storage__.sync.options} data - 辞書型のデータで初期値を設定する（無効な値は全て除外される）
@@ -767,7 +767,7 @@ export namespace __nt_storage__ {
             * キーに値を設定する
             * @param {Record<string,any>|Partial<__nt_storage__.sync.options>} value - 設定するキーと値の辞書
             */
-            set(value: Record<string, any>|Partial<__nt_storage__.sync.options>|__nt_storage__.sync.options): void;
+            set(value: Record<string, any> | Partial<__nt_storage__.sync.options> | __nt_storage__.sync.options): void;
             set(key?: OptionID | Record<string, any> | Partial<__nt_storage__.sync.options> | __nt_storage__.sync.options, value?: any): void;
             set(key?: OptionID | Record<string, any> | Partial<__nt_storage__.sync.options> | __nt_storage__.sync.options, value?: any): void {
                 if (key instanceof __nt_storage__.sync.options) {
@@ -777,13 +777,13 @@ export namespace __nt_storage__ {
                 else if (typeof key === "string") {
                     /** novelSkin_X */
                     const m = key.match(/^novelSkin_(\d)+$/)
-                    if(m!==null){
+                    if (m !== null) {
                         const idx = Number(m[1])
-                        if(isFinite(idx) && idx < __nt_skin_v2__.maxLocalSkins && idx >= 0 && value instanceof Object){
+                        if (isFinite(idx) && idx < __nt_skin_v2__.maxLocalSkins && idx >= 0 && value instanceof Object) {
                             this.novelSkins[idx] = new __nt_skin_v2__.Skin(value)
                         }
                     }
-                    
+
                     /** others */
                     else {
                         var value = _checkSyncValue(key, value)
@@ -820,17 +820,17 @@ export namespace __nt_storage__ {
                     for (const key of params) {
                         /** novelSkin_X */
                         const m = key.match(/^novelSkin_(\d)+$/)
-                        if(m!==null){
+                        if (m !== null) {
                             const skinIdx = Number(m[1])
                             const value = this.novelSkins.at(skinIdx)
-                            if( isFinite(skinIdx) && value!==undefined ){
+                            if (isFinite(skinIdx) && value !== undefined) {
                                 ret[`novelSkin_${skinIdx}`] = value
                                 continue
                             }
-                        }else if(key==="novelSkins"){
-                            for(let i = 0; i<this.novelSkins.length; i++){
+                        } else if (key === "novelSkins") {
+                            for (let i = 0; i < this.novelSkins.length; i++) {
                                 const value = this.novelSkins.at(i)
-                                if( value!==undefined ){
+                                if (value !== undefined) {
                                     ret[`novelSkin_${i}`] = value
                                 }
                             }
@@ -848,10 +848,10 @@ export namespace __nt_storage__ {
                 } else {
                     for (const [key, value] of Object.entries(this)) {
                         /** novelSkin_X */
-                        if(key === "novelSkins"){
-                            for(let idx = 0; idx<this.novelSkins.length; idx++){
+                        if (key === "novelSkins") {
+                            for (let idx = 0; idx < this.novelSkins.length; idx++) {
                                 const value = this.novelSkins.at(idx)
-                                if( value instanceof __nt_skin_v2__.Skin ){
+                                if (value instanceof __nt_skin_v2__.Skin) {
                                     ret[`novelSkin_${idx}`] = value
                                     continue
                                 }
@@ -880,20 +880,20 @@ export namespace __nt_storage__ {
              * 設定データをsyncストレージに保存する（`parameters`を指定しない場合はすべて）
              * @param parameters キーの文字列、またはそのリスト
              */
-            setToStorage(parameters?: null|OptionID|Array<OptionID>): Promise<void>{
+            setToStorage(parameters?: null | OptionID | Array<OptionID>): Promise<void> {
                 return __nt_storage__.sync.set(this.get(parameters))
             }
 
-            static check<T>(key: OptionID, value: T): T|void;
-            static check<T>(key: Record<string,T>): Record<string,T|undefined>;
-            static check<T>(key: OptionID|Record<string,T>, value?: T): T|void|Record<string,T|undefined>{
-                if(typeof key === "string"){
+            static check<T>(key: OptionID, value: T): T | void;
+            static check<T>(key: Record<string, T>): Record<string, T | undefined>;
+            static check<T>(key: OptionID | Record<string, T>, value?: T): T | void | Record<string, T | undefined> {
+                if (typeof key === "string") {
                     return _checkSyncValue(key, value)
-                }else if(key instanceof Object){
-                    var ret: Record<string,any> = {}
+                } else if (key instanceof Object) {
+                    var ret: Record<string, any> = {}
                     for (const k of Object.keys(key)) {
                         const c = _checkSyncValue(k, key[k])
-                        if(c!==undefined){
+                        if (c !== undefined) {
                             ret[k] = c
                         }
                     }
@@ -922,78 +922,78 @@ export namespace __nt_storage__ {
                 return obj
             }
         }
-        
+
         export function get(keys?: string | string[] | Partial<__nt_storage__.sync.options> | null): Promise<__nt_storage__.sync.options> {
             if (keys === undefined) { keys = null }
-            return browser.storage.sync.get(keys).then((data)=>{return new __nt_storage__.sync.options(data)})
+            return browser.storage.sync.get(keys).then((data) => { return new __nt_storage__.sync.options(data) })
         }
 
         export function set(key: string, value: any): Promise<void>;
-        export function set(data?: __nt_storage__.sync.options | Partial<__nt_storage__.sync.options> | Record<string,any> | null): Promise<void>;
+        export function set(data?: __nt_storage__.sync.options | Partial<__nt_storage__.sync.options> | Record<string, any> | null): Promise<void>;
         export function set(
-            data: __nt_storage__.sync.options | Partial<__nt_storage__.sync.options> | Record<string,any> | null | undefined | string,
+            data: __nt_storage__.sync.options | Partial<__nt_storage__.sync.options> | Record<string, any> | null | undefined | string,
             value?: any
         ): Promise<void> {
-            var v: Record<string,any> = {}
-            if(data instanceof __nt_storage__.sync.options){
+            var v: Record<string, any> = {}
+            if (data instanceof __nt_storage__.sync.options) {
                 v = data.get()
                 return browser.storage.sync.set(v)
-            }else if(data instanceof Object){
+            } else if (data instanceof Object) {
                 v = __nt_storage__.sync.options.check(data)
                 return browser.storage.sync.set(v)
-            }else if(typeof data === "string"){
+            } else if (typeof data === "string") {
                 const c = __nt_storage__.sync.options.check(data, value)
-                if(c!==undefined){
+                if (c !== undefined) {
                     v[data] = c
                 }
                 return browser.storage.sync.set(v)
-            }else{
+            } else {
                 return browser.storage.sync.set(v)
             }
         }
 
-        export function clear(): Promise<void>{
+        export function clear(): Promise<void> {
             return browser.storage.sync.clear()
         }
 
-        export function remove(keys?: string|string[]|null): Promise<void> {
-            if(keys!==null && keys!==undefined){
+        export function remove(keys?: string | string[] | null): Promise<void> {
+            if (keys !== null && keys !== undefined) {
                 return browser.storage.sync.remove(keys)
             }
-            return new Promise(()=>{})
+            return new Promise(() => { })
         }
 
 
-        export function changed(keys: {(changes: browser.Storage.StorageAreaSyncOnChangedChangesType): void}): void;
-        export function changed(keys: string|string[]|null|undefined, callback: {(changes: browser.Storage.StorageAreaSyncOnChangedChangesType): void}): void;
-        export function changed(keys?: string|string[]|null|{(changes: browser.Storage.StorageAreaSyncOnChangedChangesType): void}, callback?: {(changes: browser.Storage.StorageAreaSyncOnChangedChangesType): void}): void {
-            if((keys===null || keys===undefined) && callback!==undefined){
-                return browser.storage.sync.onChanged.addListener((changes)=>{
-                    if(callback!==undefined){
+        export function changed(keys: { (changes: browser.Storage.StorageAreaSyncOnChangedChangesType): void }): void;
+        export function changed(keys: string | string[] | null | undefined, callback: { (changes: browser.Storage.StorageAreaSyncOnChangedChangesType): void }): void;
+        export function changed(keys?: string | string[] | null | { (changes: browser.Storage.StorageAreaSyncOnChangedChangesType): void }, callback?: { (changes: browser.Storage.StorageAreaSyncOnChangedChangesType): void }): void {
+            if ((keys === null || keys === undefined) && callback !== undefined) {
+                return browser.storage.sync.onChanged.addListener((changes) => {
+                    if (callback !== undefined) {
                         return callback(changes)
                     }
                 })
-            }else if(typeof keys === "function"){
+            } else if (typeof keys === "function") {
                 callback = keys
-                return browser.storage.sync.onChanged.addListener((changes)=>{
-                    if(callback!==undefined){
+                return browser.storage.sync.onChanged.addListener((changes) => {
+                    if (callback !== undefined) {
                         return callback(changes)
                     }
                 })
-            }else if(callback!==undefined){
-                if(typeof keys === "string"){
+            } else if (callback !== undefined) {
+                if (typeof keys === "string") {
                     keys = [keys]
                 }
-                return browser.storage.sync.onChanged.addListener((changes)=>{
+                return browser.storage.sync.onChanged.addListener((changes) => {
                     var ret: browser.Storage.StorageAreaSyncOnChangedChangesType = {}
                     var c = 0
-                    if(Array.isArray(keys)){
-                        for(const key of keys){
+                    if (Array.isArray(keys)) {
+                        for (const key of keys) {
                             ret[key] = changes[key]
-                            c ++ 
+                            c++
                         }
                     }
-                    if(callback!==undefined && c > 0){
+                    if (callback !== undefined && c > 0) {
                         return callback(ret)
                     }
                 })
@@ -1039,7 +1039,7 @@ export namespace __nt_storage__ {
             * キーに値を設定する
             * @param {Record<string,any>|Partial<__nt_storage__.session.options>} value - 設定するキーと値の辞書
             */
-            set(value: Record<string, any>|Partial<__nt_storage__.session.options>|__nt_storage__.session.options): void;
+            set(value: Record<string, any> | Partial<__nt_storage__.session.options> | __nt_storage__.session.options): void;
             set(key?: OptionID | Record<string, any> | Partial<__nt_storage__.session.options> | __nt_storage__.session.options, value?: any): void;
             set(key?: OptionID | Record<string, any> | Partial<__nt_storage__.session.options> | __nt_storage__.session.options, value?: any): void {
                 if (key instanceof __nt_storage__.session.options) {
@@ -1092,16 +1092,16 @@ export namespace __nt_storage__ {
                 }
             }
 
-            static check<T>(key: OptionID, value: any): T|void;
-            static check<T>(key: Record<string,T>): Record<string,T|undefined>;
-            static check<T>(key: OptionID|Record<string,T>, value?: T): T|void|Record<string,T|undefined>{
-                if(typeof key === "string"){
+            static check<T>(key: OptionID, value: any): T | void;
+            static check<T>(key: Record<string, T>): Record<string, T | undefined>;
+            static check<T>(key: OptionID | Record<string, T>, value?: T): T | void | Record<string, T | undefined> {
+                if (typeof key === "string") {
                     return _checkSessionValue(key, value)
-                }else if(key instanceof Object){
-                    var ret: Record<string,any> = {}
+                } else if (key instanceof Object) {
+                    var ret: Record<string, any> = {}
                     for (const k of Object.keys(key)) {
                         const c = _checkSessionValue(k, key[k])
-                        if(c!==undefined){
+                        if (c !== undefined) {
                             ret[k] = c
                         }
                     }
@@ -1113,7 +1113,7 @@ export namespace __nt_storage__ {
              * 設定データをsessionストレージに保存する（`parameters`を指定しない場合はすべて）
              * @param parameters キーの文字列、またはそのリスト
              */
-            setToStorage(parameters?: null|OptionID|Array<OptionID>): Promise<void>{
+            setToStorage(parameters?: null | OptionID | Array<OptionID>): Promise<void> {
                 return __nt_storage__.session.set(this.get(parameters))
             }
 
@@ -1126,82 +1126,82 @@ export namespace __nt_storage__ {
             keys?: string | string[] | Partial<__nt_storage__.sync.options> | null,
         ): Promise<__nt_storage__.session.options> {
             if (keys === undefined) { keys = null }
-            return browser.storage.local.get(keys).then((data)=>{return new __nt_storage__.session.options(data)})
+            return browser.storage.local.get(keys).then((data) => { return new __nt_storage__.session.options(data) })
         }
 
         export function set(key: string, value: any): Promise<void>;
-        export function set(data?: __nt_storage__.session.options | Partial<__nt_storage__.session.options> | Record<string,any> | null): Promise<void>;
+        export function set(data?: __nt_storage__.session.options | Partial<__nt_storage__.session.options> | Record<string, any> | null): Promise<void>;
         export function set(
-            data: __nt_storage__.session.options | Partial<__nt_storage__.session.options> | Record<string,any> | null | undefined | string,
+            data: __nt_storage__.session.options | Partial<__nt_storage__.session.options> | Record<string, any> | null | undefined | string,
             value?: any,
         ): Promise<void> {
-            var v: Record<string,any> = {}
-            if(data instanceof __nt_storage__.session.options){
+            var v: Record<string, any> = {}
+            if (data instanceof __nt_storage__.session.options) {
                 v = data.get()
                 return browser.storage.session.set(v)
-            }else if(data instanceof Object){
+            } else if (data instanceof Object) {
                 v = __nt_storage__.session.options.check(data)
                 return browser.storage.session.set(v)
-            }else if(typeof data === "string"){
+            } else if (typeof data === "string") {
                 const c = __nt_storage__.session.options.check(data, value)
-                if(c!==undefined){
+                if (c !== undefined) {
                     v[data] = c
                 }
                 return browser.storage.session.set(v)
-            }else{
+            } else {
                 return browser.storage.session.set(v)
             }
         }
 
-        export function clear(): Promise<void>{
+        export function clear(): Promise<void> {
             return browser.storage.session.clear()
         }
 
-        export function remove(keys?: string|string[]|null): Promise<void> {
-            if(keys!==null && keys!==undefined){
+        export function remove(keys?: string | string[] | null): Promise<void> {
+            if (keys !== null && keys !== undefined) {
                 return browser.storage.session.remove(keys)
             }
-            return new Promise(()=>{})
+            return new Promise(() => { })
         }
 
 
-        export function changed(keys: {(changes: browser.Storage.StorageAreaOnChangedChangesType): void}): void;
-        export function changed(keys: string|string[]|null|undefined, callback: {(changes: browser.Storage.StorageAreaOnChangedChangesType): void}): void;
-        export function changed(keys?: string|string[]|null|{(changes: browser.Storage.StorageAreaOnChangedChangesType): void}, callback?: {(changes: browser.Storage.StorageAreaOnChangedChangesType): void}): void {
-            if((keys===null || keys===undefined) && callback!==undefined){
-                return browser.storage.session.onChanged.addListener((changes)=>{
-                    if(callback!==undefined){
+        export function changed(keys: { (changes: browser.Storage.StorageAreaOnChangedChangesType): void }): void;
+        export function changed(keys: string | string[] | null | undefined, callback: { (changes: browser.Storage.StorageAreaOnChangedChangesType): void }): void;
+        export function changed(keys?: string | string[] | null | { (changes: browser.Storage.StorageAreaOnChangedChangesType): void }, callback?: { (changes: browser.Storage.StorageAreaOnChangedChangesType): void }): void {
+            if ((keys === null || keys === undefined) && callback !== undefined) {
+                return browser.storage.session.onChanged.addListener((changes) => {
+                    if (callback !== undefined) {
                         return callback(changes)
                     }
                 })
-            }else if(typeof keys === "function"){
+            } else if (typeof keys === "function") {
                 callback = keys
-                return browser.storage.session.onChanged.addListener((changes)=>{
-                    if(callback!==undefined){
+                return browser.storage.session.onChanged.addListener((changes) => {
+                    if (callback !== undefined) {
                         return callback(changes)
                     }
                 })
-            }else if(callback!==undefined){
-                if(typeof keys === "string"){
+            } else if (callback !== undefined) {
+                if (typeof keys === "string") {
                     keys = [keys]
                 }
-                return browser.storage.session.onChanged.addListener((changes)=>{
+                return browser.storage.session.onChanged.addListener((changes) => {
                     var ret: browser.Storage.StorageAreaOnChangedChangesType = {}
                     var c = 0
-                    if(Array.isArray(keys)){
-                        for(const key of keys){
+                    if (Array.isArray(keys)) {
+                        for (const key of keys) {
                             ret[key] = changes[key]
-                            c ++ 
+                            c++
                         }
                     }
-                    if(callback!==undefined && c > 0){
+                    if (callback !== undefined && c > 0) {
                         return callback(ret)
                     }
                 })
             }
         }
 
-        export function setAccessLevel(accessOptions: { accessLevel: chrome.storage.AccessLevel }): Promise<void>{
+        export function setAccessLevel(accessOptions: { accessLevel: chrome.storage.AccessLevel }): Promise<void> {
             return chrome.storage.session.setAccessLevel(accessOptions)
         }
     }

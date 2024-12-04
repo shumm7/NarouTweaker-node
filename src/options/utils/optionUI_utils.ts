@@ -271,7 +271,6 @@ export function moveFavoriteOption(id: OptionUI_ItemID, pos: number){
 export function fixOption(_fixLocal: boolean = false, _fixSync: boolean = false){
     if(_fixLocal){
         nt.storage.local.get(null).then((data)=>{
-            console.log(data)
             nt.storage.local.clear().then(()=>{
                 nt.storage.local.set(data.get()).then(function(){
                     console.log("Fixed option data (local).")

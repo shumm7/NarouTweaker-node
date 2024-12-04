@@ -3,8 +3,6 @@ export type OptionUI_PageID = string
 export type OptionUI_CategoryID = string
 export type OptionUI_ItemID = string
 
-
-
 export class OptionHideParammeters {
     static readonly key: string = "data-for"
     static readonly value: string = "data"
@@ -104,16 +102,27 @@ export interface OptionUI_Item {
     style?: any
 }
 
-class OptionUI_Item_UI {
-    type: string = ""
-    name: string = "default"
-    suffix?: string
-    prefix?: string
-    data?: any
+type OptionUI_Item_UI_SelectType<T,U> = T extends "select"
+    ? OptionUI_Item_UI_Select
+    : T extends "toggle"
+    ? undefined
+    : T extends "text"
+    ? (
+        U extends "default"|"textfield"|undefined
+        ? OptionUI_Item_UI_Text
+        : any
+    )
+    : any
+
+interface OptionUI_Item_UI<T = string, U = string|undefined> {
+    type: T
+    name?: U
+    suffix?: string|React.JSX.Element
+    prefix?: string|React.JSX.Element
+    data?: OptionUI_Item_UI_SelectType<T,U>
     action?: Function|Array<Function>
     noindex?: boolean
-    style?: any
-    class?: any
+    class?: Array<string>
 }
 interface OptionUI_Item_Location {
     page: OptionUI_PageID
@@ -139,4 +148,17 @@ class OptionUI_Item_Value_Requirement {
     data: Array<any>|any
     mode?: string = "show"
     rule?: string
+}
+
+export class OptionUI_Item_UI_Select<T = string|number> {
+    value: Array<{value: T, title: string}> = []
+    label?: string
+    description?: string
+}
+
+export interface OptionUI_Item_UI_Text {
+    label?: string
+    description?: string
+    type?: "text"|"number"
+    variant?: "outlined"|"filled"|"standard"
 }

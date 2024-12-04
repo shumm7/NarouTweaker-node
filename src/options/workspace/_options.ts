@@ -55,7 +55,7 @@ export const workspace_optionsList: Array<OptionUI_Item> = [
             related: ["workspaceCustomMenu_Left", "workspaceCustomMenu_Middle", "workspaceCustomMenu_Right"],
         },
     },
-    
+
     {
         id: "workspaceCustomHeaderMode",
         title: "ヘッダの追従モード",
@@ -65,13 +65,16 @@ export const workspace_optionsList: Array<OptionUI_Item> = [
             keywords: ["へっだのついじゅうもーど", "ヘッダ", "追従モード"],
         },
         ui: {
-            type: "dropdown",
-            name: "default",
-            data: [
-                {value: "absolute", title: "上部"},
-                {value: "fixed", title: "追従"},
-                {value: "scroll", title: "スクロール"},
-            ]
+            type: "select",
+            name: "dropdown",
+            data: {
+                value: [
+                    { value: "absolute", title: "上部" },
+                    { value: "fixed", title: "追従" },
+                    { value: "scroll", title: "スクロール" },
+                ],
+                label: "モード"
+            }
         },
         location: {
             page: "workspace",
@@ -192,7 +195,7 @@ export const workspace_optionsList: Array<OptionUI_Item> = [
             isAdvanced: true
         },
     },
-    
+
     /* エディタ (editor) */
     {
         id: "workspaceCustomEditor",
@@ -248,13 +251,16 @@ export const workspace_optionsList: Array<OptionUI_Item> = [
             keywords: ["ぶっくまーくのれいあうと", "レイアウト", "外観", "デザイン", "ブックマーク", "お気に入り"],
         },
         ui: {
-            type: "dropdown",
-            name: "default",
-            data: [
-                {value: "0", title: "デフォルト"},
-                {value: "1", title: "旧デザイン風"},
-                {value: "2", title: "リスト表示"}
-            ]
+            type: "select",
+            name: "dropdown",
+            data: {
+                value: [
+                    { value: "0", title: "デフォルト" },
+                    { value: "1", title: "旧デザイン風" },
+                    { value: "2", title: "リスト表示" }
+                ],
+                label: "スタイル"
+            }
         },
         location: {
             page: "workspace",
@@ -278,13 +284,16 @@ export const workspace_optionsList: Array<OptionUI_Item> = [
             keywords: ["ぶっくまーくかてごりひょうじ", "レイアウト", "外観", "デザイン", "ブックマーク", "お気に入り"],
         },
         ui: {
-            type: "dropdown",
-            name: "default",
-            data: [
-                {value: "0", title: "ドロップダウン"},
-                {value: "1", title: "サイドバー"},
-                {value: "2", title: "ドロップダウン・サイドバー両方"}
-            ]
+            type: "select",
+            name: "dropdown",
+            data: {
+                value: [
+                    { value: "0", title: "ドロップダウン" },
+                    { value: "1", title: "サイドバー" },
+                    { value: "2", title: "ドロップダウン・サイドバー両方" }
+                ],
+                label: "レイアウト"
+            }
         },
         location: {
             page: "workspace",

@@ -15,8 +15,8 @@ export default function ContentsMain(props: { page: OptionUI_Page | undefined })
         <div id="main">
             <div className="contents-container" data-name={category ?? ""}>
                 <CategoryDescription page={page} category={category} />
+                <OptionContents page={page} category={getOptionCategory(page, category)} />
             </div>
-            <OptionContents page={page} category={getOptionCategory(page, category)} />
         </div>
     )
 }
@@ -53,7 +53,7 @@ function CategoryDescription(props: { page: OptionUI_Page | undefined, category:
 
 function OptionContents(props: { page: OptionUI_Page | undefined, category: OptionUI_Category | undefined }) {
     return OptionUI_Items.map((option, i)=>{
-        if (option.location && option.location.page === props.page?.id && option.location.category === props.category?.id) {
+        if (option.location.page === props.page?.id && option.location.category === props.category?.id && option.location.parent===undefined) {
             return <OptionContent option={option}/>
         }else{
             return null

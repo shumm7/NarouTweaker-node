@@ -69,8 +69,8 @@ const manifest = defineManifest({
         service_worker: "background/background.ts",
         type: "module"
     },
-    options_page: "options/general/index.html",
-    options_ui: "options/popup/index.html",
+    options_page: "options/sample/index.html",
+    options_ui: "options/sample/index.html",
     action: {
         default_icon: {
             "16": "assets/icons/icon_16.png",
@@ -85,7 +85,8 @@ const manifest = defineManifest({
         "downloads",
         "tabs",
         "cookies",
-        "notifications"
+        "notifications",
+        "unlimitedStorage"
     ],
     host_permissions: [
         "*://*.syosetu.com/*",

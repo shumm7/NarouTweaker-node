@@ -1,7 +1,8 @@
 import React from "react";
 import { OptionUI_Item } from "../../../utils/optionUI_type";
-import Link from "./Link";
+import Link from "./common/Link";
 import OptionContentItem_Head from "./OptionContent_Head";
+import OptionContentItem_Body from "./OptionContent_Body";
 
 
 export default function OptionContent(props: { option: OptionUI_Item }) {
@@ -17,7 +18,6 @@ export default function OptionContent(props: { option: OptionUI_Item }) {
     const uiType = option.ui?.type
     const uiName = option.ui?.name
     const uiData = option.ui?.data
-    const uiStyle = option.ui?.style
     const uiClass = option.ui?.class
     const uiPrefix = option.ui?.prefix ?? ""
     const uiSuffix = option.ui?.suffix ?? ""
@@ -32,7 +32,7 @@ export default function OptionContent(props: { option: OptionUI_Item }) {
         return (
             <OptionContentItem>
                 <OptionContentItem_Head option={option} />
-                <OptionContentItem_Content option={option}/>
+                <OptionContentItem_Body option={option}/>
             </OptionContentItem>
         )
     }
@@ -52,20 +52,6 @@ export default function OptionContent(props: { option: OptionUI_Item }) {
                 <div className={"contents-wide option-outer" + (page === "search" ? " search-result-box search-result--option" : "")} data-name={id ?? ""}>
                     <div className="contents-option" {...props} />
                 </div>
-            )
-        }
-    }
-
-
-    function OptionContentItem_Content(props: React.ComponentPropsWithoutRef<"div"> & {option: OptionUI_Item}) {
-        const uiType = option.ui?.type
-        if (uiType == "parent") {
-            return (
-                <div className="contents-wide-column" {...props} />
-            )
-        } else {
-            return (
-                <div className="contents-option-head" {...props} />
             )
         }
     }

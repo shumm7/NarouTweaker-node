@@ -372,7 +372,6 @@ export function getOptionElement(option: OptionUI_Item, mode?: optionType){
     const uiType = option.ui?.type
     const uiName = option.ui?.name
     const uiData = option.ui?.data
-    const uiStyle = option.ui?.style
     const uiClass = option.ui?.class
     const uiPrefix = option.ui?.prefix ?? ""
     const uiSuffix = option.ui?.suffix ?? ""
@@ -421,9 +420,6 @@ export function getOptionElement(option: OptionUI_Item, mode?: optionType){
 
             if(uiName==="default" || uiName === "toggle" || uiName===undefined){
                 var item = $(`<input type="checkbox" id="${id}" class="options toggle">`)
-                if(uiStyle){
-                    item.css(uiStyle)
-                }
                 if(uiClass){
                     item.addClass(uiClass)
                 }
@@ -438,9 +434,6 @@ export function getOptionElement(option: OptionUI_Item, mode?: optionType){
                 elm.find(".contents-option-content").append(toggleElm)
             }else if(uiName==="checkbox"){
                 var item = $(`<input type="checkbox" id="${id}" class="options ui-checkbox">`)
-                if(uiStyle){
-                    item.css(uiStyle)
-                }
                 if(uiClass){
                     item.addClass(uiClass)
                 }
@@ -471,9 +464,6 @@ export function getOptionElement(option: OptionUI_Item, mode?: optionType){
                     </div>
                 `)
 
-                if(uiStyle){
-                    dropdownElm.css(uiStyle)
-                }
                 if(uiClass){
                     dropdownElm.addClass(uiClass)
                 }
@@ -518,9 +508,6 @@ export function getOptionElement(option: OptionUI_Item, mode?: optionType){
                     </div>
                 `)
 
-                if(uiStyle){
-                    item.css(uiStyle)
-                }
                 if(uiClass){
                     item.addClass(uiClass)
                 }
@@ -545,9 +532,6 @@ export function getOptionElement(option: OptionUI_Item, mode?: optionType){
                     }
                 }
 
-                if(uiStyle){
-                    item.css(uiStyle)
-                }
                 if(uiClass){
                     item.addClass(uiClass)
                 }
@@ -563,9 +547,6 @@ export function getOptionElement(option: OptionUI_Item, mode?: optionType){
                     </div>
                 `)
 
-                if(uiStyle){
-                    item.css(uiStyle)
-                }
                 if(uiClass){
                     item.addClass(uiClass)
                 }
@@ -589,9 +570,6 @@ export function getOptionElement(option: OptionUI_Item, mode?: optionType){
                     </div>
                 `)
 
-                if(uiStyle){
-                    item.css(uiStyle)
-                }
                 if(uiClass){
                     item.addClass(uiClass)
                 }
@@ -606,9 +584,6 @@ export function getOptionElement(option: OptionUI_Item, mode?: optionType){
                     </div>
                 `)
 
-                if(uiStyle){
-                    item.css(uiStyle)
-                }
                 if(uiClass){
                     item.addClass(uiClass)
                 }

@@ -1,0 +1,19 @@
+* {
+    margin: 0;
+    padding: 0;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+a {
+    text-decoration: none;
+}
+html {
+    overflow-x: hidden;
+    -ms-overflow-style: none; /*edge*/
+  	scrollbar-width: none; /*firefox*/
+    color: var(--narou-tweaker--option--color-text);
+    background: var(--narou-tweaker--option--color-bg);
+}
+html::-webkit-scrollbar {
+    display: none; /*chrome/safari*/
+}

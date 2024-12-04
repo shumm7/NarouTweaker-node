@@ -8,12 +8,8 @@ export default function ContentsHeader(props: { page: OptionUI_Page | undefined 
     return (
         <div id="header">
             <div id="header-title">
-                <div id="header-title--heading">
-                    <HeaderTitle page={page} />
-                </div>
-                <div id="header-title--description">
-                    <HeaderDescription page={page} />
-                </div>
+                <HeaderTitle page={page} />
+                <HeaderDescription page={page} />
             </div>
             <ContentsHeaderMenu page={page} />
         </div>

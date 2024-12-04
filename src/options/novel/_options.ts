@@ -35,13 +35,16 @@ export const novel_optionsList: Array<OptionUI_Item> = [
             keywords: ["へっだのでざいん", "レイアウト", "デザイン", "外観", "ヘッダ", "シンプルなヘッダ"],
         },
         ui: {
-            type: "dropdown",
-            name: "default",
-            data: [
-                {value: "0", title: "オフ（小説家になろう標準）"},
-                {value: "1", title: "ベーシック"},
-                {value: "2", title: "ミニマル（推奨）"},
-            ]
+            type: "select",
+            name: "dropdown",
+            data: {
+                value: [
+                    { value: "0", title: "オフ（小説家になろう標準）" },
+                    { value: "1", title: "ベーシック" },
+                    { value: "2", title: "ミニマル（推奨）" },
+                ],
+                label: "スタイル"
+            }
         },
         location: {
             page: "novel",
@@ -65,13 +68,16 @@ export const novel_optionsList: Array<OptionUI_Item> = [
             keywords: ["へっだのついじゅうもーど", "ヘッダ", "追従モード"],
         },
         ui: {
-            type: "dropdown",
-            name: "default",
-            data: [
-                {value: "absolute", title: "上部"},
-                {value: "fixed", title: "追従"},
-                {value: "scroll", title: "スクロール"},
-            ],
+            type: "select",
+            name: "dropdown",
+            data: {
+                value: [
+                    { value: "absolute", title: "上部" },
+                    { value: "fixed", title: "追従" },
+                    { value: "scroll", title: "スクロール" },
+                ],
+                label: "モード"
+            }
         },
         location: {
             page: "novel",
@@ -306,7 +312,7 @@ export const novel_optionsList: Array<OptionUI_Item> = [
             },
         },
     },
-    
+
     /* 本文 (novel) */
     {
         id: "novelShowAllExtext",
@@ -1264,14 +1270,16 @@ export const novel_optionsList: Array<OptionUI_Item> = [
             keywords: ["1もじのすうち", "ローカライズ", "文章校正", "数値"],
         },
         ui: {
-            type: "dropdown",
-            name: "default",
-            data: [
-                {value: "default", title: "そのまま"},
-                {value: "half", title: "半角へ置換"},
-                {value: "full", title: "全角へ置換"},
-                {value: "kanji", title: "漢数字へ置換"},
-            ]
+            type: "select",
+            name: "dropdown",
+            data: {
+                value: [
+                    { value: "default", title: "そのまま" },
+                    { value: "half", title: "半角へ置換" },
+                    { value: "full", title: "全角へ置換" },
+                    { value: "kanji", title: "漢数字へ置換" },
+                ]
+            }
         },
         location: {
             page: "novel",
@@ -1292,7 +1300,7 @@ export const novel_optionsList: Array<OptionUI_Item> = [
             isAdvanced: true,
         },
     },
-    
+
     {
         id: "correctionNumberLong",
         title: "2文字以上の数値",
@@ -1301,14 +1309,16 @@ export const novel_optionsList: Array<OptionUI_Item> = [
             keywords: ["2もじのすうち", "ローカライズ", "文章校正", "数値"],
         },
         ui: {
-            type: "dropdown",
-            name: "default",
-            data: [
-                {value: "default", title: "そのまま"},
-                {value: "half", title: "半角へ置換"},
-                {value: "full", title: "全角へ置換"},
-                {value: "kanji", title: "漢数字へ置換"},
-            ]
+            type: "select",
+            name: "dropdown",
+            data: {
+                value: [
+                    { value: "default", title: "そのまま" },
+                    { value: "half", title: "半角へ置換" },
+                    { value: "full", title: "全角へ置換" },
+                    { value: "kanji", title: "漢数字へ置換" },
+                ]
+            }
         },
         location: {
             page: "novel",
@@ -1329,7 +1339,7 @@ export const novel_optionsList: Array<OptionUI_Item> = [
             isAdvanced: true,
         },
     },
-    
+
     {
         id: "correctionNumberSymbol",
         title: "数値内の記号",
@@ -1338,14 +1348,16 @@ export const novel_optionsList: Array<OptionUI_Item> = [
             keywords: ["すうちないのきごう", "ローカライズ", "文章校正", "数値"],
         },
         ui: {
-            type: "dropdown",
-            name: "default",
-            data: [
-                {value: "default", title: "そのまま"},
-                {value: "half", title: "半角へ置換"},
-                {value: "full", title: "全角へ置換"},
-                {value: "kanji", title: "カタカナへ置換"},
-            ]
+            type: "select",
+            name: "dropdown",
+            data: {
+                value: [
+                    { value: "default", title: "そのまま" },
+                    { value: "half", title: "半角へ置換" },
+                    { value: "full", title: "全角へ置換" },
+                    { value: "kanji", title: "カタカナへ置換" },
+                ]
+            }
         },
         location: {
             page: "novel",

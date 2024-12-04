@@ -110,7 +110,6 @@ function profileAutoURL(mypageDisableExternalURLWarning: boolean){
 
 async function profileBooklist(userid: string|number, r18?: boolean){
     let list = await nt.api.booklist.fetch(userid, r18)
-    console.log(list)
     if(list.length>0){
         var shoho_url = r18 ? "https://nl.syosetu.com/syuppan/list/" : "https://syosetu.com/syuppan/list/"
         $(".c-panel#introduction").after(`

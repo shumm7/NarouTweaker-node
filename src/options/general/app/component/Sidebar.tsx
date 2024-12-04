@@ -3,59 +3,54 @@ import { OptionUI_Items, OptionUI_Pages } from "../../../utils/optionUI_items";
 import { nt } from "../../../../utils/narou-tweaker";
 import { useSearchParams } from "react-router-dom";
 import { useState } from "react";
-import Link from "./Link";
+import Link from "./common/Link";
 import BrandIcon from "./BrandIcon";
 
 export default function Sidebar(props: {page: OptionUI_Page|undefined}) {
-    try {
-        const [searchParams, setSearchParams] = useSearchParams();
-        const [sidebarIsOpen, sidebarOpenState] = useState(true)
+    const [searchParams, setSearchParams] = useSearchParams();
+    const [sidebarIsOpen, sidebarOpenState] = useState(true)
 
-        const sidebarOpen = () => {
-            sidebarOpenState(true)
-        }
-        const sidebarClose = () => {
-            sidebarOpenState(false)
-        }
+    const sidebarOpen = () => {
+        sidebarOpenState(true)
+    }
+    const sidebarClose = () => {
+        sidebarOpenState(false)
+    }
 
-        return (
-            <div id="sidebar" className={sidebarIsOpen ? "" : "hide"}>
-                <div id="sidebar-inner">
-                    <div id="sidebar-header">
-                        <Link page="general">
-                            <BrandIcon className="brand-icon"/>
-                        </Link>
-                        <div className="sidebar-icon" id="sidebar-icon--help">
-                        </div>
-                    </div>
-                    <div id="sidebar-middle">
-                        <div id="sidebar-search">
-                            <input type="text" id="sidebar-search-box" placeholder="検索" />
-                        </div>
-                        <div id="sidebar-items">
-                            <SidebarItems pageid={props.page?.id}/>
-                        </div>
-                    </div>
-                    <div id="sidebar-bottom">
-                        <div id="sidebar-toolbox">
-                            <div id="sidebar-version">build. {nt.extension.version}</div>
-                            <div className="sidebar-icon sidebar-icon--hide" id="sidebar-close" onClick={sidebarClose}>
-                                <i className="fa-solid fa-angles-left"></i>
-                            </div>
-                        </div>
+    return (
+        <div id="sidebar" className={sidebarIsOpen ? "" : "hide"}>
+            <div id="sidebar-inner">
+                <div id="sidebar-header">
+                    <Link page="general">
+                        <BrandIcon className="brand-icon"/>
+                    </Link>
+                    <div className="sidebar-icon" id="sidebar-icon--help">
                     </div>
                 </div>
-                <div id="sidebar-open" onClick={sidebarOpen}>
-                    <div className="sidebar-icon" id="sidebar-icon--show">
-                        <i className="fa-solid fa-angles-right"></i>
+                <div id="sidebar-middle">
+                    <div id="sidebar-search">
+                        <input type="text" id="sidebar-search-box" placeholder="検索" />
+                    </div>
+                    <div id="sidebar-items">
+                        <SidebarItems pageid={props.page?.id}/>
+                    </div>
+                </div>
+                <div id="sidebar-bottom">
+                    <div id="sidebar-toolbox">
+                        <div id="sidebar-version">build. {nt.extension.version}</div>
+                        <div className="sidebar-icon sidebar-icon--hide" id="sidebar-close" onClick={sidebarClose}>
+                            <i className="fa-solid fa-angles-left"></i>
+                        </div>
                     </div>
                 </div>
             </div>
-        )
-    } catch (e) {
-        console.warn(e)
-        return
-    }
+            <div id="sidebar-open" onClick={sidebarOpen}>
+                <div className="sidebar-icon" id="sidebar-icon--show">
+                    <i className="fa-solid fa-angles-right"></i>
+                </div>
+            </div>
+        </div>
+    )
 }
 
 

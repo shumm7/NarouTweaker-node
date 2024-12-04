@@ -3,7 +3,7 @@ import { OptionUI_Page, OptionUI_PageID } from "../../../utils/optionUI_type";
 import { useLocation, useSearchParams } from "react-router-dom";
 import { nt } from "../../../../utils/narou-tweaker";
 import { getOptionPageFromID } from "../../../utils/optionUI_utils";
-import Link from "./Link";
+import Link from "./common/Link";
 
 export default function ContentsHeaderMenu(props: { page: OptionUI_Page | undefined }) {
     const page = props.page

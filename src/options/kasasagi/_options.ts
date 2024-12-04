@@ -49,7 +49,7 @@ export const kasasagi_optionsList: Array<OptionUI_Item> = [
             },
         },
     },
-    
+
     /* 総合PV (pageview) */
     {
         id: "parent_kasasagiGeneralDay",
@@ -105,12 +105,15 @@ export const kasasagi_optionsList: Array<OptionUI_Item> = [
             keywords: ["ぐらふしゅるい（とうじつ・ぜんじつPV）", "KASASAGI", "アクセス解析", "グラフ", "当日・前日PV"],
         },
         ui: {
-            type: "dropdown",
-            name: "default",
-            data: [
-                {value: "bar", title: "棒グラフ"},
-                {value: "line", title: "折れ線グラフ"}
-            ]
+            type: "select",
+            name: "dropdown",
+            data: {
+                value: [
+                    { value: "bar", title: "棒グラフ" },
+                    { value: "line", title: "折れ線グラフ" }
+                ],
+                label: "グラフ"
+            }
         },
         location: {
             page: "kasasagi",
@@ -186,12 +189,15 @@ export const kasasagi_optionsList: Array<OptionUI_Item> = [
             keywords: ["ぐらふしゅるい（るいけいPV）", "KASASAGI", "アクセス解析", "グラフ", "累計PV"],
         },
         ui: {
-            type: "dropdown",
-            name: "default",
-            data: [
-                {value: "bar", title: "棒グラフ"},
-                {value: "line", title: "折れ線グラフ"}
-            ]
+            type: "select",
+            name: "dropdown",
+            data: {
+                value: [
+                    { value: "bar", title: "棒グラフ" },
+                    { value: "line", title: "折れ線グラフ" }
+                ],
+                label: "グラフ"
+            }
         },
         location: {
             page: "kasasagi",
@@ -342,12 +348,15 @@ export const kasasagi_optionsList: Array<OptionUI_Item> = [
             keywords: ["ぐらふしゅるい（えぴそーどべつゆにーく）", "KASASAGI", "アクセス解析", "グラフ", "エピソード別ユニーク"],
         },
         ui: {
-            type: "dropdown",
-            name: "default",
-            data: [
-                {value: "bar", title: "棒グラフ"},
-                {value: "line", title: "折れ線グラフ"}
-            ]
+            type: "select",
+            name: "dropdown",
+            data: {
+                value: [
+                    { value: "bar", title: "棒グラフ" },
+                    { value: "line", title: "折れ線グラフ" }
+                ],
+                label: "グラフ"
+            }
         },
         location: {
             page: "kasasagi",
@@ -447,12 +456,15 @@ export const kasasagi_optionsList: Array<OptionUI_Item> = [
             keywords: ["ぐらふしゅるい（ひべつPV）", "KASASAGI", "アクセス解析", "グラフ", "日別PV"],
         },
         ui: {
-            type: "dropdown",
-            name: "default",
-            data: [
-                {value: "bar", title: "棒グラフ"},
-                {value: "line", title: "折れ線グラフ"}
-            ]
+            type: "select",
+            name: "dropdown",
+            data: {
+                value: [
+                    { value: "bar", title: "棒グラフ" },
+                    { value: "line", title: "折れ線グラフ" }
+                ],
+                label: "グラフ"
+            }
         },
         location: {
             page: "kasasagi",
@@ -528,12 +540,15 @@ export const kasasagi_optionsList: Array<OptionUI_Item> = [
             keywords: ["ぐらふしゅるい（ひべつゆにーく）", "KASASAGI", "アクセス解析", "グラフ", "日別ユニーク"],
         },
         ui: {
-            type: "dropdown",
-            name: "default",
-            data: [
-                {value: "bar", title: "棒グラフ"},
-                {value: "line", title: "折れ線グラフ"}
-            ]
+            type: "select",
+            name: "dropdown",
+            data: {
+                value: [
+                    { value: "bar", title: "棒グラフ" },
+                    { value: "line", title: "折れ線グラフ" }
+                ],
+                label: "グラフ"
+            }
         },
         location: {
             page: "kasasagi",
@@ -610,12 +625,15 @@ export const kasasagi_optionsList: Array<OptionUI_Item> = [
             keywords: ["ぐらふしゅるい（つきべつPV）", "KASASAGI", "アクセス解析", "グラフ", "月別PV"],
         },
         ui: {
-            type: "dropdown",
-            name: "default",
-            data: [
-                {value: "bar", title: "棒グラフ"},
-                {value: "line", title: "折れ線グラフ"}
-            ]
+            type: "select",
+            name: "dropdown",
+            data: {
+                value: [
+                    { value: "bar", title: "棒グラフ" },
+                    { value: "line", title: "折れ線グラフ" }
+                ],
+                label: "グラフ"
+            }
         },
         location: {
             page: "kasasagi",
@@ -691,12 +709,15 @@ export const kasasagi_optionsList: Array<OptionUI_Item> = [
             keywords: ["ぐらふしゅるい（つきべつゆにーく）", "KASASAGI", "アクセス解析", "グラフ", "月別ユニーク"],
         },
         ui: {
-            type: "dropdown",
-            name: "default",
-            data: [
-                {value: "bar", title: "棒グラフ"},
-                {value: "line", title: "折れ線グラフ"}
-            ]
+            type: "select",
+            name: "dropdown",
+            data: {
+                value: [
+                    { value: "bar", title: "棒グラフ" },
+                    { value: "line", title: "折れ線グラフ" }
+                ],
+                label: "グラフ"
+            }
         },
         location: {
             page: "kasasagi",
