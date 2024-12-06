@@ -83,7 +83,7 @@ export function getOptionParentFromID(id: OptionUI_ItemID): OptionUI_Item|undefi
     return getOptionParent(getOptionFromID(id))
 }
 
-export function getOptionChildsFromID(id: OptionUI_ItemID): Array<OptionUI_Item>{
+export function getOptionChildrenFromID(id: OptionUI_ItemID): Array<OptionUI_Item>{
     var ret: Array<OptionUI_Item> = []
 
     if(parent){
@@ -129,9 +129,9 @@ export function appendFavoriteOption(id: OptionUI_ItemID){
             var parent: OptionUI_Item|undefined =  getOptionParent(opt)
             if(parent){
                 if(!list.includes(parent.id)){
-                    var childs = getOptionChildsFromID(parent.id)
-                    if(childs.length>0){
-                        $.each(childs, function(_, child){
+                    var children = getOptionChildrenFromID(parent.id)
+                    if(children.length>0){
+                        $.each(children, function(_, child){
                             var idx = list.indexOf(child.id)
                             if(idx>=0){
                                 targetIdx = Math.min(targetIdx, idx)
@@ -143,15 +143,15 @@ export function appendFavoriteOption(id: OptionUI_ItemID){
             }
 
             // idが親だった場合、一番若い子の直前に親を配置する
-            var childs: Array<OptionUI_Item> = getOptionChildsFromID(opt.id)
-            if(childs.length>0){
-                $.each(childs, function(_, child){
+            var children: Array<OptionUI_Item> = getOptionChildrenFromID(opt.id)
+            if(children.length>0){
+                $.each(children, function(_, child){
                     var idx = list.indexOf(child.id)
                     if(idx>=0){
                         targetIdx = Math.min(targetIdx, idx)
                     }
                 })
-                $.each(childs, function(_, child){
+                $.each(children, function(_, child){
                     list = list.filter((v)=>v !== child.id)
                     if(!objectIds.includes(child.id)){
                         objectIds.push(child.id)
@@ -183,8 +183,8 @@ export function removeFavoriteOption(id: OptionUI_ItemID){
             list = list.filter((v)=>v !== option.id)
 
             // idが親だった場合、子のidをすべて削除
-            const childs: Array<OptionUI_Item> = getOptionChildsFromID(option.id)
-            $.each(childs, function(_, child){
+            const children: Array<OptionUI_Item> = getOptionChildrenFromID(option.id)
+            $.each(children, function(_, child){
                 if(list.includes(child.id)){
                     list = list.filter((v)=>v !== child.id)
                 }
@@ -194,9 +194,9 @@ export function removeFavoriteOption(id: OptionUI_ItemID){
             const parent: OptionUI_Item|undefined = getOptionParent(option)
             if(parent){
                 const parentId = parent.id
-                var p_childs = getOptionChildsFromID(parentId)
+                var p_children = getOptionChildrenFromID(parentId)
                 var flag = false
-                $.each(p_childs, function(_, child){
+                $.each(p_children, function(_, child){
                     if(list.includes(child.id)){
                         flag = true
                         return false
@@ -221,15 +221,15 @@ export function moveFavoriteOption(id: OptionUI_ItemID, pos: number){
         }
 
         /* リストにある要素が親 -> 子を別のリストに分離 */
-        var childsList: Record<string,any> = {}
+        var childrenList: Record<string,any> = {}
         $.each(list, function(_, parentId){
-            const childs: Array<OptionUI_Item> = getOptionChildsFromID(parentId)
-            $.each(childs, function(_, child){
+            const children: Array<OptionUI_Item> = getOptionChildrenFromID(parentId)
+            $.each(children, function(_, child){
                 if(list.includes(child.id)){
-                    if(Array.isArray(childsList[parentId])){
-                        childsList[parentId].push(child.id)
+                    if(Array.isArray(childrenList[parentId])){
+                        childrenList[parentId].push(child.id)
                     }else{
-                        childsList[parentId] = [child.id]
+                        childrenList[parentId] = [child.id]
                     }
                     list = list.filter((v)=>v!==child.id)
                 }
@@ -240,10 +240,10 @@ export function moveFavoriteOption(id: OptionUI_ItemID, pos: number){
         $.each(list, function(_, childId){
             const parentId: OptionUI_ItemID|undefined = getOptionParentIDFromID(childId)
             if(parentId && list.includes(parentId)){
-                if(Array.isArray(childsList[parentId])){
-                    childsList[parentId].push(childId)
+                if(Array.isArray(childrenList[parentId])){
+                    childrenList[parentId].push(childId)
                 }else{
-                    childsList[parentId] = [childId]
+                    childrenList[parentId] = [childId]
                 }
                 if(childId===id){
                     id = parentId
@@ -266,8 +266,8 @@ export function moveFavoriteOption(id: OptionUI_ItemID, pos: number){
             list.splice(target, 0, id);
 
             $.each(list, function(_, id){
-                if(id in childsList){
-                    list.splice(list.indexOf(id) + 1, 0, ...childsList[id])
+                if(id in childrenList){
+                    list.splice(list.indexOf(id) + 1, 0, ...childrenList[id])
                 }
             })
             data.set("extFavoriteOptions", list)

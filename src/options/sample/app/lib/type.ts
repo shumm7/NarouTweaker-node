@@ -104,7 +104,7 @@ export interface OptionUI_Item {
     }
     ui?: OptionUI_Item_UI
     value?: {
-        related?: Array<OptionID> | "childs"
+        related?: Array<OptionID> | "children"
         isAdvanced?: boolean
         isDebug?: boolean
         isExperimental?: boolean
@@ -164,6 +164,7 @@ interface OptionUI_Item_UI<T = "switch" | "checkbox" | "select" | "radio" | "sli
     labelPlacement?: 'bottom'|'end'|'start'|'top'
     showForce?: boolean
     hideButtons?: Array<"all"|"favorite"|"reset"|"info">
+    hideDivider?: boolean
 }
 
 
@@ -254,5 +255,4 @@ export class OptionUI_Item_Parent {
 export class OptionUI_Item_Custom {
     id?: string
     layout?: "default"|"wide"|"dropdown"|"popup"
-    hideDivider?: boolean
 }

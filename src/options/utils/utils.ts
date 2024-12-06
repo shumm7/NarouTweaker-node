@@ -1,6 +1,6 @@
 import { nt } from "../../utils/narou-tweaker"
 import { OptionUI_CustomElement } from "./optionUI_custom"
-import { appendFavoriteOption, getOptionCategory, getOptionChildsFromID, getOptionFromID, getOptionPageFromID, moveFavoriteOption, removeFavoriteOption } from "./optionUI_utils"
+import { appendFavoriteOption, getOptionCategory, getOptionChildrenFromID, getOptionFromID, getOptionPageFromID, moveFavoriteOption, removeFavoriteOption } from "./optionUI_utils"
 import { OptionHideParammeters, OptionUI_Item, OptionUI_ItemID } from "./optionUI_type"
 
 import $ from 'jquery';
@@ -838,8 +838,8 @@ export function getOptionElement(option: OptionUI_Item, mode?: optionType){
                                     }
                                 })
                             }else if(option.value.related === "child"){
-                                var childs = getOptionChildsFromID(option.id)
-                                $.each(childs, function(_, child){
+                                var children = getOptionChildrenFromID(option.id)
+                                $.each(children, function(_, child){
                                     ret = reset(child, ret)
                                 })
                             }

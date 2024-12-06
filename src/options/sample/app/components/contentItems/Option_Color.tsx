@@ -10,6 +10,7 @@ import TextField from '@mui/material/TextField';
 import Popover from '@mui/material/Popover';
 
 import ContentItem_Head from './module/Head';
+import OptionItemBase from './module/OptionItemBase';
 
 import { ColorPicker, useColor, ColorService, IColor } from "react-color-palette";
 import "react-color-palette/css";
@@ -38,14 +39,14 @@ export default function Option_Color(props: OptionUI_ItemProps) {
     };
     const open = Boolean(anchorEl);
 
-    if(storage!==undefined && typeof optionValue !== "string"){
+    if (storage !== undefined && typeof optionValue !== "string") {
         const value = storage[id]
         if (typeof value === "string") {
             try {
                 var col = ColorService.convert("hex", ColorService.toHex(value))
                 setColor(col)
                 setOptionValue(col.hex)
-            } catch(e) {
+            } catch (e) {
                 var col = ColorService.convert("hex", "rgb(0,0,0)")
                 setColor(col)
                 setOptionValue(col.hex)
@@ -55,12 +56,12 @@ export default function Option_Color(props: OptionUI_ItemProps) {
         nt.storage.local.changed(id, (changes) => {
             if (changes[id]) {
                 const s = changes[id].newValue
-                if (typeof s === "string" && s!==optionValue) {
+                if (typeof s === "string" && s !== optionValue) {
                     try {
                         var col = ColorService.convert("hex", ColorService.toHex(s))
                         setColor(col)
                         setOptionValue(col.hex)
-                    } catch(e) {
+                    } catch (e) {
                         var col = ColorService.convert("hex", "rgb(0,0,0)")
                         setColor(col)
                         setOptionValue(col.hex)
@@ -71,110 +72,107 @@ export default function Option_Color(props: OptionUI_ItemProps) {
     }
 
     return (
-        <>
-            <Stack direction={"row"} sx={{ justifyContent: "space-between" }} data-id={id}>
-                <ContentItem_Head {...props} />
-                <Stack
-                    sx={{
-                        height: "inherit",
-                        minWidth: "70px",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        ml: 2,
-                    }}
-                >
-                    {
-                        typeof optionValue === "string" || uiShowForce ?
-                            <>
-                                <TextField
-                                    label={uiLabel}
-                                    variant={uiVariant ?? "outlined"}
-                                    helperText={uiDescription}
-                                    aria-readonly
-                                    autoComplete="off"
-                                    onClick={handleClick}
-                                    slotProps={{
-                                        input: {
-                                            readOnly: true,
-                                            endAdornment: !uiData?.hidePreview && (
-                                                <div
-                                                    style={{
-                                                        width: 40,
-                                                        height: 20,
-                                                        borderRadius: 4,
-                                                        backgroundColor: optionValue,
-                                                        margin: 1,
-                                                    }}
-                                                />
-                                            )
-                                        },
-                                    }}
-                                    value={optionValue}
-                                />
-                                <Popover
-                                    id={id}
-                                    open={open}
-                                    anchorEl={anchorEl}
-                                    onClose={handleClose}
-                                    anchorOrigin={{
-                                        vertical: 'bottom',
-                                        horizontal: 'left',
-                                    }}
-                                    sx={{
-                                        "& .rcp-root": {
-                                            backgroundColor: "background.paper",
-                                            color: "text.secondary"
-                                        },
-                                        "& .rcp-field-input": {
-                                            color: "text.primary",
-                                            borderColor: "divider",
-                                            borderWidth: 1
-                                        }
-                                    }}
-                                >
-                                    <div style={{ width: "min(350px, 100vw)" }}>
-                                        <ColorPicker
-                                            color={color}
-                                            onChange={(c: IColor) => {
-                                                setColor(c)
-                                            }}
-                                            onChangeComplete={(c: IColor) => {
-                                                nt.storage.local.set(id, c.hex).then(() => {
-                                                    setOptionValue(c.hex)
-                                                })
-                                            }}
-                                        />
-                                    </div>
-                                </Popover>
-                            </>
-                            :
-                            <Skeleton variant="rounded">
-                                <TextField
-                                    label={uiLabel}
-                                    variant={uiVariant ?? "outlined"}
-                                    helperText={uiDescription}
-                                    autoComplete="off"
-                                    slotProps={{
-                                        input: {
-                                            endAdornment: !uiData?.hidePreview && (
-                                                <div
-                                                    style={{
-                                                        width: 40,
-                                                        height: 20,
-                                                        borderRadius: 4,
-                                                        backgroundColor: optionValue,
-                                                        margin: 1,
-                                                    }}
-                                                />
-                                            )
-                                        },
-                                    }}
-                                />
-                            </Skeleton>
-                    }
-                </Stack>
+        <OptionItemBase {...props}>
+            <ContentItem_Head {...props} />
+            <Stack
+                sx={{
+                    height: "inherit",
+                    minWidth: "70px",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    ml: 2,
+                }}
+            >
+                {
+                    typeof optionValue === "string" || uiShowForce ?
+                        <>
+                            <TextField
+                                label={uiLabel}
+                                variant={uiVariant ?? "outlined"}
+                                helperText={uiDescription}
+                                aria-readonly
+                                autoComplete="off"
+                                onClick={handleClick}
+                                slotProps={{
+                                    input: {
+                                        readOnly: true,
+                                        endAdornment: !uiData?.hidePreview && (
+                                            <div
+                                                style={{
+                                                    width: 40,
+                                                    height: 20,
+                                                    borderRadius: 4,
+                                                    backgroundColor: optionValue,
+                                                    margin: 1,
+                                                }}
+                                            />
+                                        )
+                                    },
+                                }}
+                                value={optionValue}
+                            />
+                            <Popover
+                                id={id}
+                                open={open}
+                                anchorEl={anchorEl}
+                                onClose={handleClose}
+                                anchorOrigin={{
+                                    vertical: 'bottom',
+                                    horizontal: 'left',
+                                }}
+                                sx={{
+                                    "& .rcp-root": {
+                                        backgroundColor: "background.paper",
+                                        color: "text.secondary"
+                                    },
+                                    "& .rcp-field-input": {
+                                        color: "text.primary",
+                                        borderColor: "divider",
+                                        borderWidth: 1
+                                    }
+                                }}
+                            >
+                                <div style={{ width: "min(350px, 100vw)" }}>
+                                    <ColorPicker
+                                        color={color}
+                                        onChange={(c: IColor) => {
+                                            setColor(c)
+                                        }}
+                                        onChangeComplete={(c: IColor) => {
+                                            nt.storage.local.set(id, c.hex).then(() => {
+                                                setOptionValue(c.hex)
+                                            })
+                                        }}
+                                    />
+                                </div>
+                            </Popover>
+                        </>
+                        :
+                        <Skeleton variant="rounded">
+                            <TextField
+                                label={uiLabel}
+                                variant={uiVariant ?? "outlined"}
+                                helperText={uiDescription}
+                                autoComplete="off"
+                                slotProps={{
+                                    input: {
+                                        endAdornment: !uiData?.hidePreview && (
+                                            <div
+                                                style={{
+                                                    width: 40,
+                                                    height: 20,
+                                                    borderRadius: 4,
+                                                    backgroundColor: optionValue,
+                                                    margin: 1,
+                                                }}
+                                            />
+                                        )
+                                    },
+                                }}
+                            />
+                        </Skeleton>
+                }
             </Stack>
-            <Divider sx={{ "&:last-child": { display: "none" } }} />
-        </>
+        </OptionItemBase>
     )
 }

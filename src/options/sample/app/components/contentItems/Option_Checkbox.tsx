@@ -2,15 +2,14 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import Skeleton from '@mui/material/Skeleton';
 import Stack from '@mui/material/Stack';
-import Divider from '@mui/material/Divider';
 import FormControl from '@mui/material/FormControl';
 import FormGroup from '@mui/material/FormGroup';
 import FormLabel from '@mui/material/FormLabel';
 import FormHelperText from '@mui/material/FormHelperText';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-
 import ContentItem_Head from './module/Head';
+import OptionItemBase from './module/OptionItemBase';
 
 import { OptionID, OptionUI_Item_Switch, OptionUI_ItemProps } from "../../lib/type"
 import { nt } from '../../../../../utils/narou-tweaker';
@@ -46,59 +45,56 @@ export default function Option_Checkbox(props: OptionUI_ItemProps) {
 
 
     return (
-        <>
-            <Stack direction={"row"} sx={{ justifyContent: "space-between" }} data-id={id}>
-                <ContentItem_Head {...props} />
-                <Stack
-                    sx={{
-                        height: "inherit",
-                        minWidth: "70px",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        ml: 2,
-                    }}
-                >
+        <OptionItemBase {...props}>
+            <ContentItem_Head {...props} />
+            <Stack
+                sx={{
+                    height: "inherit",
+                    minWidth: "70px",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    ml: 2,
+                }}
+            >
 
-                    {
-                        typeof optionValue === "boolean" || uiShowForce ?
+                {
+                    typeof optionValue === "boolean" || uiShowForce ?
+                        <FormControl component="fieldset" variant={uiVariant}>
+                            <FormGroup>
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            checked={optionValue}
+                                            onChange={(event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
+                                                if (checked !== optionValue) {
+                                                    nt.storage.local.set(id, checked).then(() => {
+                                                        setOptionValue(checked)
+                                                    })
+                                                }
+                                            }}
+                                        />
+                                    }
+                                    label={uiLabel}
+                                    labelPlacement={uiLabelPlacement}
+                                />
+                            </FormGroup>
+                            <FormHelperText>{uiDescription}</FormHelperText>
+                        </FormControl>
+                        :
+                        <Skeleton variant="rounded">
                             <FormControl component="fieldset" variant={uiVariant}>
                                 <FormGroup>
                                     <FormControlLabel
-                                        control={
-                                            <Checkbox
-                                                checked={optionValue}
-                                                onChange={(event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
-                                                    if (checked !== optionValue) {
-                                                        nt.storage.local.set(id, checked).then(() => {
-                                                            setOptionValue(checked)
-                                                        })
-                                                    }
-                                                }}
-                                            />
-                                        }
+                                        control={<Checkbox />}
                                         label={uiLabel}
                                         labelPlacement={uiLabelPlacement}
                                     />
                                 </FormGroup>
                                 <FormHelperText>{uiDescription}</FormHelperText>
                             </FormControl>
-                            :
-                            <Skeleton variant="rounded">
-                                <FormControl component="fieldset" variant={uiVariant}>
-                                    <FormGroup>
-                                        <FormControlLabel
-                                            control={<Checkbox />}
-                                            label={uiLabel}
-                                            labelPlacement={uiLabelPlacement}
-                                        />
-                                    </FormGroup>
-                                    <FormHelperText>{uiDescription}</FormHelperText>
-                                </FormControl>
-                            </Skeleton>
-                    }
-                </Stack>
+                        </Skeleton>
+                }
             </Stack>
-            <Divider sx={{ "&:last-child": { display: "none" } }} />
-        </>
+        </OptionItemBase >
     )
 }

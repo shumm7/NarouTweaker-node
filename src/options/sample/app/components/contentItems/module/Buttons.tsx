@@ -21,7 +21,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 
 import { OptionID, OptionUI_Item, OptionUI_ItemProps } from "../../../lib/type"
-import { appendFavoriteOption, removeFavoriteOption, getOptionChildsFromID, moveFavoriteOption, getOptionFromID } from '../../../lib/utils';
+import { appendFavoriteOption, removeFavoriteOption, getOptionChildrenFromID, moveFavoriteOption, getOptionFromID } from '../../../lib/utils';
 import { FontAwseomeIcon } from '../../common/Icon';
 
 import { nt } from '../../../../../../utils/narou-tweaker';
@@ -55,11 +55,11 @@ export default function Buttons(props: OptionUI_ItemProps & { variant?: "dropdow
     /* Target Options */
     let relatedOptions: Array<OptionID> = []
     const related = option.value?.related
-    if (related === "childs") {
-        relatedOptions = getOptionChildsFromID(id).map((child) => { return child.id })
+    if (related === "children") {
+        relatedOptions = getOptionChildrenFromID(id).map((child) => { return child.id })
     } else if (related === undefined) {
         if (uiType === "parent") {
-            relatedOptions = getOptionChildsFromID(id).map((child) => { return child.id })
+            relatedOptions = getOptionChildrenFromID(id).map((child) => { return child.id })
         } else {
             relatedOptions = [id]
         }
@@ -484,7 +484,7 @@ function Button_Reset(props: {
 
     const warningMsg = () => {
         var related = option.value?.related
-        if(related === "childs" || (option.ui?.type === "parent" && related === undefined)){
+        if(related === "children" || (option.ui?.type === "parent" && related === undefined)){
             return "子項目もすべてリセットされます。"
         }else{
             return
@@ -505,10 +505,10 @@ function Button_Reset(props: {
                     ret[key] = defaultOption[key]
                 }
             }
-        } else if (related === "childs" || (option.ui?.type === "parent" && related === undefined)) {
-            var childs = getOptionChildsFromID(option.id)
-            for (let i = 0; i < childs.length; i++) {
-                ret = reset(childs[i], ret)
+        } else if (related === "children" || (option.ui?.type === "parent" && related === undefined)) {
+            var children = getOptionChildrenFromID(option.id)
+            for (let i = 0; i < children.length; i++) {
+                ret = reset(children[i], ret)
             }
         }
         return ret

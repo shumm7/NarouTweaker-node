@@ -9,8 +9,8 @@ import Divider from '@mui/material/Divider';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Modal from '@mui/material/Modal';
-
 import ContentItem_Head from './module/Head';
+import OptionItemBase from './module/OptionItemBase';
 
 import { OptionUI_ItemProps } from "../../lib/type"
 import { nt } from '../../../../../utils/narou-tweaker';
@@ -54,15 +54,10 @@ function CustomElement(props: OptionUI_ItemProps & { id: string }) {
 }
 
 export default function Option_Custom(props: OptionUI_ItemProps) {
-    const [optionValue, setOptionValue] = useState<boolean | undefined>();
     const storage = props.storage
     const option = props.option
     const id = option.id
     const childDepth = props.child
-    const uiLabel = option.ui?.label
-    const uiDescription = option.ui?.description
-    const uiVariant = option.ui?.variant
-    const uiShowForce = option.ui?.showForce
     var uiData: Record<string, any> | undefined = option.ui?.data
     const elementId = uiData?.id
 
@@ -72,95 +67,88 @@ export default function Option_Custom(props: OptionUI_ItemProps) {
     if (element !== null) {
         if (uiData?.layout === "default" || uiData?.layout === undefined) {
             return (
-                <>
-                    <Stack direction={"row"} sx={{ justifyContent: "space-between" }} data-id={id}>
-                        <ContentItem_Head {...props} />
-                        <Stack
-                            sx={{
-                                height: "inherit",
-                                minWidth: "70px",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                ml: 2,
-                                flexShrink: 0,
-                            }}
-                        >
-                            {element}
-                        </Stack>
+                <OptionItemBase {...props} >
+                    <ContentItem_Head {...props} />
+                    <Stack
+                        sx={{
+                            height: "inherit",
+                            minWidth: "70px",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            ml: 2,
+                            flexShrink: 0,
+                        }}
+                    >
+                        {element}
                     </Stack>
-                    {!uiData?.hideDivider && <Divider sx={{ "&:last-child": { display: "none" } }} />}
-                </>
+                </OptionItemBase>
             )
         } else if (uiData?.layout === "wide") {
             return (
-                <>
-                    <Stack direction={"row"} sx={{ justifyContent: "space-between" }} data-id={id}>
+                <OptionItemBase {...props} >
+                    <Stack sx={{ width: "100%" }} direction="column">
                         {element}
                     </Stack>
-                    {!uiData?.hideDivider && <Divider sx={{ "&:last-child": { display: "none" } }} />}
-                </>
+                </OptionItemBase>
             )
         } else if (uiData?.layout === "popup") {
             return (
-                <>
-                    <Stack direction={"row"} sx={{ justifyContent: "space-between" }} data-id={id}>
-                        <ContentItem_Head {...props} />
-                        <Stack
+                <OptionItemBase {...props} >
+                    <ContentItem_Head {...props} />
+                    <Stack
+                        sx={{
+                            height: "inherit",
+                            width: `${40}px`,
+                            alignItems: "center",
+                            justifyContent: "center",
+                            ml: 2,
+                        }}
+                    >
+                        <Box
                             sx={{
-                                height: "inherit",
-                                width: `${40}px`,
+                                width: "100%",
+                                height: "100%",
+                                cursor: "pointer",
                                 alignItems: "center",
-                                justifyContent: "center",
-                                ml: 2,
+                                justifyContent: "center"
                             }}
-                        >
-                            <Box
-                                sx={{
-                                    width: "100%",
-                                    height: "100%",
-                                    cursor: "pointer",
-                                    alignItems: "center",
-                                    justifyContent: "center"
-                                }}
-                                onClick={
-                                    () => {
-                                        setOpen(true)
-                                    }
+                            onClick={
+                                () => {
+                                    setOpen(true)
                                 }
-                            >
-                                <IconButton
-                                    size="small"
-                                    aria-owns={open ? 'mouse-over-popover' : undefined}
-                                    aria-haspopup="true"
-                                    sx={{ width: "100%", height: "100%" }}
-                                >
-                                    <FontAwseomeIcon icon={{ icon: "pen-to-square", prefix: "solid" }} style={{ fontSize: "14px" }} />
-                                </IconButton>
-                            </Box>
-                        </Stack>
-                        <Modal
-                            open={open}
-                            onClose={() => { setOpen(false) }}
-                            aria-labelledby="modal-modal-title"
-                            aria-describedby="modal-modal-description"
+                            }
                         >
-                            <Box sx={{
-                                position: 'absolute',
-                                top: '50%',
-                                left: '50%',
-                                transform: 'translate(-50%, -50%)',
-                                width: `min(500px, 100vw)`,
-                                height: `min(500px, 100vh)`,
-                                bgcolor: 'background.paper',
-                                boxShadow: 24,
-                                p: 4,
-                            }}>
-                                {element}
-                            </Box>
-                        </Modal>
+                            <IconButton
+                                size="small"
+                                aria-owns={open ? 'mouse-over-popover' : undefined}
+                                aria-haspopup="true"
+                                sx={{ width: "100%", height: "100%" }}
+                            >
+                                <FontAwseomeIcon icon={{ icon: "pen-to-square", prefix: "solid" }} style={{ fontSize: "14px" }} />
+                            </IconButton>
+                        </Box>
                     </Stack>
-                    {!uiData?.hideDivider && <Divider sx={{ "&:last-child": { display: "none" } }} />}
-                </>
+                    <Modal
+                        open={open}
+                        onClose={() => { setOpen(false) }}
+                        aria-labelledby="modal-modal-title"
+                        aria-describedby="modal-modal-description"
+                    >
+                        <Box sx={{
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            width: `min(500px, 100vw)`,
+                            height: `min(500px, 100vh)`,
+                            bgcolor: 'background.paper',
+                            boxShadow: 24,
+                            p: 4,
+                        }}>
+                            {element}
+                        </Box>
+                    </Modal>
+                </OptionItemBase>
             )
         }
     }

@@ -6,6 +6,7 @@ import Stack from '@mui/material/Stack';
 import Divider from '@mui/material/Divider';
 
 import ContentItem_Head from './module/Head';
+import OptionItemBase from './module/OptionItemBase';
 
 import { OptionUI_ItemProps } from "../../lib/type"
 import { nt } from '../../../../../utils/narou-tweaker';
@@ -17,11 +18,8 @@ export default function Option_Unknown(props: OptionUI_ItemProps) {
     const childDepth = props.child
 
     return (
-        <>
-            <Stack direction={"row"} sx={{ justifyContent: "space-between" }} data-id={id}>
-                <ContentItem_Head {...props} />
-            </Stack>
-            <Divider sx={{ "&:last-child": { display: "none" } }} />
-        </>
+        <OptionItemBase {...props} >
+            <ContentItem_Head {...props} />
+        </OptionItemBase>
     )
 }

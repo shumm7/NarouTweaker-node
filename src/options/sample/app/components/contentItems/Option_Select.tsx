@@ -9,6 +9,7 @@ import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import Divider from '@mui/material/Divider';
 import ContentItem_Head from './module/Head';
+import OptionItemBase from './module/OptionItemBase';
 
 import { OptionID, OptionUI_ItemProps, OptionUI_Item_Select } from "../../lib/type"
 import { nt } from '../../../../../utils/narou-tweaker';
@@ -56,7 +57,7 @@ export default function Option_Select(props: OptionUI_ItemProps) {
         }
     }
 
-    if(storage!==undefined && (typeof optionValue !== "string" && typeof optionValue!=="number")){
+    if (storage !== undefined && (typeof optionValue !== "string" && typeof optionValue !== "number")) {
         const value = storage[id]
         if (typeof value === "string" || typeof value === "number") {
             if (uiData?.dataType === "string") {
@@ -85,48 +86,66 @@ export default function Option_Select(props: OptionUI_ItemProps) {
     }
 
     return (
-        <>
-            <Stack direction={"row"} sx={{ justifyContent: "space-between" }} data-id={id}>
-                <ContentItem_Head {...props} />
-                <Stack
-                    sx={{
-                        height: "inherit",
-                        minWidth: "200px",
-                        width: "fit-content",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        ml: 2,
-                    }}
-                >
-                    {
-                        (((typeof optionValue === "string" || typeof optionValue === "number") && Array.isArray(uiData?.values)) || uiShowForce) ?
+        <OptionItemBase {...props} >
+            <ContentItem_Head {...props} />
+            <Stack
+                sx={{
+                    height: "inherit",
+                    minWidth: "200px",
+                    width: "fit-content",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    ml: 2,
+                }}
+            >
+                {
+                    (((typeof optionValue === "string" || typeof optionValue === "number") && Array.isArray(uiData?.values)) || uiShowForce) ?
+                        <TextField
+                            select
+                            label={uiLabel}
+                            variant={uiVariant}
+                            helperText={uiDescription}
+                            defaultValue={typeof optionValue === "number" ? Number(optionValue) : String(optionValue)}
+                            value={typeof optionValue === "number" ? Number(optionValue) : String(optionValue)}
+                            placeholder={uiPlaceholder}
+                            sx={{ m: 1, width: '100%' }}
+                            name={`option-items--select--${id}`}
+                            onChange={(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+                                if (uiData?.dataType === "number") {
+                                    var vn = Number(event.target.value)
+                                    if (vn !== optionValue) {
+                                        nt.storage.local.set(id, vn).then(() => {
+                                            setOptionValue(vn)
+                                        })
+                                    }
+                                } else {
+                                    var vs = event.target.value
+                                    if (vs !== optionValue) {
+                                        nt.storage.local.set(id, vs).then(() => {
+                                            setOptionValue(vs)
+                                        })
+                                    }
+                                }
+                            }}
+                        >
+                            {
+                                uiData?.values?.map((item: { value: string | number, label: string }) => {
+                                    if (uiData?.dataType === typeof item.value || (uiData?.dataType === undefined && (typeof item.value === "string" || typeof item.value === "number"))) {
+                                        return (
+                                            <MenuItem value={item.value}>{item.label}</MenuItem>
+                                        )
+                                    }
+                                })
+                            }
+                        </TextField>
+                        : <Skeleton variant="rounded">
                             <TextField
                                 select
                                 label={uiLabel}
                                 variant={uiVariant}
                                 helperText={uiDescription}
-                                defaultValue={typeof optionValue === "number" ? Number(optionValue) : String(optionValue)}
-                                value={typeof optionValue === "number" ? Number(optionValue) : String(optionValue)}
-                                placeholder={uiPlaceholder}
-                                sx={{ m: 1, width: '100%' }}
-                                name={`option-items--select--${id}`} 
-                                onChange={(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-                                    if (uiData?.dataType === "number") {
-                                        var vn = Number(event.target.value)
-                                        if (vn !== optionValue) {
-                                            nt.storage.local.set(id, vn).then(() => {
-                                                setOptionValue(vn)
-                                            })
-                                        }
-                                    } else {
-                                        var vs = event.target.value
-                                        if (vs !== optionValue) {
-                                            nt.storage.local.set(id, vs).then(() => {
-                                                setOptionValue(vs)
-                                            })
-                                        }
-                                    }
-                                }}
+                                name={`option-items--select--${id}`}
+                                sx={{ m: 1, minWidth: '25ch' }}
                             >
                                 {
                                     uiData?.values?.map((item: { value: string | number, label: string }) => {
@@ -138,30 +157,9 @@ export default function Option_Select(props: OptionUI_ItemProps) {
                                     })
                                 }
                             </TextField>
-                            : <Skeleton variant="rounded">
-                                <TextField
-                                    select
-                                    label={uiLabel}
-                                    variant={uiVariant}
-                                    helperText={uiDescription}
-                                    name={`option-items--select--${id}`} 
-                                    sx={{ m: 1, minWidth: '25ch' }}
-                                >
-                                    {
-                                        uiData?.values?.map((item: { value: string | number, label: string }) => {
-                                            if (uiData?.dataType === typeof item.value || (uiData?.dataType === undefined && (typeof item.value === "string" || typeof item.value === "number"))) {
-                                                return (
-                                                    <MenuItem value={item.value}>{item.label}</MenuItem>
-                                                )
-                                            }
-                                        })
-                                    }
-                                </TextField>
-                            </Skeleton>
-                    }
-                </Stack>
+                        </Skeleton>
+                }
             </Stack>
-            <Divider sx={{ "&:last-child": { display: "none" } }} />
-        </>
+        </OptionItemBase>
     )
 }

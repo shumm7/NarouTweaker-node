@@ -8,10 +8,11 @@ import Stack from '@mui/material/Stack';
 import Divider from '@mui/material/Divider';
 
 import ContentItem_Head from './module/Head';
+import OptionItemBase from './module/OptionItemBase';
 
 import { OptionID, OptionUI_Item_Parent, OptionUI_ItemProps } from "../../lib/type"
 import { nt } from '../../../../../utils/narou-tweaker';
-import { getOptionChildsFromID } from '../../lib/utils';
+import { getOptionChildrenFromID } from '../../lib/utils';
 import ContentItem from '../ContentItem';
 
 export default function Option_Parent(props: OptionUI_ItemProps) {
@@ -24,12 +25,12 @@ export default function Option_Parent(props: OptionUI_ItemProps) {
 
     if (childDepth >= 0) {
         return (
-            <>
-                <Stack direction={"column"} sx={{ justifyContent: "space-between" }} data-id={id}>
+            <OptionItemBase {...props} >
+                <Stack sx={{width: "100%"}}>
                     <ContentItem_Head {...props} />
                     <Stack sx={{ gap: 0.5, ml: 4, mt: 2, mb: 0.5 }} spacing={1}>
                         {
-                            getOptionChildsFromID(option.id).map((childOption) => {
+                            getOptionChildrenFromID(option.id).map((childOption) => {
                                 if (type === "favorite") {
                                     if (storage?.extFavoriteOptions.includes(childOption.id)) {
                                         return <ContentItem type={type} option={childOption} child={childDepth + 1} storage={storage} />
@@ -41,8 +42,7 @@ export default function Option_Parent(props: OptionUI_ItemProps) {
                         }
                     </Stack>
                 </Stack>
-                <Divider sx={{ "&:last-child": { display: "none" } }} />
-            </>
+            </OptionItemBase>
         )
     }
 }

@@ -14,6 +14,7 @@ import FormHelperText from '@mui/material/FormHelperText';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import ContentItem_Head from './module/Head';
+import OptionItemBase from './module/OptionItemBase';
 
 import { OptionID, OptionUI_ItemProps, OptionUI_Item_Radio } from "../../lib/type"
 import { nt } from '../../../../../utils/narou-tweaker';
@@ -65,7 +66,7 @@ export default function Option_Radio(props: OptionUI_ItemProps) {
         }
     }
 
-    if(storage!==undefined && (typeof optionValue !== "string" && typeof optionValue!=="number")){
+    if (storage !== undefined && (typeof optionValue !== "string" && typeof optionValue !== "number")) {
         const value = storage[id]
         if (typeof value === "string" || typeof value === "number") {
             if (uiData?.dataType === "string") {
@@ -95,91 +96,23 @@ export default function Option_Radio(props: OptionUI_ItemProps) {
 
     if (uiData?.layout === "default" || uiData?.layout === undefined) {
         return (
-            <>
-                <Stack direction={"row"} sx={{ justifyContent: "space-between" }} data-id={id}>
-                    <ContentItem_Head {...props} />
-                    <Stack
-                        sx={{
-                            height: "inherit",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            ml: 2,
-                        }}
-                    >
-                        {
-                            (((typeof optionValue === "string" || typeof optionValue === "number") && Array.isArray(uiData?.values)) || uiShowForce) ?
-                                <FormControl variant={uiVariant}>
-                                    <FormLabel id={`option-items--radio--${id}`}>{uiLabel}</FormLabel>
-                                    <RadioGroup
-                                        aria-labelledby={`option-items--radio--${id}`}
-                                        name={`option-items--radio--${id}`} 
-                                        defaultValue={typeof optionValue === "number" ? Number(optionValue) : String(optionValue)}
-                                        value={typeof optionValue === "number" ? Number(optionValue) : String(optionValue)}
-                                        onChange={(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-                                            if (uiData?.dataType === "number") {
-                                                var vn = Number(event.target.value)
-                                                if (vn !== optionValue) {
-                                                    nt.storage.local.set(id, vn).then(() => {
-                                                        setOptionValue(vn)
-                                                    })
-                                                }
-                                            } else {
-                                                var vs = event.target.value
-                                                if (vs !== optionValue) {
-                                                    nt.storage.local.set(id, vs).then(() => {
-                                                        setOptionValue(vs)
-                                                    })
-                                                }
-                                            }
-                                        }}
-                                    >
-                                        {
-                                            uiData?.values?.map((item: { value: string | number, label: string }) => {
-                                                if (uiData?.dataType === typeof item.value || (uiData?.dataType === undefined && (typeof item.value === "string" || typeof item.value === "number"))) {
-                                                    return (
-                                                        <FormControlLabel value={item.value} control={<Radio />} label={item.label} labelPlacement={uiLabelPlacement ?? "start"} />
-                                                    )
-                                                }
-                                            })
-                                        }
-                                    </RadioGroup>
-                                    <FormHelperText>{uiDescription}</FormHelperText>
-                                </FormControl>
-                                : <Skeleton variant="rounded">
-                                    <FormControl>
-                                        <FormLabel>{uiLabel}</FormLabel>
-                                        <RadioGroup name={`option-items--radio--${id}`} >
-                                            {
-                                                uiData?.values?.map((item: { value: string | number, label: string }) => {
-                                                    if (uiData?.dataType === typeof item.value || (uiData?.dataType === undefined && (typeof item.value === "string" || typeof item.value === "number"))) {
-                                                        return (
-                                                            <FormControlLabel value={item.value} control={<Radio />} label={item.label} labelPlacement={uiLabelPlacement ?? "start"} />
-                                                        )
-                                                    }
-                                                })
-                                            }
-                                        </RadioGroup>
-                                        <FormHelperText>{uiDescription}</FormHelperText>
-                                    </FormControl>
-                                </Skeleton>
-                        }
-                    </Stack>
-                </Stack>
-                <Divider sx={{ "&:last-child": { display: "none" } }} />
-            </>
-        )
-    } else if (uiData.layout === "wide") {
-        return (
-            <>
-                <Stack direction={"column"} sx={{ justifyContent: "space-between" }} data-id={id}>
-                    <ContentItem_Head {...props} />
+            <OptionItemBase {...props} >
+                <ContentItem_Head {...props} />
+                <Stack
+                    sx={{
+                        height: "inherit",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        ml: 2,
+                    }}
+                >
                     {
                         (((typeof optionValue === "string" || typeof optionValue === "number") && Array.isArray(uiData?.values)) || uiShowForce) ?
                             <FormControl variant={uiVariant}>
                                 <FormLabel id={`option-items--radio--${id}`}>{uiLabel}</FormLabel>
                                 <RadioGroup
                                     aria-labelledby={`option-items--radio--${id}`}
-                                    name={`option-items--radio--${id}`} 
+                                    name={`option-items--radio--${id}`}
                                     defaultValue={typeof optionValue === "number" ? Number(optionValue) : String(optionValue)}
                                     value={typeof optionValue === "number" ? Number(optionValue) : String(optionValue)}
                                     onChange={(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -204,7 +137,7 @@ export default function Option_Radio(props: OptionUI_ItemProps) {
                                         uiData?.values?.map((item: { value: string | number, label: string }) => {
                                             if (uiData?.dataType === typeof item.value || (uiData?.dataType === undefined && (typeof item.value === "string" || typeof item.value === "number"))) {
                                                 return (
-                                                    <FormControlLabel value={item.value} control={<Radio />} label={item.label} labelPlacement={uiLabelPlacement ?? "end"} />
+                                                    <FormControlLabel value={item.value} control={<Radio />} label={item.label} labelPlacement={uiLabelPlacement ?? "start"} />
                                                 )
                                             }
                                         })
@@ -215,12 +148,12 @@ export default function Option_Radio(props: OptionUI_ItemProps) {
                             : <Skeleton variant="rounded">
                                 <FormControl>
                                     <FormLabel>{uiLabel}</FormLabel>
-                                    <RadioGroup name={`option-items--radio--${id}`}>
+                                    <RadioGroup name={`option-items--radio--${id}`} >
                                         {
                                             uiData?.values?.map((item: { value: string | number, label: string }) => {
                                                 if (uiData?.dataType === typeof item.value || (uiData?.dataType === undefined && (typeof item.value === "string" || typeof item.value === "number"))) {
                                                     return (
-                                                        <FormControlLabel value={item.value} control={<Radio />} label={item.label} labelPlacement={uiLabelPlacement ?? "end"} />
+                                                        <FormControlLabel value={item.value} control={<Radio />} label={item.label} labelPlacement={uiLabelPlacement ?? "start"} />
                                                     )
                                                 }
                                             })
@@ -231,8 +164,70 @@ export default function Option_Radio(props: OptionUI_ItemProps) {
                             </Skeleton>
                     }
                 </Stack>
-                <Divider sx={{ "&:last-child": { display: "none" } }} />
-            </>
+            </OptionItemBase>
+        )
+    } else if (uiData.layout === "wide") {
+        return (
+            <OptionItemBase {...props} >
+                <ContentItem_Head {...props} />
+                {
+                    (((typeof optionValue === "string" || typeof optionValue === "number") && Array.isArray(uiData?.values)) || uiShowForce) ?
+                        <FormControl variant={uiVariant}>
+                            <FormLabel id={`option-items--radio--${id}`}>{uiLabel}</FormLabel>
+                            <RadioGroup
+                                aria-labelledby={`option-items--radio--${id}`}
+                                name={`option-items--radio--${id}`}
+                                defaultValue={typeof optionValue === "number" ? Number(optionValue) : String(optionValue)}
+                                value={typeof optionValue === "number" ? Number(optionValue) : String(optionValue)}
+                                onChange={(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+                                    if (uiData?.dataType === "number") {
+                                        var vn = Number(event.target.value)
+                                        if (vn !== optionValue) {
+                                            nt.storage.local.set(id, vn).then(() => {
+                                                setOptionValue(vn)
+                                            })
+                                        }
+                                    } else {
+                                        var vs = event.target.value
+                                        if (vs !== optionValue) {
+                                            nt.storage.local.set(id, vs).then(() => {
+                                                setOptionValue(vs)
+                                            })
+                                        }
+                                    }
+                                }}
+                            >
+                                {
+                                    uiData?.values?.map((item: { value: string | number, label: string }) => {
+                                        if (uiData?.dataType === typeof item.value || (uiData?.dataType === undefined && (typeof item.value === "string" || typeof item.value === "number"))) {
+                                            return (
+                                                <FormControlLabel value={item.value} control={<Radio />} label={item.label} labelPlacement={uiLabelPlacement ?? "end"} />
+                                            )
+                                        }
+                                    })
+                                }
+                            </RadioGroup>
+                            <FormHelperText>{uiDescription}</FormHelperText>
+                        </FormControl>
+                        : <Skeleton variant="rounded">
+                            <FormControl>
+                                <FormLabel>{uiLabel}</FormLabel>
+                                <RadioGroup name={`option-items--radio--${id}`}>
+                                    {
+                                        uiData?.values?.map((item: { value: string | number, label: string }) => {
+                                            if (uiData?.dataType === typeof item.value || (uiData?.dataType === undefined && (typeof item.value === "string" || typeof item.value === "number"))) {
+                                                return (
+                                                    <FormControlLabel value={item.value} control={<Radio />} label={item.label} labelPlacement={uiLabelPlacement ?? "end"} />
+                                                )
+                                            }
+                                        })
+                                    }
+                                </RadioGroup>
+                                <FormHelperText>{uiDescription}</FormHelperText>
+                            </FormControl>
+                        </Skeleton>
+                }
+            </OptionItemBase>
         )
     }
 }

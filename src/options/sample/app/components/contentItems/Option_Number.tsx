@@ -9,6 +9,7 @@ import Divider from '@mui/material/Divider';
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import ContentItem_Head from './module/Head';
+import OptionItemBase from './module/OptionItemBase';
 
 import { OptionID, OptionUI_ItemProps } from "../../lib/type"
 import { nt } from '../../../../../utils/narou-tweaker';
@@ -49,19 +50,19 @@ export default function Option_Number(props: OptionUI_ItemProps) {
         }
     };
 
-    
 
-    const getAdornment = (elm: any, position: "start"|"end") => {
-        if(elm===undefined){
+
+    const getAdornment = (elm: any, position: "start" | "end") => {
+        if (elm === undefined) {
             return
-        }else if(typeof elm === "string"){
+        } else if (typeof elm === "string") {
             return <InputAdornment position={position}>{elm}</InputAdornment>
-        }else{
-            return <InputAdornment position={position}><FontAwseomeIcon icon={elm}/></InputAdornment>
+        } else {
+            return <InputAdornment position={position}><FontAwseomeIcon icon={elm} /></InputAdornment>
         }
     }
 
-    if(storage!==undefined && typeof optionValue !== "number"){
+    if (storage !== undefined && typeof optionValue !== "number") {
         const value = storage[id]
         if (typeof value === "number") {
             setOptionValue(value)
@@ -79,58 +80,18 @@ export default function Option_Number(props: OptionUI_ItemProps) {
 
     if (uiData?.layout === "default" || uiData?.layout === undefined) {
         return (
-            <>
-                <Stack direction={"row"} sx={{ justifyContent: "space-between" }} data-id={id}>
-                    <ContentItem_Head {...props} />
-                    <Stack
-                        sx={{
-                            height: "inherit",
-                            minWidth: "70px",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            ml: 2,
-                        }}
-                    >
+            <OptionItemBase {...props} >
+                <ContentItem_Head {...props} />
+                <Stack
+                    sx={{
+                        height: "inherit",
+                        minWidth: "70px",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        ml: 2,
+                    }}
+                >
 
-                        {
-                            typeof optionValue === "number" || uiShowForce ?
-                                <TextField
-                                    label={uiLabel}
-                                    value={optionValue}
-                                    defaultValue={optionValue}
-                                    variant={uiVariant}
-                                    placeholder={uiPlaceholder}
-                                    helperText={uiDescription}
-                                    type="number"
-                                    onChange={(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-                                        formatChange(Number(event.target.value))
-                                    }}
-                                    slotProps={{
-                                        input: {
-                                            startAdornment: getAdornment(uiData?.prefix, "start"),
-                                            endAdornment: getAdornment(uiData?.prefix, "end"),
-                                        },
-                                    }}
-                                />
-                                : <Skeleton variant="rounded">
-                                    <TextField
-                                        label={uiLabel}
-                                        placeholder={uiPlaceholder}
-                                        helperText={uiDescription}
-                                        type="number"
-                                    />
-                                </Skeleton>
-                        }
-                    </Stack>
-                </Stack>
-                <Divider sx={{ "&:last-child": { display: "none" } }} />
-            </>
-        )
-    } else if (uiData?.layout === "wide") {
-        return (
-            <>
-                <Stack direction={"column"} sx={{ justifyContent: "space-between", gap: 2 }} data-id={id}>
-                    <ContentItem_Head {...props} />
                     {
                         typeof optionValue === "number" || uiShowForce ?
                             <TextField
@@ -140,12 +101,15 @@ export default function Option_Number(props: OptionUI_ItemProps) {
                                 variant={uiVariant}
                                 placeholder={uiPlaceholder}
                                 helperText={uiDescription}
-                                type='number'
+                                type="number"
                                 onChange={(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
                                     formatChange(Number(event.target.value))
                                 }}
-                                sx={{
-                                    width: "100%"
+                                slotProps={{
+                                    input: {
+                                        startAdornment: getAdornment(uiData?.prefix, "start"),
+                                        endAdornment: getAdornment(uiData?.prefix, "end"),
+                                    },
                                 }}
                             />
                             : <Skeleton variant="rounded">
@@ -153,15 +117,46 @@ export default function Option_Number(props: OptionUI_ItemProps) {
                                     label={uiLabel}
                                     placeholder={uiPlaceholder}
                                     helperText={uiDescription}
-                                    sx={{
-                                        width: "100%"
-                                    }}
+                                    type="number"
                                 />
                             </Skeleton>
                     }
                 </Stack>
-                <Divider sx={{ "&:last-child": { display: "none" } }} />
-            </>
+            </OptionItemBase>
+        )
+    } else if (uiData?.layout === "wide") {
+        return (
+            <OptionItemBase {...props} >
+                <ContentItem_Head {...props} />
+                {
+                    typeof optionValue === "number" || uiShowForce ?
+                        <TextField
+                            label={uiLabel}
+                            value={optionValue}
+                            defaultValue={optionValue}
+                            variant={uiVariant}
+                            placeholder={uiPlaceholder}
+                            helperText={uiDescription}
+                            type='number'
+                            onChange={(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+                                formatChange(Number(event.target.value))
+                            }}
+                            sx={{
+                                width: "100%"
+                            }}
+                        />
+                        : <Skeleton variant="rounded">
+                            <TextField
+                                label={uiLabel}
+                                placeholder={uiPlaceholder}
+                                helperText={uiDescription}
+                                sx={{
+                                    width: "100%"
+                                }}
+                            />
+                        </Skeleton>
+                }
+            </OptionItemBase>
         )
     }
 }

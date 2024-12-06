@@ -8,6 +8,7 @@ import Stack from '@mui/material/Stack';
 import Divider from '@mui/material/Divider';
 import TextField from '@mui/material/TextField';
 import ContentItem_Head from './module/Head';
+import OptionItemBase from './module/OptionItemBase';
 
 import { OptionID, OptionUI_Item_Switch, OptionUI_ItemProps } from "../../lib/type"
 import { nt } from '../../../../../utils/narou-tweaker';
@@ -44,54 +45,51 @@ export default function Option_TextField(props: OptionUI_ItemProps) {
 
     if (uiData?.layout === "default" || uiData?.layout === undefined) {
         return (
-            <>
-                <Stack direction={"row"} sx={{ justifyContent: "space-between" }} data-id={id}>
-                    <ContentItem_Head {...props} />
-                    <Stack
-                        sx={{
-                            height: "inherit",
-                            minWidth: "70px",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            ml: 2,
-                        }}
-                    >
+            <OptionItemBase {...props}>
+                <ContentItem_Head {...props} />
+                <Stack
+                    sx={{
+                        height: "inherit",
+                        minWidth: "70px",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        ml: 2,
+                    }}
+                >
 
-                        {
-                            typeof optionValue === "string" || uiShowForce ?
+                    {
+                        typeof optionValue === "string" || uiShowForce ?
+                            <TextField
+                                label={uiLabel}
+                                value={optionValue}
+                                defaultValue={optionValue}
+                                variant={uiVariant}
+                                placeholder={uiPlaceholder}
+                                helperText={uiDescription}
+                                onChange={(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+                                    const s = event.target.value
+                                    if (optionValue !== s) {
+                                        nt.storage.local.set(id, s).then(() => {
+                                            setOptionValue(s)
+                                        })
+                                    }
+                                }}
+                            />
+                            : <Skeleton variant="rounded">
                                 <TextField
                                     label={uiLabel}
-                                    value={optionValue}
-                                    defaultValue={optionValue}
-                                    variant={uiVariant}
                                     placeholder={uiPlaceholder}
                                     helperText={uiDescription}
-                                    onChange={(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-                                        const s = event.target.value
-                                        if (optionValue !== s) {
-                                            nt.storage.local.set(id, s).then(() => {
-                                                setOptionValue(s)
-                                            })
-                                        }
-                                    }}
                                 />
-                                : <Skeleton variant="rounded">
-                                    <TextField
-                                        label={uiLabel}
-                                        placeholder={uiPlaceholder}
-                                        helperText={uiDescription}
-                                    />
-                                </Skeleton>
-                        }
-                    </Stack>
+                            </Skeleton>
+                    }
                 </Stack>
-                <Divider sx={{ "&:last-child": { display: "none" } }} />
-            </>
+            </OptionItemBase>
         )
     } else if (uiData?.layout === "wide") {
         return (
-            <>
-                <Stack direction={"column"} sx={{ justifyContent: "space-between", gap: 2 }} data-id={id}>
+            <OptionItemBase {...props}>
+                <Stack sx={{ width: "100%" }} direction="column">
                     <ContentItem_Head {...props} />
                     {
                         typeof optionValue === "string" || uiShowForce ?
@@ -126,8 +124,7 @@ export default function Option_TextField(props: OptionUI_ItemProps) {
                             </Skeleton>
                     }
                 </Stack>
-                <Divider sx={{ "&:last-child": { display: "none" } }} />
-            </>
+            </OptionItemBase>
         )
     }
 }

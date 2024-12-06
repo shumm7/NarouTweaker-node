@@ -12,6 +12,7 @@ import FormHelperText from '@mui/material/FormHelperText';
 import TextField from '@mui/material/TextField';
 
 import ContentItem_Head from './module/Head';
+import OptionItemBase from './module/OptionItemBase';
 
 import { OptionID, OptionUI_ItemProps, OptionUI_Item_TextArea } from "../../lib/type"
 import { nt } from '../../../../../utils/narou-tweaker';
@@ -46,8 +47,8 @@ export default function Option_TextArea(props: OptionUI_ItemProps) {
 
     if (uiData?.layout === "wide") {
         return (
-            <>
-                <Stack sx={{ justifyContent: "space-between" }} data-id={id}>
+            <OptionItemBase {...props}>
+                <Stack sx={{ width: "100%" }}>
                     <ContentItem_Head {...props} />
                     <Stack
                         sx={{
@@ -83,51 +84,47 @@ export default function Option_TextArea(props: OptionUI_ItemProps) {
                         </FormControl>
                     </Stack>
                 </Stack>
-                <Divider sx={{ "&:last-child": { display: "none" } }} />
-            </>
+            </OptionItemBase>
         )
     } else if (uiData?.layout === "default" || uiData?.layout === undefined) {
         return (
-            <>
-                <Stack direction={"row"} sx={{ justifyContent: "space-between" }} data-id={id}>
-                    <ContentItem_Head {...props} />
-                    <Stack
-                        sx={{
-                            height: "inherit",
-                            minWidth: `${200 * (uiData?.width ?? 1)}px`,
-                            alignItems: "center",
-                            justifyContent: "center",
-                            ml: 2,
-                        }}
-                    >
-                        <FormControl component="fieldset" variant="standard" sx={{ width: "100%" }}>
-                            <FormGroup>
-                                <TextField
-                                    label={uiLabel}
-                                    value={optionValue}
-                                    defaultValue={optionValue}
-                                    variant={uiVariant}
-                                    multiline
-                                    rows={uiData?.rows}
-                                    maxRows={uiData?.maxRows}
-                                    minRows={uiData?.minRows}
-                                    placeholder={uiPlaceholder}
-                                    onChange={(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-                                        const s = event.target.value
-                                        if (optionValue !== s) {
-                                            nt.storage.local.set(id, s).then(() => {
-                                                setOptionValue(s)
-                                            })
-                                        }
-                                    }}
-                                />
-                            </FormGroup>
-                            <FormHelperText>{uiDescription}</FormHelperText>
-                        </FormControl>
-                    </Stack>
+            <OptionItemBase {...props}>
+                <ContentItem_Head {...props} />
+                <Stack
+                    sx={{
+                        height: "inherit",
+                        minWidth: `${200 * (uiData?.width ?? 1)}px`,
+                        alignItems: "center",
+                        justifyContent: "center",
+                        ml: 2,
+                    }}
+                >
+                    <FormControl component="fieldset" variant="standard" sx={{ width: "100%" }}>
+                        <FormGroup>
+                            <TextField
+                                label={uiLabel}
+                                value={optionValue}
+                                defaultValue={optionValue}
+                                variant={uiVariant}
+                                multiline
+                                rows={uiData?.rows}
+                                maxRows={uiData?.maxRows}
+                                minRows={uiData?.minRows}
+                                placeholder={uiPlaceholder}
+                                onChange={(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+                                    const s = event.target.value
+                                    if (optionValue !== s) {
+                                        nt.storage.local.set(id, s).then(() => {
+                                            setOptionValue(s)
+                                        })
+                                    }
+                                }}
+                            />
+                        </FormGroup>
+                        <FormHelperText>{uiDescription}</FormHelperText>
+                    </FormControl>
                 </Stack>
-                <Divider sx={{ "&:last-child": { display: "none" } }} />
-            </>
+            </OptionItemBase>
         )
     }
 }

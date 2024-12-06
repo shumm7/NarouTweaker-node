@@ -9,6 +9,7 @@ import Divider from '@mui/material/Divider';
 import Input from '@mui/material/Input';
 import Slider from '@mui/material/Slider';
 import ContentItem_Head from './module/Head';
+import OptionItemBase from './module/OptionItemBase';
 
 import { OptionID, OptionUI_ItemProps, OptionUI_Item_Slider } from "../../lib/type"
 import { nt } from '../../../../../utils/narou-tweaker';
@@ -92,30 +93,60 @@ export default function Option_Slider(props: OptionUI_ItemProps) {
     }
 
     return (
-        <>
-            <Stack direction={"row"} sx={{ justifyContent: "space-between" }} data-id={id}>
-                <ContentItem_Head {...props} />
-                <Stack
-                    sx={{
-                        height: "inherit",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        ml: 2,
-                    }}
-                >
-                    {
-                        (typeof optionValue === "number" || uiShowForce) ?
-                            <Stack direction="row">
-                                <Slider
+        <OptionItemBase {...props} >
+            <ContentItem_Head {...props} />
+            <Stack
+                sx={{
+                    height: "inherit",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    ml: 2,
+                }}
+            >
+                {
+                    (typeof optionValue === "number" || uiShowForce) ?
+                        <Stack direction="row">
+                            <Slider
+                                defaultValue={optionValue}
+                                value={optionValue}
+                                max={uiData?.max}
+                                min={uiData?.min}
+                                marks={uiData?.marks}
+                                step={uiData?.step}
+                                onChange={handleSliderChange}
+                                valueLabelDisplay={uiData?.showLabel ?? "auto"}
+                                aria-labelledby="input-slider"
+                                sx={{
+                                    minWidth: uiData?.showField ? `${100 * (uiData?.width ?? 1)}px` : `${150 * (uiData?.width ?? 1)}px`
+                                }}
+                                size={uiData?.size}
+                            />
+                            {
+                                uiData?.showField &&
+                                <Input
                                     defaultValue={optionValue}
                                     value={optionValue}
-                                    max={uiData?.max}
-                                    min={uiData?.min}
-                                    marks={uiData?.marks}
-                                    step={uiData?.step}
-                                    onChange={handleSliderChange}
+                                    size="small"
+                                    onChange={handleInputChange}
+                                    onBlur={handleInputBlur}
+                                    inputProps={{
+                                        step: uiData?.step ?? 1,
+                                        max: uiData?.max,
+                                        min: uiData?.min,
+                                        type: 'number',
+                                        'aria-labelledby': 'input-slider',
+                                    }}
+                                    sx={{
+                                        minWidth: "50px",
+                                        ml: 2
+                                    }}
+                                />
+                            }
+                        </Stack>
+                        : <Skeleton variant="rounded">
+                            <Stack direction="row">
+                                <Slider
                                     valueLabelDisplay={uiData?.showLabel ?? "auto"}
-                                    aria-labelledby="input-slider"
                                     sx={{
                                         minWidth: uiData?.showField ? `${100 * (uiData?.width ?? 1)}px` : `${150 * (uiData?.width ?? 1)}px`
                                     }}
@@ -124,18 +155,7 @@ export default function Option_Slider(props: OptionUI_ItemProps) {
                                 {
                                     uiData?.showField &&
                                     <Input
-                                        defaultValue={optionValue}
-                                        value={optionValue}
                                         size="small"
-                                        onChange={handleInputChange}
-                                        onBlur={handleInputBlur}
-                                        inputProps={{
-                                            step: uiData?.step ?? 1,
-                                            max: uiData?.max,
-                                            min: uiData?.min,
-                                            type: 'number',
-                                            'aria-labelledby': 'input-slider',
-                                        }}
                                         sx={{
                                             minWidth: "50px",
                                             ml: 2
@@ -143,31 +163,9 @@ export default function Option_Slider(props: OptionUI_ItemProps) {
                                     />
                                 }
                             </Stack>
-                            : <Skeleton variant="rounded">
-                                <Stack direction="row">
-                                    <Slider
-                                        valueLabelDisplay={uiData?.showLabel ?? "auto"}
-                                        sx={{
-                                            minWidth: uiData?.showField ? `${100 * (uiData?.width ?? 1)}px` : `${150 * (uiData?.width ?? 1)}px`
-                                        }}
-                                        size={uiData?.size}
-                                    />
-                                    {
-                                        uiData?.showField &&
-                                        <Input
-                                            size="small"
-                                            sx={{
-                                                minWidth: "50px",
-                                                ml: 2
-                                            }}
-                                        />
-                                    }
-                                </Stack>
-                            </Skeleton>
-                    }
-                </Stack>
+                        </Skeleton>
+                }
             </Stack>
-            <Divider sx={{ "&:last-child": { display: "none" } }} />
-        </>
+        </OptionItemBase>
     )
 }
