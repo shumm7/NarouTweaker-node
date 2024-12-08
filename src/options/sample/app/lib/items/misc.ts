@@ -14,7 +14,7 @@ export const misc_optionsList: Array<OptionUI_Item> = [
                 id: "extIntroduction",
                 layout: "wide"
             },
-            hideButtons: ["all"],
+            hideButtons: "all",
         },
         location: {
             page: "about",
@@ -33,7 +33,7 @@ export const misc_optionsList: Array<OptionUI_Item> = [
                 id: "extPatchnotes",
                 layout: "wide"
             },
-            hideButtons: ["all"],
+            hideButtons: "all",
         },
         location: {
             page: "patchnotes",
@@ -52,11 +52,48 @@ export const misc_optionsList: Array<OptionUI_Item> = [
                 id: "extFavoriteOptions",
                 layout: "wide"
             },
-            hideButtons: ["all"],
+            hideButtons: "all"
         },
         location: {
             page: "favorite",
             category: "general",
+            noindex: true,
+        },
+    },
+
+    
+    /* Search */
+    {
+        id: "extSearch",
+        title: "検索",
+        ui: {
+            type: "custom",
+            data: {
+                id: "extSearch",
+                layout: "wide"
+            },
+            hideButtons: "all",
+        },
+        location: {
+            page: "search",
+            category: "main",
+            noindex: true,
+        },
+    },
+    {
+        id: "extSearchResult",
+        title: "検索結果",
+        ui: {
+            type: "custom",
+            data: {
+                id: "extSearchResult",
+                layout: "wide"
+            },
+            hideButtons: "all",
+        },
+        location: {
+            page: "search",
+            category: "result",
             noindex: true,
         },
     },

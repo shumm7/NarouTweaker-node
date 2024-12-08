@@ -277,6 +277,68 @@ export function moveFavoriteOption(id: OptionUI_ItemID, pos: number){
     })
 }
 
+export function insertFavoriteOption(from: OptionUI_ItemID, to: OptionUI_ItemID){
+    nt.storage.local.get("extFavoriteOptions").then(function(data){
+        var list: Array<OptionUI_ItemID> = data.extFavoriteOptions
+
+        if(!list.includes(from) || !list.includes(to)){
+            return false
+        }
+        
+        var childrenList: Record<string,any> = {}
+        $.each(list, function(_, parentId){
+            const children: Array<OptionUI_Item> = getOptionChildrenFromID(parentId)
+            $.each(children, function(_, child){
+                if(list.includes(child.id)){
+                    if(Array.isArray(childrenList[parentId])){
+                        childrenList[parentId].push(child.id)
+                    }else{
+                        childrenList[parentId] = [child.id]
+                    }
+                    list = list.filter((v)=>v!==child.id)
+                }
+            })
+        })
+
+        /* リストにある要素が子 */
+        $.each(list, function(_, childId){
+            const parentId: OptionUI_ItemID|undefined = getOptionParentIDFromID(childId)
+            if(parentId && list.includes(parentId)){
+                if(Array.isArray(childrenList[parentId])){
+                    childrenList[parentId].push(childId)
+                }else{
+                    childrenList[parentId] = [childId]
+                }
+                if(childId===from){
+                    from = parentId
+                }else if(childId===to){
+                    to = parentId
+                }
+                list = list.filter((v)=>v!==childId)
+            }
+        })
+
+        var current: number = list.indexOf(from)
+        var target: number = list.indexOf(to)
+
+        if(current >= 0){
+            var tail = list.slice(current + 1)
+            list.splice(current)
+            Array.prototype.push.apply(list, tail);
+            list.splice(target, 0, from);
+
+            $.each(list, function(_, id){
+                if(id in childrenList){
+                    list.splice(list.indexOf(id) + 1, 0, ...childrenList[id])
+                }
+            })
+            data.set("extFavoriteOptions", list)
+
+            nt.storage.local.set(data.get("extFavoriteOptions"))
+        }
+    })
+}
+
 
 
 /**

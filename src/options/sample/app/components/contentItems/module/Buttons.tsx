@@ -50,7 +50,10 @@ export default function Buttons(props: OptionUI_ItemProps & { variant?: "dropdow
     const handleClose = () => {
         setAnchorEl(null);
     };
-    const hideButtons = option.ui?.hideButtons ?? []
+    let hideButtons = option.ui?.hideButtons ?? []
+    if(hideButtons==="all"){
+        hideButtons = ["favorite", "info", "reset"]
+    }
 
     /* Target Options */
     let relatedOptions: Array<OptionID> = []

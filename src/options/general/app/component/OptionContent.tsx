@@ -1,32 +1,11 @@
 import React from "react";
 import { OptionUI_Item } from "../../../utils/optionUI_type";
-import Link from "./common/Link";
 import OptionContentItem_Head from "./OptionContent_Head";
 import OptionContentItem_Body from "./OptionContent_Body";
 
 
 export default function OptionContent(props: { option: OptionUI_Item }) {
     const option = props.option
-
-    const page = option.location?.page
-    const category = option.location?.category
-    const id = option.id
-    const title = option.title
-    const style = option.style
-    const elmClass = option.class
-    const description = option.description
-    const uiType = option.ui?.type
-    const uiName = option.ui?.name
-    const uiData = option.ui?.data
-    const uiClass = option.ui?.class
-    const uiPrefix = option.ui?.prefix ?? ""
-    const uiSuffix = option.ui?.suffix ?? ""
-    const buttons = option.value?.buttons
-    const requirement = option.value?.requirement
-    const isExperimental = option.value?.isExperimental
-    const isAdvanced = option.value?.isAdvanced
-    const isDebug = option.value?.isDebug
-    const parent = option.location?.parent
 
     if (!(option.location?.hide)) {
         return (

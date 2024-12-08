@@ -24,60 +24,8 @@ export default function ContentItem(props: OptionUI_ItemProps) {
     const storage = props.storage
     const option = props.option
     const uiType = option.ui?.type
-    const requirement = option.value?.requirement
 
-    const [isAdvanced, setAdvanced] = useState<boolean | undefined>();
-    const [isExperimental, setExperimental] = useState<boolean | undefined>();
-    const [isDebug, setDebug] = useState<boolean | undefined>();
-    const [isShow, setShow] = useState<boolean | undefined>();
-
-    if(storage!==undefined && (isShow===undefined || isAdvanced===undefined || isExperimental===undefined)){
-        setAdvanced(storage.extAdvancedSettings)
-        setExperimental(storage.extExperimentalFeatures)
-        setDebug(storage.extDebug)
-        setShow(checkConditions(storage, requirement))
-
-        nt.storage.local.changed(null, (changes) => {
-            if (changes.extAdvancedSettings!==undefined) {
-                var s = changes.extAdvancedSettings.newValue
-                if (typeof s === "boolean") {
-                    setAdvanced(s)
-                }
-            }
-            if (changes.extExperimentalFeatures!==undefined) {
-                var s = changes.extExperimentalFeatures.newValue
-                if (typeof s === "boolean") {
-                    setExperimental(s)
-                }
-            }
-            if (changes.extDebug!==undefined) {
-                var s = changes.extDebug.newValue
-                if (typeof s === "boolean") {
-                    setDebug(s)
-                }
-            }
-        })
-
-        const p = requirement?.requirementParams
-        if(Array.isArray(p)){
-            nt.storage.local.changed(null, (changes) => {
-                for(let i=0; i<p.length; i++){
-                    if(changes[p[i].id]!==undefined){
-                        nt.storage.local.get().then((data)=>{
-                            setShow(checkConditions(data, requirement))
-                        })
-                    }
-                }
-            })
-        }
-    }
-
-    if(
-        !isShow ||
-        (!isAdvanced && option.value?.isAdvanced) ||
-        (!isExperimental && option.value?.isExperimental) ||
-        (!isDebug && option.value?.isDebug)
-    ){
+    if(storage===undefined || !CheckShowElement(storage, option)){
         return null
     }
 
@@ -110,18 +58,26 @@ export default function ContentItem(props: OptionUI_ItemProps) {
     }
 }
 
-interface requirement {
-    condition?: "and"|"or"|"nor"|"nand"
-    requirementParams?: Array<{
-        id: OptionID,
-        value: any,
-        compare?: "="|"!="|">"|"<"|">="|"<="|"in"|"of"|"include"
-    }>
-}
+export function CheckShowElement(localOption: nt.storage.local.options, option: OptionUI_Item){
 
-function checkConditions(localOption: nt.storage.local.options, requirement?: requirement){
-    const p = requirement?.requirementParams
-    const c = requirement?.condition ?? "and"
+    if(option.ui?.showForce){
+        return true
+    }
+
+    /* Flags */
+    if(option.value?.isAdvanced && !localOption.extAdvancedSettings){
+        return false
+    }
+    if(option.value?.isDebug && !localOption.extDebug){
+        return false
+    }
+    if(option.value?.isExperimental && !localOption.extExperimentalFeatures){
+        return false
+    }
+
+    /* Requirement */
+    const p = option.value?.requirement?.requirementParams
+    const c = option.value?.requirement?.condition ?? "and"
 
     if(Array.isArray(p) && [undefined, "and", "or", "nor", "nand"].includes(c)){
         var conditions: Array<boolean> = []

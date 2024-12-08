@@ -11,6 +11,7 @@ import IconButton from '@mui/material/IconButton';
 import Modal from '@mui/material/Modal';
 import ContentItem_Head from './module/Head';
 import OptionItemBase from './module/OptionItemBase';
+import Option_Header from './Option_Header';
 
 import { OptionUI_ItemProps } from "../../lib/type"
 import { nt } from '../../../../../utils/narou-tweaker';
@@ -23,33 +24,40 @@ import ImportOption from './custom/General_ImportOption';
 import FixOption from './custom/General_FixOption';
 import ResetOption from './custom/General_ResetOption';
 import Favorite from './custom/Favorite';
+import { Search, SearchResult } from './custom/Search';
 
 
 function CustomElement(props: OptionUI_ItemProps & { id: string }) {
     switch (props.id) {
         /* About */
         case "extIntroduction":
-            return Introduction(props)
+            return <Introduction {...props} />
         case "extPatchnotes":
-            return Patchnotes(props)
+            return <Patchnotes {...props} />
 
         /* Favorite */
         case "extFavoriteOptions":
-            return Favorite(props)
+            return <Favorite {...props} />
+
+        /* Search */
+        case "extSearch":
+            return <Search {...props} />
+        case "extSearchResult":
+            return <SearchResult {...props} />
 
         /* General */
         case "extImportOption":
-            return ImportOption(props)
+            return <ImportOption {...props} />
         case "extExportOption":
-            return ExportOption(props)
+            return <ExportOption {...props} />
         case "extFixOption":
-            return FixOption(props)
+            return <FixOption {...props} />
         case "extResetOption":
-            return ResetOption(props)
+            return <ResetOption {...props} />
 
         /* Any */
         default:
-            return null
+            return undefined
     }
 }
 
@@ -62,9 +70,9 @@ export default function Option_Custom(props: OptionUI_ItemProps) {
     const elementId = uiData?.id
 
     const [open, setOpen] = useState(false);
-    var element = CustomElement({ id: elementId, ...props })
+    var element = CustomElement({ ...props, id: elementId })
 
-    if (element !== null) {
+    if (element) {
         if (uiData?.layout === "default" || uiData?.layout === undefined) {
             return (
                 <OptionItemBase {...props} >

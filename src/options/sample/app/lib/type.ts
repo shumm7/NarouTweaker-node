@@ -10,6 +10,11 @@ export interface OptionUI_Anchor {
     id: string
     level: number
     label: string
+    target: {
+        page: string
+        category: string
+        id: string
+    }
 }
 
 /**
@@ -58,7 +63,7 @@ export interface OptionUI_Page {
     parent?: OptionUI_PageID
     position?: OptionUI_Page_Position
     noindex?: boolean
-    hideToc?: boolean
+    hideToc?: "hide"|"empty"|"show"
     popup?: boolean
 }
 
@@ -163,7 +168,7 @@ interface OptionUI_Item_UI<T = "switch" | "checkbox" | "select" | "radio" | "sli
     placeholder?: string
     labelPlacement?: 'bottom'|'end'|'start'|'top'
     showForce?: boolean
-    hideButtons?: Array<"all"|"favorite"|"reset"|"info">
+    hideButtons?: Array<"favorite"|"reset"|"info">|"all"
     hideDivider?: boolean
 }
 

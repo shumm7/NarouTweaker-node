@@ -90,7 +90,7 @@ const top: Array<OptionUI_Page> = [
         },
         position: "top",
         popup: true,
-        hideToc: true,
+        hideToc: "hide",
         defaultCategory: "general",
         categories: [
             {
@@ -383,7 +383,7 @@ const bottom: Array<OptionUI_Page> = [
         position: "bottom",
         defaultCategory: "introduction",
         noindex: true,
-        hideToc: true,
+        hideToc: "hide",
         categories: [
             {
                 title: "パッチノート",
@@ -409,7 +409,7 @@ const bottom: Array<OptionUI_Page> = [
                 hideTitle: true,
             },
         ],
-        hideToc: true
+        hideToc: "hide"
     },
 
     {
@@ -440,16 +440,21 @@ const hide: Array<OptionUI_Page> = [
         title: "検索",
         description: "設定項目を絞り込み検索することができます。",
         id: "search",
-        defaultCategory: "general",
+        defaultCategory: "main",
         position: "hide",
         popup: true,
         categories: [
             {
                 title: "検索",
-                id: "general",
+                id: "main",
+            },
+            {
+                title: "検索結果",
+                id: "result",
+                hideTitle: true
             },
         ],
-        hideToc: true,
+        hideToc: "hide",
         noindex: true,
     },
     

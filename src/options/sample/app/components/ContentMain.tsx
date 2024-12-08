@@ -1,6 +1,8 @@
 import * as React from 'react';
-import { useEffect, useState } from 'react';
-import { styled } from '@mui/material/styles';
+import { useEffect, useRef, useState } from 'react';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { SetURLSearchParams, useSearchParams } from 'react-router-dom';
+import { styled, useTheme } from '@mui/material/styles';
 import Skeleton from '@mui/material/Skeleton';
 import Stack from '@mui/material/Stack';
 import Card from '@mui/material/Card';
@@ -54,31 +56,120 @@ function Loading(props: { storage?: nt.storage.local.options }) {
     )
 }
 
-export default function ContentMain(props: { page?: OptionUI_Page, anchors: OptionUI_Anchors, setAnchors: React.Dispatch<React.SetStateAction<OptionUI_Anchors>> }) {
+export function ScrollWithSearchParams(
+    params: {
+        page?: string | null
+        category?: string | null
+        id?: string | null
+        focus?: boolean | null
+    },
+    isMobile?: boolean
+) {
+    if (params.page) {
+        if (params.category) {
+            let windowOffset = 0
+            if (isMobile) {
+                const header = document.querySelector(`#nt-option--header-mobile`)
+                if (header) {
+                    windowOffset = (header as HTMLElement).offsetHeight
+                }
+            } else {
+                const header = document.querySelector(`#nt-option--header`)
+                if (header) {
+                    windowOffset = (header as HTMLElement).offsetHeight
+                }
+            }
+
+            if (params.id) {
+                const item = document.querySelector(`.nt-option-item[data-id="${params.id}"]`)
+                if (item) {
+                    const scroll = (item as HTMLElement).offsetTop - windowOffset
+                    document.querySelector("main")?.setAttribute("data-value", `${scroll}`)
+                    window.scrollTo({ top: scroll })
+                    return scroll
+                }
+            } else {
+                const item = document.querySelector(`.nt-option-category[data-category="${params.category}"] > *[data-anchor]`)
+                if (item) {
+                    const scroll = (item as HTMLElement).offsetTop - windowOffset
+                    document.querySelector("main")?.setAttribute("data-value", `${scroll}`)
+                    window.scrollTo({ top: scroll })
+                    return scroll
+                }
+            }
+        } else {
+            document.querySelector("main")?.setAttribute("data-value", "0")
+            window.scrollTo({ top: 0 })
+            return 0
+        }
+    }
+}
+
+export default function ContentMain(props: {
+    page?: OptionUI_Page,
+    anchors: OptionUI_Anchors,
+    setAnchors: React.Dispatch<React.SetStateAction<OptionUI_Anchors>>
+}) {
     const page = props.page
     const categories = page?.categories ?? []
+    const theme = useTheme()
     const [isDebug, setDebug] = useState<boolean | undefined>();
+    const [moved, setMoved] = useState<boolean>(false);
     const [storage, setStorage] = useState<nt.storage.local.options | undefined>();
 
+    const [searchParams, setSearchParams] = useSearchParams()
+
     useEffect(() => {
-        const localOption = async () => {
+        const localOption = async (move: boolean) => {
             const data = await nt.storage.local.get()
 
+            setMoved(move)
             setStorage(data)
             setDebug(data.extDebug)
         };
         if (storage === undefined) {
-            localOption();
+            localOption(false);
         }
 
         nt.storage.local.changed(null, (changes) => {
-            localOption()
+            localOption(true)
         })
     }, []);
 
+    useEffect(() => {
+        scrollTo()
+    }, [searchParams]);
+
+    useEffect(() => {
+        if (!moved) {
+            scrollTo()
+            setMoved(true)
+        }
+    }, [storage]);
+
+    function scrollTo() {
+        const page = searchParams.get("page")
+        const category = searchParams.get("category")
+        const id = searchParams.get("id")
+        const focus = searchParams.get("focus") === "1" ? true : false
+        return ScrollWithSearchParams(
+            { page: page, category: category, id: id, focus: focus },
+            theme.breakpoints.values.md > document.documentElement.clientWidth
+        )
+    }
+
     const array = categories.map(
         (category, i) => {
-            return { id: `category:${category.id}`, level: 1, label: category.title }
+            return {
+                id: `category:${category.id}`,
+                level: 1,
+                label: category.title,
+                target: {
+                    page: page?.id ?? "",
+                    category: category.id,
+                    id: ""
+                }
+            }
         }
     )
 
@@ -98,6 +189,8 @@ export default function ContentMain(props: { page?: OptionUI_Page, anchors: Opti
                                     mt: 0
                                 }
                             }}
+                            className='nt-option-category'
+                            data-page={page?.id ?? ""}
                             data-category={category.id}
                         >
                             {

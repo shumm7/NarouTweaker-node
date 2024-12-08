@@ -26,7 +26,7 @@ export default function OptionItemBase(props: { children: React.ReactNode } & Op
             sx={{
                 transform: isSortable ? CSS.Transform.toString(transform) : undefined,
                 //transition: transition,
-                "&:last-child .nt-option-item--divider": {
+                "&:last-child > .nt-option-item--divider": {
                     display: "none"
                 }
             }}
@@ -39,9 +39,10 @@ export default function OptionItemBase(props: { children: React.ReactNode } & Op
                         sx={{
                             cursor: isDragging ? "grabbing" : "grab",
                             color: "text.secondary",
-                            justifyContent: "center",
+                            justifyContent: "flex-start",
                             alignItems: "center",
-                            paddingRight: 2,
+                            pt: 2,
+                            pr: 2,
                             flexShrink: 0
                         }}
                         {...attributes}

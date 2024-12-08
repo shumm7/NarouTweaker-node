@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactHTMLElement, useRef } from 'react';
 import { useEffect, useState } from 'react';
 import { BrowserRouter, MemoryRouter as Router, useSearchParams } from 'react-router-dom';
 
@@ -16,19 +16,8 @@ import { OptionUI_Anchors } from './lib/type';
 import { Bounce, ToastContainer } from 'material-react-toastify';
 
 export interface Anchor {
-    items: Array<AnchorItem>
-    activeId: AnchorId
-}
-
-interface AnchorId {
-    id: string
-    parentId: string
-}
-
-interface AnchorItem {
-    id: string
-    title?: string
-    level: number
+    items: OptionUI_Anchors
+    activeId: string
 }
 
 
@@ -39,6 +28,7 @@ function Dashboard(props: { disableCustomTheme?: boolean }) {
     const resolveMode = mode === "system" ? systemMode : mode
 
     const page = getOptionPageFromID(searchParams.get("page") ?? "general")
+    let tocWidthCurrent = page?.hideToc==="hide" ? 0 : tocWidth
 
     return (
         <>
@@ -61,19 +51,19 @@ function Dashboard(props: { disableCustomTheme?: boolean }) {
                         sx={{
                             alignItems: 'center',
                             minHeight: "100vh",
-                            maxWidth: { xs: `100vw`, md: `calc(100vw - ${drawerWidth + tocWidth}px)` },
+                            maxWidth: { xs: `100vw`, md: `calc(100vw - ${drawerWidth + tocWidthCurrent}px)` },
                             pb: 5,
                             pt: { xs: 17, md: 11 },
                             pr: 3,
                             pl: 3,
-                            mr: { xs: 0, md: `${tocWidth}px` }
+                            mr: { xs: 0, md: `${tocWidthCurrent}px` }
                         }}
                     >
                         <Box sx={{ width: '100%', maxWidth: { sm: '100%', md: '1700px' }, height: "100%" }}>
-                            <MainGrid page={page} setAnchors={setAnchors} anchors={anchors} />
+                            <MainGrid page={page} setAnchors={setAnchors} anchors={anchors}/>
                         </Box>
                     </Stack>
-                    <Toc page={page} anchors={anchors} hide={page?.hideToc} />
+                    <Toc page={page} anchors={anchors} hide={page?.hideToc}/>
                 </Box>
             </Box>
             <ToastContainer

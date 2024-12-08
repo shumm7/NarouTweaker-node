@@ -14,7 +14,7 @@ import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
 import HelpRoundedIcon from '@mui/icons-material/HelpRounded';
 import Divider from '@mui/material/Divider';
-import LinkPage from './common/Link';
+import Link from './common/Link';
 import { OptionUI_Pages } from '../lib/pages';
 import { OptionUI_Page, OptionUI_Page_Position } from '../lib/type';
 import { FontAwseomeIcon } from './common/Icon';
@@ -34,14 +34,14 @@ export default function MenuContent(props: { page?: OptionUI_Page }) {
                 } else if (optionPage.type === "page" || optionPage.type === undefined) {
                     return (
                         <ListItem key={index} disablePadding sx={{ display: 'block' }}>
-                            <LinkPage page={optionPage.id} category="" id="" search="">
+                            <Link page={optionPage.id} category="" id="">
                                 <ListItemButton data-name={optionPage.id} selected={pageid !== undefined && pageid === optionPage.id}>
                                     <Stack direction="row" sx={{py: 0.5}}>
                                         {optionPage.icon && (<ListItemIcon sx={{alignItems: 'center'}}><Typography variant='h6' sx={{color: "text.primary"}}><FontAwseomeIcon icon={optionPage.icon} /></Typography></ListItemIcon>)}
                                         <ListItemText primary={<Typography variant='body2' sx={{color: "text.primary"}}>{optionPage.title}</Typography>} disableTypography/>
                                     </Stack>
                                 </ListItemButton>
-                            </LinkPage>
+                            </Link>
                         </ListItem>
                     )
                     

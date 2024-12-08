@@ -7,8 +7,9 @@ import { getOptionPageFromID, getOptionCategoryFromID, getOptionParentTree } fro
 export default function ContentItem_Breadcrumbs(props: OptionUI_ItemProps) {
     const option = props.option
     const type = props.type
+    const childDepth = props.child ?? 0
     
-    if (type === "favorite" || type === "search") {
+    if ((type === "favorite" && childDepth===0) || type === "search") {
         const page = getOptionPageFromID(option.location.page)
         const category = getOptionCategoryFromID(option.location.page, option.location.category)
         const tree = getOptionParentTree(option)
@@ -36,7 +37,7 @@ export default function ContentItem_Breadcrumbs(props: OptionUI_ItemProps) {
                                 //return <Link page={page.id} category={category.id} id={opt.id} className="nt-item-breadcrumbs nt-item-breadcrumbs--root">{opt.title}</Link>
                                 return null
                             } else {
-                                return <Link page={page.id} category={category.id} id={opt.id} className="nt-item-breadcrumbs">{opt.title}</Link>
+                                return <Link page={page.id} category={category.id} id={opt.id} focus className="nt-item-breadcrumbs">{opt.title}</Link>
                             }
                         })
                     }

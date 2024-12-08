@@ -68,7 +68,7 @@ function _checkLocalValue(key: OptionID, value: any): any {
                 var list: Array<OptionUI_ItemID> = []
                 value.forEach(function (option) {
                     var optionData: OptionUI_Item | undefined = getOptionFromID(option)
-                    if (optionData!==undefined && !optionData.ui?.hideButtons?.includes("favorite") && !optionData.ui?.hideButtons?.includes("all")) {
+                    if (optionData!==undefined && !optionData.ui?.hideButtons?.includes("favorite") && optionData.ui?.hideButtons !== "all") {
                         list.push(optionData.id)
                     }
                 })

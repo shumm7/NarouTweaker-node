@@ -26,8 +26,9 @@ export default function Introduction(props: OptionUI_ItemProps) {
                     }}
                 />
                 <Typography variant='h4' sx={{ fontWeight: "bold" }}>Narou Tweaker</Typography>
+                <Typography variant='body2' sx={{ color: "text.secondary" }}>{nt.extension.version}</Typography>
             </Stack>
-            <Divider />
+            <Divider sx={{width: "100%"}}/>
             <Stack sx={{ alignItems: "center", gap: 1 }}>
                 <Typography
                     variant='body2'

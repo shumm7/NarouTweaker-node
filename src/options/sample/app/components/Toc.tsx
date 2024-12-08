@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { styled } from '@mui/material/styles';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
@@ -11,9 +12,10 @@ import MuiListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import { OptionUI_Anchors, OptionUI_Page } from '../lib/type';
 import { nt } from '../../../../utils/narou-tweaker';
+import Link, { GetLocation } from './common/Link';
+import { ScrollWithSearchParams } from './ContentMain';
 
 export const tocWidth = 240;
-
 
 const ListItemStyled = styled(MuiListItem)(({ theme }) => ({
     display: "block",
@@ -53,71 +55,62 @@ function ListItem(props: React.ComponentPropsWithoutRef<typeof ListItemStyled> &
     }
 }
 
-export function Toc(props: { page?: OptionUI_Page, anchors: OptionUI_Anchors, hide?: boolean }) {
-    const page = props.page
-    const categories = page?.categories ?? []
-    const [anchor, setAnchor] = useState<number>(0);
-    const [isDebug, setDebug] = useState<boolean | undefined>();
-
-    const [prevItems, setPrevItems] = useState(props.page?.id);
-    if (props.page?.id !== prevItems) {
-        setPrevItems(props.page?.id);
-        setAnchor(0)
-        window.scrollTo({ top: 0 })
-        scrollToAnchor(0)
+function SetSelectedAnchor(setAnchor: React.Dispatch<React.SetStateAction<number>>, isMobile?: boolean) {
+    setAnchor(0)
+    let headerOffset = 0
+    const header = document.querySelector(isMobile ? `#nt-option--header-mobile` : `#nt-option--header`)
+    if (header) {
+        headerOffset = (header as HTMLElement).offsetHeight
     }
 
-    function scrollToAnchor(windowScroll?: number) {
-        let windowOffset = 0
-        const header = document.querySelector(`#nt-option--header`)
-        if (header) {
-            windowOffset = (header as HTMLElement).offsetHeight
-        }
+    let scrollPosition = document.documentElement.scrollTop;
+    const maxScrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight
 
-        const headings = document.querySelectorAll('*[data-anchor][data-anchor-level="1"]');
-        const scrollPosition = typeof windowScroll === "number" ? windowScroll : window.scrollY;
-        const scrollMaxY = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-        for (let i = headings.length - 1; i >= 0; i--) {
-            const heading = headings[i] as HTMLElement;
-            if (heading.offsetTop <= scrollPosition + windowOffset + 10) {
-                const id = heading.getAttribute("data-anchor-id")
-                if (id) {
-                    const tab = document.querySelector(`.anchor-tab[data-anchor-id="${id}"]`);
-                    if (tab) {
-                        const tabIndex = Number(tab.getAttribute("data-index"))
-                        if (isFinite(tabIndex) && !(windowScroll === undefined && scrollPosition >= scrollMaxY)) {
-                            setAnchor(tabIndex)
-                        }
-                    }
-                }
+    const valueScrollRaw = document.querySelector("main")?.getAttribute("data-value")
+    if (typeof valueScrollRaw === "string") {
+        const valueScroll = Number(valueScrollRaw)
+        if (isFinite(valueScroll) && maxScrollHeight <= valueScroll) {
+            scrollPosition = Number(valueScroll)
+            document.querySelector("main")?.removeAttribute("data-value")
+        }
+    }
+
+    const headings = document.querySelectorAll('*[data-anchor]');
+    for (let i = headings.length - 1; i >= 0; i--) {
+        const heading = headings[i] as HTMLElement;
+        if (Math.max(heading.offsetTop, (headings[0] as HTMLElement).offsetTop) <= scrollPosition + headerOffset + 10) {
+            const id = heading.getAttribute("data-anchor-id")
+            if (id) {
+                setAnchor(i)
                 break
             }
         }
     }
+}
+
+export function Toc(props: {
+    page?: OptionUI_Page,
+    anchors: OptionUI_Anchors,
+    hide?: "hide" | "empty" | "show"
+}) {
+    const page = props.page
+    const hide = props.hide
+    const categories = page?.categories ?? []
+    const [anchor, setAnchor] = useState<number>(0);
+    const [isDebug, setDebug] = useState<boolean | undefined>();
+    const [isScrollEvent, setIsScrollEvent] = useState<boolean>(true);
+    const navigate = useNavigate()
+    const location = useLocation()
+    const theme = useTheme()
 
     const handleScroll = () => {
-        scrollToAnchor()
-    };
-
-    const handleChange = (event: React.MouseEvent<HTMLLIElement, MouseEvent> | undefined, index: number) => {
-        let windowOffset = 0
-        const header = document.querySelector(`#nt-option--header`)
-        if (header) {
-            windowOffset = (header as HTMLElement).offsetHeight
-        }
-        const tab = document.querySelector(`.anchor-tab[data-index="${index}"]`) as HTMLElement
-        const id = tab.getAttribute("data-anchor-id")
-        if (id) {
-            const item = document.querySelector(`article *[data-anchor-id="${id}"]`)
-            if (item) {
-                const scroll = (item as HTMLElement).offsetTop - windowOffset
-                window.scrollTo({ top: scroll })
-                scrollToAnchor(scroll)
-            }
+        if (theme.breakpoints.values.md <= document.documentElement.clientWidth) {
+            SetSelectedAnchor(setAnchor)
         }
     };
 
     useEffect(() => {
+        SetSelectedAnchor(setAnchor)
         const localOption = async () => {
             const data = await nt.storage.local.get()
 
@@ -140,122 +133,117 @@ export function Toc(props: { page?: OptionUI_Page, anchors: OptionUI_Anchors, hi
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    return (
-        <Stack
-            spacing={2}
-            sx={{
-                display: { xs: 'none', md: 'flex' },
-                position: "fixed",
-                boxSizing: "border-box",
-                top: 0,
-                right: 0,
-                alignItems: 'center',
-                height: "100vh",
-                width: tocWidth,
-                mt: 8,
-                overflowY: "auto"
-            }}
-        >
+    if (hide !== "hide") {
+        return (
             <Stack
+                spacing={2}
                 sx={{
-                    flexGrow: 1,
-                    justifyContent:
-                        'space-between',
-                    height: "100%",
-                    width: "100%"
+                    display: { xs: 'none', md: 'flex' },
+                    position: "fixed",
+                    boxSizing: "border-box",
+                    top: 0,
+                    right: 0,
+                    alignItems: 'center',
+                    height: "100vh",
+                    width: tocWidth,
+                    mt: 8,
+                    overflowY: "auto"
                 }}
             >
-                <List dense sx={{ pt: 3 }}>
-                    {
-                        props.anchors.map((anchorItem, index) => {
-                            if (anchorItem.level === 1) {
-                                return (
-                                    <ListItem
-                                        disablePadding
-                                        sx={{ px: 1.5, py: 0.2 }}
-                                        selected={index === anchor}
-                                        className="anchor-tab"
-                                        data-index={index}
-                                        data-anchor-id={anchorItem.id}
-                                        onClick={(e: React.MouseEvent<HTMLLIElement, MouseEvent>) => { handleChange(e, index) }}
-                                    >
-                                        <ListItemText
-                                            disableTypography
-                                            primary={<Typography variant="body2">{anchorItem.label}</Typography>}
-                                        />
-                                    </ListItem>
-                                )
-                            }
-                        })
-                    }
-                </List>
+                <Stack
+                    sx={{
+                        flexGrow: 1,
+                        justifyContent:
+                            'space-between',
+                        height: "100%",
+                        width: "100%"
+                    }}
+                >
+                    <List dense sx={{ pt: 3 }}>
+                        {
+                            props.anchors.map((anchorItem, index) => {
+                                if (anchorItem.level === 1 && hide !== "empty") {
+                                    return (
+                                        <ListItem
+                                            disablePadding
+                                            sx={{ px: 1.5, py: 0.2 }}
+                                            selected={index === anchor}
+                                            className="anchor-tab"
+                                            data-index={index}
+                                            data-anchor-id={anchorItem.id}
+                                        >
+                                            <ListItemText
+                                                disableTypography
+                                                primary={
+                                                    <a onClick={() => {
+                                                        navigate(
+                                                            GetLocation(
+                                                                location,
+                                                                anchorItem.target.page,
+                                                                anchorItem.target.category,
+                                                                anchorItem.target.id
+                                                            )
+                                                        )
+
+                                                        ScrollWithSearchParams({
+                                                            page: anchorItem.target.page,
+                                                            category: anchorItem.target.category,
+                                                            id: anchorItem.target.id,
+                                                            focus: false
+                                                        }, false)
+                                                        setAnchor(index)
+                                                    }}>
+                                                        <Typography variant="body2">{anchorItem.label}</Typography>
+                                                    </a>
+                                                }
+                                            />
+                                        </ListItem>
+                                    )
+                                }
+                            })
+                        }
+                    </List>
+                </Stack>
             </Stack>
-        </Stack>
-    );
+        );
+    }
 }
 
 
-export function TocMobile(props: { page?: OptionUI_Page, anchors: OptionUI_Anchors, hide?: boolean }) {
+export function TocMobile(props: { page?: OptionUI_Page, anchors: OptionUI_Anchors, hide?: "hide" | "empty" | "show" }) {
     const page = props.page
+    const hide = props.hide
     const categories = page?.categories ?? []
     const [anchor, setAnchor] = useState<number>(0);
     const [isDebug, setDebug] = useState<boolean | undefined>();
-
-    const [prevItems, setPrevItems] = useState(props.page?.id);
-    if (props.page?.id !== prevItems) {
-        setPrevItems(props.page?.id);
-        setAnchor(0)
-        window.scrollTo({ top: 0 })
-        scrollToAnchor(0)
-    }
-
-    function scrollToAnchor(windowScroll?: number) {
-        let windowOffset = 0
-        const header = document.querySelector(`#nt-option--header-mobile`)
-        if (header) {
-            windowOffset = (header as HTMLElement).offsetHeight
-        }
-
-        const headings = document.querySelectorAll('*[data-anchor]');
-        const scrollPosition = typeof windowScroll === "number" ? windowScroll : window.scrollY;
-        const scrollMaxY = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-        for (let i = headings.length - 1; i >= 0; i--) {
-            const heading = headings[i] as HTMLElement;
-            if (heading.offsetTop <= scrollPosition + windowOffset + 10) {
-                const id = heading.getAttribute("data-anchor-id")
-                if (id) {
-                    const tab = document.querySelector(`.anchor-tab--mobile[data-anchor-id="${id}"]`);
-                    if (tab) {
-                        const tabIndex = Number(tab.getAttribute("data-index"))
-                        if (isFinite(tabIndex) && !(windowScroll === undefined && scrollPosition >= scrollMaxY)) {
-                            setAnchor(tabIndex)
-                        }
-                    }
-                }
-                break
-            }
-        }
-    }
+    const navigate = useNavigate()
+    const location = useLocation()
+    const theme = useTheme()
 
     const handleScroll = () => {
-        scrollToAnchor()
+        if (theme.breakpoints.values.md > document.documentElement.clientWidth) {
+            SetSelectedAnchor(setAnchor, true)
+        }
     };
 
     const handleChange = (event: React.SyntheticEvent, index: number) => {
-        let windowOffset = 0
-        const header = document.querySelector(`#nt-option--header-mobile`)
-        if (header) {
-            windowOffset = (header as HTMLElement).offsetHeight
-        }
-        const tab = document.querySelector(`.anchor-tab--mobile[data-index="${index}"]`) as HTMLElement
-        const id = tab.getAttribute("data-anchor-id")
-        if (id) {
-            const item = document.querySelector(`article *[data-anchor-id="${id}"]`)
-            if (item) {
-                const scroll = (item as HTMLElement).offsetTop - windowOffset
-                window.scrollTo({ top: scroll })
-                scrollToAnchor(scroll)
-            }
+        const anchorItem = props.anchors.at(index)
+        if (anchorItem) {
+            navigate(
+                GetLocation(
+                    location,
+                    anchorItem.target.page,
+                    anchorItem.target.category,
+                    anchorItem.target.id
+                )
+            )
+            ScrollWithSearchParams({
+                page: anchorItem.target.page,
+                category: anchorItem.target.category,
+                id: anchorItem.target.id,
+                focus: false
+            }, true)
+            setAnchor(index)
         }
     };
 
@@ -282,7 +270,7 @@ export function TocMobile(props: { page?: OptionUI_Page, anchors: OptionUI_Ancho
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    if (!props.hide) {
+    if (hide !== "empty" && hide !== "hide") {
         return (
             <TabOuter
                 sx={{
@@ -312,6 +300,7 @@ export function TocMobile(props: { page?: OptionUI_Page, anchors: OptionUI_Ancho
                             if (anchorItem.level === 1) {
                                 return (
                                     <Tab
+                                        tabIndex={index}
                                         label={anchorItem.label}
                                         className="anchor-tab--mobile"
                                         data-index={index}

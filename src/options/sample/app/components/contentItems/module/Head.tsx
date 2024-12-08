@@ -9,6 +9,7 @@ import Buttons from './Buttons';
 import ContentItem_Breadcrumbs from './Breadcrumbs';
 
 import { OptionUI_Descriptions, OptionUI_Item, OptionUI_ItemProps } from '../../../lib/type'
+import Link from '../../common/Link';
 
 
 function ContentItem_HeadDescription(props: { description?: OptionUI_Descriptions }) {
@@ -28,16 +29,38 @@ function ContentItem_HeadDescription(props: { description?: OptionUI_Description
     return null
 }
 
+function ContentItem_HeadTitle(props: OptionUI_ItemProps) {
+    const option = props.option
+    const type = props.type
+
+    if (type === "favorite" || type === "search") {
+        return (
+            <Link
+                page={option.location.page}
+                category={option.location.category}
+                id={option.id}
+                focus
+            >
+                {option.title}
+            </Link>
+        )
+    } else {
+        return (
+            <>
+                {option.title}
+            </>
+        )
+    }
+}
+
 
 export default function ContentItem_Head(props: OptionUI_ItemProps) {
     const option = props.option
-    const type = props.type
-    const title = option.title
     const description = option.description
 
     return (
         <Stack>
-            <ContentItem_Breadcrumbs {...props}/>
+            <ContentItem_Breadcrumbs {...props} />
             <Stack direction={"row"} sx={{ gap: "0.3rem" }}>
                 <Stack direction={"row"}>
                     {option.value?.isExperimental && <ContentItem_HeadExperimental />}
@@ -46,9 +69,12 @@ export default function ContentItem_Head(props: OptionUI_ItemProps) {
                     <Typography
                         sx={{
                             color: 'text.primary',
-                            ml: (option.value?.isExperimental || option.value?.isAdvanced || option.value?.isDebug) ? 1 : 0
+                            ml: (option.value?.isExperimental || option.value?.isAdvanced || option.value?.isDebug) ? 1 : 0,
+                            "& > a": {
+                                color: "text.primary"
+                            }
                         }}>
-                        {title ?? ""}
+                        <ContentItem_HeadTitle {...props} />
                     </Typography>
                 </Stack>
                 <Buttons {...props} />

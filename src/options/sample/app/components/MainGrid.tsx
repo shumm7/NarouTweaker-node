@@ -5,7 +5,11 @@ import { OptionUI_Anchors, OptionUI_Page } from '../lib/type';
 import NavbarBreadcrumbs from './Breadcrumbs';
 import ContentMain from './ContentMain';
 
-export default function MainGrid(props: { page?: OptionUI_Page, anchors: OptionUI_Anchors, setAnchors: React.Dispatch<React.SetStateAction<OptionUI_Anchors>> }) {
+export default function MainGrid(props: {
+    page?: OptionUI_Page,
+    anchors: OptionUI_Anchors,
+    setAnchors: React.Dispatch<React.SetStateAction<OptionUI_Anchors>>
+}) {
     return (
         <Stack>
             <Stack spacing={2} sx={{ pb: 1 }}>

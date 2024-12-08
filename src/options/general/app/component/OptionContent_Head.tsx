@@ -26,7 +26,7 @@ export default function OptionContentItem_Head(props: React.ComponentPropsWithou
         if (page === "favorite") {
             return (
                 <div className="contents-item--heading" {...props}>
-                    <Link page={page} category={category} id={id} focus={true}>
+                    <Link page={page} category={category} id={id} focus>
                         {title}
                     </Link>
                 </div>
@@ -37,7 +37,7 @@ export default function OptionContentItem_Head(props: React.ComponentPropsWithou
                 <div className="contents-item--heading" {...props}>
                     <OptionContentItem_HeadCrumbs />
                     <div className="search-result--items-title">
-                        <Link page={page} category={category} id={id} focus={true}>
+                        <Link page={page} category={category} id={id} focus>
                             {title}
                         </Link>
                     </div>

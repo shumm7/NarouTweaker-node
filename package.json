@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc && vite build",
-    "watch": "tsc && vite build --watch"
+    "watch": "tsc && vite build --watch --minify false"
   },
   "author": "shumm7",
   "license": "MIT",

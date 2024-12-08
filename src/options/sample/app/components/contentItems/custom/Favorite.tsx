@@ -11,7 +11,7 @@ import ErrorMessage from '../module/ErrorMessage';
 import { nt } from '../../../../../../utils/narou-tweaker';
 import { OptionUI_Items } from '../../../lib/items';
 import { OptionUI_Item, OptionUI_ItemProps } from '../../../lib/type';
-import { getOptionFromID, moveFavoriteOption } from '../../../lib/utils';
+import { getOptionFromID, getOptionParent, insertFavoriteOption, moveFavoriteOption } from '../../../lib/utils';
 
 export default function Favorite(props: OptionUI_ItemProps) {
     const storage = props.storage
@@ -45,27 +45,8 @@ export default function Favorite(props: OptionUI_ItemProps) {
                 collisionDetection={closestCenter}
                 onDragEnd={(event) => {
                     const { active, over } = event;
-                    var activeIndex = -1
-                    var overIndex = -1
-                    var moveTarget: string|undefined
-                    for(let i=0; i<favoriteOptions.length; i++){
-                        if(favoriteOptions[i].id === active.id){
-                            if(favoriteOptions[i].location.parent===undefined){
-                                activeIndex = i
-                                moveTarget = favoriteOptions[i].id
-                            }
-                        }
-                        if(favoriteOptions[i].id === over?.id){
-                            if(favoriteOptions[i].location.parent===undefined){
-                                overIndex = i
-                            }
-                        }
-                    }
-                    console.log(moveTarget, activeIndex, overIndex)
-
-                    if (activeIndex !== overIndex && activeIndex!==-1 && overIndex!==-1 && moveTarget!==undefined) {
-                        console.log(moveTarget, overIndex - activeIndex)
-                        moveFavoriteOption(moveTarget, overIndex - activeIndex)
+                    if(typeof active.id==="string" && typeof over?.id==="string"){
+                        insertFavoriteOption(active.id, over.id)
                     }
                 }}
             >
@@ -74,10 +55,7 @@ export default function Favorite(props: OptionUI_ItemProps) {
                         {
                             favoriteOptions.map((option) => {
                                 if (option.location.parent === undefined && !option.location.hide) {
-                                    return <ContentItem
-                                    
-                                    
-                                     option={option} storage={storage} type="favorite" />
+                                    return <ContentItem option={option} storage={storage} type="favorite" />
                                 }
                             })
                         }

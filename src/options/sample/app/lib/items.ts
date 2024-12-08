@@ -27,7 +27,7 @@ export const OptionUI_Items: Array<OptionUI_Item> = [
             data: {
                 id: "ui_extSearchBox"
             },
-            hideButtons: ["all"],
+            hideButtons: "all",
         },
         location: {
             page: "search",
