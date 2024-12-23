@@ -6,6 +6,7 @@ import NavigateNextRoundedIcon from '@mui/icons-material/NavigateNextRounded';
 import { OptionUI_Page } from '../lib/type';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
 import { getOptionPageFromID } from '../lib/utils';
+import Link from './common/Link';
 
 const StyledBreadcrumbs = styled(Breadcrumbs)(({ theme }) => ({
     margin: theme.spacing(1, 0),
@@ -33,7 +34,9 @@ export default function NavbarBreadcrumbs(props: { page?: OptionUI_Page }) {
                 } else {
                     pageList.splice(0, 0,
                         <Typography variant="body1">
-                            {page?.title}
+                            <Link page={page.id} category="" id="" style={{color: "inherit"}}>
+                                {page?.title}
+                            </Link>
                         </Typography>
                     )
                 }

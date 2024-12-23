@@ -7,13 +7,8 @@ import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
 
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
 import ListItemIcon from '@mui/material/ListItemIcon';
-import ListSubheader from '@mui/material/ListSubheader';
 
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -27,6 +22,7 @@ import { FontAwseomeIcon } from '../../common/Icon';
 import { nt } from '../../../../../../utils/narou-tweaker';
 import { ModalSelection } from '../../common/Modal';
 import { PushSnackbar } from '../../common/Snackbar';
+import OptionInfo from './OptionInfo';
 
 export default function Buttons(props: OptionUI_ItemProps & { variant?: "dropdown" | "bottom" }) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -51,7 +47,7 @@ export default function Buttons(props: OptionUI_ItemProps & { variant?: "dropdow
         setAnchorEl(null);
     };
     let hideButtons = option.ui?.hideButtons ?? []
-    if(hideButtons==="all"){
+    if (hideButtons === "all") {
         hideButtons = ["favorite", "info", "reset"]
     }
 
@@ -209,7 +205,7 @@ export default function Buttons(props: OptionUI_ItemProps & { variant?: "dropdow
                         }
                     </Menu>
 
-                    <Button_Info option={option} debug={isDebug} open={isInfoOpen} setOpen={setIsInfoOpen} storage={storage} />
+                    <Button_Info option={option} storage={storage} open={isInfoOpen} setOpen={setIsInfoOpen} />
                     <Button_Reset open={isResetOpen} setOpen={setIsResetOpen} option={option} />
                 </Box>
             )
@@ -316,7 +312,7 @@ export default function Buttons(props: OptionUI_ItemProps & { variant?: "dropdow
                             <FontAwseomeIcon icon={{ icon: "circle-info", prefix: "solid" }} style={{ fontSize: "12px" }} />
                         </IconButton>
                     }
-                    <Button_Info option={option} debug={isDebug} open={isInfoOpen} setOpen={setIsInfoOpen} storage={storage} />
+                    <Button_Info option={option} open={isInfoOpen} setOpen={setIsInfoOpen} storage={storage} />
                     <Button_Reset open={isResetOpen} setOpen={setIsResetOpen} option={option} />
                 </Stack>
             )
@@ -327,74 +323,15 @@ export default function Buttons(props: OptionUI_ItemProps & { variant?: "dropdow
 
 function Button_Info(props: {
     option: OptionUI_Item,
-    debug?: boolean,
     storage: nt.storage.local.options
     open: boolean,
     setOpen: React.Dispatch<React.SetStateAction<boolean>>
 }) {
-    const [optionValue, setOptionValue] = React.useState<Record<string, any> | undefined>();
     const storage = props.storage
     const option = props.option
-    const id = option.id
-    const isDebug = props.debug
     const handleClose = () => {
         props.setOpen(false);
     };
-
-    if (storage !== undefined && (optionValue === undefined)) {
-        setOptionValue(storage.get(id))
-        nt.storage.local.changed(id, (changes) => {
-            if (changes[id]) {
-                var dict: Record<string, any> = {}
-                dict[id] = changes[id].newValue
-                setOptionValue(dict)
-            }
-        })
-    }
-
-    function ListElement(props: { key?: string, label: string, value?: string, copy?: boolean }) {
-        return (
-            <ListItem
-                key={props.key}
-                secondaryAction={
-                    props.copy && typeof props.value === "string" &&
-                    <IconButton
-                        edge="end"
-                        aria-label="copy"
-                        onClick={() => {
-                            if (typeof props.value === "string") {
-                                navigator.clipboard.writeText(props.value)
-                            }
-                        }}
-                        size='small'
-                        sx={{
-                            color: 'text.secondary'
-                        }}
-                    >
-                        <FontAwseomeIcon icon={{ icon: "copy", prefix: "solid" }} style={{ fontSize: "inherit", color: "inherit" }} />
-                    </IconButton>
-                }
-            >
-                <ListItemText
-                    primary={props.label}
-                    secondary={props.value}
-                    sx={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                        gap: 2,
-                        "& .MuiListItemText-primary": {
-                            width: "100px",
-                        },
-                        "& .MuiListItemText-secondary": {
-                            wordBreak: "break-all",
-                        }
-                    }}
-                />
-
-            </ListItem>
-        )
-    }
 
     return (
         <Dialog
@@ -402,6 +339,9 @@ function Button_Info(props: {
             aria-labelledby="customized-dialog-title"
             open={props.open}
             fullWidth
+            PaperProps={{
+                elevation: 1
+            }}
         >
             <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
                 設定項目の情報
@@ -419,57 +359,7 @@ function Button_Info(props: {
                 <FontAwseomeIcon icon={{ icon: "xmark", prefix: "solid" }} style={{ color: "inherit" }} />
             </IconButton>
             <DialogContent dividers>
-                <List
-                    sx={{
-                        width: '100%',
-                        bgcolor: 'background.paper',
-                        position: 'relative',
-                        overflow: 'auto',
-                        maxHeight: 300,
-                        '& ul': { padding: 0 },
-                        borderRadius: "12px",
-                        "& .MuiListSubheader-root": {
-                            fontWeight: "bold",
-                            borderBottom: "1px solid",
-                            borderTop: "1px solid",
-                            borderColor: "divider",
-                        }
-                    }}
-                    subheader={<li />}
-                >
-
-                    <li key={"section-root"}>
-                        <ul>
-                            <ListSubheader>基本</ListSubheader>
-                            <ListElement key="option-title" label="タイトル" value={option.title} copy />
-                            <ListElement key="option-id" label="ID" value={option.id} copy />
-                            <ListElement key="option-description-text" label="説明" value={option.description?.text} />
-                            {isDebug && option.description?.small && <ListElement key="option-description-small" label="説明（small）" value={option.description?.small} />}
-                            {isDebug && option.description?.attention && <ListElement key="option-description-attention" label="説明（attention）" value={option.description?.attention} />}
-                            {isDebug && option.description?.hidden && <ListElement key="option-description-hidden" label="説明（hidden）" value={option.description?.hidden} />}
-                            {isDebug && option.description?.keywords && <ListElement key="option-description-keywords" label="キーワード" value={option.description?.keywords?.join(", ")} />}
-                        </ul>
-                    </li>
-                    <li key={"section-value"}>
-                        <ul>
-                            <ListSubheader>データ</ListSubheader>
-                            <ListElement key="option-location-page" label="ページ" value={option.location.page} copy />
-                            <ListElement key="option-location-category" label="カテゴリ" value={option.location.category} copy />
-                            {option.location.parent && <ListElement key="option-location-parent" label="親設定項目" value={option.location.parent} copy />}
-                            <ListElement key="option-ui-type" label="UI種類" value={option.ui?.type} />
-                            {optionValue && optionValue[option.id] !== undefined && <ListElement key="storage" label="値" value={String(optionValue[option.id])} copy />}
-                        </ul>
-                    </li>
-                    <li key={"section-misc"}>
-                        <ul>
-                            <ListSubheader>その他</ListSubheader>
-                            <ListElement key="option-location-noindex" label="検索に表示" value={option.location.noindex ? "はい" : "いいえ"} />
-                            <ListElement key="option-value-is-advanced" label="高度な設定" value={option.value?.isAdvanced ? "はい" : "いいえ"} />
-                            <ListElement key="option-value-is-experimental" label="実験中の機能" value={option.value?.isExperimental ? "はい" : "いいえ"} />
-                            <ListElement key="option-value-is-debug" label="デバッグ機能" value={option.value?.isDebug ? "はい" : "いいえ"} />
-                        </ul>
-                    </li>
-                </List>
+                <OptionInfo storage={storage} option={option}/>
             </DialogContent>
             <DialogActions>
                 <Button variant="contained" onClick={handleClose} autoFocus>OK</Button>
@@ -487,9 +377,9 @@ function Button_Reset(props: {
 
     const warningMsg = () => {
         var related = option.value?.related
-        if(related === "children" || (option.ui?.type === "parent" && related === undefined)){
+        if (related === "children" || (option.ui?.type === "parent" && related === undefined)) {
             return "子項目もすべてリセットされます。"
-        }else{
+        } else {
             return
         }
     }

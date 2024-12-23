@@ -45,6 +45,7 @@ export function ModalSelection(props: {
             open={props.open}
             onClose={handleClose}
             PaperProps={{
+                elevation: 1,
                 component: 'form',
                 onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
                     event.preventDefault();

@@ -96,6 +96,7 @@ export interface OptionUI_Category {
 /**
  * オプションページのアイテム
  */
+export type OptionUI_Value_RequirementCompareMethods = "="|"!="|">"|"<"|">="|"<="|"in"|"of"|"include"
 export interface OptionUI_Item {
     id: OptionUI_ItemID
     title: string
@@ -130,7 +131,7 @@ export interface OptionUI_Item {
                  * `of`: `v`.includes(`storage`)  
                  * `include`: `storage`.includes(`v`)  
                  */
-                compare?: "="|"!="|">"|"<"|">="|"<="|"in"|"of"|"include"
+                compare?: OptionUI_Value_RequirementCompareMethods
             }>
         }
     }
@@ -239,6 +240,8 @@ export class OptionUI_Item_Number {
     forceStep?: boolean
     prefix?: string|OptionUI_FontAwesomeIcon
     suffix?: string|OptionUI_FontAwesomeIcon
+    button?: boolean
+    layout?: "default"|"wide"
 }
 
 export class OptionUI_Item_Slider extends OptionUI_Item_Number {

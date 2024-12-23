@@ -68,12 +68,11 @@ export function Search(props: OptionUI_ItemProps) {
                 }}
                 spacing={1}
             >
-                <Stack direction="row" sx={{ gap: 2 }}>
-                    <SearchBox width={{ xs: '100%', md: '40ch' }} />
+                <Stack direction="row" sx={{ gap: 1 }}>
+                    <SearchBox width={{ xs: '100%', md: '40ch' }} clear/>
                     <IconButton
                         size="small"
-                        aria-label="実験的な要素"
-                        aria-owns={open ? 'mouse-over-popover' : undefined}
+                        aria-label="ヘルプ"
                         aria-haspopup="true"
                         onClick={() => { setOpen(true) }}
                         sx={{ color: 'text.secondary' }}
@@ -98,6 +97,9 @@ export function Search(props: OptionUI_ItemProps) {
                 aria-labelledby="customized-dialog-title"
                 open={open}
                 fullWidth
+                PaperProps={{
+                    elevation: 1
+                }}
             >
                 <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
                     キーワード検索
@@ -117,6 +119,7 @@ export function Search(props: OptionUI_ItemProps) {
                 <DialogContent
                     dividers
                     sx={{
+                        borderBottom: "none",
                         ".MuiTypography-root": {
                             whiteSpace: "pre-wrap"
                         }
@@ -139,6 +142,11 @@ export function Search(props: OptionUI_ItemProps) {
                                 {rows.map((row, i) => (
                                     <TableRow
                                         key={i}
+                                        sx={{
+                                            "&:last-child > .MuiTableCell-root": {
+                                                borderBottom: "none"
+                                            }
+                                        }}
                                     >
                                         <TableCell component="th" scope="row">
                                             <Stack direction="column">

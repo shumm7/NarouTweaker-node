@@ -84,6 +84,30 @@ export const general_optionsList: Array<OptionUI_Item> = [
 
     /* データ (data) */
     {
+        id: "extDebugPage",
+        title: "デバッグページ",
+        description: {
+            text: "開発者向けのデバッグ機能",
+            small: "Ctrl + Alt + O",
+        },
+        ui: {
+            type: "custom",
+            data: {
+                layout: "wide",
+                id: "extDebugPage",
+            },
+            hideDivider: true,
+            hideButtons: "all",
+        },
+        location: {
+            hide: true,
+            page: "general",
+            category: "data",
+            noindex: true,
+        }
+    },
+
+    {
         id: "extExportOption",
         title: "設定をエクスポート",
         description: {

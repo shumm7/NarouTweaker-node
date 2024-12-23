@@ -3,11 +3,15 @@ import { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import FormControl from '@mui/material/FormControl';
 import InputAdornment from '@mui/material/InputAdornment';
+import IconButton from '@mui/material/IconButton';
 import OutlinedInput from '@mui/material/OutlinedInput';
-import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import { GetLocation } from './common/Link';
+import { FontAwseomeIcon } from './common/Icon';
 
-export default function Search(props: { width?: { xs: number | string, md: number | string } }) {
+export default function Search(props: {
+    width?: { xs: number | string, md: number | string },
+    clear?: boolean
+}) {
     const [searchParams, setSearchParams] = useSearchParams()
     const navigate = useNavigate()
     const location = useLocation()
@@ -65,7 +69,25 @@ export default function Search(props: { width?: { xs: number | string, md: numbe
                 sx={{ flexGrow: 1 }}
                 startAdornment={
                     <InputAdornment position="start" sx={{ color: 'text.primary' }}>
-                        <SearchRoundedIcon fontSize="small" />
+                        <FontAwseomeIcon icon={{ icon: "magnifying-glass", prefix: "solid" }} style={{ color: "inherit" }} />
+                    </InputAdornment>
+                }
+                endAdornment={
+                    props.clear &&
+                    <InputAdornment position="end" sx={{ color: 'text.secondary' }}>
+                        <IconButton
+                            size="small"
+                            aria-label="クリア"
+                            onClick={() => {
+                                var q = searchParams
+                                setValue("")
+                                q.delete("q")
+                                setSearchParams(q)
+                            }}
+                            sx={{ color: 'text.secondary' }}
+                        >
+                            <FontAwseomeIcon icon={{ icon: "xmark", prefix: "solid" }} style={{ color: "inherit", fontSize: "inherit" }} />
+                        </IconButton>
                     </InputAdornment>
                 }
                 inputProps={{

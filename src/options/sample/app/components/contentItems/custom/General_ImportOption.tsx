@@ -185,6 +185,7 @@ export default function ImportOption(props: OptionUI_ItemProps) {
                     open={modalOpen}
                     onClose={handleClose}
                     PaperProps={{
+                        elevation: 1,
                         component: 'form',
                         onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
                             event.preventDefault();

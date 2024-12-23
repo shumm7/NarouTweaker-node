@@ -19,11 +19,14 @@ import { FontAwseomeIcon } from '../common/Icon';
 
 import Patchnotes from './custom/About_Patchnotes';
 import Introduction from './custom/About_Introduction';
+import DebugPage from './custom/General_Debug';
 import ExportOption from './custom/General_ExportOption';
 import ImportOption from './custom/General_ImportOption';
 import FixOption from './custom/General_FixOption';
 import ResetOption from './custom/General_ResetOption';
 import Favorite from './custom/Favorite';
+import Novel_CorrectionReplacePatterns from './custom/Novel_CorrectionReplacePatterns';
+
 import { Search, SearchResult } from './custom/Search';
 
 
@@ -46,6 +49,8 @@ function CustomElement(props: OptionUI_ItemProps & { id: string }) {
             return <SearchResult {...props} />
 
         /* General */
+        case "extDebugPage":
+            return <DebugPage {...props} />
         case "extImportOption":
             return <ImportOption {...props} />
         case "extExportOption":
@@ -55,9 +60,14 @@ function CustomElement(props: OptionUI_ItemProps & { id: string }) {
         case "extResetOption":
             return <ResetOption {...props} />
 
+        /* Novel */
+        case "correctionReplacePatterns":
+            return <Novel_CorrectionReplacePatterns {...props} />
+
         /* Any */
         default:
-            return undefined
+            return <></>
+        //return undefined
     }
 }
 

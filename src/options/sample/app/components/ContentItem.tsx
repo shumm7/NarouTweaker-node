@@ -4,7 +4,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 
-import { OptionID, OptionUI_Item, OptionUI_ItemProps } from '../lib/type';
+import { OptionID, OptionUI_Item, OptionUI_ItemProps, OptionUI_Value_RequirementCompareMethods } from '../lib/type';
 import { nt } from '../../../../utils/narou-tweaker';
 import Option_Select from './contentItems/Option_Select';
 import Option_Switch from './contentItems/Option_Switch';
@@ -58,6 +58,49 @@ export default function ContentItem(props: OptionUI_ItemProps) {
     }
 }
 
+export function CheckRequirementCondition(storageValue: any, requirementValue: any, compare: OptionUI_Value_RequirementCompareMethods = "="){
+    switch(compare){
+        case "=":
+            return storageValue===requirementValue
+        case "!=":
+            return storageValue!==requirementValue
+        case ">":
+            if(typeof storageValue === "number" && typeof requirementValue === "number"){
+                return storageValue>requirementValue
+            }
+        case "<":
+            if(typeof storageValue === "number" && typeof requirementValue === "number"){
+                return storageValue<requirementValue
+            }
+        case ">=":
+            if(typeof storageValue === "number" && typeof requirementValue === "number"){
+                return storageValue>=requirementValue
+            }
+        case "<=":
+            if(typeof storageValue === "number" && typeof requirementValue === "number"){
+                return storageValue<=requirementValue
+            }
+        case "in":
+            if(typeof requirementValue === "string" && typeof storageValue === "object"){
+                return requirementValue in storageValue
+            }
+        case "of":
+            if(Array.isArray(requirementValue)){
+                return requirementValue.includes(storageValue)
+            }else if(typeof storageValue==="string" && typeof requirementValue==="string"){
+                return requirementValue.includes(storageValue)
+            }
+        case "include":
+            if(Array.isArray(storageValue)){
+                return storageValue.includes(requirementValue)
+            }else if(typeof storageValue==="string" && typeof requirementValue==="string"){
+                return storageValue.includes(requirementValue)
+            }
+        default:
+            return false
+    }
+}
+
 export function CheckShowElement(localOption: nt.storage.local.options, option: OptionUI_Item){
 
     if(option.ui?.showForce){
@@ -92,57 +135,7 @@ export function CheckShowElement(localOption: nt.storage.local.options, option: 
             const storageValue = localOption[p[i].id]
             const requirementValue = p[i].value
 
-            if(compare === "="){
-                conditions.push(storageValue===requirementValue)
-            }else if(compare === "!="){
-                conditions.push(storageValue!==requirementValue)
-            }else if(compare === ">"){
-                if(typeof storageValue === "number" && typeof requirementValue === "number"){
-                    conditions.push(storageValue>requirementValue)
-                }else{
-                    conditions.push(false)
-                }
-            }else if(compare === "<"){
-                if(typeof storageValue === "number" && typeof requirementValue === "number"){
-                    conditions.push(storageValue<requirementValue)
-                }else{
-                    conditions.push(false)
-                }
-            }else if(compare === ">="){
-                if(typeof storageValue === "number" && typeof requirementValue === "number"){
-                    conditions.push(storageValue>=requirementValue)
-                }else{
-                    conditions.push(false)
-                }
-            }else if(compare === "<="){
-                if(typeof storageValue === "number" && typeof requirementValue === "number"){
-                    conditions.push(storageValue<=requirementValue)
-                }else{
-                    conditions.push(false)
-                }
-            }else if(compare === "in"){
-                if(typeof requirementValue === "string" && typeof storageValue === "object"){
-                    conditions.push(requirementValue in storageValue)
-                }else{
-                    conditions.push(false)
-                }
-            }else if(compare === "of"){
-                if(Array.isArray(storageValue)){
-                    conditions.push(storageValue.includes(requirementValue))
-                }else if(typeof storageValue==="string" && typeof requirementValue==="string"){
-                    conditions.push(storageValue.includes(requirementValue))
-                }else{
-                    conditions.push(false)
-                }
-            }else if(compare ==="include"){
-                if(Array.isArray(requirementValue)){
-                    conditions.push(requirementValue.includes(storageValue))
-                }else if(typeof storageValue==="string" && typeof requirementValue==="string"){
-                    conditions.push(requirementValue.includes(storageValue))
-                }else{
-                    conditions.push(false)
-                }
-            }
+            conditions.push(CheckRequirementCondition(storageValue, requirementValue, compare))
         }
 
         if(conditions.length >= 1){

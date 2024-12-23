@@ -225,6 +225,33 @@ export namespace __nt_text__ {
     }
 
     /**
+     * 正規表現をテストする
+     * @param regex - 正規表現を含む文字列
+     * @returns - 正規表現が正常かどうか
+     */
+    export function checkRegex(regex: string): boolean {
+        try{
+            new RegExp(regex)
+            return true
+        }catch{
+            return false
+        }
+    }
+
+    /**
+     * 正規表現をテストする
+     * @param regex - 正規表現を含む文字列
+     * @returns - 正規表現が正常かどうか
+     */
+    export function checkRegexWithError(regex: string): string|void {
+        try{
+            new RegExp(regex)
+        }catch(e){
+            return String(e)
+        }
+    }
+
+    /**
      * CSSを縮小
      * @param css - CSS文字列
      * @returns minifyされたCSSを

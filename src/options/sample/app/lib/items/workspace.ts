@@ -237,7 +237,7 @@ export const workspace_optionsList: Array<OptionUI_Item> = [
         title: "「部分」表記へ変更",
         description: {
             text: "「エピソード(ep.)」の表記を「部分」に変更します。",
-            keywords: ["「えぴそーど」 → 「ぶぶん」ひょうき", "ブックマーク", "お気に入り"],
+            keywords: ["「ぶぶん」ひょうきへへんこう", "ブックマーク", "お気に入り"],
         },
         ui: {
             type: "switch",

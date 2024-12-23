@@ -11,6 +11,7 @@ import { __nt_workspace__ } from "./workspace"
 import { __nt_header__ } from "./header"
 
 import browser from "webextension-polyfill"
+import { __nt_font__ } from "./skin"
 
 
 
@@ -330,10 +331,10 @@ export namespace __nt_storage__ {
             /* Font */
             fontSelectedFontFamily: number = 0
             fontFontFamilyList: __nt_font_v1__.FontFamilies = []
-            fontFontSize: number = 0
-            fontLineHeight: number = 0
-            fontTextRendering: string = "optimizeLegibility"
-            fontWidth: number = 1
+            fontFontSize: number = __nt_font_v1__.localFont["font-size"]
+            fontLineHeight: number = __nt_font_v1__.localFont["line-height"]
+            fontTextRendering: string = __nt_font_v1__.localFont["text-rendering"]
+            fontWidth: number = __nt_font_v1__.localFont.width
 
             /* Correction */
             correctionIndent: boolean = false

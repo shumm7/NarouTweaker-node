@@ -466,6 +466,7 @@ const hide: Array<OptionUI_Page> = [
             prefix: "solid",
             icon: "bug"
         },
+        parent: "general",
         position: "hide",
         popup: false,
         defaultCategory: "general",

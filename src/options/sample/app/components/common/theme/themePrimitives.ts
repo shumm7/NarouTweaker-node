@@ -19,7 +19,7 @@ declare module '@mui/material/styles/createPalette' {
     900: string;
   }
 
-  interface PaletteColor extends ColorRange {}
+  interface PaletteColor extends ColorRange { }
 
   interface Palette {
     baseShadow: string;
@@ -143,9 +143,9 @@ export const getDesignTokens = (mode: PaletteMode) => {
         main: red[400],
         dark: red[800],
         ...(mode === 'dark' && {
-          light: red[400],
-          main: red[500],
-          dark: red[700],
+          light: "rgb(234, 83, 71)",
+          main: "rgb(229, 40, 26)",
+          dark: "rgb(160, 28, 18)",
         }),
       },
       success: {
@@ -161,7 +161,7 @@ export const getDesignTokens = (mode: PaletteMode) => {
       grey: {
         ...gray,
       },
-      divider: mode === 'dark' ? alpha(gray[700], 0.6) : alpha(gray[300], 0.4),
+      divider: mode === 'dark' ? alpha("rgb(255,255,255)", 0.12) : alpha(gray[300], 0.4),
       background: {
         default: 'hsl(0, 0%, 99%)',
         paper: 'hsl(220, 35%, 97%)',
@@ -309,9 +309,9 @@ export const colorSchemes = {
         dark: orange[700],
       },
       error: {
-        light: red[400],
-        main: red[500],
-        dark: red[700],
+        light: "rgb(234, 83, 71)",
+        main: "rgb(229, 40, 26)",
+        dark: "rgb(160, 28, 18)",
       },
       success: {
         light: green[400],
@@ -321,7 +321,7 @@ export const colorSchemes = {
       grey: {
         ...gray,
       },
-      divider: alpha(gray[700], 0.6),
+      divider: alpha("rgb(255,255,255)", 0.12),
       background: {
         default: gray[900],
         paper: 'hsl(220, 30%, 7%)',

@@ -69,8 +69,10 @@ export const novel_optionsList: Array<OptionUI_Item> = [
         },
         value: {
             requirement: {
+                condition: "or",
                 requirementParams: [
-                    { id: "novelCustomHeaderType", value: [1, 2, "1", "2"], compare: "of" }
+                    { id: "novelCustomHeaderType", value: [1, 2], compare: "of" },
+                    { id: "novelCustomHeaderType", value: ["1", "2"], compare: "of" }
                 ]
             },
         }
@@ -122,8 +124,10 @@ export const novel_optionsList: Array<OptionUI_Item> = [
         value: {
             related: ["novelCustomHeaderLeft", "novelCustomHeaderRight"],
             requirement: {
+                condition: "or",
                 requirementParams: [
-                    { id: "novelCustomHeaderType", value: [1, 2, "1", "2"], compare: "of" }
+                    { id: "novelCustomHeaderType", value: [1, 2], compare: "of" },
+                    { id: "novelCustomHeaderType", value: ["1", "2"], compare: "of" }
                 ]
             },
         }
@@ -143,8 +147,10 @@ export const novel_optionsList: Array<OptionUI_Item> = [
         value: {
             isAdvanced: true,
             requirement: {
+                condition: "or",
                 requirementParams: [
-                    { id: "novelCustomHeaderType", value: [1, 2, "1", "2"], compare: "of" }
+                    { id: "novelCustomHeaderType", value: [1, 2], compare: "of" },
+                    { id: "novelCustomHeaderType", value: ["1", "2"], compare: "of" }
                 ]
             },
         }
@@ -168,8 +174,10 @@ export const novel_optionsList: Array<OptionUI_Item> = [
         value: {
             isAdvanced: true,
             requirement: {
+                condition: "or",
                 requirementParams: [
-                    { id: "novelCustomHeaderType", value: [1, 2, "1", "2"], compare: "of" }
+                    { id: "novelCustomHeaderType", value: [1, 2], compare: "of" },
+                    { id: "novelCustomHeaderType", value: ["1", "2"], compare: "of" }
                 ]
             },
         },
@@ -194,8 +202,10 @@ export const novel_optionsList: Array<OptionUI_Item> = [
         value: {
             isAdvanced: true,
             requirement: {
+                condition: "or",
                 requirementParams: [
-                    { id: "novelCustomHeaderType", value: [1, 2, "1", "2"], compare: "of" }
+                    { id: "novelCustomHeaderType", value: [1, 2], compare: "of" },
+                    { id: "novelCustomHeaderType", value: ["1", "2"], compare: "of" }
                 ]
             },
         },
@@ -220,8 +230,10 @@ export const novel_optionsList: Array<OptionUI_Item> = [
         value: {
             isAdvanced: true,
             requirement: {
+                condition: "or",
                 requirementParams: [
-                    { id: "novelCustomHeaderType", value: [1, 2, "1", "2"], compare: "of" }
+                    { id: "novelCustomHeaderType", value: [1, 2], compare: "of" },
+                    { id: "novelCustomHeaderType", value: ["1", "2"], compare: "of" }
                 ]
             },
         },
@@ -245,8 +257,10 @@ export const novel_optionsList: Array<OptionUI_Item> = [
         value: {
             isAdvanced: true,
             requirement: {
+                condition: "or",
                 requirementParams: [
-                    { id: "novelCustomHeaderType", value: [1, 2, "1", "2"], compare: "of" }
+                    { id: "novelCustomHeaderType", value: [1, 2], compare: "of" },
+                    { id: "novelCustomHeaderType", value: ["1", "2"], compare: "of" }
                 ]
             },
         },
@@ -616,11 +630,14 @@ export const novel_optionsList: Array<OptionUI_Item> = [
             keywords: ["もじさいず", "レイアウト", "外観", "フォント", "大きさ"],
         },
         ui: {
-            type: "custom",
+            type: "number",
             data: {
-                id: "ui_novelFontSizeInput"
+                step: 10,
+                max: 300,
+                min: 50,
+                suffix: "%",
+                button: true,
             },
-            hideButtons: ["reset"],
         },
         location: {
             page: "novel",
@@ -636,11 +653,14 @@ export const novel_optionsList: Array<OptionUI_Item> = [
             keywords: ["ぎょうかん", "レイアウト", "外観", "フォント", "行間", "幅"],
         },
         ui: {
-            type: "custom",
+            type: "number",
             data: {
-                id: "ui_novelFontLineHeightInput"
+                step: 10,
+                max: 300,
+                min: 50,
+                suffix: "%",
+                button: true,
             },
-            hideButtons: ["reset"],
         },
         location: {
             page: "novel",
@@ -656,11 +676,14 @@ export const novel_optionsList: Array<OptionUI_Item> = [
             keywords: ["よこはば", "レイアウト", "外観", "フォント", "横幅", "幅"],
         },
         ui: {
-            type: "custom",
+            type: "number",
             data: {
-                id: "ui_novelFontWidthInput"
+                step: 10,
+                max: 1000,
+                min: 0,
+                suffix: "px",
+                button: true,
             },
-            hideButtons: ["reset"],
         },
         location: {
             page: "novel",
@@ -1232,16 +1255,14 @@ export const novel_optionsList: Array<OptionUI_Item> = [
         title: "置換",
         description: {
             text: "任意の文字列を置換します。 ",
-            small: "・「＋」ボタンをクリックすると、置換パターンを追加します。追加されたパターンは上から順番に適用されます。\n・「＊」アイコンをオンにすると正規表現が利用できます。\n・「●」アイコンで置換の有効/無効を切り替えることができます。",
             keywords: ["ちかん", "置換", "置き換え", "文章校正", "正規表現"],
         },
         ui: {
             type: "custom",
             data: {
-                id: "ui_correctionReplacePatternList",
+                id: "correctionReplacePatterns",
                 layout: "wide",
-            },
-            hideButtons: ["favorite"]
+            }
         },
         location: {
             page: "novel",
