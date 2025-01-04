@@ -32,7 +32,8 @@ export const debug_optionsList: Array<OptionUI_Item> =  [
         ui: {
             type: "custom",
             data: {
-                id: "ui_extDebug_OptionList"
+                id: "extDebug_ShowOption",
+                layout: "wide"
             },
             hideButtons: ["reset"],
         },
@@ -56,7 +57,8 @@ export const debug_optionsList: Array<OptionUI_Item> =  [
         ui: {
             type: "custom",
             data: {
-                id: "ui_extDebug_InsertOptionForm"
+                id: "extDebug_InsertOption",
+                layout: "wide",
             },
             hideButtons: ["reset"],
         },

@@ -108,6 +108,21 @@ function _checkLocalValue(key: OptionID, value: any): any {
             if ((src === "internal" || src === "local") && typeof key === "number" && isFinite(key)) {
                 return { src: src, key: key }
             }
+        } else if( "correctionReplacePatterns" === key) {
+            var ret: __nt_storage__.local.ReplacePatterns = []
+            if (Array.isArray(value)) {
+                for (let i = 0; i < value.length; i++) {
+                    const active = "active" in value[i] ? value[i].active : undefined
+                    const regex = "regex" in value[i] ? value[i].regex : undefined
+                    const pattern = "pattern" in value[i] ? value[i].pattern : undefined
+                    const replacement = "replacement" in value[i] ? value[i].replacement : undefined
+
+                    if(typeof active === "boolean" && typeof regex === "boolean" && typeof pattern === "string" && typeof replacement === "string"){
+                        ret.push({active, regex, pattern, replacement})
+                    }
+                }
+            }
+            return ret
         }
         return value
     }

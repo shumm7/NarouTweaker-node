@@ -469,6 +469,7 @@ const hide: Array<OptionUI_Page> = [
         parent: "general",
         position: "hide",
         popup: false,
+        hideToc: "hide",
         defaultCategory: "general",
         categories: [
             {

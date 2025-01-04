@@ -16,6 +16,7 @@ import Option_Header from './Option_Header';
 import { OptionUI_ItemProps } from "../../lib/type"
 import { nt } from '../../../../../utils/narou-tweaker';
 import { FontAwseomeIcon } from '../common/Icon';
+import { Search, SearchResult } from './custom/Search';
 
 import Patchnotes from './custom/About_Patchnotes';
 import Introduction from './custom/About_Introduction';
@@ -25,10 +26,12 @@ import ImportOption from './custom/General_ImportOption';
 import FixOption from './custom/General_FixOption';
 import ResetOption from './custom/General_ResetOption';
 import Favorite from './custom/Favorite';
+import Debug_ShowOption from './custom/Debug_ShowOption';
+import Debug_InsertOption from './custom/Debug_InsertOption';
 import Novel_CorrectionReplacePatterns from './custom/Novel_CorrectionReplacePatterns';
-
-import { Search, SearchResult } from './custom/Search';
-
+import Novel_CustomHeader from './custom/Novel_CustomHeader';
+import Workspace_CustomHeader from './custom/Workspace_CustomHeader';
+import Workspace_CustomMenu from './custom/Workspace_CustomMenu';
 
 function CustomElement(props: OptionUI_ItemProps & { id: string }) {
     switch (props.id) {
@@ -60,9 +63,23 @@ function CustomElement(props: OptionUI_ItemProps & { id: string }) {
         case "extResetOption":
             return <ResetOption {...props} />
 
+        /* Debug */
+        case "extDebug_ShowOption":
+            return <Debug_ShowOption {...props} />
+        case "extDebug_InsertOption":
+            return <Debug_InsertOption {...props} />
+
         /* Novel */
+        case "novelCustomHeaderData":
+            return <Novel_CustomHeader {...props} />
         case "correctionReplacePatterns":
             return <Novel_CorrectionReplacePatterns {...props} />
+
+        /* Workspace */
+        case "workspaceCustomHeader":
+            return <Workspace_CustomHeader {...props} />
+        case "workspaceCustomMenu":
+            return <Workspace_CustomMenu {...props} />
 
         /* Any */
         default:

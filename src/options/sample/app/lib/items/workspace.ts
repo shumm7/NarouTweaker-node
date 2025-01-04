@@ -14,7 +14,8 @@ export const workspace_optionsList: Array<OptionUI_Item> = [
         ui: {
             type: "custom",
             data: {
-                id: "ui_workspaceCustomHeaderDraggable"
+                id: "workspaceCustomHeader",
+                layout: "wide",
             },
         },
         location: {
@@ -33,7 +34,8 @@ export const workspace_optionsList: Array<OptionUI_Item> = [
         ui: {
             type: "custom",
             data: {
-                id: "ui_workspaceCustomHeaderMenuDraggable"
+                id: "workspaceCustomMenu",
+                layout: "wide",
             },
         },
         location: {

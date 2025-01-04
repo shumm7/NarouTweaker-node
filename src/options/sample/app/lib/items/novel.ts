@@ -114,7 +114,8 @@ export const novel_optionsList: Array<OptionUI_Item> = [
         ui: {
             type: "custom",
             data: {
-                id: "ui_novelCustomHeaderDraggable",
+                id: "novelCustomHeaderData",
+                layout: "wide",
             }
         },
         location: {
