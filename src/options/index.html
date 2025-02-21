@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>環境設定 ｜ Narou Tweaker</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+	<base target="_blank">
+	<link rel="stylesheet" type="text/css" href="../common.css">
+	<link rel="stylesheet" type="text/css" href="main.css">
+	<link rel="icon" href="../../assets/icons/favicon.ico" sizes="32x32">
+	<link rel="icon" href="../../assets/icons/app-icon.png" type="image/png" sizes="128x128">
+	<link rel="apple-touch-icon" href="../../assets/icons/apple-touch-icon.png">
+	<link rel="manifest" href="../../assets/icons/manifest.webmanifest">
+	<script src="index.tsx" type="module"></script>
+</head>
+
+<body>
+	<div id="js-failed">
+		JavaScript failed to load. Your development build failed or your browser has some issue.
+	</div>
+</body>
+<style>
+	#js-failed {
+		display: none;
+		color: red;
+		font-weight: bold;
+		animation: late-open 0.5s ease-in 5s forwards;
+	}
+
+	/* late-open = display: block; */
+	@keyframes late-open {
+		to {
+			display: block;
+		}
+	}
+</style>
+
+</html>

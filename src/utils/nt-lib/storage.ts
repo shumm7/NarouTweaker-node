@@ -1,5 +1,5 @@
-import { getOptionFromID, getOptionPageFromID } from "../../options/sample/app/lib/utils"
-import { OptionID, OptionUI_Item, OptionUI_ItemID } from "../../options/sample/app/lib/type"
+import { getOptionFromID, getOptionPageFromID } from "../../options/app/lib/utils"
+import { OptionID, OptionUI_Item, OptionUI_ItemID } from "../../options/app/lib/type"
 
 import { __nt_text__ } from "./utils"
 import { __nt_extension__ } from "./process"
@@ -18,111 +18,129 @@ import { __nt_font__ } from "./skin"
 function _checkLocalValue(key: OptionID, value: any): any {
     var opt = new __nt_storage__.local.options()
     if (typeof opt[key] === typeof value && typeof opt[key] !== "function") {
-        if (key === "extOptionsVersion") {
-            return
-        } else if (["kasasagiGraphType_GeneralDay", "kasasagiGraphType_GeneralTotal", "kasasagiGraphType_ChapterUnique", "kasasagiGraphType_DayPV", "kasasagiGraphType_DayUnique", "kasasagiGraphType_MonthPV", "kasasagiGraphType_MonthUnique"].includes(key)) {
-            if (!["bar", "line"].includes(value)) {
+        switch (key) {
+            case "extOptionsVersion":
                 return
-            }
-        } else if (["novelCustomHeaderMode", "workspaceCustomHeaderMode"].includes(key)) {
-            if (!["absolute", "fixed", "scroll"].includes(value)) {
+            case "kasasagiGraphType_GeneralDay":
+            case "kasasagiGraphType_GeneralTotal":
+            case "kasasagiGraphType_ChapterUnique":
+            case "kasasagiGraphType_DayUnique":
+            case "kasasagiGraphType_DayPV":
+            case "kasasagiGraphType_MonthPV":
+            case "kasasagiGraphType_MonthUnique":
+                if (["bar", "line"].includes(value)) {
+                    break
+                }
                 return
-            }
-        }
-        else if (key === "correctionNumberShort" || key === "correctionNumberLong" || key === "correctionNumberSymbol") {
-            if (!["default", "half", "full", "kanji"].includes(value)) {
+            case "novelCustomHeaderMode":
+            case "workspaceCustomHeaderMode":
+                if (["absolute", "fixed", "scroll"].includes(value)) {
+                    break
+                }
                 return
-            }
-        } else if (["novelCustomHeaderLeft", "novelCustomHeaderRight"].includes(key)) {
-            if (!Array.isArray(value)) { return }
-
-            var list: Array<__nt_header__.iconId> = []
-            value.forEach(function (id) {
-                if (id in __nt_header__.novelIconList) {
-                    list.push(id)
+            case "correctionNumberShort":
+            case "correctionNumberLong":
+            case "correctionNumberSymbol":
+                if (["default", "half", "full", "kanji"].includes(value)) {
+                    break
                 }
-            })
-            return list
-        } else if ("workspaceCustomHeader" === key) {
-            if (!Array.isArray(value)) { return }
+                return
+            case "novelCustomHeaderLeft":
+            case "novelCustomHeaderRight":
+                if (!Array.isArray(value)) { return }
 
-            var list: Array<__nt_header__.iconId> = []
-            value.forEach(function (id) {
-                if (id in __nt_header__.workspaceIconList) {
-                    list.push(id)
-                }
-            })
-            return list
-
-        } else if (["workspaceCustomMenu_Left", "workspaceCustomMenu_Middle", "workspaceCustomMenu_Right"].includes(key)) {
-            if (!Array.isArray(value)) { return }
-
-            var list: Array<__nt_header__.iconId> = []
-            value.forEach(function (id) {
-                if (id in __nt_header__.workspaceMenuIconList) {
-                    list.push(id)
-                }
-            })
-            return list
-        } else if ("extFavoriteOptions" === key) {
-            if (Array.isArray(value)) {
-                var list: Array<OptionUI_ItemID> = []
-                value.forEach(function (option) {
-                    var optionData: OptionUI_Item | undefined = getOptionFromID(option)
-                    if (optionData!==undefined && !optionData.ui?.hideButtons?.includes("favorite") && optionData.ui?.hideButtons !== "all") {
-                        list.push(optionData.id)
+                var list: Array<__nt_header__.iconId> = []
+                value.forEach(function (id) {
+                    if (id in __nt_header__.novelIconList) {
+                        list.push(id)
                     }
                 })
-                var listNoDuplicate = list.filter((e, i) => {
-                    return list.indexOf(e) == i;
+                return list
+            case "workspaceCustomHeader":
+                if (!Array.isArray(value)) { return }
+
+                var list: Array<__nt_header__.iconId> = []
+                value.forEach(function (id) {
+                    if (id in __nt_header__.workspaceIconList) {
+                        list.push(id)
+                    }
                 })
-                return listNoDuplicate
-            }
-            return
-        } else if ("extPopupDefaultPage" === key) {
-            if (value !== "__auto__") {
-                var page = getOptionPageFromID(value)
-                if (page?.popup && (page?.type==="page" || page?.type===undefined) && page?.title) {
+                return list
+            case "workspaceCustomMenu_Left":
+            case "workspaceCustomMenu_Middle":
+            case "workspaceCustomMenu_Right":
+                if (!Array.isArray(value)) { return }
+
+                var list: Array<__nt_header__.iconId> = []
+                value.forEach(function (id) {
+                    if (id in __nt_header__.workspaceMenuIconList) {
+                        list.push(id)
+                    }
+                })
+                return list
+            case "extFavoriteOptions":
+                if (Array.isArray(value)) {
+                    var list: Array<OptionUI_ItemID> = []
+                    value.forEach(function (option) {
+                        var optionData: OptionUI_Item | undefined = getOptionFromID(option)
+                        if (optionData !== undefined && !optionData.ui?.hideButtons?.includes("favorite") && optionData.ui?.hideButtons !== "all") {
+                            list.push(optionData.id)
+                        }
+                    })
+                    var listNoDuplicate = list.filter((e, i) => {
+                        return list.indexOf(e) == i;
+                    })
+                    return listNoDuplicate
+                }
+                return
+            case "extPopupDefaultPage":
+                if (value !== "__auto__") {
+                    var page = getOptionPageFromID(value)
+                    if (page?.popup && (page?.type === "page" || page?.type === undefined) && page?.title) {
+                        return value
+                    } else {
+                        return
+                    }
+                } else {
                     return value
-                }else{
-                    return
                 }
-            }else{
-                return value
-            }
-        } else if ("novelSkinsAvailable" === key) {
-            if (Array.isArray(value)) {
-                var p: Array<__nt_skin_v2__.AvailableSkin> = []
-                for (let i = 0; i < value.length; i++) {
-                    const src = value[i]?.src
-                    const key = value[i]?.key
-                    if ((src === "internal" || src === "local") && typeof key === "number" && isFinite(key)) {
-                        p.push(value[i])
+            case "novelSkinsAvailable":
+                if (Array.isArray(value)) {
+                    var p: Array<__nt_skin_v2__.AvailableSkin> = []
+                    for (let i = 0; i < value.length; i++) {
+                        const src = value[i]?.src
+                        const key = value[i]?.key
+                        if ((src === "internal" || src === "local") && typeof key === "number" && isFinite(key)) {
+                            p.push(value[i])
+                        }
                     }
+                    return p
                 }
-                return p
-            }
-        } else if ("novelSkinSelected" === key) {
-            const src = value?.src
-            const key = value?.key
-            if ((src === "internal" || src === "local") && typeof key === "number" && isFinite(key)) {
-                return { src: src, key: key }
-            }
-        } else if( "correctionReplacePatterns" === key) {
-            var ret: __nt_storage__.local.ReplacePatterns = []
-            if (Array.isArray(value)) {
-                for (let i = 0; i < value.length; i++) {
-                    const active = "active" in value[i] ? value[i].active : undefined
-                    const regex = "regex" in value[i] ? value[i].regex : undefined
-                    const pattern = "pattern" in value[i] ? value[i].pattern : undefined
-                    const replacement = "replacement" in value[i] ? value[i].replacement : undefined
+                return
+            case "novelSkinSelected":
+                const src = value?.src
+                const key = value?.key
+                if ((src === "internal" || src === "local") && typeof key === "number" && isFinite(key)) {
+                    return { src: src, key: key }
+                }
+                return
+            case "correctionReplacePatterns":
+                var ret: __nt_storage__.local.ReplacePatterns = []
+                if (Array.isArray(value)) {
+                    for (let i = 0; i < value.length; i++) {
+                        const active = "active" in value[i] ? value[i].active : undefined
+                        const regex = "regex" in value[i] ? value[i].regex : undefined
+                        const pattern = "pattern" in value[i] ? value[i].pattern : undefined
+                        const replacement = "replacement" in value[i] ? value[i].replacement : undefined
 
-                    if(typeof active === "boolean" && typeof regex === "boolean" && typeof pattern === "string" && typeof replacement === "string"){
-                        ret.push({active, regex, pattern, replacement})
+                        if (typeof active === "boolean" && typeof regex === "boolean" && typeof pattern === "string" && typeof replacement === "string") {
+                            ret.push({ active, regex, pattern, replacement })
+                        }
                     }
                 }
-            }
-            return ret
+                return ret
+            default:
+                break
         }
         return value
     }
@@ -177,6 +195,36 @@ function _checkSessionValue(key: OptionID, value: any): any {
 
 
 export namespace __nt_storage__ {
+
+    /**
+     * storageの不要なパラメータをフォーマットする
+     * @param {bool} _fixLocal - nt.storage.localをフォーマットする
+     * @param {bool} _fixSync - nt.storage.syncをフォーマットする
+     */
+    export function fixOption(_fixLocal: boolean = false, _fixSync: boolean = false) {
+        if (_fixLocal) {
+            local.get(null).then((data) => {
+                var option = new local.options(data).get()
+                local.clear().then(() => {
+                    local.set(option).then(function () {
+                        console.log("Fixed option data (local).", option)
+                    })
+                })
+            })
+        }
+
+        if (_fixSync) {
+            sync.get(null).then((data) => {
+                var option = new sync.options(data).get()
+                sync.clear().then(() => {
+                    sync.set(option).then(function () {
+                        console.log("Fixed option data (sync).", option)
+                    })
+                })
+            })
+        }
+    }
+
     export namespace local {
         /**
          * 設定データ（storage.local）

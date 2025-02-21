@@ -1,6 +1,7 @@
 import { resolve } from 'node:path';
 import { defineConfig } from 'vite';
 import { crx, defineManifest } from '@crxjs/vite-plugin'
+import tsconfigPaths from 'vite-tsconfig-paths'
 import react from '@vitejs/plugin-react';
 
 export default defineConfig(({ mode }) => {
@@ -8,6 +9,7 @@ export default defineConfig(({ mode }) => {
     return {
         root: "src",
         plugins: [
+            tsconfigPaths(),
             react(),
             crx({ manifest: manifest }),
         ],
@@ -23,17 +25,8 @@ export default defineConfig(({ mode }) => {
             emptyOutDir: true,
             rollupOptions: {
                 input: {
-                    "options/favorite/main": resolve(__dirname, 'src/options/favorite/index.html'),
-                    "options/general/main": resolve(__dirname, 'src/options/general/index.html'),
-                    "options/kasasagi/main": resolve(__dirname, 'src/options/kasasagi/index.html'),
-                    "options/mitemin/main": resolve(__dirname, 'src/options/mitemin/index.html'),
-                    "options/mypage/main": resolve(__dirname, 'src/options/mypage/index.html'),
-                    "options/narou/main": resolve(__dirname, 'src/options/narou/index.html'),
-                    "options/novel/main": resolve(__dirname, 'src/options/novel/index.html'),
-                    "options/popup/main": resolve(__dirname, 'src/options/popup/index.html'),
-                    "options/search/main": resolve(__dirname, 'src/options/search/index.html'),
-                    "options/workspace/main": resolve(__dirname, 'src/options/workspace/index.html'),
-                    "options/youmou/main": resolve(__dirname, 'src/options/yomou/index.html'),
+                    "options/main": resolve(__dirname, 'src/options/index.html'),
+                    "options/popup": resolve(__dirname, 'src/options/popup/index.html'),
                 },
                 output: {
                     entryFileNames: '[name].js',
@@ -69,15 +62,15 @@ const manifest = defineManifest({
         service_worker: "background/background.ts",
         type: "module"
     },
-    options_page: "options/sample/index.html",
-    options_ui: "options/sample/index.html",
+    options_page: "options/index.html",
+    options_ui: "options/index.html",
     action: {
         default_icon: {
             "16": "assets/icons/icon_16.png",
             "24": "assets/icons/icon_24.png",
             "32": "assets/icons/icon_32.png"
         },
-        default_title: "__MSG_extName__の設定画面を開く",
+        default_title: "設定画面を開く",
         default_popup: "options/popup/index.html",
     },
     permissions: [

@@ -1,5 +1,4 @@
 import { nt } from "../utils/narou-tweaker"
-import { fixOption } from "../options/utils/optionUI_utils"
 import { messageListener } from "./_process"
 import { skinListener } from "./_skin"
 import { yomouCssListener } from "./_yomou"
@@ -8,7 +7,7 @@ import { yomouCssListener } from "./_yomou"
 chrome.runtime.onInstalled.addListener((details) => {
     if(details.reason === "update"){ // updated
         console.log("Updated: fixing option...")
-        fixOption(true, true)
+        nt.storage.fixOption(true, true)
 
         const version = nt.extension.version
         if(details.previousVersion !== version){
@@ -35,7 +34,7 @@ chrome.runtime.onInstalled.addListener((details) => {
         }
     }else if(details.reason === "install"){ // installed
         console.log("Updated: fixing option...")
-        fixOption(true, true)
+        nt.storage.fixOption(true, true)
     }
 })
 
