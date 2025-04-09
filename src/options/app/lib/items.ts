@@ -1,17 +1,16 @@
-import { general_optionsList } from "./items/general";
-import { narou_optionsList } from "./items/narou";
-import { novel_optionsList } from "./items/novel";
-import { yomou_optionsList } from "./items/yomou";
-import { workspace_optionsList } from "./items/workspace";
-import { mypage_optionsList } from "./items/mypage";
-import { mitemin_optionsList } from "./items/mitemin";
-import { kasasagi_optionsList } from "./items/kasasagi";
+import { general_optionsList } from "./items/general"
+import { narou_optionsList } from "./items/narou"
+import { novel_optionsList } from "./items/novel"
+import { yomou_optionsList } from "./items/yomou"
+import { workspace_optionsList } from "./items/workspace"
+import { mypage_optionsList } from "./items/mypage"
+import { mitemin_optionsList } from "./items/mitemin"
 
-import { OptionUI_Item } from "./type";
+import { OptionUI_Item } from "./type"
 
-import { test_optionsList } from "./items/test";
-import { misc_optionsList } from "./items/misc";
-import { debug_optionsList } from "./items/debug";
+import { test_optionsList } from "./items/test"
+import { misc_optionsList } from "./items/misc"
+import { debug_optionsList } from "./items/debug"
 
 export const OptionUI_Items: Array<OptionUI_Item> = [
     /* 検索 */
@@ -20,12 +19,12 @@ export const OptionUI_Items: Array<OptionUI_Item> = [
         title: "検索",
         description: {
             text: "キーワードを入力してください",
-            small: "・スペース区切りでAND検索ができます。<br>・「\"◯◯\"」と括ると完全一致する語句を検索します。<br>・「-◯◯」で特定の語句を除外します。"
+            small: '・スペース区切りでAND検索ができます。<br>・「"◯◯"」と括ると完全一致する語句を検索します。<br>・「-◯◯」で特定の語句を除外します。',
         },
         ui: {
             type: "custom",
             data: {
-                id: "ui_extSearchBox"
+                id: "ui_extSearchBox",
             },
             hideButtons: "all",
         },
@@ -47,7 +46,7 @@ export const OptionUI_Items: Array<OptionUI_Item> = [
 
     /* 小説ページ */
     ...novel_optionsList,
-    
+
     /* 小説を読もう！ */
     ...yomou_optionsList,
 
@@ -59,9 +58,6 @@ export const OptionUI_Items: Array<OptionUI_Item> = [
 
     /* みてみん */
     ...mitemin_optionsList,
-
-    /* アクセス解析 */
-    ...kasasagi_optionsList,
 
     /* デバッグ */
     ...debug_optionsList,

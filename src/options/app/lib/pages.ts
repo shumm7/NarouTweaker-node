@@ -1,4 +1,4 @@
-import { OptionUI_Page } from "./type";
+import { OptionUI_Page } from "./type"
 
 const top: Array<OptionUI_Page> = [
     {
@@ -17,35 +17,35 @@ const top: Array<OptionUI_Page> = [
         categories: [
             {
                 title: "Switch",
-                id: "switch"
+                id: "switch",
             },
             {
                 title: "Checkbox",
-                id: "checkbox"
+                id: "checkbox",
             },
             {
                 title: "Select",
-                id: "select"
+                id: "select",
             },
             {
                 title: "Radio",
-                id: "radio"
+                id: "radio",
             },
             {
                 title: "Slider",
-                id: "slider"
+                id: "slider",
             },
             {
                 title: "TextArea",
-                id: "textarea"
+                id: "textarea",
             },
             {
                 title: "Code",
-                id: "code"
+                id: "code",
             },
             {
                 title: "Text Field",
-                id: "textfield"
+                id: "textfield",
             },
         ],
     },
@@ -56,7 +56,7 @@ const top: Array<OptionUI_Page> = [
         id: "general",
         icon: {
             prefix: "solid",
-            icon: "gear"
+            icon: "gear",
         },
         position: "top",
         popup: true,
@@ -66,27 +66,28 @@ const top: Array<OptionUI_Page> = [
                 title: "基本設定",
                 id: "config",
                 description: {
-                    text: "Narou Tweaker全体に影響する設定を変更します。"
-                }
+                    text: "Narou Tweaker全体に影響する設定を変更します。",
+                },
             },
             {
                 title: "設定データ",
                 id: "data",
                 description: {
                     text: "Narou Tweakerの設定データを変更します。",
-                    attention: "すべての設定がリセットされる場合があります。操作にはご注意ください。"
-                }
-            }
-        ]
+                    attention:
+                        "すべての設定がリセットされる場合があります。操作にはご注意ください。",
+                },
+            },
+        ],
     },
-    
+
     {
         title: "お気に入り",
         description: "お気に入りのオプションを登録できます。",
         id: "favorite",
         icon: {
             prefix: "solid",
-            icon: "heart"
+            icon: "heart",
         },
         position: "top",
         popup: true,
@@ -114,7 +115,7 @@ const top: Array<OptionUI_Page> = [
         id: "narou",
         icon: {
             prefix: "solid",
-            icon: "house"
+            icon: "house",
         },
         popup: true,
         targetUrl: ["*.syosetu.com", "eparet.net"],
@@ -124,10 +125,10 @@ const top: Array<OptionUI_Page> = [
                 title: "全般",
                 id: "general",
                 description: {
-                    text: "小説家になろうの全般に影響する設定を変更します。"
-                }
+                    text: "小説家になろうの全般に影響する設定を変更します。",
+                },
             },
-        ]
+        ],
     },
     {
         title: "小説ページ",
@@ -135,25 +136,30 @@ const top: Array<OptionUI_Page> = [
         id: "novel",
         icon: {
             prefix: "solid",
-            icon: "book"
+            icon: "book",
         },
         popup: true,
-        targetUrl: ["ncode.syosetu.com", "novelcom.syosetu.com", "novel18.syosetu.com", "novelcom18.syosetu.com"],
+        targetUrl: [
+            "ncode.syosetu.com",
+            "novelcom.syosetu.com",
+            "novel18.syosetu.com",
+            "novelcom18.syosetu.com",
+        ],
         defaultCategory: "general",
         categories: [
             {
                 title: "全般",
                 id: "general",
                 description: {
-                    text: "小説ページ全体に影響する設定を変更します。"
-                }
+                    text: "小説ページ全体に影響する設定を変更します。",
+                },
             },
             {
                 title: "本文",
                 id: "novel",
                 description: {
-                    text: "本文ページに影響する設定を変更します。"
-                }
+                    text: "本文ページに影響する設定を変更します。",
+                },
             },
             {
                 title: "スキン",
@@ -161,7 +167,7 @@ const top: Array<OptionUI_Page> = [
                 description: {
                     text: "ページの外観を変更します。",
                     small: "これらの設定は、小説ページ内から直接変更できます。",
-                }
+                },
             },
             {
                 title: "書体",
@@ -169,7 +175,7 @@ const top: Array<OptionUI_Page> = [
                 description: {
                     text: "フォントや行間などの文章レイアウトを変更します。",
                     small: "これらの設定は、小説ページ内から直接変更できます。",
-                }
+                },
             },
             {
                 title: "文章校正",
@@ -177,9 +183,9 @@ const top: Array<OptionUI_Page> = [
                 description: {
                     text: "小説本文を指定した方法で校正します。",
                     small: "これらの設定は、小説ページ内から直接変更できます。",
-                }
+                },
             },
-        ]
+        ],
     },
     {
         title: "小説を読もう！",
@@ -187,7 +193,7 @@ const top: Array<OptionUI_Page> = [
         id: "yomou",
         icon: {
             prefix: "solid",
-            icon: "crown"
+            icon: "crown",
         },
         popup: true,
         targetUrl: ["yomou.syosetu.com", "noc.syosetu.com", "mnlt.syosetu.com", "mid.syosetu.com"],
@@ -197,17 +203,17 @@ const top: Array<OptionUI_Page> = [
                 title: "ランキング",
                 id: "rank",
                 description: {
-                    text: "ランキング全般の設定を変更します。"
-                }
+                    text: "ランキング全般の設定を変更します。",
+                },
             },
             {
                 title: "ランキング（トップ）",
                 id: "ranktop",
                 description: {
-                    text: "ランキングのトップページの設定を変更します。"
-                }
+                    text: "ランキングのトップページの設定を変更します。",
+                },
             },
-        ]
+        ],
     },
     {
         title: "ユーザページ",
@@ -215,7 +221,7 @@ const top: Array<OptionUI_Page> = [
         id: "workspace",
         icon: {
             prefix: "solid",
-            icon: "fa-pen-nib"
+            icon: "fa-pen-nib",
         },
         popup: true,
         targetUrl: ["syosetu.com"],
@@ -225,38 +231,38 @@ const top: Array<OptionUI_Page> = [
                 title: "全般",
                 id: "general",
                 description: {
-                    text: "ユーザページの全体に影響する設定を変更します。"
-                }
+                    text: "ユーザページの全体に影響する設定を変更します。",
+                },
             },
             {
                 title: "小説管理",
                 id: "manage",
                 description: {
-                    text: "小説の管理画面を変更します。"
-                }
+                    text: "小説の管理画面を変更します。",
+                },
             },
             {
                 title: "エディタ",
                 id: "editor",
                 description: {
-                    text: "小説の編集画面を変更します。"
-                }
+                    text: "小説の編集画面を変更します。",
+                },
             },
             {
                 title: "お気に入り",
                 id: "favorite",
                 description: {
-                    text: "ブックマークやお気に入りユーザの設定を変更します。"
-                }
+                    text: "ブックマークやお気に入りユーザの設定を変更します。",
+                },
             },
             {
                 title: "リアクション",
                 id: "reaction",
                 description: {
-                    text: "感想やレビューなどの設定を変更します。"
-                }
+                    text: "感想やレビューなどの設定を変更します。",
+                },
             },
-        ]
+        ],
     },
     {
         title: "マイページ",
@@ -264,7 +270,7 @@ const top: Array<OptionUI_Page> = [
         id: "mypage",
         icon: {
             prefix: "solid",
-            icon: "user"
+            icon: "user",
         },
         popup: true,
         targetUrl: ["mypage.syosetu.com", "xmypage.syosetu.com"],
@@ -274,24 +280,24 @@ const top: Array<OptionUI_Page> = [
                 title: "全般",
                 id: "general",
                 description: {
-                    text: "マイページの全体に影響する設定を変更します。"
-                }
+                    text: "マイページの全体に影響する設定を変更します。",
+                },
             },
             {
                 title: "活動報告",
                 id: "blog",
                 description: {
-                    text: "活動報告の設定を変更します。"
-                }
+                    text: "活動報告の設定を変更します。",
+                },
             },
             {
                 title: "プロフィール",
                 id: "profile",
                 description: {
-                    text: "プロフィールの設定を変更します。"
-                }
+                    text: "プロフィールの設定を変更します。",
+                },
             },
-        ]
+        ],
     },
     {
         title: "みてみん",
@@ -299,7 +305,7 @@ const top: Array<OptionUI_Page> = [
         id: "mitemin",
         icon: {
             prefix: "solid",
-            icon: "palette"
+            icon: "palette",
         },
         popup: true,
         targetUrl: ["mitemin.net", "eparet.net"],
@@ -309,59 +315,10 @@ const top: Array<OptionUI_Page> = [
                 title: "全般",
                 id: "general",
                 description: {
-                    text: "みてみん全体に影響する設定を変更します。"
-                }
+                    text: "みてみん全体に影響する設定を変更します。",
+                },
             },
-        ]
-    },
-    {
-        title: "アクセス解析",
-        description: "KASASAGI（アクセス解析ページ）の表示を設定することが出来ます。",
-        id: "kasasagi",
-        icon: {
-            prefix: "solid",
-            icon: "chart-line"
-        },
-        popup: true,
-        targetUrl: ["kasasagi.hinaproject.com"],
-        defaultCategory: "general",
-        categories: [
-            {
-                title: "全般",
-                id: "general",
-                description: {
-                    text: "KASASAGIの全体に影響する設定を変更します。"
-                }
-            },
-            {
-                title: "総合PV",
-                id: "pageview",
-                description: {
-                    text: "総合PVの設定を変更します。"
-                }
-            },
-            {
-                title: "エピソード別",
-                id: "episode",
-                description: {
-                    text: "エピソード別ユニークの設定を変更します。"
-                }
-            },
-            {
-                title: "日別",
-                id: "day",
-                description: {
-                    text: "日別PV・ユニークの設定を変更します。"
-                }
-            },
-            {
-                title: "月別",
-                id: "month",
-                description: {
-                    text: "月別PV・ユニークの設定を変更します。"
-                }
-            },
-        ]
+        ],
     },
 ]
 
@@ -378,7 +335,7 @@ const bottom: Array<OptionUI_Page> = [
         id: "patchnotes",
         icon: {
             prefix: "solid",
-            icon: "file-lines"
+            icon: "file-lines",
         },
         position: "bottom",
         defaultCategory: "introduction",
@@ -389,7 +346,7 @@ const bottom: Array<OptionUI_Page> = [
                 title: "パッチノート",
                 id: "general",
             },
-        ]
+        ],
     },
 
     {
@@ -397,7 +354,7 @@ const bottom: Array<OptionUI_Page> = [
         id: "about",
         icon: {
             prefix: "solid",
-            icon: "circle-info"
+            icon: "circle-info",
         },
         noindex: true,
         position: "bottom",
@@ -409,7 +366,7 @@ const bottom: Array<OptionUI_Page> = [
                 hideTitle: true,
             },
         ],
-        hideToc: "hide"
+        hideToc: "hide",
     },
 
     {
@@ -417,7 +374,7 @@ const bottom: Array<OptionUI_Page> = [
         id: "help",
         icon: {
             prefix: "solid",
-            icon: "circle-question"
+            icon: "circle-question",
         },
         position: "bottom",
         defaultCategory: "introduction",
@@ -431,7 +388,7 @@ const bottom: Array<OptionUI_Page> = [
                 title: "よくある質問",
                 id: "faq",
             },
-        ]
+        ],
     },
 ]
 
@@ -451,20 +408,20 @@ const hide: Array<OptionUI_Page> = [
             {
                 title: "検索結果",
                 id: "result",
-                hideTitle: true
+                hideTitle: true,
             },
         ],
         hideToc: "hide",
         noindex: true,
     },
-    
+
     {
         title: "デバッグ",
         description: "開発者向けのデバッグ機能",
         id: "debug",
         icon: {
             prefix: "solid",
-            icon: "bug"
+            icon: "bug",
         },
         parent: "general",
         position: "hide",
@@ -476,16 +433,13 @@ const hide: Array<OptionUI_Page> = [
                 title: "デバッグ機能",
                 id: "general",
                 description: {
-                    attention: "【デバッグ機能】開発者向けの機能です。不具合が発生する可能性がありますのでご注意ください。"
-                }
+                    attention:
+                        "【デバッグ機能】開発者向けの機能です。不具合が発生する可能性がありますのでご注意ください。",
+                },
             },
         ],
-        noindex: true
+        noindex: true,
     },
 ]
 
-export const OptionUI_Pages: Array<OptionUI_Page> = [
-    ...top,
-    ...bottom,
-    ...hide
-]
+export const OptionUI_Pages: Array<OptionUI_Page> = [...top, ...bottom, ...hide]
