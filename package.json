@@ -50,7 +50,7 @@
     "license-checker": "^25.0.1",
     "material-react-toastify": "^10.0.5",
     "pickadatejs": "^1.0.23",
-    "prismjs": "^1.29.0",
+    "prismjs": "^1.30.0",
     "qrcode": "^1.5.4",
     "range-slider-input": "^2.4.4",
     "react": "^18.3.1",
