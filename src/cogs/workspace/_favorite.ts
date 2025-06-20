@@ -275,7 +275,7 @@ function bookmarkCategoryLayout() {
                 var title = $(this).text()
 
                 var c = $(`<li class="c-up-aside__nav-item"></li>`)
-                c.append($(`<a/>`).text(title).attr("href", String(href ?? "")))
+                c.append($(`<a/>`).text(title).attr("href", nt.text.escapeHtml(`${href ?? ""}`)))
                 if (selected) {
                     c.addClass("is-selected")
                 }
