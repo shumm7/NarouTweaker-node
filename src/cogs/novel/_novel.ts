@@ -253,11 +253,10 @@ function _history() {
                     var elm = $(".novellingindex_bookmarker_no")
                     var link = elm.find("a").prop("href")
                     var text = elm.find("a").text()
-                    outer.append(`
-                        <div class="novelview_history-item" id="novel_siori">
-                            <i class="fa-solid fa-bookmark"></i><a href="${link}">${text}</a>
-                        </div>
-                    `)
+                    var outerE = $(`<div class="novelview_history-item" id="novel_siori"/>`)
+                    outerE.append(`<i class="fa-solid fa-bookmark"></i>`)
+                    outerE.append($(`<a/`).text(text).attr("href", link))
+                    outer.append(outerE)
                     showHistory = true
                 } else if ($("meta[name='siori']").length) {
                     var elm = $("meta[name='siori']")
@@ -433,7 +432,9 @@ function _authorLink() {
                             outer.empty()
                             outer.append(elm_atteintion)
                             outer.append(elm_title_c)
-                            outer.append(` 作者：<a href="${userid_link}">${author}</a> `)
+                            outer.append(` 作者：`)
+                            outer.append($(`<a/>`).text(author).attr("href", userid_link))
+                            outer.append(` `)
                             outer.append(elm_chapter_c)
                         }
                     }
@@ -446,7 +447,7 @@ function _authorLink() {
                         if (!elm.find("a").length) {
                             const author = elm.text()
                             elm.empty()
-                            elm.append(`<a href="${userid_link}">${author}</a>`)
+                            elm.append($(`<a/>`).text(author).attr("href", userid_link))
                         }
                     }
                 })
