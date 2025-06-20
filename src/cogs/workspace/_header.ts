@@ -2,42 +2,42 @@ import { nt } from "../../utils/narou-tweaker"
 
 import $ from "jquery"
 
-export function _header(){
+export function _header() {
     headerIcons()
     changeHeaderScrollMode()
     addMenuLink()
 }
 
-function changeHeaderScrollMode(){
+function changeHeaderScrollMode() {
     var elm = ".l-header"
 
-    $("body > div").each(function(){
-        if(!$(this).hasClass("l-header")){
+    $("body > div").each(function () {
+        if (!$(this).hasClass("l-header")) {
             $(this).addClass("top")
             return false
         }
     })
 
-    function changeMode(elm: HTMLElement|JQuery<HTMLElement>){
+    function changeMode(elm: HTMLElement | JQuery<HTMLElement>) {
         nt.storage.local.get(null).then((data) => {
             const header_mode = data.workspaceCustomHeaderMode
             const hidden_begin = data.workspaceCustomHeaderScrollHidden
-            if(!$(elm).length){return}
+            if (!$(elm).length) { return }
 
             $(elm).removeClass("header-mode--fixed")
             $(elm).removeClass("header-mode--absolute")
             $(elm).removeClass("header-mode--scroll")
-            $(elm).css({"position": ""})
-            $("#novelnavi_right").css({"position": ""})
-            $("#novelnavi_right > *").css({"position": ""})
+            $(elm).css({ "position": "" })
+            $("#novelnavi_right").css({ "position": "" })
+            $("#novelnavi_right > *").css({ "position": "" })
 
-            if(header_mode=="fixed"){
+            if (header_mode == "fixed") {
                 $(elm).addClass("header-mode--fixed")
-            }else if(header_mode=="absolute"){
+            } else if (header_mode == "absolute") {
                 $(elm).addClass("header-mode--absolute")
-            }else if(header_mode=="scroll"){
+            } else if (header_mode == "scroll") {
                 $(elm).addClass("header-mode--scroll")
-                if(hidden_begin){
+                if (hidden_begin) {
                     $(elm + '.header-mode--scroll').addClass('hide');
                 }
             }
@@ -46,13 +46,13 @@ function changeHeaderScrollMode(){
     changeMode($(elm))
 
     var pos = $(window).scrollTop();
-    $(window).on("scroll", function(){
+    $(window).on("scroll", function () {
         const scrollTop = $(this).scrollTop()
-        if(scrollTop!==undefined && pos!==undefined && Math.abs(scrollTop - pos)>100){
-            if(scrollTop < pos ){
+        if (scrollTop !== undefined && pos !== undefined && Math.abs(scrollTop - pos) > 100) {
+            if (scrollTop < pos) {
                 $(elm + '.header-mode--scroll').removeClass('hide'); /* Scroll Up */
                 $("#novel_header_search_box.show").removeClass("show")
-            }else{
+            } else {
                 $(elm + '.header-mode--scroll').addClass('hide'); /* Scroll Down */
                 $("#novel_header_search_box.show").removeClass("show")
             }
@@ -60,24 +60,24 @@ function changeHeaderScrollMode(){
         }
     });
 
-    nt.storage.local.changed(["workspaceCustomHeaderMode", "workspaceCustomHeaderScrollHidden"], function(changes){
+    nt.storage.local.changed(["workspaceCustomHeaderMode", "workspaceCustomHeaderScrollHidden"], function (changes) {
         changeMode($(elm))
     })
 }
 
-function headerIcons(){
+function headerIcons() {
     var headerParent = $(".p-up-header-pc .p-up-header-pc__nav")
-    function getLink(selector: string){
+    function getLink(selector: string) {
         var g = $(".p-up-header-pc__gmenu-list").find(selector)
-        if(g.length){
+        if (g.length) {
             return g.clone()[0].outerHTML
         }
         return ``
     }
 
-    function getList(selector: string){
+    function getList(selector: string) {
         var g = $(".p-up-header-pc__gmenu-list").find(selector)
-        if(g.length){
+        if (g.length) {
             return "<li>" + g.clone()[0].outerHTML + "</li>"
         }
         return ``
@@ -85,25 +85,25 @@ function headerIcons(){
 
     // ユーザ
     var elm = $(".p-up-header-pc__nav-item:has(.p-up-header-pc__account)")
-    if(elm.length){
+    if (elm.length) {
         elm.addClass("user")
     }
 
     //メッセージ
     var elm = $(".p-up-header-pc__nav-item:has(.p-icon--envelope)")
-    if(elm.length){
+    if (elm.length) {
         elm.addClass("message")
     }
 
     //ユーザホーム
     var elm = $(".p-up-header-pc__nav-item:has(a > .p-icon--home)")
-    if(elm.length){
+    if (elm.length) {
         elm.addClass("home")
     }
 
     //メニュー
     var elm = $(".p-up-header-pc__nav-item:has(.p-up-header-pc__gmenu)")
-    if(elm.length){
+    if (elm.length) {
         elm.addClass("menu")
     }
 
@@ -136,18 +136,18 @@ function headerIcons(){
 
     //更新通知
     var g = $(".p-up-header-pc__gmenu-list").find("a[href='https://syosetu.com/xuser/top/'], a[href='https://syosetu.com/user/top/']")
-    let r18: boolean|undefined
-    if(g.length){
+    let r18: boolean | undefined
+    if (g.length) {
         var href = g.prop("href").trim()
         r18 = nt.api.isR18(href)
     }
-    if(r18){
+    if (r18) {
         elm = $(`
             <li class="p-up-header-pc__nav-item noticelist">
                 <a class="p-up-header-pc__nav-label" href="https://syosetu.com/favnovelmain18/isnoticelist/"><span class="p-icon p-icon--bell p-up-header-pc__nav-icon" aria-hidden="true"></span>更新通知</a>
             </li>
         `)
-    }else{
+    } else {
         elm = $(`
             <li class="p-up-header-pc__nav-item noticelist">
                 <a class="p-up-header-pc__nav-label" href="https://syosetu.com/favnovelmain/isnoticelist/"><span class="p-icon p-icon--bell p-up-header-pc__nav-icon" aria-hidden="true"></span>更新通知</a>
@@ -291,7 +291,7 @@ function headerIcons(){
     `)
     elm.find("a").addClass("p-up-header-pc__nav-label").prepend(`<span class="p-icon p-icon--home p-up-header-pc__nav-icon" aria-hidden="true"></span>`)
     headerParent.append(elm)
-    
+
     //作品を探す
     headerParent.append(`
         <li class="p-up-header-pc__nav-item find">
@@ -339,12 +339,12 @@ function headerIcons(){
 
 
     //ヘッダ設定
-    function resetHeader(){
+    function resetHeader() {
         $(".p-up-header-pc__nav .p-up-header-pc__nav-item").addClass("disabled")
         nt.storage.local.get(null).then((data) => {
-            $.each(data.workspaceCustomHeader, function(_, key){
-                var elm = $(".p-up-header-pc__nav-item."+key)
-                if(elm.length){
+            $.each(data.workspaceCustomHeader, function (_, key) {
+                var elm = $(".p-up-header-pc__nav-item." + key)
+                if (elm.length) {
                     elm.removeClass("disabled")
                     $(".p-up-header-pc__nav").append(elm)
                 }
@@ -354,47 +354,47 @@ function headerIcons(){
     resetHeader()
 
     /* Storage Listener */
-    nt.storage.local.changed("workspaceCustomHeader", function(changes){
+    nt.storage.local.changed("workspaceCustomHeader", function (changes) {
         resetHeader()
     })
 }
 
-function addMenuLink(){
-    function getLink(parent: JQuery<HTMLElement>, selector: string, callback?: (element: JQuery<HTMLElement>)=>void){
+function addMenuLink() {
+    function getLink(parent: JQuery<HTMLElement>, selector: string, callback?: (element: JQuery<HTMLElement>) => void): JQuery<HTMLElement> {
         var g = parent.find(selector)
-        if(g.length){
+        if (g.length) {
             var ret = g.clone()
-            if(callback!=undefined){
+            if (callback != undefined) {
                 callback(ret)
             }
-            return ret[0].outerHTML
+            return ret
         }
-        return ``
+        return $("")
     }
 
-    function getHeadlineType(elm: JQuery<HTMLElement>){
-        if(elm.find(".p-icon--star-line").length){
+    function getHeadlineType(elm: JQuery<HTMLElement>) {
+        if (elm.find(".p-icon--star-line").length) {
             return "favorite"
         }
-        else if(elm.find(".p-icon--pen").length){
+        else if (elm.find(".p-icon--pen").length) {
             return "edit"
         }
-        else if(elm.find(".p-icon--article").length){
+        else if (elm.find(".p-icon--article").length) {
             return "blog"
         }
-        else if(elm.find(".p-icon--comment-dots-line").length){
+        else if (elm.find(".p-icon--comment-dots-line").length) {
             return "reaction"
         }
-        else if(elm.find(".p-icon--block").length){
+        else if (elm.find(".p-icon--block").length) {
             return "block-mute"
         }
-        else if(elm.find(".p-icon--home").length){
+        else if (elm.find(".p-icon--home").length) {
             return "x-home"
         }
-        else if(elm.find(".p-icon--search").length){
+        else if (elm.find(".p-icon--search").length) {
             return "find"
         }
-        else if(elm.find(".p-icon--question").length){
+        else if (elm.find(".p-icon--question").length) {
             return "support"
         }
     }
@@ -411,12 +411,12 @@ function addMenuLink(){
     parentRight.prop("id", "p-up-header-pc__gmenu-column--right")
 
     // Set Elements
-    parents.find(".p-up-header-pc__gmenu-column").each(function(){
+    parents.find(".p-up-header-pc__gmenu-column").each(function () {
         var column = $(this)
-        var tag:string|undefined = undefined
-        column.find(".p-up-header-pc__gmenu-headline, .p-up-header-pc__gmenu-item").each(function(){
-            if($(this).hasClass("p-up-header-pc__gmenu-headline")){
-                if(tag!=undefined){
+        var tag: string | undefined = undefined
+        column.find(".p-up-header-pc__gmenu-headline, .p-up-header-pc__gmenu-item").each(function () {
+            if ($(this).hasClass("p-up-header-pc__gmenu-headline")) {
+                if (tag != undefined) {
                     $(`.p-up-header-pc__gmenu-column .p-up-header-pc__temporary-class-${tag}`).wrapAll(`<div class="p-up-header-pc__gmenu-list-items ${tag}">`)
                     $(`.p-up-header-pc__gmenu-column .p-up-header-pc__temporary-class-${tag}`).removeClass(`p-up-header-pc__temporary-class-${tag}`)
                 }
@@ -424,7 +424,7 @@ function addMenuLink(){
                 tag = getHeadlineType($(this))
                 $(this).addClass(`p-up-header-pc__temporary-class-${tag}`)
             }
-            else if($(this).hasClass("p-up-header-pc__gmenu-item")){
+            else if ($(this).hasClass("p-up-header-pc__gmenu-item")) {
                 $(this).addClass(`p-up-header-pc__temporary-class-${tag}`)
             }
         })
@@ -434,26 +434,15 @@ function addMenuLink(){
     })
 
     // User
-    parentHidden.append(`
-        <div class="p-up-header-pc__gmenu-list-items user">
-            <div class="p-up-header-pc__gmenu-headline">
-                <span class="p-icon p-icon--user" aria-hidden="true"></span>ユーザ
-            </div>
-            <div class="p-up-header-pc__gmenu-item">
-                ${getLink($(".p-up-header-pc__nav-item.user"), `a[href="https://syosetu.com/useredit/input/"]`)}
-            </div>
-            <div class="p-up-header-pc__gmenu-item">
-                ${getLink($(".p-up-header-pc__nav-item.user"), `a[href^="https://mypage.syosetu.com/"], a[href^="https://xmypage.syosetu.com/"]`)}
-            </div>
-            <div class="p-up-header-pc__gmenu-item">
-                ${getLink($(".p-up-header-pc__nav-item.user"), `a[href="https://syosetu.com/login/logout/"]`, (elm)=>{
-                    elm.find("span.p-icon").remove()
-                    elm.text(elm.text().trim())
-                })
-            }
-            </div>
-        </div>
-    `)
+    var userElm = $(`<div class="p-up-header-pc__gmenu-list-items user"/>`)
+    userElm.append(`<div class="p-up-header-pc__gmenu-headline"><span class="p-icon p-icon--user" aria-hidden="true"></span>ユーザ</div>`)
+    userElm.append($(`<div class="p-up-header-pc__gmenu-item"/>`).append(getLink($(".p-up-header-pc__nav-item.user"), `a[href="https://syosetu.com/useredit/input/"]`)))
+    userElm.append($(`<div class="p-up-header-pc__gmenu-item"/>`).append(getLink($(".p-up-header-pc__nav-item.user"), `a[href^="https://mypage.syosetu.com/"], a[href^="https://xmypage.syosetu.com/"]`)))
+    userElm.append($(`<div class="p-up-header-pc__gmenu-item"/>`).append(getLink($(".p-up-header-pc__nav-item.user"), `a[href="https://syosetu.com/login/logout/"]`, (elm) => {
+        elm.find("span.p-icon").remove()
+        elm.text(elm.text().trim())
+    })))
+    parentHidden.append(userElm)
 
     // Message
     parentHidden.append(`
@@ -462,14 +451,14 @@ function addMenuLink(){
                 <span class="p-icon p-icon--envelope" aria-hidden="true"></span>メッセージ
             </div>
             <div class="p-up-header-pc__gmenu-item">
-                ${getLink($(".p-up-header-pc__nav-item.message"), `a`, (elm)=>{
-                    elm.find("span.p-icon").remove()
-                    elm.text(elm.text().trim())
-                })}
+                ${getLink($(".p-up-header-pc__nav-item.message"), `a`, (elm) => {
+        elm.find("span.p-icon").remove()
+        elm.text(elm.text().trim())
+    })}
             </div>
         </div>
     `)
-    
+
     // Home
     parentHidden.append(`
         <div class="p-up-header-pc__gmenu-list-items home">
@@ -477,36 +466,36 @@ function addMenuLink(){
                 <span class="p-icon p-icon--home" aria-hidden="true"></span>${$(".p-up-header-pc__nav-item.home a").text().trim().replace("ユーザホーム", "ユーザページ")}
             </div>
             <div class="p-up-header-pc__gmenu-item">
-                ${getLink($(".p-up-header-pc__nav-item.home"), `a`, (elm)=>{
-                    elm.find("span.p-icon").remove()
-                    elm.text(elm.text().trim())
-                })}
+                ${getLink($(".p-up-header-pc__nav-item.home"), `a`, (elm) => {
+        elm.find("span.p-icon").remove()
+        elm.text(elm.text().trim())
+    })}
             </div>
         </div>
     `)
 
 
     // Setting Menu
-    function resetMenu(){
+    function resetMenu() {
         $(".p-up-header-pc__gmenu .p-up-header-pc__gmenu-column .p-up-header-pc__gmenu-list-items").appendTo(".p-up-header-pc__gmenu .p-up-header-pc__gmenu-column#p-up-header-pc__gmenu-column--hidden")
         nt.storage.local.get(null).then((data) => {
-            $.each(data.workspaceCustomMenu_Left, function(_, key){
-                var elm = $(".p-up-header-pc__gmenu .p-up-header-pc__gmenu-column .p-up-header-pc__gmenu-list-items."+key)
-                if(elm.length){
+            $.each(data.workspaceCustomMenu_Left, function (_, key) {
+                var elm = $(".p-up-header-pc__gmenu .p-up-header-pc__gmenu-column .p-up-header-pc__gmenu-list-items." + key)
+                if (elm.length) {
                     $("#p-up-header-pc__gmenu-column--left").append(elm)
                 }
             })
-            
-            $.each(data.workspaceCustomMenu_Middle, function(_, key){
-                var elm = $(".p-up-header-pc__gmenu .p-up-header-pc__gmenu-column .p-up-header-pc__gmenu-list-items."+key)
-                if(elm.length){
+
+            $.each(data.workspaceCustomMenu_Middle, function (_, key) {
+                var elm = $(".p-up-header-pc__gmenu .p-up-header-pc__gmenu-column .p-up-header-pc__gmenu-list-items." + key)
+                if (elm.length) {
                     $("#p-up-header-pc__gmenu-column--middle").append(elm)
                 }
             })
-            
-            $.each(data.workspaceCustomMenu_Right, function(_, key){
-                var elm = $(".p-up-header-pc__gmenu .p-up-header-pc__gmenu-column .p-up-header-pc__gmenu-list-items."+key)
-                if(elm.length){
+
+            $.each(data.workspaceCustomMenu_Right, function (_, key) {
+                var elm = $(".p-up-header-pc__gmenu .p-up-header-pc__gmenu-column .p-up-header-pc__gmenu-list-items." + key)
+                if (elm.length) {
                     $("#p-up-header-pc__gmenu-column--right").append(elm)
                 }
             })
@@ -515,7 +504,7 @@ function addMenuLink(){
     resetMenu()
 
     /* Storage Listener */
-    nt.storage.local.changed(["workspaceCustomMenu_Left", "workspaceCustomMenu_Middle", "workspaceCustomMenu_Right"], function(changes){
+    nt.storage.local.changed(["workspaceCustomMenu_Left", "workspaceCustomMenu_Middle", "workspaceCustomMenu_Right"], function (changes) {
         resetMenu()
     })
 }

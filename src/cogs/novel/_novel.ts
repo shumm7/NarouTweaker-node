@@ -128,7 +128,7 @@ function _novelPage() {
                 }
             }
             if (chapter) {
-                $(".p-novel__number").after("<div class='novel-chapter'>" + chapter + "</div>")
+                $(".p-novel__number").after($("<div class='novel-chapter'></div>").text(chapter))
             }
 
             $(".c-announce--novel-detail").empty()
