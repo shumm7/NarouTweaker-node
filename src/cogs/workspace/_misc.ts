@@ -1,23 +1,23 @@
 import { nt } from "../../utils/narou-tweaker"
 import $ from "jquery"
 
-export function _misc(){
+export function _misc() {
     deleteConfirm()
     deleteConfirmUserblog()
     pointAverage()
 }
 
-function deleteConfirm(){
+function deleteConfirm() {
 
-    if(location.hostname=="syosetu.com" && location.pathname.match(/^\/usernovel\/deleteconfirm\/ncode\/\d+\/*$/)){
-        nt.storage.local.get(null).then(function(data){
-            if(data.workspaceNovelmanageDeleteConfirm){
+    if (location.hostname == "syosetu.com" && location.pathname.match(/^\/usernovel\/deleteconfirm\/ncode\/\d+\/*$/)) {
+        nt.storage.local.get(null).then(function (data) {
+            if (data.workspaceNovelmanageDeleteConfirm) {
                 $("#noveldelete").attr("type", "button")
                 $("#noveldelete").prop("disabled", true)
 
-                let novelTitle: string|undefined = undefined
-                $(".c-form__group").each(function(){
-                    if($(this).find(".c-form__label").text().trim()=="作品タイトル"){
+                let novelTitle: string | undefined = undefined
+                $(".c-form__group").each(function () {
+                    if ($(this).find(".c-form__label").text().trim() == "作品タイトル") {
                         novelTitle = $(this).find(".c-form__plaintext").text().trim()
                     }
                 })
@@ -30,28 +30,28 @@ function deleteConfirm(){
                         <input class="c-form__input-text" type="text" name="novel_title" value="" data-name="作品タイトル" data-minlength="1" data-maxlength="100">
                     </div>
                 `)
-                $("input[name='novel_title']").on("input", function(){
+                $("input[name='novel_title']").on("input", function () {
                     var m = $(this).val()
-                    if(typeof m === "string"){
+                    if (typeof m === "string") {
                         const title = m.trim()
-                        if(title==novelTitle){
+                        if (title == novelTitle) {
                             $("#noveldelete").prop("disabled", false)
-                        }else{
+                        } else {
                             $("#noveldelete").prop("disabled", true)
                         }
                     }
                 })
 
-                $("#noveldelete").on("click", function(){
+                $("#noveldelete").on("click", function () {
                     var m = $("input[name='novel_title']").val()
-                    if(typeof m === "string"){
+                    if (typeof m === "string") {
                         const title = m.trim()
-                        if(title==novelTitle){
+                        if (title == novelTitle) {
                             var confirmed = confirm('この作品を削除します。よろしいですか？\n（この操作は取り消すことはできません）');
-                            if(confirmed) {
+                            if (confirmed) {
                                 $(".c-form").trigger("submit")
                             }
-                        }else{
+                        } else {
                             $("#noveldelete").prop("disabled", true)
                         }
                     }
@@ -59,20 +59,20 @@ function deleteConfirm(){
             }
         })
     }
-        
+
 }
 
-function deleteConfirmUserblog(){
+function deleteConfirmUserblog() {
 
-    if(location.hostname=="syosetu.com" && (location.pathname.match(/^\/userblogmanage\/deleteconfirm\/blogkey\/\d+\/*$/) || location.pathname.match(/^\/userxblogmanage\/deleteconfirm\/blogkey\/\d+\/*$/))){
-        nt.storage.local.get(null).then(function(data){
-            if(data.workspaceUserblogmanageDeleteConfirm){
+    if (location.hostname == "syosetu.com" && (location.pathname.match(/^\/userblogmanage\/deleteconfirm\/blogkey\/\d+\/*$/) || location.pathname.match(/^\/userxblogmanage\/deleteconfirm\/blogkey\/\d+\/*$/))) {
+        nt.storage.local.get(null).then(function (data) {
+            if (data.workspaceUserblogmanageDeleteConfirm) {
                 $("#blogdelete").attr("type", "button")
                 $("#blogdelete").prop("disabled", true)
 
-                let blogTitle: string|undefined
-                $(".c-form__group").each(function(){
-                    if($(this).find(".c-form__label").text().trim()=="タイトル"){
+                let blogTitle: string | undefined
+                $(".c-form__group").each(function () {
+                    if ($(this).find(".c-form__label").text().trim() == "タイトル") {
                         blogTitle = $(this).find(".c-form__plaintext").text().trim()
                     }
                 })
@@ -85,28 +85,28 @@ function deleteConfirmUserblog(){
                         <input class="c-form__input-text" type="text" name="blog_title" value="" data-name="タイトル" data-minlength="1" data-maxlength="100">
                     </div>
                 `)
-                $("input[name='blog_title']").on("input", function(){
+                $("input[name='blog_title']").on("input", function () {
                     var m = $(this).val()
-                    if(typeof m === "string"){
+                    if (typeof m === "string") {
                         const title = m.trim()
-                        if(title==blogTitle){
+                        if (title == blogTitle) {
                             $("#blogdelete").prop("disabled", false)
-                        }else{
+                        } else {
                             $("#blogdelete").prop("disabled", true)
                         }
                     }
                 })
 
-                $("#blogdelete").on("click", function(){
+                $("#blogdelete").on("click", function () {
                     var m = $("input[name='blog_title']").val()
-                    if(typeof m === "string"){
+                    if (typeof m === "string") {
                         const title = m.trim()
-                        if(title==blogTitle){
+                        if (title == blogTitle) {
                             var confirmed = confirm('この活動報告を削除します。よろしいですか？\n（この操作は取り消すことはできません）');
-                            if(confirmed) {
+                            if (confirmed) {
                                 $(".c-form").trigger("submit")
                             }
-                        }else{
+                        } else {
                             $("#noveldelete").prop("disabled", true)
                         }
                     }
@@ -114,17 +114,17 @@ function deleteConfirmUserblog(){
             }
         })
     }
-        
+
 }
 
-function pointAverage(){
-    if(location.hostname=="syosetu.com" && location.pathname.match(/^\/usernovelmanage\/top\/ncode\/\d+\/*$/)){
-        nt.storage.local.get(null).then(function(data){
-            if(data.workspaceNovelmanageShowPointAverage){
-                if($(".p-up-novelinfo__reaction").length){
+function pointAverage() {
+    if (location.hostname == "syosetu.com" && location.pathname.match(/^\/usernovelmanage\/top\/ncode\/\d+\/*$/)) {
+        nt.storage.local.get(null).then(function (data) {
+            if (data.workspaceNovelmanageShowPointAverage) {
+                if ($(".p-up-novelinfo__reaction").length) {
                     var point = $(".p-up-novelinfo__reaction .js-hyokapointavg")
                     const pointAvg = point.find("input[name='score']").attr("value")
-                    point.find(".p-up-novelinfo__point-star").before(`<span style="margin-right: 3px;">${pointAvg}</span>`)
+                    if (pointAvg) point.find(".p-up-novelinfo__point-star").before(($(`<span style="margin-right: 3px;"></span>`).text(pointAvg)))
                 }
             }
         })

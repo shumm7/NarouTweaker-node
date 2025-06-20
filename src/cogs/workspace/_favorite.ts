@@ -3,35 +3,35 @@ import $ from "jquery"
 
 const path = location.pathname
 
-export function _bookmark(){
+export function _bookmark() {
     bookmarkLayout()
     bookmarkCategoryLayout()
 }
 
-function bookmarkLayout(){
-    nt.storage.local.get(null).then(function(data){
+function bookmarkLayout() {
+    nt.storage.local.get(null).then(function (data) {
         // ブックマークページのレイアウト調整
         const layout = data.workspaceBookmarkLayout
-        if(layout==1){ // 旧デザインライク
+        if (layout == 1) { // 旧デザインライク
             $("body").addClass("narou-tweaker-bookmark-layout-1")
-        }else if(layout==2){ //コンパクト
+        } else if (layout == 2) { //コンパクト
             $("body").addClass("narou-tweaker-bookmark-layout-2")
-        }else{ //デフォルト
+        } else { //デフォルト
             $("body").addClass("narou-tweaker-bookmark-layout-0")
         }
 
-        $("li.c-up-panel__list-item.p-up-bookmark-item").each(function(){
+        $("li.c-up-panel__list-item.p-up-bookmark-item").each(function () {
             let insertClass
-            if(path.match(/^\/favnovelmain\/isnoticelist\/*.*/) || path.match(/^\/favnovelmain18\/isnoticelist\/*.*/)){
+            if (path.match(/^\/favnovelmain\/isnoticelist\/*.*/) || path.match(/^\/favnovelmain18\/isnoticelist\/*.*/)) {
                 $(this).wrapInner("<div class='c-up-chk-item__content'>")
                 insertClass = "c-up-chk-item__content--nochk"
             }
 
             var outer = $(this).find(".c-up-chk-item__content")
-            
-            if(layout==1){ //mode = 1
+
+            if (layout == 1) { //mode = 1
                 outer.addClass("narou-tweaker-bookmark-layout-1--item")
-                if(insertClass){
+                if (insertClass) {
                     outer.addClass(insertClass)
                 }
 
@@ -58,7 +58,7 @@ function bookmarkLayout(){
                 var complete = outer.find(".p-up-bookmark-item__complete")
                 var memo = outer.find(".c-up-memo")
 
-                if(complete.length){
+                if (complete.length) {
                     complete.text(`＜ ${complete.text()} ＞`)
                 }
 
@@ -72,62 +72,62 @@ function bookmarkLayout(){
                 var episode = $(`<span class="p-up-bookmark-item__episode">`)
                 var unread = outer.find(".p-up-bookmark-item__unread-num")
 
-                if(latest_ep.find(".p-up-bookmark-item__unread").length){
+                if (latest_ep.find(".p-up-bookmark-item__unread").length) {
                     latest_ep.find(".p-up-bookmark-item__unread").remove()
                 }
                 let is_latest = true
-                if(latest_ep.attr("disabled")!==undefined){
+                if (latest_ep.attr("disabled") !== undefined) {
                     is_latest = false
                 }
 
-                if(current_ep.length){
+                if (current_ep.length) {
                     episode.prepend($(`<span class="p-up-bookmark-item__episode__siori">`).append(current_ep))
                     current_ep.find(".p-icon--siori").insertBefore(current_ep)
                 }
 
-                current_ep.removeClass(["c-button", "c-button--primary","c-button__text-sm", "c-button--outline", "c-button--sm"])
-                latest_ep.removeClass(["c-button--primary","c-button__text-sm", "c-button c-button--outline", "c-button--sm"])
+                current_ep.removeClass(["c-button", "c-button--primary", "c-button__text-sm", "c-button--outline", "c-button--sm"])
+                latest_ep.removeClass(["c-button--primary", "c-button__text-sm", "c-button c-button--outline", "c-button--sm"])
 
-                if(data.workspaceBookmarkReplaceEpisode){
+                if (data.workspaceBookmarkReplaceEpisode) {
                     current_ep.text(current_ep.text().replace(/ep\.(\d+)/, "$1部分"))
                 }
                 $(this).addClass("p-up-bookmark-item--siori")
 
                 latest_ep.removeClass("c-button c-button--outline c-button--sm")
-                if(data.workspaceBookmarkReplaceEpisode){
+                if (data.workspaceBookmarkReplaceEpisode) {
                     latest_ep.text(latest_ep.text().replace(/ep\.(\d+)/, "$1部分"))
                 }
 
-                if(is_latest && latest_ep.length){
+                if (is_latest && latest_ep.length) {
                     episode.append($(`<span class="p-up-bookmark-item__episode__latest">`).append(latest_ep))
                 }
                 outer.find(".p-up-bookmark-item__button-group").remove()
                 outer.find(".p-up-bookmark-item__info").remove()
                 middle.append(episode)
-                
+
                 // footer
                 var option = outer.find(".p-up-bookmark-item__menu")
 
                 outer.append(`<div class="p-up-bookmark-item__option-button"></div>`)
                 var footer = outer.find(".p-up-bookmark-item__option-button")
                 footer.append(`<span class="p-up-bookmark-item__status">`)
-                if(unread.length){
+                if (unread.length) {
                     outer.find(".p-up-bookmark-item__status").append(`<span class="p-up-bookmark-item__unread">未読 <span class="p-up-bookmark-item__unread-num">${unread.text()}</span></span>`)
                 }
-                if(notice.length){
+                if (notice.length) {
                     $(this).addClass("p-up-bookmark-item--notice")
                     notice.text("チェック中")
                     outer.find(".p-up-bookmark-item__status").append(notice)
                 }
-                if(invisible.length){
+                if (invisible.length) {
                     invisible.text("非公開ブックマーク")
                     outer.find(".p-up-bookmark-item__status").append(invisible)
                 }
                 footer.append(option)
 
-            }else if(layout==2){ //mode = 2
+            } else if (layout == 2) { //mode = 2
                 outer.addClass("narou-tweaker-bookmark-layout-2--item")
-                if(insertClass){
+                if (insertClass) {
                     outer.addClass(insertClass)
                 }
                 var c = outer.clone()
@@ -154,46 +154,47 @@ function bookmarkLayout(){
                 var latest_ep = outer.find(".p-up-bookmark-item__button.c-button:nth-child(2)")
                 var episode = $(`<span class="p-up-bookmark-item__episode">`)
                 var unread = outer.find(".p-up-bookmark-item__unread-num")
-                
-                if(latest_ep.find(".p-up-bookmark-item__unread").length){
+
+                if (latest_ep.find(".p-up-bookmark-item__unread").length) {
                     latest_ep.find(".p-up-bookmark-item__unread").remove()
                 }
 
                 var is_latest = true
                 var is_siori = false
-                if(latest_ep.attr("disabled")!==undefined){
+                if (latest_ep.attr("disabled") !== undefined) {
                     is_latest = false
                     latest_ep.remove()
                 }
-                if(current_ep.length){
+                if (current_ep.length) {
                     episode.prepend($(`<span class="p-up-bookmark-item__episode__siori">`).append(current_ep))
-                    if(current_ep.find(".p-icon--siori").length){
+                    if (current_ep.find(".p-icon--siori").length) {
                         is_siori = true
                     }
                 }
 
-                current_ep.removeClass(["c-button", "c-button--primary","c-button__text-sm", "c-button--outline", "c-button--sm"])
-                latest_ep.removeClass(["c-button--primary","c-button__text-sm", "c-button", "c-button--outline", "c-button--sm"])
+                current_ep.removeClass(["c-button", "c-button--primary", "c-button__text-sm", "c-button--outline", "c-button--sm"])
+                latest_ep.removeClass(["c-button--primary", "c-button__text-sm", "c-button", "c-button--outline", "c-button--sm"])
 
-                if(data.workspaceBookmarkReplaceEpisode){
+                if (data.workspaceBookmarkReplaceEpisode) {
                     latest_ep.text(latest_ep.text().replace(/ep\.(\d+)/, "$1部分"))
                     current_ep.text(current_ep.text().replace(/ep\.(\d+)/, "$1部分"))
-                    if(is_siori){
+                    if (is_siori) {
                         current_ep.prepend(`<span class="p-icon p-icon--siori" aria-hidden="true"></span>`)
                     }
                 }
-                if(is_latest && latest_ep.length){
+                if (is_latest && latest_ep.length) {
                     episode.append($(`<span class="p-up-bookmark-item__episode__latest">`).append(latest_ep))
-                    if(unread.length){
-                        latest_ep.append(`<span class="p-up-bookmark-item__unread"><span class="p-up-bookmark-item__unread-num">${unread.text()}</span></span>`)
+                    if (unread.length) {
+                        var num = $(`<span class="p-up-bookmark-item__unread-num"/>`).text(unread.text())
+                        latest_ep.append($(`<span class="p-up-bookmark-item__unread"/>`).append(num))
                     }
                 }
                 list_elm.after(episode)
 
-                header.append($(`<span class="p-up-bookmark-item__show-info-button"><span class="p-icon p-icon--caret-down" aria-hidden="true"></span></span>`).click(function(){
-                    if(outer.hasClass("p-up-bookmark-item--hidden")){
+                header.append($(`<span class="p-up-bookmark-item__show-info-button"><span class="p-icon p-icon--caret-down" aria-hidden="true"></span></span>`).click(function () {
+                    if (outer.hasClass("p-up-bookmark-item--hidden")) {
                         outer.removeClass("p-up-bookmark-item--hidden")
-                    }else{
+                    } else {
                         outer.addClass("p-up-bookmark-item--hidden")
                     }
                 }))
@@ -204,15 +205,15 @@ function bookmarkLayout(){
                 info.find(".p-up-bookmark-item__status").append(option)
                 outer.find(".p-up-bookmark-item__info-button").remove()
 
-            }else{ //mode = 0
+            } else { //mode = 0
                 outer.addClass("narou-tweaker-bookmark-layout-0--item")
-                if(data.workspaceBookmarkReplaceEpisode){
+                if (data.workspaceBookmarkReplaceEpisode) {
                     var complete = outer.find(".p-up-bookmark-item__complete").clone()
                     var current_ep = outer.find(".p-up-bookmark-item__button .c-button-combo a:nth-child(1)")
                     var latest_ep = outer.find(".p-up-bookmark-item__button .c-button-combo a:nth-child(2)")
                     var unread_mark = latest_ep.find(".p-up-bookmark-item__unread").clone()
-                
-                    if(unread_mark.length){
+
+                    if (unread_mark.length) {
                         latest_ep.find(".p-up-bookmark-item__unread").remove()
                     }
 
@@ -225,37 +226,37 @@ function bookmarkLayout(){
                     latest_ep.append(unread_mark)
                 }
             }
-            
+
 
 
         })
     })
 }
 
-function bookmarkCategoryLayout(){
-    nt.storage.local.get(null).then(function(data){
+function bookmarkCategoryLayout() {
+    nt.storage.local.get(null).then(function (data) {
         // ブックマークページのカテゴリのレイアウト調整
-        function resetTags(layout?: number|string){
-            if(typeof layout === "string"){
+        function resetTags(layout?: number | string) {
+            if (typeof layout === "string") {
                 layout = Number(layout)
             }
             $("body").removeClass("narou-tweaker-bookmark-category-layout-0")
             $("body").removeClass("narou-tweaker-bookmark-category-layout-1")
             $("body").removeClass("narou-tweaker-bookmark-category-layout-2")
 
-            if(layout==1){ // サイドバー
+            if (layout == 1) { // サイドバー
                 $("body").addClass("narou-tweaker-bookmark-category-layout-1")
             }
-            else if(layout==2){ //両方
+            else if (layout == 2) { //両方
                 $("body").addClass("narou-tweaker-bookmark-category-layout-2")
             }
-            else{ //デフォルト
+            else { //デフォルト
                 $("body").addClass("narou-tweaker-bookmark-category-layout-0")
             }
         }
         resetTags(data.workspaceBookmarkCategoryLayout)
 
-        if($(".p-up-bookmark-category").length){
+        if ($(".p-up-bookmark-category").length) {
             $(".l-sidebar .c-ad").before(`
                 <div class="c-up-aside" id="bookmark-category">
                     <div class="c-up-aside__box">
@@ -268,17 +269,14 @@ function bookmarkCategoryLayout(){
                 </div>
             `)
 
-            $(".p-up-bookmark-category select option").each(function(){
+            $(".p-up-bookmark-category select option").each(function () {
                 var href = $(this).val()
                 var selected = $(this).prop("selected")
                 var title = $(this).text()
 
-                var c = $(`
-                    <li class="c-up-aside__nav-item">
-                        <a href="${href}">${title}</a>
-                    </li>
-                `)
-                if(selected){
+                var c = $(`<li class="c-up-aside__nav-item"></li>`)
+                c.append($(`<a/>`).text(title).attr("href", String(href ?? "")))
+                if (selected) {
                     c.addClass("is-selected")
                 }
 
@@ -286,9 +284,9 @@ function bookmarkCategoryLayout(){
             })
         }
 
-        nt.storage.local.changed("workspaceBookmarkCategoryLayout", function(changes){
+        nt.storage.local.changed("workspaceBookmarkCategoryLayout", function (changes) {
             const layout = changes?.workspaceBookmarkCategoryLayout?.newValue
-            if(typeof layout === "number" || typeof layout === "string" || layout === undefined){
+            if (typeof layout === "number" || typeof layout === "string" || layout === undefined) {
                 resetTags(layout)
             }
         })
