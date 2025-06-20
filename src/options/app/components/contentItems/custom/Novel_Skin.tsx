@@ -48,6 +48,7 @@ export default function Novel_Skin(props: OptionUI_ItemProps) {
     const mouseSensor = useSensor(MouseSensor, { activationConstraint: { distance: 5 } });
     const sensors = useSensors(mouseSensor);
 
+    /*
     return (
         <>
             <Stack
@@ -254,4 +255,6 @@ export default function Novel_Skin(props: OptionUI_ItemProps) {
             </Stack>
         </>
     )
+        */
+       return <></>
 }
