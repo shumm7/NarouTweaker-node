@@ -568,7 +568,7 @@ function removeIllustrationLink(){
 function verticalLayout_CombineWord(max: number){
     /* 縦書き表示時の半角単語の縦中横 */
     $(".p-novel__body p.correction-replaced").each(function(){
-        wrapTextWithTag($(this), new RegExp(`(?<![a-zA-Z\\d\.\,])[a-zA-Z\\d\.\,]{1,${max}}(?![a-zA-Z\\d\.\,])`, "g"), $("<span class='text-combine'>"), (rpl, tag)=>{
+        wrapTextWithTag($(this), new RegExp(`(?<![a-zA-Z\\d.,])[a-zA-Z\\d.,]{1,${max}}(?![a-zA-Z\\d.,])`, "g"), $("<span class='text-combine'>"), (rpl, tag)=>{
             if(rpl.match(/^\d+$/)){return rpl}
             var t = $(tag)
             t.text(rpl)
@@ -583,7 +583,7 @@ function verticalLayout_CombineNumber(max: number, ignoreCombineInWord?: boolean
 
     $(".p-novel__body p.correction-replaced").each(function(){
         if(ignoreCombineInWord){
-            wrapTextWithTag($(this), new RegExp(`(?<![a-zA-Z\\d\\.\\,])\\d{1,${max}}(?![a-zA-Z\\d\\.\\,])`, "g"), tag)
+            wrapTextWithTag($(this), new RegExp(`(?<![a-zA-Z\\d.,])\\d{1,${max}}(?![a-zA-Z\\d.,])`, "g"), tag)
         }else{
             wrapTextWithTag($(this), new RegExp(`(?<!\\d)\\d{1,${max}}(?!\\d)`, "g"), tag)
         }
