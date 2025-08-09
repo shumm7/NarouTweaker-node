@@ -135,12 +135,7 @@ function headerIcons() {
     headerParent.append(elm)
 
     //更新通知
-    var g = $(".p-up-header-pc__gmenu-list").find("a[href='https://syosetu.com/xuser/top/'], a[href='https://syosetu.com/user/top/']")
-    let r18: boolean | undefined
-    if (g.length) {
-        var href = g.prop("href").trim()
-        r18 = nt.api.isR18(href)
-    }
+    let r18 = nt.api.isR18()
     if (r18) {
         elm = $(`
             <li class="p-up-header-pc__nav-item noticelist">

@@ -191,21 +191,18 @@ function _tategaki() {
 function _autoURL() {
     /* Auto Url */
     nt.storage.local.get(null).then((data) => {
-        try {
-            if (data.novelPrefaceAutoURL) {
-                $(".p-novel__text--preface p").each(function (idx, elem) {
-                    nt.text.replaceUrl(elem, false)
-                })
-            }
-
-            if (data.novelAfterwordAutoURL) {
-                $(".p-novel__text--afterword p").each(function (idx, elem) {
-                    nt.text.replaceUrl(elem, false)
-                })
-            }
-        } catch (e) {
-            console.warn(e)
+        if (data.novelPrefaceAutoURL) {
+            $(".p-novel__text--preface p").each(function (idx, elem) {
+                nt.text.replaceUrl(elem, false)
+            })
         }
+        if (data.novelAfterwordAutoURL) {
+            $(".p-novel__text--afterword p").each(function (idx, elem) {
+                nt.text.replaceUrl(elem, false)
+            })
+        }
+    }).catch(e => {
+        console.warn(e)
     })
 }
 

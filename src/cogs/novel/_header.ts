@@ -155,7 +155,8 @@ export function _header() {
                 if (elm.length) {
                     text = elm.text()
                     elm.text("")
-                    elm.append($('<i class="fa-solid fa-house"></i><span class="title"></span>').text(text))
+                    elm.append($('<i class="fa-solid fa-house"></i>'))
+                    elm.append($('<span class="title"></span>').text(text))
                     elm.parent().addClass("home")
                 } else {
                     // inactive
